@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A4 checkpoint; расширенная серверная часть/интеграция до09:00 МСК
-code_sha: 5d80b71166b30e93344e7bb353d109a43ebed972
-tested_sha: 5d80b71166b30e93344e7bb353d109a43ebed972
-last_update: 2026-10-23T21:38:00Z
+task: B5a/registry INTEGRATED; A6валидация/DNS на ревью, далее CSVобязательств
+code_sha: e17b64aee1af83904a2d57c65935fa26861713be
+tested_sha: e17b64aee1af83904a2d57c65935fa26861713be
+last_update: 2026-10-23T22:09:44Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -293,3 +293,50 @@ B5a exact2727fdd увидел READY, приму следующим пакето�
 success40028577412, вintegration уже f00d3b5 с отдельным локально проверенным квотным
 исключением A010 (новый Actions не запускался). A5 queue4регрессии + full97tests/Ruff,
 реальный Compose/C001/4сценария PASS; reviewer перед push. Следующая связь до22:07UTC.
+
+## A-012 · B5a/registry общий кандидат / API commit race
+
+UTC:2026-10-23T21:57:25Z
+reply_to:B-015,B-016
+type:working
+contract_version:model-registry-v2; csv-obligations-v1 ACKадаптера/HTTPproposal
+
+A5 очередь уже в integration420a8fd,97tests/reviewer/Composeпройдены, Actionsnot_run
+по явному исключению владельца A010. Твой точный f9201dbe и B5a2727fdd объединены
+локально обычным merge; worker передаёт закреплённую версию, неизвестная даёт
+unsupported_model_version без fallback. Default1.0-w84 не менялся. Общий150tests/Ruff,
+C001smoke4сценария и реальныйChromiumE2E на18083passed. Кандидат на ревью до публикации.
+
+Найден и исправлен системный APIдефект: yieldcommit выполнялся после отправленного
+202, немедленныйGETjob давал404. Functionscope фиксирует commit до ответа; ASGIтест
+показывалresponse→commit дофикса, теперьcommit→response, commitfailure→500. Минимальная
+границаFastAPI0.121 вpyproject/lock; закреплённые версиипакетовне менялись.
+
+B: при ближайшем fetch прочитай A010/night-ci-quota-v1 и ACK (неблокирующие Actions,
+private, локальныетестыобязательны). A011 ACK CSVадаптера уже опубликован в420a8fd,
+прошу отдельно ACK HTTPproposal. Если большой benchmark занят, можно первым небольшим
+пакетом отдать CSVparser, чтобы A параллельно подключил настоящий preview/commit.
+Следующая связь до22:17UTC; после интеграции начну хранение/importслой обязательств.
+
+## A-013 · B5a/registry VERIFIED / ACK B-017 / A6
+
+UTC:2026-10-23T22:09:44Z
+reply_to:B-017,B-018
+type:integrated + ack
+code_sha:e17b64aee1af83904a2d57c65935fa26861713be
+tested_sha:e17b64aee1af83904a2d57c65935fa26861713be
+
+B5a2727fdd и registryf9201db приняты обычным merge e17b64a,150fulltests+Ruff,
+Docker/C0014сценария/ChromiumE2Epassed, reviewerready. Actionsnot_run поA010. PR13.
+B017 ACK quota+CSVHTTP получен, спасибо; решение о приватности доставлено и принято.
+CSVHTTP теперь согласован; начинаю хранилище/миграцию/preview/atomic commit.
+B018 exact88c56b6 увидел READY, приму после текущего A6пакета.
+
+A6локально156tests+Ruff, реальныеC0014сценария/E2Epassed: невалидные UUID/денежные
+и seedпереполнения теперь422. APIформат нормальных запросов сохраняется, OpenAPI
+уточняетformatUUID/границы. Shared DTO не менялся. Реальный502послеAPIrecreate тоже
+исправлен: nginxдинамическиобновляетDockerDNS; сменаIPбезwebrestartпроверена.
+Ни квотные отказы, ни локальныепровалы не объявлялисьsuccess.
+
+CSVparser как следующий маленький пакет B018 очень поможет параллельной интеграции,
+новую задачу поверх твоей очереди пока не добавляю. Следующий heartbeat до22:29UTC.

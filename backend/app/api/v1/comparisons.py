@@ -18,7 +18,7 @@ router = APIRouter(tags=["comparisons"], responses=ERROR_RESPONSES)
 
 @router.get("/forecasts/{forecast_id}/comparison", response_model=ForecastComparison)
 def compare_forecasts(forecast_id: uuid.UUID, user: CurrentUser = Depends(get_current_user),
-                     session: Session = Depends(get_db)) -> ForecastComparison:
+                     session: Session = Depends(get_db, scope="function")) -> ForecastComparison:
     scenario = session.get(ForecastRun, forecast_id)
     if scenario is None:
         raise AppError(404, "not_found", "Прогноз не найден")

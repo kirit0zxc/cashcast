@@ -7,7 +7,7 @@ import pytest
 from sqlalchemy import select
 
 from app.core.forecast_input import ForecastInputCodec
-from app.core.models import BankTransaction, DailyBalance, ForecastRun
+from app.core.models import BankTransaction, DailyBalance, ForecastRun, Job
 from tests.test_integration import (
     _run_worker_until_idle,
     _statement_csv,
@@ -88,3 +88,36 @@ def test_enqueue_freezes_inputs_and_scenario_keeps_original_base(client, session
     # Новый базовый запрос, напротив, видит исправленные входы и имеет новую версию.
     updated = client.post(f"/api/v1/companies/{company}/forecasts", json=request).json()
     assert updated["forecast_run_id"] != base["forecast_run_id"]
+
+
+def test_worker_keeps_queued_model_when_default_factory_changes(client, session_factory, frozen_context, monkeypatch):
+    from app.modules.jobs import handlers
+
+    accepted = client.post(f"/api/v1/companies/{frozen_context['company_id']}/forecasts", json={
+        "account_id": frozen_context["account_id"], "as_of": "2026-03-01", "horizon_days": 30,
+    }).json()
+    real_factory = handlers.get_forecast_service
+
+    def changed_default(model_version=None):
+        return real_factory(model_version if model_version is not None else "seasonal-block-bootstrap-1.0-w28")
+
+    # Очередь уже закрепила w84, а default теперь другой: worker обязан передать точную версию.
+    monkeypatch.setattr(handlers, "get_forecast_service", changed_default)
+    _run_worker_until_idle(session_factory)
+    result = client.get("/api/v1/forecasts/" + accepted["forecast_run_id"]).json()
+    assert result["status"] == "succeeded" and result["model_version"] == "seasonal-block-bootstrap-1.0-w84"
+
+
+def test_unknown_pinned_model_fails_explicitly_without_default_fallback(client, session_factory, frozen_context):
+    accepted = client.post(f"/api/v1/companies/{frozen_context['company_id']}/forecasts", json={
+        "account_id": frozen_context["account_id"], "as_of": "2026-03-01", "horizon_days": 30,
+    }).json()
+    with session_factory() as session:
+        session.get(ForecastRun, accepted["forecast_run_id"]).model_version = "unknown-model"
+        session.get(Job, accepted["job_id"]).max_attempts = 1
+        session.commit()
+    _run_worker_until_idle(session_factory)
+    job = client.get("/api/v1/jobs/" + accepted["job_id"]).json()
+    result = client.get("/api/v1/forecasts/" + accepted["forecast_run_id"]).json()
+    assert job["status"] == result["status"] == "failed"
+    assert job["error_code"] == "unsupported_model_version" and result["points"] == []

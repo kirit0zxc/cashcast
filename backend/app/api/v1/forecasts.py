@@ -47,10 +47,10 @@ def create_forecast(
     response: Response,
     _company: str = Depends(require_company_access),
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
     settings: Settings = Depends(get_settings),
 ) -> JobAccepted:
-    acc = session.scalar(select(Account).where(Account.id == uuid.UUID(body.account_id)).with_for_update())
+    acc = session.scalar(select(Account).where(Account.id == body.account_id).with_for_update())
     if acc is None or str(acc.company_id) != str(company_id):
         raise AppError(404, "not_found", "Счёт не найден")
     seed = body.seed if body.seed is not None else settings.forecast_default_seed
@@ -61,7 +61,7 @@ def create_forecast(
     # Собираем снимок только ради data_version — чтобы повторный запрос нашёл тот же прогон.
     snap = build_snapshot(
         session,
-        account_id=body.account_id,
+        account_id=str(body.account_id),
         as_of=body.as_of,
         horizon_days=body.horizon_days,
         seed=seed,
@@ -69,7 +69,7 @@ def create_forecast(
     run = _get_or_create_run(
         session,
         company_id=company_id,
-        account_id=uuid.UUID(body.account_id),
+        account_id=body.account_id,
         as_of=body.as_of,
         horizon_days=body.horizon_days,
         data_version=snap.data_version,
@@ -92,7 +92,7 @@ def create_forecast(
 def get_job(
     job_id: uuid.UUID,
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> JobStatusOut:
     job = session.get(Job, job_id)
     if job is None:
@@ -113,7 +113,7 @@ def get_job(
 def get_forecast(
     forecast_id: uuid.UUID,
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> ForecastOut:
     run = session.get(ForecastRun, forecast_id)
     if run is None:
@@ -162,7 +162,7 @@ def get_forecast(
 def get_explanations(
     forecast_id: uuid.UUID,
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> ExplanationsOut:
     run = session.get(ForecastRun, forecast_id)
     if run is None:
@@ -184,7 +184,7 @@ def create_scenario(
     body: ScenarioRequest,
     response: Response,
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
     settings: Settings = Depends(get_settings),
 ) -> JobAccepted:
     base = session.get(ForecastRun, forecast_id)

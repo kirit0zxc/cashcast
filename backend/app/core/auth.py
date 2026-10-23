@@ -32,7 +32,7 @@ class CurrentUser:
 
 def get_current_user(
     request: Request,
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
     settings: Settings = Depends(get_settings),
 ) -> CurrentUser:
     token = request.cookies.get(settings.session_cookie_name)
@@ -59,7 +59,7 @@ def get_current_user(
 def require_company_access(
     company_id: uuid.UUID,
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> str:
     member = session.get(CompanyMember, {"company_id": company_id, "user_id": uuid.UUID(user.id)})
     if member is None:

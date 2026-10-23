@@ -22,7 +22,7 @@ router = APIRouter(tags=["planned-events"], responses=ERROR_RESPONSES)
 def list_events(
     company_id: uuid.UUID,
     _company: str = Depends(require_company_access),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> list[PlannedEventOut]:
     rows = session.scalars(
         select(PlannedEvent)
@@ -38,19 +38,19 @@ def create_event(
     body: PlannedEventIn,
     _company: str = Depends(require_company_access),
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> PlannedEventOut:
     if body.currency != "RUB":
         raise AppError(422, "unsupported_currency", "Плановые события MVP поддерживают только RUB")
     if body.account_id:
-        acc = session.scalar(select(Account).where(Account.id == uuid.UUID(body.account_id)).with_for_update())
+        acc = session.scalar(select(Account).where(Account.id == body.account_id).with_for_update())
         if acc is None or str(acc.company_id) != str(company_id):
             raise AppError(404, "not_found", "Счёт не найден")
         if acc.currency != body.currency:
             raise AppError(422, "currency_mismatch", "Валюта события должна совпадать с валютой счёта")
     event = PlannedEvent(
         company_id=company_id,
-        account_id=uuid.UUID(body.account_id) if body.account_id else None,
+        account_id=body.account_id,
         direction=body.direction,
         amount_minor=body.amount_minor,
         remaining_amount_minor=body.amount_minor,
@@ -74,7 +74,7 @@ def patch_event(
     event_id: uuid.UUID,
     body: PlannedEventPatch,
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> PlannedEventOut:
     event = session.get(PlannedEvent, event_id)
     if event is None:

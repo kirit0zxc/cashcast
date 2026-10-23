@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from datetime import date, datetime
 from typing import Literal
+from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field
 
+from app.core.limits import MAX_MONEY_MINOR
 from app.modules.contracts import Category
 
 Direction = Literal["in", "out"]
@@ -97,21 +99,21 @@ class TransactionCategoryPatch(BaseModel):
 
 # --- Planned events ---
 class PlannedEventIn(BaseModel):
-    account_id: str | None = None
+    account_id: UUID | None = None
     direction: Direction
-    amount_minor: int = Field(gt=0)
+    amount_minor: int = Field(gt=0, le=MAX_MONEY_MINOR, strict=True)
     due_date: date
     kind: Literal["invoice", "obligation", "tax", "manual"] = "manual"
     currency: str = "RUB"
-    counterparty_name: str | None = None
+    counterparty_name: str | None = Field(default=None, max_length=500)
     description: str | None = None
-    category: str | None = None
-    source_ref: str | None = None
+    category: str | None = Field(default=None, max_length=50)
+    source_ref: str | None = Field(default=None, max_length=200)
 
 
 class PlannedEventPatch(BaseModel):
     due_date: date | None = None
-    amount_minor: int | None = Field(default=None, gt=0)
+    amount_minor: int | None = Field(default=None, gt=0, le=MAX_MONEY_MINOR, strict=True)
     status: Literal["planned", "partially_paid", "paid", "cancelled"] | None = None
 
 
@@ -134,10 +136,10 @@ class PlannedEventOut(BaseModel):
 
 # --- Forecasts & jobs ---
 class ForecastRequest(BaseModel):
-    account_id: str
-    as_of: date
+    account_id: UUID
+    as_of: date = Field(ge=date(2, 1, 2))
     horizon_days: int = Field(default=30, ge=1, le=180)
-    seed: int | None = None
+    seed: int | None = Field(default=None, ge=-(2**31), le=2**31 - 1, strict=True)
 
 
 class JobAccepted(BaseModel):
@@ -206,15 +208,15 @@ class ExplanationsOut(BaseModel):
 class ScenarioChangeIn(BaseModel):
     kind: Literal["delay_event", "reduce_irregular_inflow", "add_expense", "increase_recurring"]
     target_id: str | None = None
-    shift_days: int | None = None
+    shift_days: int | None = Field(default=None, ge=0, le=3650, strict=True)
     factor: float | None = Field(default=None, ge=0, le=2)
-    amount_minor: int | None = Field(default=None, gt=0)
+    amount_minor: int | None = Field(default=None, gt=0, le=MAX_MONEY_MINOR, strict=True)
     on_date: date | None = None
 
 
 class ScenarioRequest(BaseModel):
-    changes: list[ScenarioChangeIn] = Field(min_length=1)
-    seed: int | None = None
+    changes: list[ScenarioChangeIn] = Field(min_length=1, max_length=50)
+    seed: int | None = Field(default=None, ge=-(2**31), le=2**31 - 1, strict=True)
 
 
 MeResponse.model_rebuild()

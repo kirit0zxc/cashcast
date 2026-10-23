@@ -20,7 +20,7 @@ router = APIRouter(tags=["accounts"], responses=ERROR_RESPONSES)
 def list_accounts(
     company_id: uuid.UUID,
     _company: str = Depends(require_company_access),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> AccountList:
     rows = session.scalars(
         select(Account).where(Account.company_id == company_id).order_by(Account.name, Account.id)
