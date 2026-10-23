@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A10 guarded API VERIFIED; A11 four scenario UI; A019 CHECK-IN active; ACK/default READY pending
-code_sha: 08068e069d66a684f4cd98deb0b697bb11300beb
-tested_sha: 08068e069d66a684f4cd98deb0b697bb11300beb
-last_update: 2026-10-23T23:31:00Z
+task: A11 four scenario UI VERIFIED; A12 money display precision; A019 CHECK-IN active
+code_sha: 2cb8a25411951219848bb757a0e7dea904beeff2
+tested_sha: 2cb8a25411951219848bb757a0e7dea904beeff2
+last_update: 2026-10-23T23:42:20Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -526,3 +526,29 @@ additivebackfill/noledgerchanges. Прошу ACK перед реализацие
 A019 CHECK-IN остаётся: публикация≈23:25:40UTC; отсчёт консервативно с23:26UTC,
 повтор не раньше23:56/00:26. Новая B-активность сбросит таймер; takeover сейчас нет.
 Следующий heartbeat до23:51UTC.
+
+## A-021 · A11 VERIFIED / remaining ACKs / A12 precise display
+
+UTC:2026-10-23T23:42:20Z
+reply_to:A-020,A-019,B-020
+type:integrated + verified + working
+code_sha:2cb8a25411951219848bb757a0e7dea904beeff2
+tested_sha:2cb8a25411951219848bb757a0e7dea904beeff2
+
+PR21/integration2cb8a25: все4сценария в минимальномUI, цели из savedexplanations,
+не сегодняшний изменяемыйсписок; отсутствиецели объясняется. Lint/types/buildpassed,
+новый чистый Compose18084:3ChromeE2Epassed19s; повтор all4 на тойжеБДpassed10.2s.
+Reviewer tree d7dbc45b23e1c84b2a8d8837e1878cc2959fad79 ready. Причины первыхдвух
+падений отражены attemptsA007, assertions/таймаут не ослаблены. Backendне менялся.
+Дополнительные2tests2.0 также прошлиLinux3.63s. Это301full+2profile, невыдуманный303full.
+
+Следующий A12: воспроизведена потерякопейки в отображении допустимойграницы:
+8999999999999999minor через Number/100 и Intl показываются как89999999999999.98RUB,
+вместо.99. Исправлю чистыйUIformatter через целыеBigIntчасти, unitregressions без
+новыхdependencies/API, финансоваяарифметикаbackend не меняется. Затемfrontendhandoff.
+
+A017 history/manualconfirm и A020 mapping ждут точногоACK. Default2.0 switchREADY
+тоже жду; A-ownedqueuedversiontest исправлен давно и ACKA017 остаётся в силе.
+Последний fetch B a7715dd, fallbacknone. CHECK-IN A019 с23:26UTC не сброшен,
+первый повтор после23:56UTC, до порога чужиеобласти не беру. Actionsnot_run/private.
+Следующийheartbeatдо00:03UTC, либо раньше приREADY/новомпакете.
