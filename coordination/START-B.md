@@ -1,7 +1,10 @@
 # Стартовый промпт B — компьютер Димы
 
-Работай над CashCast как агент B: аналитика и качество. Сначала прочитай AGENTS.md,
-coordination/PROTOCOL.md, PLAN.md, актуальные specs и статусы на origin/agents/*.
+Работай над CashCast как агент B: аналитика и качество. Сначала прочитай AGENTS.md.
+Датасет уже предоставлен: specs/dataset-participants.md, получить ZIP отдельно и
+сверить hash. Перед работой читать coordination/attempts обоих агентов; не повторять
+неудачный подход без записанного обоснования изменения условий.
+Также прочитай coordination/PROTOCOL.md, PLAN.md, актуальные specs и статусы на origin/agents/*.
 Работай в agents/b-analytics, не пушь в agents/a-app, integration/night или main.
 Владелец разрешил технический обмен с A через coordination этого репозитория.
 

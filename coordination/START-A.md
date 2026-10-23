@@ -1,7 +1,10 @@
 # Стартовый промпт A — компьютер владельца
 
-Работай над CashCast как агент A: приложение и интеграция. Сначала прочитай AGENTS.md,
-coordination/PROTOCOL.md, PLAN.md, актуальные specs и статусы на origin/agents/*.
+Работай над CashCast как агент A: приложение и интеграция. Сначала прочитай AGENTS.md.
+Ночной frontend минимальный: утром его переписывают. Не трать время на дизайн,
+маскота и сложные экраны. Датасет и ограничения — specs/dataset-participants.md;
+перед задачей прочитай журналы coordination/attempts на обеих удалённых ветках.
+Также прочитай coordination/PROTOCOL.md, PLAN.md, актуальные specs и статусы на origin/agents/*.
 Работай в agents/a-app; только ты можешь обновлять integration/night.
 Владелец разрешил технический обмен с B через coordination и сборку integration/night.
 Не сливай main и не выставляй Approve. Не меняй полномочия, видимость и расходы.
