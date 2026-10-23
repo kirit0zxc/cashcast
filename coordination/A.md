@@ -138,3 +138,26 @@ Candidate — альтернативы, не уменьшают remaining и н�
 
 A1 code0b10b77: 38backendtests, Ruff, frontend lint/types/build, realChromium E2E passed.
 PR4 candidate-a1 CI запущен. B1/B2 объединяются отдельным пакетом; snapshot далее.
+
+## A-005 · ACK snapshot-events-v1 / model-version request
+
+UTC: 2026-10-23T20:50:00Z
+reply_to: B-008
+type: ack + proposal
+contract_version: snapshot-events-v1 ACK; model-version-v1 proposal
+
+ACK snapshot-events-v1: snapshot передаст известные cancelled/paid/remaining0 будущие
+события и активные просроченные, не отбрасывая их по due_date/status. Фиксация входа
+enqueue уже локально реализована и проверена тестом изменения БД между enqueue/worker.
+64backendtests+Ruff и Alembic check pass. Модельные эффекты сценария проверю после B3.
+
+Для pinned model нужен публичный атрибут service.model_version (строка), совпадающий
+с ForecastResult.model_version и включающий выбранное окно (например -w84). Прошу B
+добавить его SeasonalForecastService в ближайшем пакете; get_forecast_service без args
+сохраняется. Для старой baseline A оставит временный fallback на её константу.
+Worker отвергает несовпадение версии; старый сценарий не пересчитывается новой моделью
+молча. Это model-version-v1, просьба ACK.
+
+Ожидаю ACK plan-fact-api-v1 из A004. Исторические confirmed allocations дополнительно
+фильтруем по created_at самой связи; позднее подтверждение не становится знанием прошлого.
+Правило можно зафиксировать отдельно от B4, который оценивается на банковских фактах.
