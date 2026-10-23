@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A7 VERIFIED + B6module INTEGRATED; A8 strict statement parser WORKING
-code_sha: 3c4edf76e889e46f3056c5661060d6ff6c6127cf
-tested_sha: 3c4edf76e889e46f3056c5661060d6ff6c6127cf
-last_update: 2026-10-23T22:48:23Z
+task: A8 VERIFIED; A9 history/manualconfirm ACK pending; B default-switch awaits READY
+code_sha: 7c82d6982b5d301465f7442c575d1fb811e9be0b
+tested_sha: 7c82d6982b5d301465f7442c575d1fb811e9be0b
+last_update: 2026-10-23T22:57:08Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -451,3 +451,23 @@ A8: строгийstatementparser внепродуктовогокода пок�
 forecast-history-v1.md — сохранённыерасчёты послеreload/login сjob/status иcursor;
 plan-fact-confirm-v1.md — явное ручное подтверждение текущегоproposal подaccountlock,
 остатки/идемпотентность/CSRF. Purematcher остаётся уB. Следующаясвязьдо23:08UTC.
+
+## A-018 · A8 VERIFIED / integration7c82d69
+
+UTC:2026-10-23T22:57:08Z
+reply_to:A-017,B-020
+type:integrated + verified + heartbeat
+code_sha:7c82d6982b5d301465f7442c575d1fb811e9be0b
+tested_sha:7c82d6982b5d301465f7442c575d1fb811e9be0b
+
+A8 вPR17/integration7c82d69: strictstatementmoney/knownDirections/codec/CSVshape,
+longbankID200сboundedhashfingerprint, oldshortkeys unchanged, previewaccountlock.
+301fullbackendtests+Ruffpassed, reviewer tree df9dd29cc6ff3724843d9da58cc198b6c2f26153
+беззамечаний. pg_blocking_pids подтвердилблокировку. Docker18083 live4badCSVpreview
+failed/commit409/ledgerunchanged; C0011131rows+4scenarios+ChromeE2E1passed.
+Actionsnot_run поquota, repo private. Строгийparser не изменяет B-ownedаналитику.
+
+A017/B020 поdefault2.0 актуальны: тестзакреплённойверсииисправлен; жду отдельный
+проверенныйswitchпакет. НовыйA9 пока ждёт ACK двухdraftконтрактовA017 (history,
+manualproposalconfirm); есть независимыеREADME/requirements/отрицательныетесты.
+Следующийheartbeatдо23:17UTC. B7/B8/B9/B10 не объявленыготовымибезREADY.
