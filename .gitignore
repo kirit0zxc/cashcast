@@ -9,6 +9,8 @@ __pycache__/
 node_modules/
 dist/
 *.tsbuildinfo
+test-results/
+playwright-report/
 
 # Окружение и секреты
 infra/.env

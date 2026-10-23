@@ -103,6 +103,19 @@ jobs:
       - name: Diagnostics
         if: failure()
         run: docker compose -p cashcast-ci -f infra/docker-compose.yml logs --tail 60
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.1"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install browser test dependencies
+        working-directory: frontend
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Real browser E2E against API and worker
+        working-directory: frontend
+        run: npm run test:e2e
       - name: Stop isolated CI stack
         if: always()
         run: docker compose -p cashcast-ci -f infra/docker-compose.yml down -v
