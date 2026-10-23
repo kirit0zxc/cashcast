@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import base64
+import binascii
 import uuid
 from datetime import date
 
 from fastapi import APIRouter, Depends, Query
-from sqlalchemy import select
+from sqlalchemy import select, tuple_
 from sqlalchemy.orm import Session
 
 from app.api.schemas.common import ERROR_RESPONSES, Page
@@ -57,10 +58,13 @@ def list_transactions(
 
     # Стабильный порядок для курсора: (booked_on, id). Курсор = последняя отданная пара.
     if cursor:
-        c_date, c_id = _decode_cursor(cursor)
-        stmt = stmt.where(
-            (BankTransaction.booked_on, BankTransaction.id) > (c_date, uuid.UUID(c_id))
-        )
+        try:
+            c_date, c_id = _decode_cursor(cursor)
+            boundary = c_date, uuid.UUID(c_id)
+        except (ValueError, UnicodeError, binascii.Error):
+            raise AppError(422, "invalid_cursor", "Некорректный курсор операций") from None
+        # SQL row comparison сохраняет операции той же даты за границей страницы.
+        stmt = stmt.where(tuple_(BankTransaction.booked_on, BankTransaction.id) > boundary)
     stmt = stmt.order_by(BankTransaction.booked_on, BankTransaction.id).limit(limit + 1)
 
     rows = session.scalars(stmt).all()

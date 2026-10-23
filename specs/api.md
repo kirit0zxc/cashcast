@@ -25,6 +25,8 @@
 | POST | `/auth/login` | Вход; ставит cookie сессии и CSRF. |
 | GET | `/auth/me` | Текущий пользователь и его компании. |
 | POST | `/auth/logout` | Выход (удаляет серверную сессию). |
+| GET | `/companies/{id}/accounts` | Счета доступной компании, `{items:[{id,company_id,name,currency}]}`. |
+| GET | `/import-presets` | Именованные mapping CSV, `{items:[{id,name,mapping}]}`; нужна сессия. |
 | POST | `/companies/{id}/imports` | Загрузка выписки (multipart: `file`, `account_id`, `mapping`). Preview: ошибки строк, дубли, период. |
 | POST | `/imports/{id}/commit` | Подтвердить импорт; идемпотентно, повтор не создаёт дубли. |
 | GET | `/companies/{id}/transactions` | Операции; курсорная пагинация (`items`, `next_cursor`), фильтры. |
@@ -46,3 +48,16 @@
 
 `forecast_run` уникален по (account, as_of, horizon, data_version, model_version, seed, scenario_hash).
 Повторный запрос с теми же данными возвращает тот же прогон, а не считает заново.
+
+## app-api-v1: согласованные дополнения
+
+Согласование A-001/B-002: coordination/decisions/app-api-v1.md.
+Список счетов сортируется по name/id, чужая компания возвращает 404.
+Пресет participants-v1 предназначен для одной statements/Cxxx.csv организаторов:
+UTF-8 BOM, разделитель `;`, явные русские направления. Полученный mapping передаётся
+JSON-строкой в multipart импорта. Пресет не импортирует сводный all_operations.csv
+в один счёт и не создаёт компании автоматически.
+
+Минимальный UI использует cookie-сессию и CSRF из /auth/me, получает компании и счета,
+показывает preview до подтверждения, курсорный список операций и 30-дневный прогноз.
+Задание опрашивается до succeeded/failed, после чего загружается неизменяемый результат.

@@ -1,0 +1,20 @@
+/* Минимальное оформление проверочного UI; визуальная переработка запланирована утром. */
+:root { font-family: system-ui, sans-serif; color: #172b41; background: #f3f5f7; }
+body { margin: 0; }
+main { max-width: 1150px; margin: auto; padding: 20px; }
+header { margin-bottom: 20px; }
+.panel { background: white; border: 1px solid #cbd3dc; border-radius: 8px; padding: 20px; margin-bottom: 18px; }
+.narrow { max-width: 420px; }
+.row { display: flex; gap: 16px; flex-wrap: wrap; align-items: end; }
+label { display: grid; gap: 6px; margin-bottom: 12px; }
+input, select, textarea, button { font: inherit; padding: 9px; border: 1px solid #9babbc; border-radius: 4px; }
+button { cursor: pointer; background: #e6edf6; color: #172b41; }
+button:disabled { opacity: .55; cursor: default; }
+textarea { width: 95%; font-family: monospace; }
+details { margin: 14px 0; }
+[role=alert] { color: #a71c25; }
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+th, td { text-align: left; border-bottom: 1px solid #d9e0e7; padding: 10px; }
+small { display: block; max-width: 380px; }
+.chart { width: 100%; min-width: 0; }
