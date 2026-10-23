@@ -8,6 +8,7 @@ __pycache__/
 # Node
 node_modules/
 dist/
+*.tsbuildinfo
 
 # Окружение и секреты
 infra/.env

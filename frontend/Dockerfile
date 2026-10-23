@@ -3,7 +3,7 @@ FROM node:24.18.1-alpine AS build
 WORKDIR /app
 # Кэш слоя зависимостей, пока не менялся lock-файл.
 COPY package.json package-lock.json* ./
-RUN npm ci || npm install
+RUN npm ci
 COPY . .
 RUN npm run build
 

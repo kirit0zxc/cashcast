@@ -40,13 +40,22 @@ uv run alembic upgrade head              # нужен запущенный Postg
 uv run uvicorn app.main:app --reload
 ```
 
-Тесты поднимают **локальный PostgreSQL сами** (через `pgserver`, без Docker):
+Чистые тесты работают без БД. Интеграционные используют только явно выделенную
+PostgreSQL с именем, заканчивающимся на `_test`; `CC_DATABASE_URL` приложения не
+используется как разрешение на очистку. Пример в PowerShell (из корня проекта):
 
-```bash
+```powershell
+docker run -d --name cashcast-test-db -e POSTGRES_USER=cashcast -e POSTGRES_PASSWORD=cashcast-test-local -e POSTGRES_DB=cashcast_test -p 127.0.0.1:55439:5432 postgres:16.10-alpine
 cd backend
-uv run pytest -q                         # или задайте CC_DATABASE_URL на внешний Postgres
+uv sync --frozen
+$env:CC_TEST_DATABASE_URL='postgresql+psycopg://cashcast:cashcast-test-local@127.0.0.1:55439/cashcast_test'
+uv run pytest -q
 uv run ruff check .
 ```
+
+При повторном запуске используйте существующий test-контейнер; не запускайте второй
+с тем же именем. Демо и тесты имеют разные БД/контейнеры. Тесты очищают тестовые таблицы.
+Для чистых вычислительных тестов достаточно `uv run pytest tests/test_baseline.py`.
 
 Регенерация артефактов контракта:
 

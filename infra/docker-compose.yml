@@ -63,7 +63,7 @@ services:
     build:
       context: ../frontend
     ports:
-      - "${WEB_PORT:-8080}:80"  # единственный публичный порт
+      - "127.0.0.1:${WEB_PORT:-8080}:80"  # локальный стенд, без публикации в LAN
     depends_on:
       - api
 

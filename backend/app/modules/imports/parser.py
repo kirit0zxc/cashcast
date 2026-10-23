@@ -41,7 +41,7 @@ class ColumnMapping:
     balance: str | None = None  # остаток на конец дня, если банк его даёт
     delimiter: str = ","
     encoding: str = "utf-8-sig"
-    direction_in_values: tuple[str, ...] = ("in", "credit", "приход", "+")
+    direction_in_values: tuple[str, ...] = ("in", "credit", "приход", "поступление", "+")
     default_currency: str = "RUB"
 
 
