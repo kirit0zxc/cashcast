@@ -29,6 +29,10 @@ test("login → account → preview/commit → worker forecast → logout", asyn
   await expect(page.getByRole("img", { name: "Прогноз остатка: p10, медиана, p90", exact: true })).toBeVisible();
   await page.getByText("Дневные значения и происхождение расчёта", { exact: true }).click();
   await expect(page.getByRole("cell", { name: "2026-09-13", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Причины риска и компоненты", exact: true })).toBeVisible();
+  await page.getByLabel("Дополнительный расход, ₽", { exact: true }).fill("1234,56");
+  await page.getByRole("button", { name: "Проверить сценарий", exact: true }).click();
+  await expect(page.getByTestId("scenario-comparison")).toContainText("1 234,56");
   await page.getByRole("button", { name: "Выйти (demo@example.com)", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Вход", exact: true })).toBeVisible();
   await page.reload();
