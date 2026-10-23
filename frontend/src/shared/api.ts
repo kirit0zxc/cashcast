@@ -24,6 +24,11 @@ export interface ObligationPreview {
   sample_errors: { row: number; field: string; code: string }[]; reused: boolean;
 }
 export interface Accepted { job_id: string; forecast_run_id: string; status: string }
+export interface Explanation {
+  available: boolean; summary: string;
+  items: { kind: string; label: string; amount_minor: number | null; source_ref: string | null;
+    detail: { date?: string; direction?: string; [key: string]: unknown } }[];
+}
 export interface Job { id: string; status: string; error_code: string | null }
 export interface Point {
   point_date: string; inflow_minor: number; outflow_minor: number;

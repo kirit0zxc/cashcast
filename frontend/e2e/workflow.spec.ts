@@ -30,6 +30,10 @@ test("login → account → preview/commit → worker forecast → logout", asyn
   await page.getByText("Дневные значения и происхождение расчёта", { exact: true }).click();
   await expect(page.getByRole("cell", { name: "2026-09-13", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Причины риска и компоненты", exact: true })).toBeVisible();
+  await page.getByRole("combobox", { name: "Вид сценария", exact: true }).selectOption("delay_event");
+  await expect(page.getByRole("button", { name: "Проверить сценарий", exact: true })).toBeDisabled();
+  await expect(page.getByText("В сохранённой базе нет будущего поступления. Добавьте план и пересчитайте базу.")).toBeVisible();
+  await page.getByRole("combobox", { name: "Вид сценария", exact: true }).selectOption("add_expense");
   await page.getByLabel("Дополнительный расход, ₽", { exact: true }).fill("1234,56");
   await page.getByRole("button", { name: "Проверить сценарий", exact: true }).click();
   await expect(page.getByTestId("scenario-comparison")).toContainText("1 234,56");

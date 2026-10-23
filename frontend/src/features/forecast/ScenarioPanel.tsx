@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
-import { CashCastApi, money, probability, rublesToMinor, type Accepted, type Forecast, type Job } from "../../shared/api";
+import { CashCastApi, money, probability, rublesToMinor,
+  type Accepted, type Explanation, type Forecast, type Job } from "../../shared/api";
 
 interface Comparison {
   base_forecast_id: string; scenario_forecast_id: string;
@@ -8,16 +9,44 @@ interface Comparison {
   risk: { base: Forecast["risk"]; scenario: Forecast["risk"] };
 }
 
-// Минимальный сценарий демо: гипотетический расход не меняет ни факт, ни исходный прогноз.
+type ScenarioKind = "add_expense" | "delay_event" | "reduce_irregular_inflow" | "increase_recurring";
+
+// Цели берём из сохранённого расчёта: сегодняшние планы могут отличаться от его снимка.
 export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast }) {
+  const [kind, setKind] = useState<ScenarioKind>("add_expense");
   const [amount, setAmount] = useState("1000");
   const [date, setDate] = useState(base.points[0]?.point_date ?? "");
+  const [percent, setPercent] = useState("20");
+  const [shift, setShift] = useState("7");
+  const [target, setTarget] = useState("");
   const [accepted, setAccepted] = useState<Accepted | null>(null);
+  const explanations = useQuery({ queryKey: ["explanations", base.id],
+    queryFn: ({ signal }) => api.request<Explanation>(`/forecasts/${base.id}/explanations`, { signal }) });
+  const targetKind = kind === "delay_event" ? "planned" : "recurrence";
+  const targets = [...new Map((explanations.data?.items ?? []).filter(item =>
+    item.kind === targetKind && item.source_ref && item.detail.direction === (kind === "delay_event" ? "in" : "out"),
+  ).map(item => [item.source_ref!, item])).values()];
+  const selectedTarget = targets.some(item => item.source_ref === target) ? target : targets[0]?.source_ref ?? "";
+  const needsTarget = kind === "delay_event" || kind === "increase_recurring";
   const mutation = useMutation({ mutationFn: () => {
-    const minor = rublesToMinor(amount);
-    return api.post<Accepted>(`/forecasts/${base.id}/scenarios`, {
-      changes: [{ kind: "add_expense", amount_minor: minor, on_date: date }],
-    });
+    let change: object;
+    if (kind === "add_expense") change = { kind, amount_minor: rublesToMinor(amount), on_date: date };
+    else if (kind === "delay_event") {
+      const days = Number(shift);
+      if (!selectedTarget || !Number.isInteger(days) || days < 1 || days > 3650) {
+        throw new Error("Выберите поступление и задержку от1 до3650дней");
+      }
+      change = { kind, target_id: selectedTarget, shift_days: days };
+    } else {
+      const value = Number(percent);
+      if (!percent.trim() || !Number.isFinite(value) || value < 0 || value > 100) {
+        throw new Error("Укажите процент от0 до100");
+      }
+      if (kind === "increase_recurring" && !selectedTarget) throw new Error("В базе нет регулярного списания");
+      change = { kind, factor: kind === "reduce_irregular_inflow" ? 1 - value / 100 : 1 + value / 100,
+        ...(kind === "increase_recurring" ? { target_id: selectedTarget } : {}) };
+    }
+    return api.post<Accepted>(`/forecasts/${base.id}/scenarios`, { changes: [change] });
   }, onSuccess: value => setAccepted(value) });
   const job = useQuery({ queryKey: ["job", accepted?.job_id],
     queryFn: ({ signal }) => api.request<Job>(`/jobs/${accepted!.job_id}`, { signal }), enabled: !!accepted,
@@ -26,15 +55,43 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
     queryFn: ({ signal }) => api.request<Comparison>(`/forecasts/${accepted!.forecast_run_id}/comparison`, { signal }),
     enabled: job.data?.status === "succeeded" });
   const pending = mutation.isPending || (!!accepted && !job.error && !["succeeded", "failed"].includes(job.data?.status ?? ""));
+  function resetResult() { setAccepted(null); mutation.reset(); }
   function submit(event: FormEvent) { event.preventDefault(); setAccepted(null); mutation.mutate(); }
   const last = comparison.data?.points.at(-1);
-  return <section><h3>3. Что, если добавить расход?</h3>
+  return <section><h3>3. Проверка сценария</h3>
     <form className="row" onSubmit={submit}>
-      <label>Дополнительный расход, ₽<input inputMode="decimal" required value={amount} onChange={e => setAmount(e.target.value)} /></label>
-      <label>Дата расхода<input type="date" required value={date} min={base.points[0]?.point_date}
-        max={base.points.at(-1)?.point_date} onChange={e => setDate(e.target.value)} /></label>
-      <button disabled={pending}>Проверить сценарий</button>
+      <label>Вид сценария<select disabled={pending} value={kind} onChange={e => {
+        setKind(e.target.value as ScenarioKind); setTarget(""); resetResult();
+      }}><option value="add_expense">Дополнительный расход</option>
+        <option value="delay_event">Задержка поступления</option>
+        <option value="reduce_irregular_inflow">Снижение нерегулярной выручки</option>
+        <option value="increase_recurring">Рост регулярного списания</option></select></label>
+      {kind === "add_expense" && <>
+        <label>Дополнительный расход, ₽<input disabled={pending} inputMode="decimal" required value={amount}
+          onChange={e => { setAmount(e.target.value); resetResult(); }} /></label>
+        <label>Дата расхода<input disabled={pending} type="date" required value={date} min={base.points[0]?.point_date}
+          max={base.points.at(-1)?.point_date} onChange={e => { setDate(e.target.value); resetResult(); }} /></label>
+      </>}
+      {needsTarget && <label>Платёж из базового прогноза<select disabled={pending} required value={selectedTarget}
+        onChange={e => { setTarget(e.target.value); resetResult(); }}>
+        {targets.length === 0 && <option value="">Нет подходящих платежей</option>}
+        {targets.map(item => <option key={item.source_ref} value={item.source_ref!}>
+          {item.detail.date}: {money(item.amount_minor)} · {item.source_ref!.slice(0, 8)}
+        </option>)}
+      </select></label>}
+      {kind === "delay_event" && <label>Задержка, дней<input disabled={pending} type="number" required min={1} max={3650}
+        value={shift} onChange={e => { setShift(e.target.value); resetResult(); }} /></label>}
+      {(kind === "reduce_irregular_inflow" || kind === "increase_recurring") && <label>Изменение, %
+        <input disabled={pending} type="number" required min={0} max={100} step="any" value={percent}
+          onChange={e => { setPercent(e.target.value); resetResult(); }} /></label>}
+      <button disabled={pending || (needsTarget && !selectedTarget)}>Проверить сценарий</button>
     </form>
+    {needsTarget && explanations.isPending && <p role="status">Получаем цели из базового расчёта…</p>}
+    {needsTarget && explanations.error && <p role="alert">{explanations.error.message}</p>}
+    {needsTarget && explanations.data && targets.length === 0 && <p>
+      {kind === "delay_event" ? "В сохранённой базе нет будущего поступления. Добавьте план и пересчитайте базу."
+        : "В сохранённой базе нет регулярного списания. Нужна история с подтверждёнными повторами."}</p>}
+    <p>Сценарий использует сохранённую базу. Он не меняет выписку и реальные обязательства.</p>
     {pending && <p role="status">Считаем сценарий по сохранённой базе…</p>}
     {[mutation.error, job.error, comparison.error].filter(Boolean).map((e, i) => <p role="alert" key={i}>{e!.message}</p>)}
     {job.data?.status === "failed" && <p role="alert">Ошибка сценария: {job.data.error_code}</p>}

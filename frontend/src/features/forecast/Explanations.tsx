@@ -1,10 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { CashCastApi, money } from "../../shared/api";
-
-interface Explanation {
-  available: boolean; summary: string;
-  items: { kind: string; label: string; amount_minor: number | null; source_ref: string | null }[];
-}
+import { CashCastApi, money, type Explanation } from "../../shared/api";
 
 // Показываем сохранённые компоненты конкретного расчёта, не выводим причины из графика.
 export function Explanations({ api, forecastId }: { api: CashCastApi; forecastId: string }) {
