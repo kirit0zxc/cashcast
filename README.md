@@ -1,48 +1,157 @@
-# CashCast — прогноз денежного потока для малого бизнеса
+# CashCast · Нейролептик
 
-## Текущий режим: два ночных агента
+Сервис прогноза денег для малого бизнеса: загрузить банковскую выписку, увидеть
+категории и ежедневный остаток, учесть будущий платёж, проверить сценарий «что если».
+Одна компания/один счёт за расчёт, RUB. Интерфейс сейчас минимальный, использует
+настоящие API, PostgreSQL и worker. Фронтенд будут перерабатывать отдельно.
 
-Название CashCast утверждено. Актуальные роли и права: [AGENTS.md](AGENTS.md) и
-[протокол A/B](coordination/PROTOCOL.md). Ниже сохранено исходное описание каркаса;
-его распределение на четверых заменено ночными ролями A/B. Заявления о готовности
-из архива требуют повторной проверки. Начать: [очередь](coordination/PLAN.md),
-[агент A](coordination/START-A.md), [агент B](coordination/START-B.md).
+## Что работает
 
-> Рабочее название продукта — **плейсхолдер** (не финальное). Проект команды «Нейролептик»
-> на 48-часовом хакатоне. Кейс: предприниматель загружает банковскую выписку, сервис
-> категоризирует операции, находит регулярные платежи, учитывает будущие счета и строит
-> ежедневный прогноз остатка на 30+ дней с датой, размером и **модельной** вероятностью
-> кассового разрыва, объяснением причин и сценарием «что если».
+- Cookie-сессия, CSRF и изоляция компаний; список доступных счетов.
+- CSV preview с ошибками строк, подтверждение импорта, защита от дублей, пагинация операций.
+- Пресет организаторского датасета: UTF-8 BOM, `;`, «Поступление/Списание», ИНН как строка.
+- Автокатегории и ручная категория через API; календарные регулярности.
+- Неизменяемый вход задания, фоновые расчёты, p10/p50/p90, причины и происхождение результата.
+- Плановые события и план-факт: безопасные однозначные оплаты, частичный остаток,
+  блокировки от двойного распределения; неоднозначность остаётся предложением.
+- Четыре сценария API: перенос платежа, снижение нерегулярных поступлений,
+  дополнительный расход, увеличение регулярного потока. Сравнение сценария с базой.
+- В UI: вход → импорт → операции → 30-дневный прогноз/причины → дополнительный расход
+  → дневное сравнение. Остальные сценарии, планы и категории доступны через API.
 
-Это каркас (часы 0–4 по плану): общие контракты, по которым команда работает параллельно.
-Продуктовая логика прогноза, категорий и UI — за соответствующими владельцами (ниже).
+Риск — модельная оценка. Текущая проверка **не подтвердила калибровку вероятностей**:
+на опубликованной выборке horizon Brier хуже постоянного ориентира. Нет гарантии
+достоверной вероятности. Подробности и воспроизводимые числа: [evaluation/REPORT.md](evaluation/REPORT.md).
+Расширенная аналитика B5–B10 ещё разрабатывается; её нельзя считать готовой по этому README.
 
-## Запуск одной командой (Docker)
+## Запуск на одном устройстве
 
-```bash
-cp infra/.env.example infra/.env        # при желании поменяйте пароли/порт
-docker compose -f infra/docker-compose.yml up --build
+Нужны Git и Docker Compose v2; на Windows — Docker Desktop с Linux-контейнерами.
+Python/Node на хосте для обычного запуска не нужны. Команды выполняются из корня клона.
+Первая сборка скачивает образы/зависимости; далее используются кэши.
+
+PowerShell:
+
+```powershell
+Copy-Item infra/.env.example infra/.env
+# Открой infra/.env: при необходимости измени WEB_PORT и демо-пароль.
+docker compose --env-file infra/.env -f infra/docker-compose.yml up -d --build
+docker compose --env-file infra/.env -f infra/docker-compose.yml ps -a
+curl.exe --fail http://127.0.0.1:8080/api/v1/health
 ```
 
-- Откроется `http://localhost:8080` (web). Внутри: `api` (FastAPI), `worker`, `postgres`.
-- Наружу публикуется **только** web; api/worker/postgres закрыты.
-- Контейнер `migrate` применяет миграции и (при `CC_SEED_DEMO=true`) создаёт демо-пользователя.
-- Проверка живости: `http://localhost:8080/api/v1/health` → `{"status":"ok"}`.
-
-Демо-вход: `CC_DEMO_EMAIL` / `CC_DEMO_PASSWORD` из `infra/.env` (по умолчанию `demo@example.com`).
-
-## Разработка backend без Docker
+Linux/macOS:
 
 ```bash
-cd backend
-uv sync                                  # Python 3.12, зависимости из uv.lock
-uv run alembic upgrade head              # нужен запущенный PostgreSQL (CC_DATABASE_URL)
-uv run uvicorn app.main:app --reload
+cp infra/.env.example infra/.env
+docker compose --env-file infra/.env -f infra/docker-compose.yml up -d --build
+curl --fail http://127.0.0.1:8080/api/v1/health
 ```
 
-Чистые тесты работают без БД. Интеграционные используют только явно выделенную
-PostgreSQL с именем, заканчивающимся на `_test`; `CC_DATABASE_URL` приложения не
-используется как разрешение на очистку. Пример в PowerShell (из корня проекта):
+Открыть **http://localhost:8080**. При изменении WEB_PORT используй новый порт.
+Демо-вход по умолчанию: **demo@example.com / demo-password**. Если менял значения —
+используй CC_DEMO_EMAIL/CC_DEMO_PASSWORD. Seed создаёт пользователя только при его
+отсутствии; смена env не меняет пароль существующего пользователя в volume.
+
+`migrate` должен завершиться с кодом 0; `api`, `worker`, `web`, `postgres` работают.
+Миграции применяются автоматически до старта API и worker. Сервис web слушает только
+127.0.0.1; PostgreSQL и API не публикуются отдельно. Это локальное развёртывание.
+Не открывай демо-пароли и HTTP-сессию в интернет: публичный TLS-деплой требует отдельной настройки.
+
+## Попробовать за несколько минут
+
+1. Войди и выбери «Расчётный счёт».
+2. Распакуй полученный отдельно ZIP и выбери **одну** `statements/C001.csv`.
+   Нажми «Проверить файл», проверь ошибки, затем «Подтвердить импорт».
+   Не загружай одновременно individual statements и `all_operations.csv`: это те же операции.
+3. Оставь последний день выписки как дату среза (для C001 — 2026-09-30).
+   Нажми «Рассчитать» и дождись worker. Посмотри график, причины, допущения и дневную таблицу.
+4. Ниже задай дополнительный расход и дату внутри горизонта. «Проверить сценарий»
+   покажет изменение по дням. Исходный прогноз и фактические операции сохраняются.
+5. Повторная загрузка того же файла возвращает прежний импорт и не создаёт новые операции.
+
+Исторический прогноз не знает план, добавленный сегодня. Для проверки нового обязательства
+создай его через API и пересчитай на текущую дату UTC. Устаревший остаток будет отмечен
+предупреждением: это ограничение данных, а не новый банковский баланс.
+
+## API для фронтенда и интеграции
+
+Префикс `/api/v1`; машинный контракт [specs/openapi.json](specs/openapi.json),
+описание [specs/api.md](specs/api.md). JSON-схемы генерируются из Pydantic.
+Все изменяющие запросы после login требуют cookie-сессии и `X-CSRF-Token` из `/auth/me`.
+Суммы `*_minor` — целые копейки; `100000` означает 1000 ₽.
+
+Основная цепочка:
+
+```text
+POST /auth/login → GET /auth/me
+GET /companies/{company}/accounts → GET /import-presets
+POST /companies/{company}/imports (multipart: file, account_id, mapping JSON)
+POST /imports/{import}/commit
+POST /companies/{company}/forecasts → job_id + forecast_run_id
+GET /jobs/{job} до succeeded/failed
+GET /forecasts/{forecast} и /forecasts/{forecast}/explanations
+POST /forecasts/{forecast}/scenarios → новое job
+GET /forecasts/{scenario}/comparison
+```
+
+План: `POST /companies/{company}/planned-events`, например:
+
+```json
+{"account_id":"<UUID>","direction":"out","amount_minor":100000,
+ "due_date":"2026-10-29","kind":"manual","counterparty_name":"Поставщик"}
+```
+
+План-факт: `GET /companies/{company}/plan-fact?account_id=<UUID>&as_of=YYYY-MM-DD`.
+POST того же пути подтверждает только безопасные auto-сопоставления на сегодняшнем
+UTC-срезе. Ручное подтверждение неоднозначных кандидатов пока не реализовано.
+Исторический POST409; GET прошлого409, если план редактировался позже среза и его
+прошлая версия отсутствует. `paid`/`cancelled` не возникают повторно из регулярностей.
+
+Примеры `changes` для сценария (один или несколько элементов в одном запросе):
+
+```json
+{"changes":[{"kind":"add_expense","amount_minor":100000,"on_date":"2026-10-29"}]}
+{"changes":[{"kind":"delay_event","target_id":"<planned event UUID>","shift_days":7}]}
+{"changes":[{"kind":"reduce_irregular_inflow","factor":0.8}]}
+{"changes":[{"kind":"increase_recurring","factor":1.1}]}
+```
+
+Даты/цели должны существовать в зафиксированном входе и подходить виду сценария;
+некорректный запрос422. Для increase нужна обнаруженная регулярность. Каждый сценарий
+создаётся от исходной успешной базы; вложенный сценарий409. Сравнение требует того же
+seed/входа/модели/горизонта, иначе409. Ошибки единые: `error.code/message/field_errors/request_id`.
+
+## Данные и восстановление
+
+PostgreSQL хранится в именованном volume `<compose-project>_pgdata`. Не меняй project name
+при обычном перезапуске: это выберет другую БД. `stop`/`start`, `restart`, `down` без `-v`
+сохраняют данные. **Не используй down -v для рабочего демо.**
+
+```powershell
+docker compose --env-file infra/.env -f infra/docker-compose.yml stop
+docker compose --env-file infra/.env -f infra/docker-compose.yml start
+docker compose --env-file infra/.env -f infra/docker-compose.yml logs --tail 60 api worker migrate
+```
+
+Резервная копия без преобразования бинарных байтов PowerShell-перенаправлением:
+
+```powershell
+docker compose --env-file infra/.env -f infra/docker-compose.yml exec -T postgres pg_dump -U cashcast -d cashcast -Fc -f /tmp/cashcast.dump
+$taskPgId = docker compose --env-file infra/.env -f infra/docker-compose.yml ps -q postgres
+docker cp "${taskPgId}:/tmp/cashcast.dump" ./cashcast.dump
+```
+
+Имена пользователя/БД заменить, если менял env. Дамп содержит финансовые данные:
+храни отдельно от Git. Восстановление проверяй в отдельной пустой БД через `pg_restore`,
+не поверх рабочего стенда. Резервная копия не заменяет исходный ZIP.
+
+## Проверки разработки
+
+Python3.12 + uv0.13.5, Node24.18.1; зависимости закреплены backend/uv.lock и frontend/package-lock.json.
+Из backend: `uv sync --frozen`. Чистая аналитика: `uv run pytest tests/analytics -q`.
+Полный backend требует отдельную PostgreSQL БД с суффиксом `_test`: fixtures очищают её.
+Никогда не указывай БД демо для тестов.
 
 ```powershell
 docker run -d --name cashcast-test-db -e POSTGRES_USER=cashcast -e POSTGRES_PASSWORD=cashcast-test-local -e POSTGRES_DB=cashcast_test -p 127.0.0.1:55439:5432 postgres:16.10-alpine
@@ -50,55 +159,60 @@ cd backend
 uv sync --frozen
 $env:CC_TEST_DATABASE_URL='postgresql+psycopg://cashcast:cashcast-test-local@127.0.0.1:55439/cashcast_test'
 uv run pytest -q
-uv run ruff check .
+uv run ruff check . ../evaluation
+uv run python -m app.scripts.export_openapi
 ```
 
-При повторном запуске используйте существующий test-контейнер; не запускайте второй
-с тем же именем. Демо и тесты имеют разные БД/контейнеры. Тесты очищают тестовые таблицы.
-Для чистых вычислительных тестов достаточно `uv run pytest tests/test_baseline.py`.
+Если test-контейнер уже есть, используй `docker start cashcast-test-db`. Frontend:
+`npm ci`, `npm run lint`, `npm run typecheck`, `npm run build` из frontend.
+Для Chromium E2E подними отдельный Compose project на18081 с чистой БД, затем:
+`npx playwright install chromium` и `npm run test:e2e`. Тест пишет синтетический CSV
+в выделенное демо; это проверка интеграции, не качества модели.
 
-Регенерация артефактов контракта:
+В CI три обязательные проверки: backend/PostgreSQL/миграции/OpenAPI, frontend, чистый
+Docker startup + Chromium E2E. Зелёный статус относится к точному проверенному SHA.
 
-```bash
-uv run python -m app.scripts.export_openapi   # specs/openapi.json
-uv run python -m app.scripts.gen_fixtures     # specs/examples/*.json
+Расширенная ручная приёмка на **отдельном локальном демо** (добавляет импорт и тестовый план):
+
+```powershell
+# Из backend, при запущенном web на выбранном порту:
+uv run python -m app.scripts.smoke_demo --base-url http://127.0.0.1:18083 --zip ../data/raw/cashflow_dataset_participants.zip --write-demo-data
 ```
 
-## Структура
+Она проверяет C001, повтор импорта и полную пагинацию, настоящий worker, причины,
+план-факт, все4сценария/сравнение, неизменность базы и logout. Для регулярностей
+использует исторический срез с обнаруженными группами. Пароль/почта читаются из
+CC_DEMO_PASSWORD/CC_DEMO_EMAIL или локальных defaults. Каждый запуск добавляет тестовый план.
 
+## Оценка и ограничения
+
+ZIP передаётся отдельно; [формат/контрольная сумма](specs/dataset-participants.md).
+Не коммитить data/raw, CSV, .env, дампы и токены. Оценка из корня после uv sync:
+
+```powershell
+backend/.venv/Scripts/python.exe evaluation/backtest.py --zip data/raw/cashflow_dataset_participants.zip --phase validation --config evaluation/selected-config.json --output evaluation/validation.json
+backend/.venv/Scripts/python.exe evaluation/backtest.py --zip data/raw/cashflow_dataset_participants.zip --phase holdout --config evaluation/selected-config.json --output evaluation/holdout.json
 ```
-frontend/   React + TypeScript + Vite (Диана)
-backend/    FastAPI, worker, модули расчёта (интегратор + Данил + Дима)
-specs/      контракт API, модель данных, архитектура, вопросы ментору, фикстуры
-evaluation/ backtest и отчёты качества (Данил)
-infra/      Docker Compose, nginx, пример переменных окружения
-```
 
-## Границы владения
+Опубликованный B4: validation517folds; отдельная сентябрьская оценка122folds, MAE
+остатка1 072 364,48₽ против baseline2 775 628,60₽. Это ошибка в рублях, не «процент точности».
+Вероятность горизонта хуже константы; короткая история не показала улучшения. Сентябрь
+уже просмотрен, исправленный повтор не новый независимый holdout. Нет эталонных меток
+категорий/счетов/налогового режима; confidence правил не является accuracy.
 
-| Папка | Владелец | Что внутри |
-|---|---|---|
-| `frontend/` | Диана | экраны фич, график, сценарии |
-| `backend/` ядро/api/imports/jobs/infra/миграции | Интегратор | каркас, контракт, worker, **единственный владелец миграций** |
-| `backend/app/modules/forecasting/`, `evaluation/` | Данил | модель прогноза, риск, качество |
-| `backend/app/modules/categorization/`, `planning/` | Дима | категории, регулярности, план-факт |
+Нет живого банка/1С, OCR, автоматического расчёта налогов и консолидации счетов.
+Налоговые обязательства вводятся только по известным сумме/дате. До полноценной
+истории планов действуют описанные ограничения исторического plan-fact. Риск на конец
+дня, внутридневные кассовые разрывы по этим данным не определяются.
 
-Контракт модулей — `backend/app/modules/contracts.py` (чистые DTO). Данил и Дима реализуют
-Protocol-интерфейсы внутри своих папок; сейчас там честные заглушки с TODO.
+## Архитектура и работа команды
 
-## Правила проекта
+React/TypeScript/Vite/Recharts → nginx → FastAPI/SQLAlchemy/Pydantic → PostgreSQL16;
+worker того же backend-образа читает PostgreSQL jobs с lease. Статистика на CPU без
+внешнего LLM и без обязательного GPU. [Архитектура](specs/architecture.md),
+[модель данных](specs/data-model.md), [API](specs/api.md), [аналитика](specs/forecasting.md).
 
-- `main` — только через PR, финальное одобрение человеком.
-- Комментарии в коде — по-русски, объясняют допущения и причины.
-- Деньги — целые копейки (`*_minor`), **никакого float**.
-- Спеки держим актуальными; общие контракты меняем согласованно.
-- **Никаких выдуманных метрик** и «точности 95%». Числа в фикстурах помечены как синтетические.
-- Назначения платежей, реквизиты, токены и содержимое файлов **в логи не пишем**.
-- Модульный монолит: без микросервисов, WebSocket, GPU и LLM в основной цепочке.
-
-## Статус
-
-Готов сквозной путь: вход → загрузка CSV → commit → прогноз (baseline) → задание worker →
-30 дневных точек. Прогноз сейчас — **заглушка-baseline** «повтор последней недели» (владелец
-финальной модели — Данил). Категоризация и регулярности — заглушки (владелец — Дима). Ручка
-`GET /forecasts/{id}/explanations` отвечает `501` до реализации.
+Ночью A владеет приложением/интеграцией, B — аналитикой. [AGENTS.md](AGENTS.md),
+[протокол](coordination/PROTOCOL.md), [очередь B до08:00](coordination/NIGHT-B-FULL.md).
+Main меняется только через PR с человеческим одобрением. Общая готовая версия ночью
+находится в integration/night; проверенные SHA и ограничения — в coordination/A.md.

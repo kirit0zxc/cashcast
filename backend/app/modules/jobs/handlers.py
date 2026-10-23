@@ -1,13 +1,9 @@
-"""Обработчики заданий. Пока один: расчёт прогноза (baseline). Данил заменит модель внутри.
-
-Обработчик читает ForecastRun по id из payload, собирает снимок, запускает ForecastService,
-сохраняет точки и риск в снимок. Категории/регулярности сейчас не влияют на baseline, но
-снимок уже готов их принять (поля в ForecastInput есть).
-"""
+"""Расчёт закреплённого входа прогноза и синхронизация окончательной ошибки с заданием."""
 
 from __future__ import annotations
 
 from datetime import UTC, date, datetime
+from uuid import UUID
 
 from sqlalchemy.orm import Session
 
@@ -76,6 +72,19 @@ def _parse_scenario(scenario: dict | None) -> list[ScenarioChange]:
             data["on_date"] = date.fromisoformat(data["on_date"])
         changes.append(ScenarioChange(**data))
     return changes
+
+
+def mark_forecast_failed(session: Session, payload: dict, error_code: str) -> None:
+    """Неудача задания не оставляет связанный прогноз вечным pending/running."""
+    try:
+        run_id = UUID(str(payload.get("forecast_run_id")))
+    except ValueError:
+        return
+    run = session.get(ForecastRun, run_id, with_for_update=True)
+    if run is not None and run.status != "succeeded":
+        run.status = "failed"
+        run.error_code = error_code
+        run.finished_at = datetime.now(UTC)
 
 
 # Реестр обработчиков по виду задания. Новые виды добавляются сюда.
