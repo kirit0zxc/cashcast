@@ -1,11 +1,11 @@
 # Статус B
 
-state: READY
-task: B0–B4 complete; B3/B4 integration by A pending
+state: WORKING
+task: B5–B10 extended queue; B5a quality/registry
 base_sha: 21eca62dc8d1f3f7d54544cb272db9c9e9a130e9
 code_sha: 331b6f24629032648b5ded8b0b69e75d33c9e554
 tested_sha: 331b6f24629032648b5ded8b0b69e75d33c9e554
-last_update: 2026-10-23T21:01:32Z
+last_update: 2026-10-23T21:29:23Z
 contract_version: archive-v1 + wiring-v1.1 + allocation-residual-v1 + snapshot-events-v1 + model-version-v1 + plan-fact-api-v1 + comparison-v1 ACK
 
 ## B-001 · CHECK-IN
@@ -342,3 +342,44 @@ A продолжает snapshot/reconcile/explanations/scenario/comparison и о
 Собственная очередь B0–B4 закончена; калибровка/новый holdout — дальнейшее улучшение,
 не выдуманное доказательство готовой вероятности. В main/integration B не пишет.
 CI финального pushed SHA проверю после публикации; сейчас не объявляю его зелёным.
+
+## B-014 · ACK новой цели B5–B10 / план пакетов
+
+UTC: 2026-10-23T21:29:23Z
+reply_to: A-007
+type: ack + proposal
+task: B5–B10
+contract_version: NIGHT-B-FULL 5d80b71; model-registry-v2 proposal
+base_sha: 5bf8cd0134f8776a26cb3b4848fe7cc62a711961
+checkpoint_sha: 5e7c2bd22debb74f2284815be5f9c138a5ead7af
+
+Подтверждаю прямую расширенную цель владельца: законченная аналитика B5–B10,
+до08:00МСК24.10.2026 (05:00UTC). B0–B4 VERIFIED A007/5bf8cd0 не повторяю.
+Собственная ветка чистая; принятая интеграция5bf8cd0 уже в checkpoint5e7c2bd,
+fetch origin/agents/a-app5d80b71 выполнен, новые AGENTS/START/NIGHT/PLAN прочитаны.
+В main/integration/night не пишу. В конце срока checkpoint и честный аудит незавершённого.
+
+Порядок небольших пакетов:
+1. B5a: quality-gates/валидация/ресурсные пределы/горизонты1–180 и совместимый реестр версий.
+2. B5b: заранее зафиксированный эксперимент: альтернативы point forecast, profile CPU/memory,
+   сравнение baseline+старыйseasonal на одинаковых временных срезах.
+3. B6: отдельные fit/calibration/threshold-check/retrospective-test и company split;
+   Brier/reliability/false alarms/lead time/интервалы, проверенный probability-None fallback.
+4. B7: категоризация и устойчивые раздельные обязательства, циклы/календарь/состав источников.
+5. B8: распределение оплат/бюджеты + CSV будущих обязательств по согласованному адаптеру;
+   атомарность и HTTP/ORM остаются у A.
+6. B9: комбинации сценариев/численные эффекты/объяснения/границы горизонта.
+7. B10: единая команда оценки, контрактные инварианты, документация и совместная приёмка.
+Каждый READY — точный code/tested SHA, профильные тесты и один независимый reviewer.
+Между пакетами fetch/ACK/CI, heartbeat примерно20мин; при блокировке независимая очередь.
+
+Предлагаю model-registry-v2 (прошу ACK A):
+- get_forecast_service(model_version: str|None=None): без args текущая продуктовая версия;
+  с точной строкой — закреплённая версия либо ValueError с явной причиной unsupported_model_version.
+- get_supported_model_versions() -> tuple[str,...] для доступных исполнений, без динамического импорта.
+- A передаёт run.model_version в factory worker; сравнение result.model_version остаётся.
+  Новая модель/параметры/quality policy получают новый ID, старую семантику не меняем молча.
+  Старый неподдерживаемый queued/scenario завершается явной ошибкой, не новой моделью.
+DTO не меняется. Смена default модели только после метрик/критериев и отдельного READY.
+CSV будущих счетов предложу отдельно, до ACK общий контракт не меняю.
+ETA первого B5a пакета ~25мин, следующая связь до21:50UTC.
