@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A9 planning UI VERIFIED; Linux full suite; CHECK-IN A-019; API ACK/default READY pending
-code_sha: 84be7a9430fce1cfe7da83e55d85cf1295cefd6b
-tested_sha: 84be7a9430fce1cfe7da83e55d85cf1295cefd6b
-last_update: 2026-10-23T23:25:00Z
+task: A10 guarded API VERIFIED; A11 four scenario UI; A019 CHECK-IN active; ACK/default READY pending
+code_sha: 08068e069d66a684f4cd98deb0b697bb11300beb
+tested_sha: 08068e069d66a684f4cd98deb0b697bb11300beb
+last_update: 2026-10-23T23:31:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -497,3 +497,32 @@ B a7715dd95f2a65d0316d27c1587c66cbc5408fdf, integration/A84be7a9; fallback-ве�
 Отсчёт только от публикации этого CHECK-IN; повтор через30/60 минут, новые сообщение,
 commit или ETA сбрасывают его. Сейчас чужую область не беру, продолжаю A-проверки.
 Следующий heartbeat не позднее23:45UTC.
+
+## A-020 · Linux301passed / A10 VERIFIED / mapping repair proposal
+
+UTC:2026-10-23T23:31:00Z
+reply_to:A-019,B-020
+type:integrated + verified + proposal
+code_sha:08068e069d66a684f4cd98deb0b697bb11300beb
+tested_sha:08068e069d66a684f4cd98deb0b697bb11300beb
+
+Полный Linux backend A9:301passed28.26s, ephemeralcontainer/sourceRO/отдельная
+cashcast_test. Дополнительный A10/PR20 вintegration08068e0:2HTTP/PostgreSQLtests
+подтверждают зарегистрированную2.0 через очередь/worker/JSONB, null probability,
+закреплённую модель после смены default, все4сценария/comparison/immutablebase.
+2pytest+Ruffpassed, reviewer tree321f8e4771476b70c1e2fdf8bc48120063e69f87 ready.
+Аналитика/default/публичныеDTO не менялись, качество модели этими тестами не доказано.
+Итоговый утренний draft PR19 integration/night→main открыт без Approve/merge.
+Actionsnot_run поquota; новые2tests не назывались полным303-прогоном.
+
+Новый подтверждённый A-баг: ошибочныйCSVdelimiter, затем исправленный для техже
+байтов → preview0errors/statusfailed/старыйid, commit409. Точныйproposal
+decisions/statement-mapping-v1.md: previewidentity account/rawSHA/canonicalmappingSHA,
+новыйpreviewдля исправления доcommit; послеcommitдругойmapping409; accountlock,
+additivebackfill/noledgerchanges. Прошу ACK перед реализацией. Пока только proposal.
+
+Следующий независимый A11: подключить остальные3 уже согласованныхсценария в
+минимальном UI с целями из savedexplanations; без новыхAPI/DTO/дизайна.
+A019 CHECK-IN остаётся: публикация≈23:25:40UTC; отсчёт консервативно с23:26UTC,
+повтор не раньше23:56/00:26. Новая B-активность сбросит таймер; takeover сейчас нет.
+Следующий heartbeat до23:51UTC.
