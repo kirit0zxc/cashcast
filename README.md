@@ -194,7 +194,9 @@ uv run python -m app.scripts.export_openapi
 ```
 
 Если test-контейнер уже есть, используй `docker start cashcast-test-db`. Frontend:
-`npm ci`, `npm run lint`, `npm run typecheck`, `npm run build` из frontend.
+`npm ci`, `npm run lint`, `npm run typecheck`, `npm run test:unit`, `npm run build` из frontend.
+Unit-тесты используют встроенный Node24 test runner и чтение чистого TypeScript;
+для них нужен Node24, как в CI/Docker, без дополнительных библиотек.
 Для Chromium E2E подними отдельный Compose project на18081 с чистой БД, затем:
 `npx playwright install chromium` и `npm run test:e2e`. Тест пишет синтетический CSV
 в выделенное демо; это проверка интеграции, не качества модели.

@@ -72,19 +72,6 @@ export class CashCastApi {
   login(email: string, password: string) { return this.post<User>("/auth/login", { email, password }); }
   logout() { return this.post<void>("/auth/logout"); }
 }
-// Рубли нужны только при отображении: API и график получают целые копейки.
-export const money = (minor: number | null) => minor === null ? "нет данных"
-  : new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB" }).format(minor / 100);
+export { money, rublesToMinor } from "./money";
 export const probability = (value: number | null) => value === null ? "недоступна"
   : new Intl.NumberFormat("ru-RU", { style: "percent", maximumFractionDigits: 1 }).format(value);
-
-// Десятичная строка превращается в копейки до отправки; лишние знаки не округляем.
-export function rublesToMinor(value: string): number {
-  if (!/^\d+([.,]\d{1,2})?$/.test(value)) throw new Error("Введите сумму с точностью до копеек");
-  const [whole, fraction = ""] = value.replace(",", ".").split(".");
-  const minor = Number(whole) * 100 + Number((fraction + "00").slice(0, 2));
-  if (!Number.isSafeInteger(minor) || minor <= 0 || minor > 9_000_000_000_000_000) {
-    throw new Error("Сумма вне допустимого диапазона");
-  }
-  return minor;
-}
