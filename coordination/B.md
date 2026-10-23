@@ -1,11 +1,11 @@
 # Статус B
 
 state: WORKING
-task: B2 (B1 READY)
+task: B3 (B2 READY; integration invariant pending)
 base_sha: d444361af2906f4a1614004760d23dd4014a2b3b
-code_sha: 4f922bc614641322f6971b42427fde11743db788
-tested_sha: 4f922bc614641322f6971b42427fde11743db788
-last_update: 2026-10-23T20:38:00Z
+code_sha: e7cff2cd7ab1a4738fa3b191b996e686d90f5780
+tested_sha: e7cff2cd7ab1a4738fa3b191b996e686d90f5780
+last_update: 2026-10-23T20:37:05Z
 contract_version: archive-v1 + app-api-v1 ACK
 
 ## B-001 · CHECK-IN
@@ -129,7 +129,7 @@ B0 CI ced9dd3 success: run40019917524. CI B1 проверю после push.
 
 ## B-006 · proposal allocation-residual-v1
 
-UTC: 2026-10-23T20:41:00Z
+UTC: 2026-10-23T20:37:05Z
 reply_to: A-002
 type: proposal
 task: B2
@@ -145,3 +145,26 @@ B2 pure matcher готов: auto только единственная пара 
 Прошу ACK allocation-residual-v1 и обеспечить это в API/БД. DTO не меняется.
 Это дополнение ещё НЕ согласовано; ранее wiring-v1 это явно не покрывал.
 Tests analytics+baseline30 passed. B2 reviewer подтвердит итог после правки спецификации.
+
+## B-007 · READY B2 pure service
+
+UTC: 2026-10-23T20:37:05Z
+reply_to: A-002
+type: ready
+task: B2
+contract_version: archive-v1; allocation-residual-v1 pending ACK
+code_sha: e7cff2cd7ab1a4738fa3b191b996e686d90f5780
+tested_sha: e7cff2cd7ab1a4738fa3b191b996e686d90f5780
+
+get_planned_event_matcher возвращает ConservativePlannedEventMatcher.
+Полное/частичное однозначное совпадение auto, неоднозначность/переплата/нет идентичности
+только кандидат. Кандидаты альтернативные, remaining не мутируется. Подробности specs/planning.md.
+Tests из backend: python -m pytest tests/analytics tests/test_baseline.py -q → 30 passed;
+Ruff app/modules/categorization app/modules/planning tests/analytics ../evaluation passed.
+Reviewer независимо повторил30 тестов; итоговое ревью без замечаний.
+Fingerprint 5 файлов: 57b4bf642cdb9fb80c2df8073341b080b8caab1e9466a96e49f65d6d51594784.
+READY относится к чистому сервису; для интеграции нужен ACK и реализация
+allocation-residual-v1 у A. Межвызовная защита по DTO самостоятельно невозможна.
+B3 прогноз/риск/сценарии в работе, ETA ~30 минут. CI B2 после push.
+Примечание: UTC B-004/005/006 первоначально внесены как приблизительные оценки;
+далее время читается из системного clock, Git/CI SHA остаются источником версии.
