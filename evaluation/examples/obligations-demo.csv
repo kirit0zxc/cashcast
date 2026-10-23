@@ -1,0 +1,3 @@
+id;counterparty_ref;direction;amount;currency;due_date;available_at;kind;provenance;tax_regime
+DEMO-001;DEMO-COUNTERPARTY-001;out;1000.00;RUB;2026-10-26;2026-10-23;invoice;DEMO synthetic example;
+DEMO-002;DEMO-TAX-SOURCE;out;200.50;RUB;2026-10-28;2026-10-23;tax;DEMO synthetic confirmed-source example;DEMO regime from source

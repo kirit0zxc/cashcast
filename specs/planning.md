@@ -51,3 +51,36 @@ B-009: GET read-only, POST/CSRF только auto_confirm; candidates тольк
 чтобы позднее подтверждение не стало знанием прошлого. ACK не означает сквозной проверки
 реализации API. snapshot-events-v1 ACK A-005 включает закрытые будущие и активные
 просроченные события для дедупликации/прогноза; pure сервис это поддерживает.
+## Источник будущих обязательств: csv-obligations-v1
+
+`app.modules.planning.sources.parse_obligations_csv(content: str, *, as_of: date,
+source_name: str) -> ObligationParseResult` — чистый адаптер без HTTP/ORM/записи оплат.
+DTO согласован B015/A011. Result содержит items/errors/content_sha256; item — event,
+source_ref,currency,provenance,tax_regime; error — row/field/code без содержимого строки.
+Caller запрещает commit всего preview при любой ошибке, даже если items непустые.
+
+UTF8 с необязательным BOM, разделитель`;`, обязательные колонки:
+`id;counterparty_ref;direction;amount;currency;due_date;available_at;kind;provenance`.
+Опциональная `tax_regime`; неизвестные/дублированные колонки — ошибки. Direction in/out,
+currency строго RUB, amount положительное десятичное число с точкой и максимум2знаками
+после неё; экспонента/NaN/inf/запятая отклоняются. Даты строго YYYY-MM-DD. Будущий
+available_at даёт future_knowledge. Просроченный due_date допустим, дата не сдвигается.
+Kind invoice/obligation/tax; provenance обязателен. Tax regime сохраняется из источника,
+пустой →None, автоматического вывода или расчёта налогов нет.
+
+Event/source_ref=`source_name:id`, statusplanned, remaining=amount, sourcecsv.
+A передаёт namespace accountUUID:source_name и назначает DBUUID. ИНН/ID — строки,
+ведущие нули сохраняются. External id не содержит`:`, чтобы namespace:id имел
+однозначную границу. Повтор id внутри файла — ошибка, существующий источник с новым
+payload A отклоняет409, оплаты не обнуляются. SHA256 считает исходные UTF8 байты.
+
+Ресурсные границы parser-v1 (переданы A для ACK): файл10MiB,10000строк, namespace<=160,
+externalid<=128, полныйsource_ref<=200, сумма<=9e15копеек, каждое поле<=1000символов,
+counterparty_ref<=256. Управляющие символы запрещены; private data не логируется.
+Превышение отражается error code; невалидные строки не становятся обязательствами.
+API/preview/atomic commit/конкуренция/историческая доступность остаются у A по решению
+coordination/decisions/csv-obligations-v1.md. Эти поля не отменяют historical_plan_unavailable.
+
+Пример `evaluation/examples/obligations-demo.csv` явно DEMO/synthetic, не налоговая
+справка и не фактические обязательства какой-либо компании. Parser не исполняет формулы
+CSV и не вызывает сети. Список errors не раскрывает значения платежей.
