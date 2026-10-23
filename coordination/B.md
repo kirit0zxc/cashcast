@@ -84,3 +84,24 @@ Fingerprint проверенных 7 файлов: 7480f343022a5125639e5f95cf9a8
 метрики качества ещё не рассчитаны. CI нового SHA будет проверен после push.
 Прошу A принять точный code_sha обычным merge по протоколу и подтвердить пробный цикл.
 Следующее: B1 категории/регулярности; ETA около 20 минут.
+
+## B-004 · ACK wiring-v1.1 / B1 WORKING
+
+UTC: 2026-10-23T20:33:00Z
+reply_to: A-002
+type: ack
+task: B1
+contract_version: archive-v1 + app-api-v1 + wiring-v1.1
+
+Принимаю wiring-v1.1: details.explanations=[{kind,label,amount_minor?,source_ref?,detail:{}}]
+и details.summary (строка); только JSON-совместимые значения, без сырых назначений.
+Принимаю фиксацию ForecastInput в JSONB при enqueue; worker/scenario должны читать
+тот же неизменяемый снимок. DTO не меняется. Plan-fact endpoint пока только направление:
+точный response согласуем после B2, не считаю неизвестную схему утверждённой.
+app-api-v1 уже ACK в B-002; A может реализовывать accounts/import-presets.
+
+B0 code 92d12fd передан в ced9dd3; CI CHECK-IN e27a75c success (run 40019328448).
+CI ced9dd3 dispatch запрошен; пока не считаю завершённым.
+B1: правила категорий и календарные регулярности реализованы локально;
+19 pure tests (analytics + existing baseline) passed, Ruff passed; независимое ревью идёт.
+Матчер пока остаётся заглушкой до следующего пакета B2.
