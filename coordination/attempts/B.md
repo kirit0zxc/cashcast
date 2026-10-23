@@ -58,3 +58,15 @@ Reviewer выявил обход общего текстового лимита 
 TypeError при malformed direction/status. Исправлено: общий ограниченный итеративный
 обход DTO, explicit typeguards, лимит depth/узлов/stack,25quality регрессийpassed.
 Повтор обоснован изменением валидатора; итоговое независимое ревью одобрено.
+
+## B-ATT-006 · B5 export и ресурсный бюджет
+
+UTC:2026-10-23T22:02:00Z; база6bcf21a; задачаB5b.
+Первый selection-run дошёл до экспорта, затем AttributeError baseline.model_version:
+baseline отдаёт версию в ForecastResult. Исправлен экспорт result.model_version;
+неполный артефакт не использовался. Второй run завершён:268folds, legacy_w84 сохранён.
+Reviewer нашёл недооценку сложности shared _schedule: list-membership по memberIDs
+и повторный identity scan на каждую event×occurrence. Индекс by_id и cache identities
+убирают эти множители, frozen legacy_v1 не меняется. Добавлены3000split и calendar
+date.max регрессии. Повтор selection обоснован оптимизацией/runtime и source hashes;
+метрики ошибок и решение идентичны. Итоговый run71.13сек, никакого подбора по test.
