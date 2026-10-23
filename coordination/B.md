@@ -1,12 +1,12 @@
 # Статус B
 
-state: WORKING
-task: B4 (B3 READY; integration wiring pending)
-base_sha: d444361af2906f4a1614004760d23dd4014a2b3b
-code_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
-tested_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
-last_update: 2026-10-23T20:53:00Z
-contract_version: archive-v1 + app-api-v1 ACK
+state: READY
+task: B0–B4 complete; B3/B4 integration by A pending
+base_sha: 21eca62dc8d1f3f7d54544cb272db9c9e9a130e9
+code_sha: 331b6f24629032648b5ded8b0b69e75d33c9e554
+tested_sha: 331b6f24629032648b5ded8b0b69e75d33c9e554
+last_update: 2026-10-23T21:01:32Z
+contract_version: archive-v1 + wiring-v1.1 + allocation-residual-v1 + snapshot-events-v1 + model-version-v1 + plan-fact-api-v1 + comparison-v1 ACK
 
 ## B-001 · CHECK-IN
 
@@ -293,3 +293,52 @@ B1/B2 INTEGRATED21eca62 подтверждено A-006, обычный merge в 
 B4 author holdout повтор точно совпал со всеми JSON полями/prediction hashes;
 независимый validation→holdout ещё идёт (reviewer live21158, in-memory config).
 Финальный B4 не READY до завершения этой проверки. ETA несколько минут.
+
+## B-013 · READY B4 / итог B0–B4
+
+UTC: 2026-10-23T21:01:32Z
+reply_to: A-006
+type: ready
+task: B4
+contract_version: archive-v1 + agreed wiring; comparison-v1 ACK в B-012
+code_sha: 331b6f24629032648b5ded8b0b69e75d33c9e554
+tested_sha: 331b6f24629032648b5ded8b0b69e75d33c9e554
+
+B0–B4 реализованы и проверены. B4: воспроизводимый rolling backtest, фиксированный
+validation выбор84, отдельная сентябрьская оценка, сравнение с baseline, метрики риска,
+cohorts/исключения, исходные hashes и ограничения в evaluation/REPORT.md и JSON.
+Reviewer независимо повторил validation→config→holdout: ВСЕ поля JSON exact match;
+source fingerprints соответствуют коду;51 analytics+baseline tests и Ruff passed.
+Fingerprint8 B4файлов: eb4ec04162a4350d2fd3459436f8267c98ccb0769da50183ef203858ee7e1d12.
+
+Авторские команды (из backend):
+- .venv/Scripts/python.exe -m pytest tests/analytics tests/test_baseline.py -q →51 passed, без БД.
+- CC_TEST_DATABASE_URL на выделенную cashcast_b_test PostgreSQL17;
+  .venv/Scripts/python.exe -m pytest -o addopts='' -q →84 passed,1 upstream warning.
+- .venv/Scripts/ruff.exe check . ../evaluation →passed.
+Backtest из корня (ZIP вне Git):
+- backend/.venv/Scripts/python.exe evaluation/backtest.py --zip ../cashflow_dataset_participants.zip --phase validation --config evaluation/selected-config.json --output evaluation/validation.json
+- backend/.venv/Scripts/python.exe evaluation/backtest.py --zip ../cashflow_dataset_participants.zip --phase holdout --config evaluation/selected-config.json --output evaluation/holdout.json
+Повтор holdout автором дал exact JSON+prediction_sha256; reviewer повторил обе фазы.
+
+Измерения: validation517folds/15510дней, выбран84 по MAE; holdout122folds/3660дней.
+MAE остатка1072364.48₽ против baseline2775628.60₽; это абсолютная ошибка, не accuracy.
+Риск доступен117folds: Brier0.107358 хуже constant validation0.056426;19false alarms
+и7true при пороге0.5. Калибровка не подтверждена. Short-history улучшения нет.
+Нет эталонной accuracy категорий/matching, нет истинных внешних счетов, не проведён
+split новых компаний. Исправленный повтор уже просмотренного holdout раскрыт честно.
+Сырая ZIP/CSV и секреты не опубликованы. Модель после просмотра holdout не подбиралась.
+
+Предыдущие готовые code SHA:
+B0 92d12fdd82c2ac1ccc91309fc726caccc57d1e80;
+B1 4f922bc614641322f6971b42427fde11743db788;
+B2 e7cff2cd7ab1a4738fa3b191b996e686d90f5780;
+B3 f3741f476072ef8d4c81bc82f9f4c555ae4be8a8;
+B3.1 model-version 1028b3451244107f77e7ae3f3133ef7f40dd59e0.
+B0/B1/B2 INTEGRATED в21eca62 (A-006), B подтянул его обычным merge62ed922.
+B3/B3.1/B4 передаются этим итоговым SHA, совместная A2 проверка ещё не VERIFIED.
+A: обычный merge331b6f2 включает всё, в том числе модель и версии; не cherry-pick.
+A продолжает snapshot/reconcile/explanations/scenario/comparison и общий кандидат/CI.
+Собственная очередь B0–B4 закончена; калибровка/новый holdout — дальнейшее улучшение,
+не выдуманное доказательство готовой вероятности. В main/integration B не пишет.
+CI финального pushed SHA проверю после публикации; сейчас не объявляю его зелёным.
