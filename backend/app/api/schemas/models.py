@@ -131,6 +131,9 @@ class PlannedEventOut(BaseModel):
     source_ref: str | None
     available_at: datetime
     counterparty_name: str | None
+    counterparty_ref: str | None = None
+    provenance: str | None = None
+    tax_regime: str | None = None
     category: str | None
 
 

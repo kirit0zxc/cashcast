@@ -96,16 +96,17 @@ def test_worker_keeps_queued_model_when_default_factory_changes(client, session_
     accepted = client.post(f"/api/v1/companies/{frozen_context['company_id']}/forecasts", json={
         "account_id": frozen_context["account_id"], "as_of": "2026-03-01", "horizon_days": 30,
     }).json()
+    queued_model = client.get("/api/v1/forecasts/" + accepted["forecast_run_id"]).json()["model_version"]
     real_factory = handlers.get_forecast_service
 
     def changed_default(model_version=None):
         return real_factory(model_version if model_version is not None else "seasonal-block-bootstrap-1.0-w28")
 
-    # Очередь уже закрепила w84, а default теперь другой: worker обязан передать точную версию.
+    # Очередь уже закрепила модель; последующая смена default не меняет это задание.
     monkeypatch.setattr(handlers, "get_forecast_service", changed_default)
     _run_worker_until_idle(session_factory)
     result = client.get("/api/v1/forecasts/" + accepted["forecast_run_id"]).json()
-    assert result["status"] == "succeeded" and result["model_version"] == "seasonal-block-bootstrap-1.0-w84"
+    assert result["status"] == "succeeded" and result["model_version"] == queued_model
 
 
 def test_unknown_pinned_model_fails_explicitly_without_default_fallback(client, session_factory, frozen_context):

@@ -17,7 +17,7 @@ from sqlalchemy import (
     func,
     text,
 )
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.models.base import Base, created_at_col, uuid_pk
@@ -74,6 +74,11 @@ class PlannedEvent(Base):
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
     counterparty_name: Mapped[str | None] = mapped_column(String(500))
+    counterparty_ref: Mapped[str | None] = mapped_column(String(256))
+    provenance: Mapped[str | None] = mapped_column(Text)
+    tax_regime: Mapped[str | None] = mapped_column(Text)
+    # Первоначальный документ не меняется при ручной правке/оплате события.
+    source_payload: Mapped[dict | None] = mapped_column(JSONB)
     description: Mapped[str | None] = mapped_column(Text)
     category: Mapped[str | None] = mapped_column(String(50))
     recurrence_group: Mapped[str | None] = mapped_column(String(100))

@@ -17,6 +17,7 @@
 | `app_user`, `user_session` | Пользователь и серверная сессия | `user_session.token_hash` — только хеш токена |
 | `company`, `company_member`, `account` | Компании, доступ, счета | доступ строго через `company_member` |
 | `statement_import` | Загруженный файл выписки | `uq (account_id, content_sha256)` — тот же файл не грузится дважды |
+| `obligation_import` | Нормализованное превью счетов/обязательств | `uq (account, source_name, sha, as_of)`; commit целиком |
 | `bank_transaction` | Фактическая операция | `uq (account_id, fingerprint)`; `amount_minor ≥ 0` |
 | `daily_balance` | Остаток на конец дня | `uq (account_id, balance_date)` |
 | `planned_event` | Счёт/обязательство/ручное/регулярное событие | `remaining ≤ amount`; `uq (company, source, source_ref)` |
@@ -26,6 +27,14 @@
 | `job` | Очередь worker | `dedupe_key` уникален; lease + повтор |
 
 ## Разделение вероятностей
+
+Импортированные `planned_event` дополнительно хранят counterparty_ref, provenance,
+tax_regime и неизменяемый source_payload первоначального документа. UUID события
+назначает центр; внешний ключ = accountUUID:source_name:externalID. Повтор идентичного
+документа не отменяет ручные изменения и подтверждённые оплаты. Изменение оригинала
+с тем же source_ref даёт409SOURCE_ID_CONFLICT до записи всего набора. Исходный CSV
+обязательств не хранится; ошибки содержат только row/field/code. Поля старых событий
+nullable; аддитивная миграция не меняет их состояния, суммы или даты.
 
 - `forecast_point.probability_negative` — вероятность минуса **в этот день**.
 - `forecast_run.probability_any_negative` — вероятность хотя бы одного минуса **на всём горизонте**.

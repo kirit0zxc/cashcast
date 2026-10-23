@@ -34,6 +34,7 @@ from app.modules.contracts import ScenarioChange
 from app.modules.forecasting.baseline import MODEL_VERSION
 from app.modules.forecasting.service import get_forecast_service
 from app.modules.forecasting.snapshot import build_snapshot
+from app.modules.forecasting.v2.quality import ForecastInputError, validate_input
 from app.modules.integration.plan_fact import PlanFactService
 from app.modules.jobs import queue
 
@@ -66,6 +67,7 @@ def create_forecast(
         horizon_days=body.horizon_days,
         seed=seed,
     )
+    _validate_before_enqueue(snap.data)
     run = _get_or_create_run(
         session,
         company_id=company_id,
@@ -227,6 +229,7 @@ def create_scenario(
     scenario_hash = hashlib.sha256(
         json.dumps(scenario, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
+    _validate_before_enqueue(frozen)
 
     run = _get_or_create_run(
         session,
@@ -252,6 +255,14 @@ def create_scenario(
     )
     response.headers["Location"] = f"/api/v1/jobs/{job.id}"
     return JobAccepted(job_id=str(job.id), forecast_run_id=str(run.id), status=job.status)
+
+
+def _validate_before_enqueue(data) -> None:
+    try:
+        # Проверяем тот же неизменяемый вход; worker независимо повторяет guard.
+        validate_input(data)
+    except ForecastInputError as exc:
+        raise AppError(422, exc.code, "Вход прогноза некорректен или превышает поддерживаемые пределы") from None
 
 
 def _get_or_create_run(

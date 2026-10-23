@@ -48,3 +48,17 @@ counterparty_ref<=256, сумма<=9e15копеек. Десятичная стр
 без экспоненты/NaN/запятой; датыYYYY-MM-DD. Контрольные символы, неизвестные и
 повторные заголовки отклоняются. Непустые errors запрещают commit всего preview.
 HTTP source_name остаётся1–40; namespace формирует A как accountUUID:source_name.
+
+## Read-only происхождение и capacity: A015/A016/B020 ACK
+
+B020 на remotea7715dd подтвердил точные дополнительные PlannedEventOut поля
+counterparty_ref/provenance/tax_regime:str|None. Старые строкиnull, ручной create/patch
+их не принимает, налоговый режим не выводится автоматически.
+
+Под accountlock CSV/manualcreate/patch соблюдают совокупный count<=2000событий
+(включаяpaid/cancelled, как forecast ResourceLimits) и суммуremaining<=9e15копеек.
+Идентичные пропуски не расходуют бюджет. Несовместимыйcommit целиком409
+forecast_capacity_exceeded. Уменьшение/оплата существующего плана остаётся возможным
+для восстановления старого переполненного счёта. Превью до10000строк не гарантирует,
+что их можно добавить к текущим планам. Передenqueue выполняетсяvalidate_input,
+ошибки422с typedcode; worker независимо повторяет проверку. Старые snapshot не меняются.

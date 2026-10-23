@@ -125,7 +125,7 @@ def build_snapshot(
             kind=e.kind,
             source=e.source,
             available_at=e.available_at.date(),
-            counterparty_ref=e.counterparty_name,
+            counterparty_ref=e.counterparty_ref or e.counterparty_name,
             recurrence_group=e.recurrence_group,
         )
         for e in events

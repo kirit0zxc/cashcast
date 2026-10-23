@@ -66,7 +66,7 @@ class PlanFactService:
             id=str(e.id), direction=Direction(e.direction), amount_minor=e.amount_minor,
             remaining_amount_minor=e.remaining_amount_minor, due_date=e.due_date,
             status=e.status, kind=e.kind, source=e.source, available_at=e.available_at.date(),
-            counterparty_ref=e.counterparty_name, recurrence_group=e.recurrence_group,
+            counterparty_ref=e.counterparty_ref or e.counterparty_name, recurrence_group=e.recurrence_group,
         ) for e in events if e.currency == "RUB"]
         proposals = [p for p in get_planned_event_matcher().match(plans, inputs)
                      if (p.planned_event_id, p.transaction_id) not in pairs]

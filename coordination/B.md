@@ -1,11 +1,11 @@
 # Статус B
 
 state: WORKING
-task: B5b alternative comparison; registry READY
-base_sha: 21eca62dc8d1f3f7d54544cb272db9c9e9a130e9
-code_sha: f9201dbe522f6d9c032a7ab378624524cfde2eb2
-tested_sha: f9201dbe522f6d9c032a7ab378624524cfde2eb2
-last_update: 2026-10-23T21:55:00Z
+task: B6 posthoc new-gap audit and guarded service; B8a CSV READY
+base_sha: 420a8fd
+code_sha: 822b6cd92679bde8510e206d4be4f25343fd24b5
+tested_sha: 822b6cd92679bde8510e206d4be4f25343fd24b5
+last_update: 2026-10-23T22:13:53Z
 contract_version: archive-v1 + wiring-v1.1 + allocation-residual-v1 + snapshot-events-v1 + model-version-v1 + plan-fact-api-v1 + comparison-v1 ACK
 
 ## B-001 · CHECK-IN
@@ -475,3 +475,73 @@ namespaced source_ref, auth/CSRF/изоляция и historical_plan_unavailable
 не объявляется мной VERIFIED. B5b сравнение всё ещё не запускалось: пишу инвариантные
 тесты исследовательского движка, затем фиксированный selection Jan–Mar.
 Следующий heartbeat до22:15UTC; ETA сравнения с профилем ~20минут.
+
+## B-018 · READY B5b alternatives/profile; B6 WORKING
+
+UTC:2026-10-23T22:05:41Z
+reply_to:A-012
+type:ready + heartbeat
+task:B5b
+code_sha:88c56b6e45f047c5fe5b2f9760f9364f3c14077f
+tested_sha:88c56b6e45f047c5fe5b2f9760f9364f3c14077f
+base_sha:420a8fd
+
+Готов пакет сравнения/preregistered point-selection, текущий default не переключён.
+268общихfolds/8040дней/104developmentкомпании, только Jan–Mar и границаApr30.
+MAE₽:baseline2446278.34,seasonal1328239.15,EWM1399894.33,winsor1322081.74,trend1423881.26.
+Winsor gain0.46%<5%, остальные хуже; сохраняюseasonal1.0-w84. Короткая история8folds
+не улучшилась противbaseline, раскрыто в B5-REPORT.md. Риск raw всё ещё хуже ориентира,
+никакой калиброванной вероятности этим пакетом не заявлено. B6 уже запущен отдельно.
+
+Resource P2 изревью исправлен индексом/cached identities в shared schedule;3000split
+и calendarmax регрессии. Frozenlegacy/реестр/default неизменны. Профиль1–180дней,
+source hashes, exclusions/cohorts и reproducible команда — evaluation/selection-v2.json
+и evaluation/B5-REPORT.md. Последний run71.13s, reviewer независимо полностью повторил
+численные метрики/решение, совпадение точное; время не сравнивалось на равенство.
+
+Author:133puretests; fullbackend179passed на выделенной cashcast_b_test/PostgreSQL17,
+Ruff . ../evaluation изbackend, diff-checkpassed. Reviewer133trackedpuretests,
+Ruff/diff/sourcehashespassed. Fingerprint9файлов:
+ed55e237d19de96ec78cda396c986a9db2d2eaba0111f9e6929268d34fbc524b.
+Tree:c327cec799bc8e91051014cc719fbbcb650df2b8. Actionsnot_run поnight-ci-quota-v1.
+
+A012 прочитан. ACKquota/CSVHTTP уже отправленB017/6bcf21a — прошу сверить свежую Bветку.
+Риск fit/check/test считается (~1мин); чтобы разблокировать A, следующий небольшой
+пакет будет CSVparser безHTTP/ORM, ETA~10мин. Затем B6продуктовый quality fallback.
+Следующий heartbeat до22:25UTC. Полный B5–B10 ещё не закончен.
+
+## B-019 · READY B8a CSV adapter / ACK A-013
+
+UTC:2026-10-23T22:13:53Z
+reply_to:A-012,A-013
+type:ready + proposal
+task:B8a
+contract_version:csv-obligations-v1; parser resource bounds proposal
+code_sha:822b6cd92679bde8510e206d4be4f25343fd24b5
+tested_sha:822b6cd92679bde8510e206d4be4f25343fd24b5
+
+Чистый parse_obligations_csv готов в app.modules.planning.sources с согласованными
+DTO/именами. Future knowledge/invalidrows/errors без содержимого, UTF8BOM/semicolon,
+точные копейки независимо от Decimal context, source_ref namespace:id, provenance,
+строковыеИНН/leadingzeros, tax_regime только изисточника. DEMOCSV в evaluation/examples.
+Result.items может содержать валидныеpreviewстроки при errors, commit всегоpreview
+должен быть запрещён при любойошибке. БезHTTP/ORM/записи/сбросаоплат.
+
+Прошу ACK точных parser-v1 границ до HTTPинтеграции:10MiB/10000data rows,
+namespace<=160,externalid<=128 и без':', fullsource_ref<=200,поле<=1000символов,
+counterparty_ref<=256, amount<=9e15копеек. Decimalстрока с точкой,<=2дробныхзнаков,
+безэкспоненты/NaN/запятой; датыYYYY-MM-DD, kindinvoice/obligation/tax.
+Контрольные символы/неизвестные/дублиheader отклоняются. Namespace A ужеaccountUUID:source_name;
+запрет':' толькоexternalid сохраняет однозначность границы пары. ОстальнойHTTP ACKB017.
+
+Author/reviewer18source tests passed, дополнительно precision1/2/28×3roundingmode,
+min/max/overflow sums. Ruff/diffpassed. Reviewerнашёлcontext-rounding, исправленBATT007.
+Tree20f3a2eaed9c39b4203f180838f756a6551727ee; fingerprint5файлов:
+51d7ca457895a80de4ceb137cad290ff4f37dacca37444dcf370067471fc9445.
+Actionsnot_run поnight-ci-quota-v1. Это B8aadapter, не весьB8/совместныйHTTPVERIFY.
+
+A013 интеграцияB5a/registry и ACKquota/HTTP получены; d37d659 скоро подтяну чистымmerge.
+B6 прошёл заранее заданныеBrierpoint-estimate gates, но8из12testpositives ужеnegative
+наas_of. Дополнительный posthoc audit подтверждает лишь4новыхgap-folds; параметры
+не меняю. Готовлю явный продуктовый probabilityNone fallback, а не заявлениедоказанного
+предсказанияновогоразрыва. БлижайшийB6READY~20мин, следующаясвязь до22:33UTC.

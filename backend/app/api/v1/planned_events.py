@@ -14,6 +14,7 @@ from app.core.auth import CurrentUser, get_current_user, require_company_access
 from app.core.deps import get_db
 from app.core.errors import AppError
 from app.core.models import Account, PlannedEvent
+from app.core.plan_capacity import PlanCapacityPolicy
 
 router = APIRouter(tags=["planned-events"], responses=ERROR_RESPONSES)
 
@@ -48,6 +49,7 @@ def create_event(
             raise AppError(404, "not_found", "Счёт не найден")
         if acc.currency != body.currency:
             raise AppError(422, "currency_mismatch", "Валюта события должна совпадать с валютой счёта")
+        PlanCapacityPolicy(session).ensure_change(acc.id, added_count=1, remaining_delta=body.amount_minor)
     event = PlannedEvent(
         company_id=company_id,
         account_id=body.account_id,
@@ -85,6 +87,8 @@ def patch_event(
         session.scalar(select(Account).where(Account.id == event.account_id).with_for_update())
         session.refresh(event)
 
+    previous_remaining = event.remaining_amount_minor
+
     if body.due_date is not None:
         event.due_date = body.due_date
     if body.amount_minor is not None:
@@ -98,6 +102,10 @@ def patch_event(
         event.status = body.status
         if body.status in {"cancelled", "paid"}:
             event.remaining_amount_minor = 0
+    if event.account_id is not None:
+        PlanCapacityPolicy(session).ensure_change(
+            event.account_id, added_count=0, remaining_delta=event.remaining_amount_minor - previous_remaining,
+        )
     session.flush()
     return _to_out(event)
 
@@ -126,5 +134,8 @@ def _to_out(e: PlannedEvent) -> PlannedEventOut:
         source_ref=e.source_ref,
         available_at=e.available_at,
         counterparty_name=e.counterparty_name,
+        counterparty_ref=e.counterparty_ref,
+        provenance=e.provenance,
+        tax_regime=e.tax_regime,
         category=e.category,
     )
