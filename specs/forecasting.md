@@ -106,3 +106,21 @@ assess_quality: префиксная сверка остатков (без кв�
 
 Схема новых экспериментов до запусков: evaluation/EXPERIMENT-B5-B6.md. Сентябрь
 не объявляется нетронутым holdout, заранее ограничены кандидаты и критерии принятия.
+
+## model-registry-v2 и замороженная версия1.0
+
+Контракт A-009 подтверждает get_forecast_service(model_version=None) и
+get_supported_model_versions()->tuple[str,...]. Без args default пока1.0-w84.
+Поддерживаются ровно baseline-repeat-week-0.1 и seasonal1.0-w28/w56/w84.
+Неизвестная версия (включая пустую строку/нестроковый вход) вызывает
+UnsupportedModelVersionError(ValueError) с code unsupported_model_version.
+A передаёт закреплённую run.model_version worker, несовпадение не считается новымпрогнозом.
+
+Реализация legacy_v1 замораживает математику и транзитивные зависимости категоризации,
+регулярностей и сценариев от B4/331b6f2. MANIFEST.json и12golden-выходов на синтетических
+fixture закрепляют их; новые правила продукта не влияют на старые IDs.
+Старые jobs не получают улучшенную математику под прежним именем. Общий resource/input
+boundary quality-v2.0 явно отвергает неподдерживаемый вход, не меняет валидные суммы.
+Новые модели/параметры/gates будут иметь другие model_version; default только отдельнымREADY.
+Для побитового воспроизведения исторических B4 source_fingerprints нужен checkout331b6f2;
+новые отчёты сравнивают frozen legacy численно и хранят собственный манифест.

@@ -1,0 +1,13 @@
+{
+  "origin_commit": "331b6f24629032648b5ded8b0b69e75d33c9e554",
+  "note": "Frozen causal modules; only local import paths and formatting differ.",
+  "files": {
+    "__init__.py": "cd8a61a7c0eb5db353011088b930b125598c008aaf7a75cc9b2fe79bdd88588a",
+    "baseline.py": "7c94eeafa53290bf30247350f065243f1711665ca1df78b0be0717b6fa14d559",
+    "categorization.py": "c63bdb186476bb6c6cf0adcfabc4c9972e69b8bea2c70ed4ddd75aef34912e3f",
+    "factories.py": "0b689417aeddf579106fb759dd1225324074ff3961b116d93e78ecf5b9cdd07a",
+    "recurrence.py": "cf361cd837f36e66bac8708ae4ffcbad3a64d74f2872132a1e9b7c2356620cf5",
+    "scenarios.py": "cb17d4728bf4768b42333b172beea15ed7b9ab3704cf1fede9b7c1222a45af12",
+    "seasonal.py": "d1a5da1caa713d5a93f981e99cc92bd013de3d3d29d4619f426fd2957a6cde0d"
+  }
+}
