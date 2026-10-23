@@ -63,9 +63,9 @@ UTF8 с необязательным BOM, разделитель`;`, обяза�
 `id;counterparty_ref;direction;amount;currency;due_date;available_at;kind;provenance`.
 Опциональная `tax_regime`; неизвестные/дублированные колонки — ошибки. Direction in/out,
 currency строго RUB, amount положительное десятичное число с точкой и максимум2знаками
-после неё; экспонента/NaN/inf/запятая отклоняются. Даты строго YYYY-MM-DD. Будущий
-Целые копейки получаются из десятичных цифр независимо от ambient Decimal context.
-available_at даёт future_knowledge. Просроченный due_date допустим, дата не сдвигается.
+после неё; экспонента/NaN/inf/запятая отклоняются. Целые копейки получаются из десятичных
+цифр независимо от ambient Decimal context. Даты строго YYYY-MM-DD. Будущий available_at
+даёт future_knowledge. Просроченный due_date допустим, дата не сдвигается.
 Kind invoice/obligation/tax; provenance обязателен. Tax regime сохраняется из источника,
 пустой →None, автоматического вывода или расчёта налогов нет.
 
