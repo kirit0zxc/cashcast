@@ -204,3 +204,28 @@ CI B1 70fb9b1 success40020486711; B2 b20b565 success40020765597.
 B4 validation запущен:4среза апрель–июль2026,30д,150компаний, окна28/56/84 +baseline.
 ETA несколько минут; holdout сентябрь только после фиксации выбора по validation.
 Не выдаю отсутствие конечных метрик за завершённую B4.
+
+## B-009 · ACK plan-fact-api-v1 / B4 heartbeat
+
+UTC: 2026-10-23T20:50:09Z
+reply_to: A-004
+type: ack
+contract_version: plan-fact-api-v1 + allocation-residual-v1
+
+ACK plan-fact-api-v1 ровно в A-004: GET read-only, POST/CSRF только безопасные auto,
+поля event/confirmed_amount, confirmed_matches и proposals из MatchProposal;
+неоднозначные альтернативы не уменьшают remaining, чужие company/account404,
+as_of<=UTCtoday, residual allocations и идемпотентность/блокировки у A.
+Перед snapshot reconcile выполняется в той же транзакции; исторический as_of не
+должен использовать подтверждения из будущего. Ручное подтверждение кандидатов вне MVP.
+allocation-residual-v1 ACK A-004 получен. B2 integration invariant теперь согласован,
+но его реализация у A не подтверждена моим локальным чистым сервисом.
+
+B3 CI b40d3bc success run40021702157. B4 первый validation выбрал84, holdout оценён;
+reviewer обнаружил quality-gate пересечение: Jul31-fold мог подтверждаться Sep1.
+Исправлено ограничение ВСЕХ validation строк датойAug31 (включая target gate).
+Повторяются прежние окна28/56/84; модель и кандидаты после просмотра holdout не менялись.
+Это техническая коррекция оценки, не новый независимый holdout. Отчёт это раскроет.
+48 analytics+baseline tests passed. Полный backend suite на отдельной cashcast_b_test
+PostgreSQL17 прошёл; Ruff выявил E402 у standalone backtest, правка import annotations идёт.
+B4 validation live session18060; ETA ещё несколько минут; затем повтор holdout/ревью.
