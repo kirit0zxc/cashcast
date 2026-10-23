@@ -13,6 +13,16 @@ export interface Preview {
   sample_errors: { row: number; field: string; message: string }[]; reused: boolean;
 }
 export interface Commit { inserted: number; skipped_existing: number; error_count: number }
+export interface PlannedEvent {
+  id: string; account_id: string | null; direction: "in" | "out"; amount_minor: number;
+  remaining_amount_minor: number; due_date: string; status: string; source: string;
+  source_ref: string | null; counterparty_name: string | null; counterparty_ref: string | null;
+  provenance: string | null; tax_regime: string | null;
+}
+export interface ObligationPreview {
+  import_id: string; status: string; total_rows: number; valid_count: number; error_count: number;
+  sample_errors: { row: number; field: string; code: string }[]; reused: boolean;
+}
 export interface Accepted { job_id: string; forecast_run_id: string; status: string }
 export interface Job { id: string; status: string; error_code: string | null }
 export interface Point {
@@ -49,6 +59,10 @@ export class CashCastApi {
       headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
     }) });
   }
+  patch<T>(path: string, body: unknown): Promise<T> {
+    return this.request(path, { method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body) });
+  }
   me() { return this.request<User>("/auth/me"); }
   login(email: string, password: string) { return this.post<User>("/auth/login", { email, password }); }
   logout() { return this.post<void>("/auth/logout"); }
@@ -58,3 +72,14 @@ export const money = (minor: number | null) => minor === null ? "нет данн
   : new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB" }).format(minor / 100);
 export const probability = (value: number | null) => value === null ? "недоступна"
   : new Intl.NumberFormat("ru-RU", { style: "percent", maximumFractionDigits: 1 }).format(value);
+
+// Десятичная строка превращается в копейки до отправки; лишние знаки не округляем.
+export function rublesToMinor(value: string): number {
+  if (!/^\d+([.,]\d{1,2})?$/.test(value)) throw new Error("Введите сумму с точностью до копеек");
+  const [whole, fraction = ""] = value.replace(",", ".").split(".");
+  const minor = Number(whole) * 100 + Number((fraction + "00").slice(0, 2));
+  if (!Number.isSafeInteger(minor) || minor <= 0 || minor > 9_000_000_000_000_000) {
+    throw new Error("Сумма вне допустимого диапазона");
+  }
+  return minor;
+}

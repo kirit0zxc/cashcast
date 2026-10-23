@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
-import { CashCastApi, money, probability, type Accepted, type Forecast, type Job } from "../../shared/api";
+import { CashCastApi, money, probability, rublesToMinor, type Accepted, type Forecast, type Job } from "../../shared/api";
 
 interface Comparison {
   base_forecast_id: string; scenario_forecast_id: string;
@@ -14,10 +14,7 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
   const [date, setDate] = useState(base.points[0]?.point_date ?? "");
   const [accepted, setAccepted] = useState<Accepted | null>(null);
   const mutation = useMutation({ mutationFn: () => {
-    if (!/^\d+([.,]\d{1,2})?$/.test(amount)) throw new Error("Введите сумму с точностью до копеек");
-    const [whole, fractional = ""] = amount.replace(",", ".").split(".");
-    const minor = Number(whole) * 100 + Number((fractional + "00").slice(0, 2));
-    if (!Number.isSafeInteger(minor) || minor <= 0) throw new Error("Некорректная сумма");
+    const minor = rublesToMinor(amount);
     return api.post<Accepted>(`/forecasts/${base.id}/scenarios`, {
       changes: [{ kind: "add_expense", amount_minor: minor, on_date: date }],
     });

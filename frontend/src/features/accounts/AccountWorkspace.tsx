@@ -3,6 +3,7 @@ import { useState } from "react";
 import { StatementImport } from "../imports/StatementImport";
 import { Transactions } from "../transactions/Transactions";
 import { ForecastPanel } from "../forecast/ForecastPanel";
+import { PlannedEvents } from "../planning/PlannedEvents";
 import { CashCastApi } from "../../shared/api";
 
 interface Account { id: string; company_id: string; name: string; currency: string }
@@ -33,5 +34,8 @@ function AccountTools({ api, companyId, accountId }: { api: CashCastApi; company
       onCommit={date => { if (date) setLastDate(date); setVersion(v => v + 1); }} />
     <Transactions key={`transactions:${version}`} api={api} companyId={companyId} accountId={accountId} />
     <ForecastPanel key={`forecast:${version}`} api={api} companyId={companyId} accountId={accountId} initialDate={lastDate} />
+    <PlannedEvents api={api} companyId={companyId} accountId={accountId} onChanged={() => {
+      setLastDate(new Date().toISOString().slice(0, 10)); setVersion(v => v + 1);
+    }} />
   </>;
 }
