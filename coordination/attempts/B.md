@@ -50,3 +50,11 @@ Reviewer нашёл, что quality-gate последнего validation cutoff 
 Первый полный backend pytest на cashcast_b_test прошёл. Ruff из backend обнаружил
 E402 standalone backtest: root-config fix удалил noqa как ненужный. Восстановлены
 E402 annotations; дальнейший lint evaluation только с backend/pyproject.toml.
+
+## B-ATT-005 · границы quality-v2.0
+
+UTC:2026-10-23T21:40:36Z; задачаB5a; code2727fdd.
+Reviewer выявил обход общего текстового лимита через события/вложенные DTO и сырой
+TypeError при malformed direction/status. Исправлено: общий ограниченный итеративный
+обход DTO, explicit typeguards, лимит depth/узлов/stack,25quality регрессийpassed.
+Повтор обоснован изменением валидатора; итоговое независимое ревью одобрено.
