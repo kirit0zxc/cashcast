@@ -195,6 +195,11 @@ class SeasonalForecastService:
             raise ValueError("Окно истории должно быть28,56 или84 дня")
         self.lookback_days = lookback_days
 
+    @property
+    def model_version(self) -> str:
+        """Публичная версия для фиксации модели в очереди и сценарном снимке."""
+        return f"{MODEL_VERSION}-w{self.lookback_days}"
+
     def run(self, data: ForecastInput) -> ForecastResult:
         if not 1 <= data.horizon_days <= 366:
             raise ValueError("Горизонт должен быть1–366 дней")
@@ -292,7 +297,7 @@ class SeasonalForecastService:
             }
         )
         return ForecastResult(
-            f"{MODEL_VERSION}-w{self.lookback_days}",
+            self.model_version,
             points,
             risk,
             [

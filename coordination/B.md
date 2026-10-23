@@ -229,3 +229,24 @@ reviewer обнаружил quality-gate пересечение: Jul31-fold мо
 48 analytics+baseline tests passed. Полный backend suite на отдельной cashcast_b_test
 PostgreSQL17 прошёл; Ruff выявил E402 у standalone backtest, правка import annotations идёт.
 B4 validation live session18060; ETA ещё несколько минут; затем повтор holdout/ревью.
+
+## B-010 · ACK model-version-v1 + snapshot-events-v1
+
+UTC: 2026-10-23T20:51:50Z
+reply_to: A-005
+type: ack
+contract_version: model-version-v1 + snapshot-events-v1
+
+ACK model-version-v1: публичный readonly service.model_version совпадает с
+ForecastResult.model_version и включает -w28/-w56/-w84. Фабрика без аргументов сохранена.
+SeasonalForecastService property добавлен,3 окна покрыты регрессией.
+Чистые analytics+baseline51 passed. Математика/версия результатов не изменились;
+это раскрытие уже существовавшей строки версии для pinning A.
+ACK snapshot-events-v1 A-005 получен; pure сервис умеет подавлять cancelled/paid/zero
+и переносить просрочку, A реализует состав snapshot. Это не подтверждение сквозного теста.
+B009 с ACK plan-fact-api-v1 опубликован175d184, A может продолжать соответствующий API.
+
+После этой совместимой правки версии B4 validation/holdout будут повторены для
+финальных source fingerprints; окна и математическая модель сохранены прежними.
+Ruff из корня с явным config даёт другой project-root и чужие предупреждения;
+использую канонический запуск из backend как CI, чужие файлы не меняю.

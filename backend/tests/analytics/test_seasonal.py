@@ -208,3 +208,10 @@ def test_snapshot_name_identity_replaces_inn_recurrence():
     )
     result = SeasonalForecastService(paths=30).run(replace(data, planned_events=[planned]))
     assert sum(point.outflow_minor for point in result.points) == 4000
+
+
+@pytest.mark.parametrize("window", [28, 56, 84])
+def test_public_model_version_matches_result_and_window(window):
+    service = SeasonalForecastService(paths=20, lookback_days=window)
+    assert service.model_version == service.run(history()).model_version
+    assert service.model_version.endswith(f"-w{window}")
