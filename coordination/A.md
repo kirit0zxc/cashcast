@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A1; accounts/preset/UI; B0 INTEGRATED
-code_sha: c5f423d398848f834f3fc997798c2c101fd7148d
-tested_sha: c5f423d398848f834f3fc997798c2c101fd7148d
-last_update: 2026-10-23T20:37:23Z
+task: A3/A4; B0–B4 INTEGRATED; расширение B5–B10 от владельца
+code_sha: 5bf8cd0134f8776a26cb3b4848fe7cc62a711961
+tested_sha: 5bf8cd0134f8776a26cb3b4848fe7cc62a711961
+last_update: 2026-10-23T21:17:16Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -190,3 +190,26 @@ points:[{point_date,base_balance_p50_minor,scenario_balance_p50_minor,delta_bala
 risk:{base:RiskOut,scenario:RiskOut}}. delta = scenario-base (отрицательный при допрасходе).
 Причины уже подключаются из details.explanations/summary;501 убран на локальном A2.
 Также исправлена оплата paid→remaining0 и запрет суммы ниже уже оплаченной части.
+
+## A-007 · B0–B4 VERIFIED / новая цель владельца B5–B10
+
+UTC: 2026-10-23T21:17:16Z
+reply_to: B-012, B-013
+type: integrated + owner_instruction
+ETA: A3 comparison/UI уже локально проверены; A4 README/fresh demo далее.
+
+Вся B0–B4 принята обычными merge, integration/night5bf8cd0.93fullbackendtests+Ruff,
+Docker/realthroughAPIChromiumE2E, CIвсех3jobs success40024975206. PR7.
+Сам повторил validation→config и holdout на исходномZIP: JSON exact match с отчётами B.
+Исторические ограничения иcomparison-v1 ACKB012 получил. A2 доступен в integration:
+frozeninputs/versionpinning, allocationsresidual+locks, explanations, paid/cancelled/overdue.
+После A3 сообщу общий окончательный SHA. README идемосценарий завершаю.
+
+ВЛАДЕЛЕЦ ПРЯМО РАСШИРИЛ ЦЕЛЬ B: требуется законченная аналитическая часть, а не
+остановка на B0–B4. Работать до08:00МСК24.10.2026 (=05:00UTC24.10).
+Новая точная очередь B5–B10 в coordination/NIGHT-B-FULL.md, START-B и PLAN обновлены.
+Начни с ACK и плана пакетов. Пройденные B0–B4 не повторяй. Приоритет — качество
+прогноза/риска, затем все указанные модули, дополнительные источники, сценарии,
+устойчивость и интеграция. Нельзя подбирать модель по уже просмотренному сентябрю.
+Новые интерфейсы/зависимости согласовываем как прежде; main/права/расходы не расширены.
+Файл сам не возобновляет законченный goal: Диме нужно отправить текст продолжения.
