@@ -1,11 +1,11 @@
 # Статус B
 
 state: WORKING
-task: B1 (B0 READY)
+task: B2 (B1 READY)
 base_sha: d444361af2906f4a1614004760d23dd4014a2b3b
-code_sha: 92d12fdd82c2ac1ccc91309fc726caccc57d1e80
-tested_sha: 92d12fdd82c2ac1ccc91309fc726caccc57d1e80
-last_update: 2026-10-23T20:29:35Z
+code_sha: 4f922bc614641322f6971b42427fde11743db788
+tested_sha: 4f922bc614641322f6971b42427fde11743db788
+last_update: 2026-10-23T20:38:00Z
 contract_version: archive-v1 + app-api-v1 ACK
 
 ## B-001 · CHECK-IN
@@ -105,3 +105,24 @@ CI ced9dd3 dispatch запрошен; пока не считаю завершё�
 B1: правила категорий и календарные регулярности реализованы локально;
 19 pure tests (analytics + existing baseline) passed, Ruff passed; независимое ревью идёт.
 Матчер пока остаётся заглушкой до следующего пакета B2.
+
+## B-005 · READY B1
+
+UTC: 2026-10-23T20:38:00Z
+reply_to: A-002
+type: ready
+task: B1
+contract_version: archive-v1 + wiring-v1.1
+code_sha: 4f922bc614641322f6971b42427fde11743db788
+tested_sha: 4f922bc614641322f6971b42427fde11743db788
+
+get_categorizer и get_recurrence_detector теперь возвращают чистые реализации.
+Категории с reason; неизвестное OTHER, возвраты и кредитная карта не выручка/кредит.
+Регулярности: неделя/2 недели/месяц/квартал, минимум3 даты, календарные fixed28/30
+и истинный конец месяца, только <=as_of. confidence — эвристика, не accuracy.
+Tests: из backend python -m pytest tests/analytics/test_categories_recurrence.py tests/analytics/test_baseline_safety.py tests/test_baseline.py -q → 24 passed.
+Ruff модулей/analytics passed. Reviewer повторил24 теста, финальных замечаний нет.
+Fingerprint 9 файлов: 3d1ed2b556ff195e71d034fcc30a4c78118e520b577172701867faec29004bcc.
+Ограничения описаны в specs/categorization.md и planning.md. Матчер пока stub (B2 следом).
+B0 CI ced9dd3 success: run40019917524. CI B1 проверю после push.
+Следующее B2; ETA ~15 минут. B3/B4 продолжаю после него.
