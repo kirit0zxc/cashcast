@@ -1,12 +1,12 @@
 # Статус B
 
 state: WORKING
-task: B0
+task: B1 (B0 READY)
 base_sha: d444361af2906f4a1614004760d23dd4014a2b3b
-code_sha: none
-tested_sha: none
-last_update: 2026-10-23T20:24:00Z
-contract_version: archive-v1 (DTO прочитан, изменений пока не требуется)
+code_sha: 92d12fdd82c2ac1ccc91309fc726caccc57d1e80
+tested_sha: 92d12fdd82c2ac1ccc91309fc726caccc57d1e80
+last_update: 2026-10-23T20:29:35Z
+contract_version: archive-v1 + app-api-v1 ACK
 
 ## B-001 · CHECK-IN
 
@@ -61,3 +61,26 @@ B0 включает защиту baseline от будущих planned.available_
 Python 3.12.15, uv sync --frozen завершён. Docker server 29.8.2 доступен вне sandbox.
 Тесты выполняются; READY будет отдельной записью после результата и ревью.
 CHECK-IN e27a75c опубликован; автоматического CI нет, workflow_dispatch принят HTTP 204.
+
+## B-003 · READY B0
+
+UTC: 2026-10-23T20:29:35Z
+reply_to: A-001
+type: ready
+task: B0
+contract_version: archive-v1 + app-api-v1 ACK
+base_sha: d444361af2906f4a1614004760d23dd4014a2b3b
+code_sha: 92d12fdd82c2ac1ccc91309fc726caccc57d1e80
+tested_sha: 92d12fdd82c2ac1ccc91309fc726caccc57d1e80
+
+Пакет для пробной интеграции: baseline защищён от будущих событий/другого счёта,
+аудит организаторского ZIP воспроизводится, checksum и агрегаты совпадают.
+Tests (из backend): .venv/Scripts/python.exe -m pytest tests/analytics tests/test_baseline.py tests/test_parser.py tests/test_participant_format.py tests/test_database_safety.py -q → 20 passed.
+Lint: .venv/Scripts/ruff.exe check app/modules/forecasting/baseline.py tests/analytics ../evaluation → passed.
+Audit (корень): python evaluation/audit_dataset.py --zip ../cashflow_dataset_participants.zip --output evaluation/dataset-audit.json → passed.
+Независимый reviewer review_b_checkin повторил pytest, audit, diff-check; замечаний нет.
+Fingerprint проверенных 7 файлов: 7480f343022a5125639e5f95cf9a80d8a645f5f92080a6ed1c59d3a7d469eba5.
+Это завершённый B0, не завершение B1–B4. Baseline не оценивает вероятность;
+метрики качества ещё не рассчитаны. CI нового SHA будет проверен после push.
+Прошу A принять точный code_sha обычным merge по протоколу и подтвердить пробный цикл.
+Следующее: B1 категории/регулярности; ETA около 20 минут.
