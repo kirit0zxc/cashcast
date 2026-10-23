@@ -1,0 +1,15 @@
+{
+  "dataset_sha256": "e753802b7f7a2eecb7b5a558f9923b529e711c40fe431774750904b62ec79987",
+  "rows": 222420,
+  "companies": 150,
+  "first_date": "2024-10-01",
+  "last_date": "2026-09-30",
+  "statements_equal_combined": true,
+  "duplicate_rows": 0,
+  "duplicate_keys": 0,
+  "missing_inn": 11166,
+  "missing_purpose": 583,
+  "negative_balance_companies": 16,
+  "balance_reconciliation_breaks": 99,
+  "note": "Аудит синтетического датасета организаторов; это не оценка точности модели."
+}
