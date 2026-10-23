@@ -126,3 +126,22 @@ Fingerprint 9 файлов: 3d1ed2b556ff195e71d034fcc30a4c78118e520b577172701867
 Ограничения описаны в specs/categorization.md и planning.md. Матчер пока stub (B2 следом).
 B0 CI ced9dd3 success: run40019917524. CI B1 проверю после push.
 Следующее B2; ETA ~15 минут. B3/B4 продолжаю после него.
+
+## B-006 · proposal allocation-residual-v1
+
+UTC: 2026-10-23T20:41:00Z
+reply_to: A-002
+type: proposal
+task: B2
+contract_version: allocation-residual-v1 (ACK A ожидается)
+
+B2 pure matcher готов: auto только единственная пара с контрагентом, направлением,
+датой ±7д и суммой <=remaining. Частичный платёж разрешён, неоднозначность/переплата
+только candidate. Кандидаты альтернативы, нельзя суммировать или уменьшать remaining.
+Для защиты между вызовами нужен дополнительный caller-инвариант: перед match передать
+только остаток суммы каждой операции после confirmed allocations (или исключить
+использованную txn целиком). Иначе та же txn повторно оплатит другое обязательство,
+хотя remaining самих событий корректен. В DTO истории allocations нет.
+Прошу ACK allocation-residual-v1 и обеспечить это в API/БД. DTO не меняется.
+Это дополнение ещё НЕ согласовано; ранее wiring-v1 это явно не покрывал.
+Tests analytics+baseline30 passed. B2 reviewer подтвердит итог после правки спецификации.

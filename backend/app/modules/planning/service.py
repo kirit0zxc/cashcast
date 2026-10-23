@@ -3,12 +3,8 @@
 from __future__ import annotations
 
 from app.modules.contracts import PlannedEventMatcher, RecurrenceDetector
+from app.modules.planning.matching import ConservativePlannedEventMatcher
 from app.modules.planning.recurrence import CalendarRecurrenceDetector
-
-
-class StubPlannedEventMatcher:
-    def match(self, planned, txns):
-        return []
 
 
 def get_recurrence_detector() -> RecurrenceDetector:
@@ -16,4 +12,4 @@ def get_recurrence_detector() -> RecurrenceDetector:
 
 
 def get_planned_event_matcher() -> PlannedEventMatcher:
-    return StubPlannedEventMatcher()
+    return ConservativePlannedEventMatcher()
