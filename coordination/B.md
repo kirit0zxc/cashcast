@@ -1,11 +1,11 @@
 # Статус B
 
 state: WORKING
-task: B3 (B2 READY; integration invariant pending)
+task: B4 (B3 READY; integration wiring pending)
 base_sha: d444361af2906f4a1614004760d23dd4014a2b3b
-code_sha: e7cff2cd7ab1a4738fa3b191b996e686d90f5780
-tested_sha: e7cff2cd7ab1a4738fa3b191b996e686d90f5780
-last_update: 2026-10-23T20:37:05Z
+code_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
+tested_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
+last_update: 2026-10-23T20:44:22Z
 contract_version: archive-v1 + app-api-v1 ACK
 
 ## B-001 · CHECK-IN
@@ -168,3 +168,39 @@ allocation-residual-v1 у A. Межвызовная защита по DTO сам
 B3 прогноз/риск/сценарии в работе, ETA ~30 минут. CI B2 после push.
 Примечание: UTC B-004/005/006 первоначально внесены как приблизительные оценки;
 далее время читается из системного clock, Git/CI SHA остаются источником версии.
+
+## B-008 · READY B3 / snapshot-events-v1 proposal
+
+UTC: 2026-10-23T20:44:22Z
+reply_to: A-003
+type: ready
+task: B3
+contract_version: archive-v1 + wiring-v1.1; snapshot-events-v1 pending ACK
+code_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
+tested_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
+
+get_forecast_service теперь SeasonalForecastService: weekday остаточный поток,
+календарные регулярности и planned.remaining без двойного счёта,200 парных недельных
+bootstrap путей, p10/p50/p90, дневной и горизонтный риск,4 сценария и explanations
+по wiring-v1.1. При плохой/короткой истории вероятность None. Модельные оценки,
+не гарантия; исходный DTO не мутируется. Источник истинного риска — наблюдаемый счёт.
+Tests: из backend python -m pytest tests/analytics tests/test_baseline.py -q →44 passed.
+Ruff forecasting +analytics passed. Reviewer независимо повторил44tests и итоговую логику.
+Fingerprint5файлов:3919c0d8269404c9cfc2a1113395d0e9a267026c0cc4ee7f6d3fc225f060b8dd.
+Подробности/ограничения specs/forecasting.md; default84 пока до выбора окна на validation B4.
+
+Для реальной интеграции требуется snapshot-events-v1 (прошу ACK A):
+- передавать известные на as_of cancelled/paid/remaining0 события будущих occurrence,
+  чтобы закрытый/отменённый платёж не возрождался из исторической регулярности;
+- передавать активные просроченные события, а не только due_date>as_of:
+  модель явно предполагает оплату завтра; это не доказательство срока;
+- сохранять original snapshot для базы/сценария. Дедупликация понимает planned name
+  против txn.INN+name; связь recurrence_group предпочтительна.
+Текущий snapshot.py фильтрует cancelled и due<=as_of, поэтому READY pure сервиса
+не означает, что эти случаи уже работают через приложение. DTO менять не требуется.
+
+B0 уже INTEGRATED c5f423d, подтянут обычным merge dd9015b в чистую B ветку.
+CI B1 70fb9b1 success40020486711; B2 b20b565 success40020765597.
+B4 validation запущен:4среза апрель–июль2026,30д,150компаний, окна28/56/84 +baseline.
+ETA несколько минут; holdout сентябрь только после фиксации выбора по validation.
+Не выдаю отсутствие конечных метрик за завершённую B4.
