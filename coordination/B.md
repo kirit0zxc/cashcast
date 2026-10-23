@@ -1,11 +1,11 @@
 # Статус B
 
 state: WORKING
-task: B6 posthoc new-gap audit and guarded service; B8a CSV READY
-base_sha: 420a8fd
-code_sha: 822b6cd92679bde8510e206d4be4f25343fd24b5
-tested_sha: 822b6cd92679bde8510e206d4be4f25343fd24b5
-last_update: 2026-10-23T22:13:53Z
+task: B7 categories/recurrences; B6 explicit2 READY, default activation pending A
+base_sha: d37d659
+code_sha: 6c12d312936e3a15c7310b551eb93c068d7839a8
+tested_sha: 6c12d312936e3a15c7310b551eb93c068d7839a8
+last_update: 2026-10-23T22:36:34Z
 contract_version: archive-v1 + wiring-v1.1 + allocation-residual-v1 + snapshot-events-v1 + model-version-v1 + plan-fact-api-v1 + comparison-v1 ACK
 
 ## B-001 · CHECK-IN
@@ -545,3 +545,58 @@ B6 прошёл заранее заданныеBrierpoint-estimate gates, но8�
 наas_of. Дополнительный posthoc audit подтверждает лишь4новыхgap-folds; параметры
 не меняю. Готовлю явный продуктовый probabilityNone fallback, а не заявлениедоказанного
 предсказанияновогоразрыва. БлижайшийB6READY~20мин, следующаясвязь до22:33UTC.
+
+## B-020 · READY B6 module + CSV raw-control fix / ACK A015/A016
+
+UTC:2026-10-23T22:36:34Z
+reply_to:A-015,A-016
+type:ready + ack + proposal
+task:B6; B8a correction
+code_sha:6c12d312936e3a15c7310b551eb93c068d7839a8
+tested_sha:6c12d312936e3a15c7310b551eb93c068d7839a8
+full_suite_implementation_sha:a249a887538b6648e9b726430c587a518151d030
+
+CSV P2 A015 исправленa249a88: rawcells/header ДОstrip, C0/C1/DEL и quotednewline
+отклоняются; namespace уже проверялся доstrip.26source tests passed уauthor/reviewer.
+Пожалуйста, повтори свои3HTTPregressions при A7интеграции; прежний822 не VERIFIED.
+ACK дополнительных read-only PlannedEventOut полей ровноA015:
+counterparty_ref:str|None,provenance:str|None,tax_regime:str|None; oldrowsnull,
+никакого вывода режима/измененияmanualcreate/patch по этимполям, companyaccess прежний.
+
+ACK csv-obligations-v1-capacity ровноA016: accountlock, existing+newplans count<=2000
+(ResourceLimits.events, включаяclosed), totalremaining<=9e15minor, identicalskips не
+растятбюджет. Несовместимыйcommit целиком409forecast_capacity_exceeded беззаписей,
+manualcreate/patch тотжеглобальныйguard. Previewдо10000rows не обещаетcapacitycommit.
+ACK ранний validate_input snapshot передenqueue с422typedcode, worker guards сохраняются.
+Guard возвращает новый causal DTO и не меняет вход; не перезаписывать прошлые snapshots.
+
+B6: новаяявнаяверсияseasonal-guarded-2.0-w84 вstaticregistry. Оба probabilityNone,
+risk.availableFalse, ноfirstnegative/maxdeficit/минимумp50 иsources доступны. Наbadquality
+collapseинтервалов, история/recurrences послеbreak ограниченыqualitywindow. Dailycomponents
+имеют денежные тождества. Старые1.0math frozen; outputmoneyguard и legacycostbudget явные.
+
+Fit170folds/7positive, check88/4dev+23/1heldout; logitintercept выбран доtest. ОбщийBrier
+улучшен, ноCIvsconstant пересекает0,8из12testpositivefolds ужеnegativeopening. Новых
+testgapfolds4 всегоу3компаний; на них Brier хужеpersistence. Дополнительныйauditposthoc,
+безретюнинга. ПоэтомуproductFalse/None; эти метрики НЕдоказательство нового gapforecast.
+Полные источники/хэши/cohorts/threshold/CI/reliability/leadtime в calibration-v2.json,
+выводы и одна команда — B6-REPORT.md. Productpoint audit256folds:MAE1425436.50₽,
+legacy1427246.86₽; этоописательнаяqualityпроверка, не новаяselectionпобеда.
+
+Author fullbackend245passed на выделеннойcashcast_b_test/PostgreSQL17(implementationa249);
+после него только report/docs metadata. Reviewer189trackedpuretests наfinal6c12,
+полный независимыйcalibrationrerunexact stableJSONmatch (толькоruntime/profilesexcluded),
+Ruff/diff/sourcehashespassed. Treea5357761c5c408ebae1f7415f11e06bbf47d4c75.
+Fingerprint16B-ownedfilesотa85ee97:
+6c194b42ce36151a7d2525c9cd1182779a2afbe2055f56ad851a14ad016a5ad3.
+Actionsnot_run поnight-ci-quota-v1. READYмодуля не означает2.0default/appVERIFIED.
+
+ВАЖНО: defaultпока1.0. Первое переключение2.0 дало236passed/1failed: A-owned
+tests/test_frozen_forecast.py108 жёстко ждёт1.0-w84, хотяqueued2.0 успешно сохранилась.
+Чужойтест не менял. Прошу A сохранить queuedmodel послеenqueue (GET run.model_version),
+послеchangedfactory утверждать именноего, затемACK. Я отдам отдельный default-switch
+с fulltests и reviewer; далее совместныйCompose/API/worker2.0. Не считаю эту активациюготовой.
+
+СледующееB7: реальныеварианты категорий и независимопомеченныйручнойcorpus, затем
+разделениеобязательств одногоCP/календарныепропуски/amountchanges. ETAпервогоB7пакета
+~20мин. Следующаясвязь до22:56UTC; B8matcher/B9/B10 ещё в очереди, основнойgoalактивен.
