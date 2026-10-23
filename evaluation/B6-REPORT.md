@@ -56,7 +56,7 @@ Brier0.021624 хуже persistence0.016484 и константы0.017113. Heldou
 хуже persistence0.020000 и константы0.020303. Persistence сохраняет знак известного
 остатка и при неотрицательномopening прогнозирует отсутствие минуса.
 
-Из4новыхtestgapfolds selected порог обнаружил2 с16ложными тревогами, precision2/18,
+Новые4testgapfolds относятся всего к3компаниям. Selected порог обнаружил2 с16ложными тревогами, precision2/18,
 recall2/4. Leadtime у этих двух truealerts5 и25дней — слишком малая опора для обещания
 предупреждения. Поэтому product probability удержана. Уточнение политики не используется
 для подбора иного калибратора на просмотренномtest. None не является оценкой нулевого риска.
@@ -84,7 +84,7 @@ resource guards ограничивают стоимость сверки/legacy 
 На крупнейшем входе3215операций локальный профиль2.0 горизонтов1/7/30/90/180:
 с tracemalloc0.707/0.674/0.792/0.876/1.314сек и peak Python allocator менее2.60МБ
 в последнем запуске. Это не RSS и не SLA; времена зависят от нагрузки и приведены
-вJSON. Без tracemalloc медиана30-дневного расчёта около0.065сек.
+вJSON. Без tracemalloc медиана30-дневного расчёта0.0755сек.
 
 Воспроизведение из корня:
 `backend/.venv/Scripts/python.exe evaluation/calibrate_v2.py --zip ../cashflow_dataset_participants.zip --output evaluation/calibration-v2.json`.
