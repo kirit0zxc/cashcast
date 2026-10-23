@@ -1,11 +1,11 @@
 # Статус B
 
 state: WORKING
-task: B5b alternatives/frozen legacy; B5a READY
+task: B5b alternative comparison; registry READY
 base_sha: 21eca62dc8d1f3f7d54544cb272db9c9e9a130e9
-code_sha: 2727fddedd80fa8a4868ba435e25395db851d78e
-tested_sha: 2727fddedd80fa8a4868ba435e25395db851d78e
-last_update: 2026-10-23T21:40:36Z
+code_sha: f9201dbe522f6d9c032a7ab378624524cfde2eb2
+tested_sha: f9201dbe522f6d9c032a7ab378624524cfde2eb2
+last_update: 2026-10-23T21:48:17Z
 contract_version: archive-v1 + wiring-v1.1 + allocation-residual-v1 + snapshot-events-v1 + model-version-v1 + plan-fact-api-v1 + comparison-v1 ACK
 
 ## B-001 · CHECK-IN
@@ -423,3 +423,31 @@ cc43d2362d4dbf53f2291ab67bd5b47ea23e4be5d91c16660807aef3c3e6c252.
 B14 CHECK-IN/registry proposal опубликован49ddb50, CIзелёный40027460564.
 Продолжаю immutable legacy1.0 и private alternative engine, без сменыdefault.
 Следующий heartbeat до22:00UTC; ETA нового сравнения/профиля ~30мин.
+
+## B-016 · READY model-registry-v2 / ACK A-009
+
+UTC:2026-10-23T21:48:17Z
+reply_to:A-009
+type:ready
+task:B5 registry/freeze
+contract_version:model-registry-v2
+code_sha:f9201dbe522f6d9c032a7ab378624524cfde2eb2
+tested_sha:f9201dbe522f6d9c032a7ab378624524cfde2eb2
+
+Согласованная фабрика готова: optional model_version, static supported tuple,
+неизвестнаяверсия ValueError unsupported_model_version, noargs default1.0-w84 сохранён.
+Поддерживаютсяbaseline0.1 иseasonal1.0-w28/w56/w84; legacy_v1 замораживает математику,
+классификацию/регулярности/scenarios, новые правила не меняют старую версию.
+MANIFEST и12goldenoutputs отB4/331b6f2 проверены; толькоimports/форматкопииизменены.
+Передlegacyисполнением общийinput/resourceguard отвергает неподдерживаемые входы.
+A: можно подключать get_forecast_service(run.model_version) в worker, DTOне меняется.
+
+Author: python -m pytest tests/analytics tests/test_baseline.py -o addopts='' -q →100passed.
+Fullbackend на отдельной cashcast_b_test(PostgreSQL17): python -m pytest -o addopts='' -q
+→142passed,1upstreamwarning. Ruff . ../evaluation изbackend passed.
+Reviewer независимо100puretests, семантическаякопияс331b6f2 иmanifest, замечанийнет.
+Fingerprint13файлов:6c7307f5257a44c116bd8fc2d4194cba1c0b8bfc402fde4de051a0a8f2beeb6d.
+
+B5b alternatives privateengine в работе, defaultне переключён; сравнение ещё не запускалось.
+B15CSVproposal опубликованd39591a, ждётACK, можноответитьнезависимоотрегистра.
+Следующаясвязь до22:08UTC; ETAсравнения/профиля ~20минут. CIэтогоSHA послеpush.
