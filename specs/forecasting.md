@@ -110,7 +110,8 @@ assess_quality: префиксная сверка остатков (без кв�
 ## model-registry-v2 и замороженная версия1.0
 
 Контракт A-009 подтверждает get_forecast_service(model_version=None) и
-get_supported_model_versions()->tuple[str,...]. Без args default пока1.0-w84.
+get_supported_model_versions()->tuple[str,...]. Без args default seasonal-guarded-2.0-w84
+(до B6 применялся1.0-w84). Старые точные версии остаются доступны для replay.
 Поддерживаются ровно baseline-repeat-week-0.1 и seasonal1.0-w28/w56/w84.
 Неизвестная версия (включая пустую строку/нестроковый вход) вызывает
 UnsupportedModelVersionError(ValueError) с code unsupported_model_version.
@@ -146,3 +147,45 @@ Raw probabilities помечены исследовательскими и не 
 Фазы, split и acceptance gate закреплены до запуска в evaluation/EXPERIMENT-B5-B6.md.
 Отчёт содержит source hashes, общие folds, отсечения, cohorts, company macro, runtime
 и профиль Python allocator на горизонтах1/7/30/90/180. Peak allocator не является RSS.
+
+## B6: продуктовый quality/fallback и пределы доказанного риска
+
+Default `seasonal-guarded-2.0-w84` использует выбранную B5 математику frozen1.0-w84.
+Вход проверяется quality-v2.0; после несверки вся статистическая/recurrence история
+ограничена пригодным периодом. При непригодной симуляции p10/p90 схлопываются к p50.
+На нормальной согласованной истории потоки/квантили1.0 сохраняются; None вероятности
+является намеренным продуктовым поведением, отдельным от нулевого риска.
+
+`risk-policy-2.0-withheld-new-gap`: probability_negative и probability_any_negative
+всегдаNone, risk.available=False. Firstnegative/maxdeficit и минимум p50 остаются
+доступны. Причина — недостаточно подтверждённых НОВЫХ разрывов; уже отрицательный
+начальный остаток не доказывает заблаговременный прогноз. Details содержит quality,
+risk_probability.status/reasons, версию политики и experiment ID. Для других горизонтов,
+сценариев и явных будущих планов добавляется соответствующая причина отсутствия
+подтверждённой калибровки. Нет переноса30-дневной калибровки молча.
+
+Исследовательский B6 отдельно fit/check/test по EXPERIMENT-B5-B6.md сравнивает raw,
+Beta(1,1)константу, logit-intercept и monotonePAVA. Daily/horizon раздельны; после обоих
+преобразований horizon>=max(daily). Порог выбирается наcheck поF2 с FPR=FP/(FP+TN)<=25%.
+Report содержит reliability/ECE/Brier,TP/FP/FN,Wilson95,company-bootstrap500 и leadtime
+только для неотрицательногоopening. Нельзя подменять None нулём или называть сентябрь
+новым нетронутым периодом. Дополнительный аудит openingnegative/persistence явно posthoc,
+параметры не меняет; он вправе запретить продуктовую вероятность.
+
+Команда из корня:
+`backend/.venv/Scripts/python.exe evaluation/calibrate_v2.py --zip ../cashflow_dataset_participants.zip --output evaluation/calibration-v2.json`.
+Фиксированный выбор метода берётся из selection-v2.json. Product fallback проверяется
+отдельно от research risk scores на всех пригодных retrospectivefolds. Изменение quality
+может менять pointfallback после несверки; такиеfolds и ошибка раскрыты отдельно.
+
+Daily components различают planned/recurrence/scenario_expense/irregular и согласованы
+с inflow/outflow. Объяснение risk_minimum указывает дату/сумму p50 и ссылки на outgoing
+sources до минимума, а не только до первого минуса; это описание компонентов, не
+гарантированная причинность. Сырые назначения не попадают в объяснения/логи.
+
+Все зарегистрированные версии проверяют денежный диапазон результата<=9e15копеек
+по модулю до записи в БД/JSON. Frozenseasonal дополнительно имеет guard стоимости
+исторической сверки/memberlist/occurrence5M и<=500groups; превышение даёт явный
+forecast_resource_limit, математика допустимых legacy входов не меняется. Новая версия
+получает явный invalid_scenario/invalid_forecast_input при неподдерживаемой календарной
+границе; старые1.0 не заменяются новым методом молча.
