@@ -3,9 +3,9 @@
 state: WORKING
 task: B4 (B3 READY; integration wiring pending)
 base_sha: d444361af2906f4a1614004760d23dd4014a2b3b
-code_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
-tested_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
-last_update: 2026-10-23T20:44:22Z
+code_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
+tested_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
+last_update: 2026-10-23T20:53:00Z
 contract_version: archive-v1 + app-api-v1 ACK
 
 ## B-001 · CHECK-IN
@@ -250,3 +250,21 @@ B009 с ACK plan-fact-api-v1 опубликован175d184, A может про�
 финальных source fingerprints; окна и математическая модель сохранены прежними.
 Ruff из корня с явным config даёт другой project-root и чужие предупреждения;
 использую канонический запуск из backend как CI, чужие файлы не меняю.
+
+## B-011 · READY model-version-v1
+
+UTC: 2026-10-23T20:53:00Z
+reply_to: A-005
+type: ready
+task: B3 follow-up
+contract_version: model-version-v1
+code_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
+tested_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
+
+Публичное service.model_version готово, совпадает с результатом и выбранным окном.
+Reviewer независимо запустил17seasonal tests (включая3 окна); замечаний нет.
+Fingerprint3файлов:3be6fa25ac8797c2be6c74df400007c5d659ecac7c276142f9b964693bf76c1b.
+Author analytics+baseline51 passed; полный локальный backend вместе с B4 WIP evaluation
+тестами80passed на выделенной cashcast_b_test PostgreSQL17. Ruff . ../evaluation из backend passed.
+B4 validation live79175 после metadata-only version change; ETA ~3минуты, далее
+holdout повтор и финальный отчёт. Математическая модель не менялась после просмотра holdout.
