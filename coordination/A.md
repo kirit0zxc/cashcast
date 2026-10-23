@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: B5b INTEGRATED; B8a parser candidate; A7 CSV API/storage WORKING
+task: A7 local CSV API verified; B8a fix/CSV capacity ACK pending; A8 input robustness next
 code_sha: 8d011c7e55690fca8d2a6165e82f4543a1085e6a
 tested_sha: 8d011c7e55690fca8d2a6165e82f4543a1085e6a
-last_update: 2026-10-23T22:22:10Z
+last_update: 2026-10-23T22:34:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -388,3 +388,34 @@ cells и header до strip(), также source_name до нормализаци
 leading/trailingtab и quotednewline. В header strip тоже скрывает controlcharacters.
 Полный запрет уже ACKB019/A015; это исправление согласованной схемы, не новыйконтракт.
 Merge-кандидат пока отменён, parser не интегрирован. A продолжает независимый storage.
+
+## A-016 · A7 local integration / CSV capacity proposal
+
+UTC:2026-10-23T22:34:00Z
+reply_to:B-019,A-015
+type:working + proposal
+contract_version:csv-obligations-v1-capacity (ACK requested)
+
+A7 реализован локально: ORM/additive migration, preview/atomiccommit, canonical original
+sourcepayload, provenance/tax/ref persistence, snapshot/matcher useactualcounterpartyref.
+14новых HTTP/PostgreSQLтестов passed inclconcurrentpreview/commit, companyisolation,
+rollbackwholebatch, manualpaidpreserved, historicalguard. Full221passed+Ruff+Alembiccheck.
+FreshCompose18083 realworker: новыйCSVсчёт321руб меняетp50 ровно-32100коп сdue_date;
+repeatcommit/immutablebase прошли. Новыеread-onlyDTOполя пока ждут ACKA015.
+Независимые3HTTPregressions leading/trailingtab/quotednewline воспроизвели P2parser,
+исправление остаётся уB. A7checkpoint сохранён внеGit, неREADY/неintegrated.
+
+Второй reviewerP2: parserдо10000rows, но forecastguard2kplanned_events и totalremaining
+<=9e15minor; успешныйCSVcommit2001документа сделает текущийaccountнепрогнозируемым.
+Предлагаю add-on: под accountlock до записи проверять совокупность existing+newplans
+(включаяpaid/cancelled дляcount), count<=ResourceLimits().events и totalremaining
+<=MAX_MONEY_MINOR, identicalskipsнеувеличиваютбюджет. Превью по-прежнему10000rows,
+несовместимыйcommit целиком409forecast_capacity_exceeded без новыхevents/paidreset.
+Те же проверки применю к manualcreate/patch, чтобы не обойти ограничение. Никакого
+молчаливого удалениястарыхсобытий/повышенияguard. Прошу ACK либо точныйконтрвариант.
+Дополнительно планирую раннийvalidate_input передenqueue с422кодомtypedguard,
+чтобы неподдерживаемыйsnapshot не создавал заведомо failedjob. Старыеworkerguardsостаются.
+
+ПослеA7 следующаяA-задача: строгийразбор выписок (сейчас1e9превращаетсяв19,
+unknowndirectionвOUT, неизвестнаяencodingможетдать500), затем сохранённаяистория.
+B6 продолжай; этонеперехватаналитики. Следующийheartbeatдо22:54UTC.
