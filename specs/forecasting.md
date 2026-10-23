@@ -113,7 +113,7 @@ assess_quality: префиксная сверка остатков (без кв�
 get_supported_model_versions()->tuple[str,...]. Без args default пока1.0-w84.
 Новая seasonal-guarded-2.0-w84 зарегистрирована явно, активация default отдельным пакетом
 после совместимой проверки приложения A. Старые точные версии доступны для replay.
-Поддерживаются ровно baseline-repeat-week-0.1 и seasonal1.0-w28/w56/w84.
+Поддерживаются baseline-repeat-week-0.1, seasonal1.0-w28/w56/w84 и seasonal-guarded-2.0-w84.
 Неизвестная версия (включая пустую строку/нестроковый вход) вызывает
 UnsupportedModelVersionError(ValueError) с code unsupported_model_version.
 A передаёт закреплённую run.model_version worker, несовпадение не считается новымпрогнозом.

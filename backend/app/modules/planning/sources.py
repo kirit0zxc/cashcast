@@ -51,7 +51,7 @@ class ObligationParseResult:
 
 
 def _has_control(value: str) -> bool:
-    return any(ord(character) < 32 or ord(character) == 127 for character in value)
+    return any(ord(character) < 32 or 127 <= ord(character) <= 159 for character in value)
 
 
 def parse_obligations_csv(content: str, *, as_of: date, source_name: str) -> ObligationParseResult:
@@ -87,6 +87,8 @@ def parse_obligations_csv(content: str, *, as_of: date, source_name: str) -> Obl
         header = next(reader, None)
         if not header:
             return ObligationParseResult([], [ObligationRowError(1, "header", "missing_header")], digest)
+        if any(_has_control(value) for value in header):
+            return ObligationParseResult([], [ObligationRowError(1, "header", "invalid_control_characters")], digest)
         header = [value.strip() for value in header]
         if len(set(header)) != len(header):
             errors.append(ObligationRowError(1, "header", "duplicate_columns"))
@@ -105,13 +107,13 @@ def parse_obligations_csv(content: str, *, as_of: date, source_name: str) -> Obl
             if len(cells) != len(header):
                 errors.append(ObligationRowError(row, "row", "wrong_column_count"))
                 continue
-            values = {key: value.strip() for key, value in zip(header, cells, strict=True)}
             before = len(errors)
-            for field, value in values.items():
+            for field, value in zip(header, cells, strict=True):
                 if len(value) > 1000 or _has_control(value):
                     errors.append(ObligationRowError(row, field, "invalid_text_length_or_control"))
             if len(errors) != before:
                 continue
+            values = {key: value.strip() for key, value in zip(header, cells, strict=True)}
             external_id = values["id"]
             source_ref = f"{source_name}:{external_id}"
             if not external_id or ":" in external_id or len(external_id) > 128 or len(source_ref) > 200:

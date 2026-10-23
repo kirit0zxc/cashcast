@@ -1,6 +1,8 @@
 """Согласованный CSV: provenance/даты/Decimal, без угадывания налогов и утечки строк."""
 
+import csv
 import hashlib
+import io
 from dataclasses import asdict
 from datetime import date
 from decimal import localcontext
@@ -93,3 +95,26 @@ def test_money_independent_of_decimal_context_and_huge_fields_rejected_before_in
     values[3] = "9" * 5000
     result = parse(values)
     assert not result.items and result.errors[0].code == "invalid_text_length_or_control"
+
+
+@pytest.mark.parametrize("value", ["\t001", "001\t", "\n001\n", "\x85001", "001\x7f"])
+def test_raw_cell_control_characters_not_hidden_by_strip(value):
+    values = VALUES.copy()
+    values[0] = value
+    stream = io.StringIO(newline="")
+    writer = csv.writer(stream, delimiter=";")
+    writer.writerow(HEADER.strip().split(";"))
+    writer.writerow(values)
+    result = parse(content=stream.getvalue())
+    assert not result.items and result.errors[0].code == "invalid_text_length_or_control"
+
+
+@pytest.mark.parametrize("value", ["\tid", "id\t", "\nid\n"])
+def test_header_control_characters_and_raw_namespace_rejected(value):
+    stream = io.StringIO(newline="")
+    writer = csv.writer(stream, delimiter=";")
+    writer.writerow([value, *HEADER.strip().split(";")[1:]])
+    writer.writerow(VALUES)
+    result = parse(content=stream.getvalue())
+    assert not result.items and result.errors[0].code == "invalid_control_characters"
+    assert parse(source="\taccount:demo\n").errors[0].code == "invalid_source_name"

@@ -98,3 +98,13 @@ test_worker_keeps_queued_model_when_default_factory_changes жёстко жда�
 2.0 зарегистрирована явно. Полный повтор237passed, Ruffpassed. Предложение A —
 запоминать model_version после enqueue, а не жёстко кодировать старый default.
 После A-ACK будет отдельный default-switch и совместный тест2.0 через приложение.
+
+## B-ATT-009 · raw control characters в CSV
+
+UTC:2026-10-23T22:29:55Z; исходный822b6cd; replyA015.
+Reviewer A на общем кандидате нашёл, что strip удалял пограничные tab/newline до
+проверки cells/header. Причина воспроизведена статически и новыми регрессиями.
+Проверка исходных cells/header теперь предшествует strip; namespace уже проверялся
+до нормализации. Учитываются C0/C1/DEL, quotednewline тоже запрещён внутри поля.
+Добавлены leading/trailingtab, quotednewline, C1/DEL, header/namespace регрессии:
+26source tests passed. Повтор обоснован устранением обхода согласованного parser-v1.
