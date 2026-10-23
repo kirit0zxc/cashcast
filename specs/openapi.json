@@ -600,7 +600,8 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "format": "uuid"
                 },
                 {
                   "type": "null"
@@ -1906,6 +1907,7 @@
         "properties": {
           "account_id": {
             "type": "string",
+            "format": "uuid",
             "title": "Account Id"
           },
           "mapping": {
@@ -2516,6 +2518,7 @@
         "properties": {
           "account_id": {
             "type": "string",
+            "format": "uuid",
             "title": "Account Id"
           },
           "as_of": {
@@ -2533,7 +2536,9 @@
           "seed": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "maximum": 2147483647.0,
+                "minimum": -2147483648.0
               },
               {
                 "type": "null"
@@ -2966,7 +2971,8 @@
           "account_id": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               },
               {
                 "type": "null"
@@ -2984,6 +2990,7 @@
           },
           "amount_minor": {
             "type": "integer",
+            "maximum": 9000000000000000.0,
             "exclusiveMinimum": 0.0,
             "title": "Amount Minor"
           },
@@ -3011,7 +3018,8 @@
           "counterparty_name": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "maxLength": 500
               },
               {
                 "type": "null"
@@ -3033,7 +3041,8 @@
           "category": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "maxLength": 50
               },
               {
                 "type": "null"
@@ -3044,7 +3053,8 @@
           "source_ref": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "maxLength": 200
               },
               {
                 "type": "null"
@@ -3191,6 +3201,7 @@
             "anyOf": [
               {
                 "type": "integer",
+                "maximum": 9000000000000000.0,
                 "exclusiveMinimum": 0.0
               },
               {
@@ -3319,7 +3330,9 @@
           "shift_days": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "maximum": 3650.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -3344,6 +3357,7 @@
             "anyOf": [
               {
                 "type": "integer",
+                "maximum": 9000000000000000.0,
                 "exclusiveMinimum": 0.0
               },
               {
@@ -3378,13 +3392,16 @@
               "$ref": "#/components/schemas/ScenarioChangeIn"
             },
             "type": "array",
+            "maxItems": 50,
             "minItems": 1,
             "title": "Changes"
           },
           "seed": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "maximum": 2147483647.0,
+                "minimum": -2147483648.0
               },
               {
                 "type": "null"

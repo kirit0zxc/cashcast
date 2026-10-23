@@ -25,7 +25,7 @@ router = APIRouter(tags=["imports"], responses=ERROR_RESPONSES)
 @router.post("/companies/{company_id}/imports", response_model=ImportPreviewResponse)
 async def create_import(
     company_id: uuid.UUID,
-    account_id: str = Form(...),
+    account_id: uuid.UUID = Form(...),
     mapping: str = Form(..., description="JSON соответствия колонок (ColumnMappingIn)"),
     file: UploadFile = File(...),
     _company: str = Depends(require_company_access),
@@ -37,7 +37,7 @@ async def create_import(
     if len(content) > settings.max_upload_bytes:
         raise AppError(413, "file_too_large", "Файл превышает допустимый размер")
 
-    acc = session.get(Account, uuid.UUID(account_id))
+    acc = session.get(Account, account_id)
     if acc is None or str(acc.company_id) != str(company_id):
         raise AppError(404, "not_found", "Счёт не найден")
 
@@ -48,7 +48,7 @@ async def create_import(
     col_map = ColumnMapping(**mapping_in.model_dump())
     result = ImportService(session).preview(
         company_id=str(company_id),
-        account_id=account_id,
+        account_id=str(account_id),
         filename=file.filename or "statement.csv",
         content=content,
         mapping=col_map,

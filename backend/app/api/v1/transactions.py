@@ -34,7 +34,7 @@ def _decode_cursor(cursor: str) -> tuple[date, str]:
 @router.get("/companies/{company_id}/transactions", response_model=Page[TransactionOut])
 def list_transactions(
     company_id: uuid.UUID,
-    account_id: str | None = None,
+    account_id: uuid.UUID | None = None,
     date_from: date | None = None,
     date_to: date | None = None,
     category: str | None = None,
@@ -46,7 +46,7 @@ def list_transactions(
 ) -> Page[TransactionOut]:
     stmt = select(BankTransaction).where(BankTransaction.company_id == company_id)
     if account_id:
-        stmt = stmt.where(BankTransaction.account_id == uuid.UUID(account_id))
+        stmt = stmt.where(BankTransaction.account_id == account_id)
     if date_from:
         stmt = stmt.where(BankTransaction.booked_on >= date_from)
     if date_to:
