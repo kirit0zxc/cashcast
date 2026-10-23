@@ -48,6 +48,15 @@ class ImportService:
         mapping: ColumnMapping,
         uploaded_by: str | None,
     ) -> PreviewResult:
+        account = self._session.scalar(select(Account).where(
+            Account.id == account_id, Account.company_id == company_id,
+        ).with_for_update())
+        if account is None:
+            raise AppError(404, "not_found", "Счёт не найден")
+        if account.currency != "RUB":
+            raise AppError(422, "unsupported_currency", "Импорт поддерживает только RUB")
+        if not filename or len(filename) > 255 or "\x00" in filename:
+            raise AppError(422, "invalid_import", "Недопустимое имя файла или длина более255символов")
         sha = hashlib.sha256(content).hexdigest()
         # Идемпотентность входа: тот же файл в тот же счёт — возвращаем прежний импорт.
         existing = self._session.scalar(
