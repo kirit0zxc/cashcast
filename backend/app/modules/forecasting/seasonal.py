@@ -136,24 +136,34 @@ def _schedule(data: ForecastInput, groups: list[RecurrenceGroup]):
     end = data.as_of + timedelta(days=data.horizon_days)
     schedule = []
     occurrences = []
+    by_id = {txn.id: txn for txn in data.txns}
+    identities_by_group = {}
     for group in groups:
+        members = [by_id[member_id] for member_id in group.member_transaction_ids if member_id in by_id]
+        identities = {normalize(group.counterparty_ref)} - {""}
+        for member in members:
+            identities.update({normalize(member.counterparty_ref), normalize(member.counterparty_name)} - {""})
+        identities_by_group[group.group_id] = identities
         day = group.next_expected_date
         if day is None:
             continue
         # Якорь выводится из наблюдений, иначе Apr30 -> May30 сломает конец месяца.
-        members = [txn.booked_on for txn in data.txns if txn.id in group.member_transaction_ids]
-        anchor = max((day.day for day in members), default=day.day)
-        if members and all(d.day == calendar.monthrange(d.year, d.month)[1] for d in members):
+        member_days = [member.booked_on for member in members]
+        anchor = max((day.day for day in member_days), default=day.day)
+        if member_days and all(d.day == calendar.monthrange(d.year, d.month)[1] for d in member_days):
             anchor = 31
         while day <= end:
             if day > data.as_of:
                 occurrences.append([day, group, False])
-            day = advance(day, group.interval, anchor)
+            try:
+                day = advance(day, group.interval, anchor)
+            except (ValueError, OverflowError):
+                # Следующая occurrence вне представимого календаря, значит и вне end.
+                break
     replaced = set()
     # Матчинг с исходной датой события производится до сценарного переноса:
     # delay_event не должен возвращать исходное регулярное обязательство второй раз.
     originals = {event.id: event for event in data.planned_events if event.available_at <= data.as_of}
-    by_id = {txn.id: txn for txn in data.txns}
     for event in sorted(state.events, key=lambda event: event.id):
         original = originals[event.id]
         candidates = []
@@ -161,12 +171,9 @@ def _schedule(data: ForecastInput, groups: list[RecurrenceGroup]):
             if index in replaced or event.direction != group.direction:
                 continue
             explicit = event.recurrence_group == group.group_id
-            identities = {normalize(group.counterparty_ref)} - {""}
-            for member_id in group.member_transaction_ids:
-                if member_id in by_id:
-                    member = by_id[member_id]
-                    identities.update({normalize(member.counterparty_ref), normalize(member.counterparty_name)} - {""})
-            identity = bool(event.counterparty_ref and normalize(event.counterparty_ref) in identities)
+            identity = bool(
+                event.counterparty_ref and normalize(event.counterparty_ref) in identities_by_group[group.group_id]
+            )
             if (explicit or identity) and abs((original.due_date - day).days) <= 3:
                 candidates.append(index)
         # Не угадываем, если один счёт подходит нескольким регулярностям.
