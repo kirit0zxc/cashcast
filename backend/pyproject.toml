@@ -1,0 +1,48 @@
+[project]
+name = "cashcast-backend"
+version = "0.1.0"
+description = "API, worker и модули расчёта сервиса прогноза денежного потока (рабочее название CashCast)"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.30,<1",
+    "pydantic>=2.8,<3",
+    "pydantic-settings>=2.4,<3",
+    "sqlalchemy>=2.0.30,<2.1",
+    "alembic>=1.13,<2",
+    "psycopg[binary]>=3.2,<4",
+    "python-multipart>=0.0.9",
+    "email-validator>=2.2,<3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3,<9",
+    "httpx>=0.27,<1",
+    "ruff>=0.6,<1",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+# 120, а не 88/100: русские комментарии и docstring-и объективно шире латиницы.
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "RUF"]
+ignore = [
+    "RUF001", "RUF002", "RUF003",  # кириллица в строках и комментариях — норма для проекта
+    "S101",                         # assert в тестах
+    "B008",                         # Depends() в сигнатурах FastAPI
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106"]
+"migrations/**" = ["E501", "W291"]
+"app/core/config.py" = ["S105"]  # demo_password — дефолт для локального демо, не секрет прод
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

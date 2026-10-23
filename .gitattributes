@@ -1,0 +1,6 @@
+# Единые переводы строк. Шелл-скрипты ОБЯЗАТЕЛЬНО LF — иначе не запустятся в Linux-контейнере.
+* text=auto eol=lf
+*.sh text eol=lf
+*.png binary
+*.jpg binary
+*.ico binary

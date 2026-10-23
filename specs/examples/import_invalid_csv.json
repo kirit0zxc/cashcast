@@ -1,0 +1,23 @@
+{
+  "import_id": "55555555-5555-5555-5555-555555555555",
+  "status": "failed",
+  "total_rows": 2,
+  "error_count": 2,
+  "duplicate_in_file": 0,
+  "period_start": null,
+  "period_end": null,
+  "sample_errors": [
+    {
+      "row": 1,
+      "field": "row",
+      "message": "не распознана дата: 'вчера'"
+    },
+    {
+      "row": 2,
+      "field": "row",
+      "message": "не распознана сумма: 'много'"
+    }
+  ],
+  "reused": false,
+  "_note": "СИНТЕТИЧЕСКИЕ данные для разработки фронтенда и тестов, не реальные измерения."
+}

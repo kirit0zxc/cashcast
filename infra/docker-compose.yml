@@ -1,0 +1,71 @@
+# Один ПК с Docker: web (nginx+статика) — единственный публичный сервис.
+# api, worker и postgres во внутренней сети, наружу не публикуются.
+name: cashcast
+
+services:
+  postgres:
+    image: postgres:16.10-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-cashcast}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cashcast}
+      POSTGRES_DB: ${POSTGRES_DB:-cashcast}
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # закрытый volume: данные не покидают хост
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cashcast}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    # Порт наружу НЕ публикуется намеренно.
+
+  migrate:
+    build:
+      context: ../backend
+    command: ["sh", "migrate_and_seed.sh"]
+    environment:
+      CC_DATABASE_URL: ${CC_DATABASE_URL:-postgresql+psycopg://cashcast:cashcast@postgres:5432/cashcast}
+      CC_SEED_DEMO: ${CC_SEED_DEMO:-true}
+      CC_DEMO_EMAIL: ${CC_DEMO_EMAIL:-demo@example.com}
+      CC_DEMO_PASSWORD: ${CC_DEMO_PASSWORD:-demo-password}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: ../backend
+    environment:
+      CC_DATABASE_URL: ${CC_DATABASE_URL:-postgresql+psycopg://cashcast:cashcast@postgres:5432/cashcast}
+      CC_APP_ENV: ${CC_APP_ENV:-dev}
+      CC_COOKIE_SECURE: ${CC_COOKIE_SECURE:-false}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    expose:
+      - "8000"  # видно только внутри сети compose
+
+  worker:
+    build:
+      context: ../backend
+    command: ["python", "-m", "app.worker"]
+    environment:
+      CC_DATABASE_URL: ${CC_DATABASE_URL:-postgresql+psycopg://cashcast:cashcast@postgres:5432/cashcast}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  web:
+    build:
+      context: ../frontend
+    ports:
+      - "${WEB_PORT:-8080}:80"  # единственный публичный порт
+    depends_on:
+      - api
+
+volumes:
+  pgdata:

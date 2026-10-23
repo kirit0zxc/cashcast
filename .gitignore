@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dist/
+
+# Окружение и секреты
+infra/.env
+.env
+*.local
+
+# ОС/редакторы
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

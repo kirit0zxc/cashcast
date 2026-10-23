@@ -1,0 +1,295 @@
+{
+  "id": "33333333-3333-3333-3333-333333333333",
+  "account_id": "22222222-2222-2222-2222-222222222222",
+  "as_of": "2026-03-01",
+  "horizon_days": 30,
+  "status": "succeeded",
+  "model_version": "baseline-repeat-week-0.1",
+  "data_version": "demo-sha-2",
+  "seed": 42,
+  "opening_balance_minor": 1000000,
+  "base_forecast_id": null,
+  "assumptions": [
+    "Синтетический пример: разрыва нет."
+  ],
+  "data_warnings": [],
+  "risk": {
+    "available": true,
+    "first_negative_date": null,
+    "max_deficit_minor": null,
+    "probability_any_negative": 0.02
+  },
+  "points": [
+    {
+      "point_date": "2026-03-02",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 927000,
+      "balance_p50_minor": 1030000,
+      "balance_p90_minor": 1133000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-03",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 954000,
+      "balance_p50_minor": 1060000,
+      "balance_p90_minor": 1166000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-04",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 981000,
+      "balance_p50_minor": 1090000,
+      "balance_p90_minor": 1199000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-05",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1008000,
+      "balance_p50_minor": 1120000,
+      "balance_p90_minor": 1232000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-06",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1035000,
+      "balance_p50_minor": 1150000,
+      "balance_p90_minor": 1265000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-07",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1062000,
+      "balance_p50_minor": 1180000,
+      "balance_p90_minor": 1298000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-08",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1089000,
+      "balance_p50_minor": 1210000,
+      "balance_p90_minor": 1331000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-09",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1116000,
+      "balance_p50_minor": 1240000,
+      "balance_p90_minor": 1364000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-10",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1143000,
+      "balance_p50_minor": 1270000,
+      "balance_p90_minor": 1397000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-11",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1170000,
+      "balance_p50_minor": 1300000,
+      "balance_p90_minor": 1430000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-12",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1197000,
+      "balance_p50_minor": 1330000,
+      "balance_p90_minor": 1463000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-13",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1224000,
+      "balance_p50_minor": 1360000,
+      "balance_p90_minor": 1496000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-14",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1251000,
+      "balance_p50_minor": 1390000,
+      "balance_p90_minor": 1529000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-15",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1278000,
+      "balance_p50_minor": 1420000,
+      "balance_p90_minor": 1562000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-16",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1305000,
+      "balance_p50_minor": 1450000,
+      "balance_p90_minor": 1595000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-17",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1332000,
+      "balance_p50_minor": 1480000,
+      "balance_p90_minor": 1628000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-18",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1359000,
+      "balance_p50_minor": 1510000,
+      "balance_p90_minor": 1661000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-19",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1386000,
+      "balance_p50_minor": 1540000,
+      "balance_p90_minor": 1694000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-20",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1413000,
+      "balance_p50_minor": 1570000,
+      "balance_p90_minor": 1727000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-21",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1440000,
+      "balance_p50_minor": 1600000,
+      "balance_p90_minor": 1760000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-22",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1467000,
+      "balance_p50_minor": 1630000,
+      "balance_p90_minor": 1793000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-23",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1494000,
+      "balance_p50_minor": 1660000,
+      "balance_p90_minor": 1826000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-24",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1521000,
+      "balance_p50_minor": 1690000,
+      "balance_p90_minor": 1859000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-25",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1548000,
+      "balance_p50_minor": 1720000,
+      "balance_p90_minor": 1892000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-26",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1575000,
+      "balance_p50_minor": 1750000,
+      "balance_p90_minor": 1925000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-27",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1602000,
+      "balance_p50_minor": 1780000,
+      "balance_p90_minor": 1958000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-28",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1629000,
+      "balance_p50_minor": 1810000,
+      "balance_p90_minor": 1991000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-29",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1656000,
+      "balance_p50_minor": 1840000,
+      "balance_p90_minor": 2024000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-30",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1683000,
+      "balance_p50_minor": 1870000,
+      "balance_p90_minor": 2057000,
+      "probability_negative": 0.0
+    },
+    {
+      "point_date": "2026-03-31",
+      "inflow_minor": 90000,
+      "outflow_minor": 60000,
+      "balance_p10_minor": 1710000,
+      "balance_p50_minor": 1900000,
+      "balance_p90_minor": 2090000,
+      "probability_negative": 0.0
+    }
+  ],
+  "_note": "СИНТЕТИЧЕСКИЕ данные для разработки фронтенда и тестов, не реальные измерения."
+}
