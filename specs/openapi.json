@@ -1133,6 +1133,210 @@
         }
       }
     },
+    "/api/v1/companies/{company_id}/plan-fact": {
+      "get": {
+        "tags": [
+          "plan-fact"
+        ],
+        "summary": "Plan Fact",
+        "operationId": "plan_fact_api_v1_companies__company_id__plan_fact_get",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          },
+          {
+            "name": "account_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Account Id"
+            }
+          },
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "As Of"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanFactOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Ещё не реализовано",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "plan-fact"
+        ],
+        "summary": "Reconcile",
+        "operationId": "reconcile_api_v1_companies__company_id__plan_fact_post",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          },
+          {
+            "name": "account_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Account Id"
+            }
+          },
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "As Of"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanFactOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Ещё не реализовано",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/companies/{company_id}/forecasts": {
       "post": {
         "tags": [
@@ -1640,6 +1844,21 @@
         ],
         "title": "Body_create_import_api_v1_companies__company_id__imports_post"
       },
+      "Category": {
+        "type": "string",
+        "enum": [
+          "sales",
+          "purchases",
+          "payroll",
+          "rent",
+          "tax",
+          "fees",
+          "loan",
+          "transfer",
+          "other"
+        ],
+        "title": "Category"
+      },
       "ColumnMappingIn": {
         "properties": {
           "date": {
@@ -1758,6 +1977,8 @@
           },
           "delimiter": {
             "type": "string",
+            "maxLength": 1,
+            "minLength": 1,
             "title": "Delimiter",
             "default": ","
           },
@@ -1795,6 +2016,29 @@
           "role"
         ],
         "title": "CompanyBrief"
+      },
+      "ConfirmedMatchOut": {
+        "properties": {
+          "planned_event_id": {
+            "type": "string",
+            "title": "Planned Event Id"
+          },
+          "transaction_id": {
+            "type": "string",
+            "title": "Transaction Id"
+          },
+          "matched_amount_minor": {
+            "type": "integer",
+            "title": "Matched Amount Minor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "planned_event_id",
+          "transaction_id",
+          "matched_amount_minor"
+        ],
+        "title": "ConfirmedMatchOut"
       },
       "ErrorDetail": {
         "properties": {
@@ -2385,6 +2629,44 @@
         ],
         "title": "LoginRequest"
       },
+      "MatchProposalOut": {
+        "properties": {
+          "planned_event_id": {
+            "type": "string",
+            "title": "Planned Event Id"
+          },
+          "transaction_id": {
+            "type": "string",
+            "title": "Transaction Id"
+          },
+          "matched_amount_minor": {
+            "type": "integer",
+            "title": "Matched Amount Minor"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "auto_confirm": {
+            "type": "boolean",
+            "title": "Auto Confirm"
+          }
+        },
+        "type": "object",
+        "required": [
+          "planned_event_id",
+          "transaction_id",
+          "matched_amount_minor",
+          "confidence",
+          "reason",
+          "auto_confirm"
+        ],
+        "title": "MatchProposalOut"
+      },
       "MeResponse": {
         "properties": {
           "id": {
@@ -2444,6 +2726,66 @@
           "items"
         ],
         "title": "Page[TransactionOut]"
+      },
+      "PlanFactItem": {
+        "properties": {
+          "event": {
+            "$ref": "#/components/schemas/PlannedEventOut"
+          },
+          "confirmed_amount_minor": {
+            "type": "integer",
+            "title": "Confirmed Amount Minor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event",
+          "confirmed_amount_minor"
+        ],
+        "title": "PlanFactItem"
+      },
+      "PlanFactOut": {
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "title": "Account Id"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlanFactItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "confirmed_matches": {
+            "items": {
+              "$ref": "#/components/schemas/ConfirmedMatchOut"
+            },
+            "type": "array",
+            "title": "Confirmed Matches"
+          },
+          "proposals": {
+            "items": {
+              "$ref": "#/components/schemas/MatchProposalOut"
+            },
+            "type": "array",
+            "title": "Proposals"
+          }
+        },
+        "type": "object",
+        "required": [
+          "account_id",
+          "as_of",
+          "items",
+          "confirmed_matches",
+          "proposals"
+        ],
+        "title": "PlanFactOut"
       },
       "PlannedEventIn": {
         "properties": {
@@ -2816,7 +3158,7 @@
               {
                 "type": "number",
                 "maximum": 2.0,
-                "exclusiveMinimum": 0.0
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -2886,10 +3228,7 @@
       "TransactionCategoryPatch": {
         "properties": {
           "category": {
-            "type": "string",
-            "maxLength": 50,
-            "minLength": 1,
-            "title": "Category"
+            "$ref": "#/components/schemas/Category"
           }
         },
         "type": "object",

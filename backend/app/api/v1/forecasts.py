@@ -5,6 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 import uuid
+from dataclasses import replace
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, Response
 from sqlalchemy import select
@@ -12,6 +14,7 @@ from sqlalchemy.orm import Session
 
 from app.api.schemas.common import ERROR_RESPONSES
 from app.api.schemas.models import (
+    ExplanationItem,
     ExplanationsOut,
     ForecastOut,
     ForecastPointOut,
@@ -24,10 +27,14 @@ from app.api.schemas.models import (
 from app.core.auth import CurrentUser, get_current_user, require_company_access
 from app.core.config import Settings, get_settings
 from app.core.deps import get_db
-from app.core.errors import AppError, not_implemented
+from app.core.errors import AppError
+from app.core.forecast_input import ForecastInputCodec
 from app.core.models import Account, ForecastPoint, ForecastRun, Job
+from app.modules.contracts import ScenarioChange
 from app.modules.forecasting.baseline import MODEL_VERSION
+from app.modules.forecasting.service import get_forecast_service
 from app.modules.forecasting.snapshot import build_snapshot
+from app.modules.integration.plan_fact import PlanFactService
 from app.modules.jobs import queue
 
 router = APIRouter(tags=["forecasts"], responses=ERROR_RESPONSES)
@@ -43,10 +50,13 @@ def create_forecast(
     session: Session = Depends(get_db),
     settings: Settings = Depends(get_settings),
 ) -> JobAccepted:
-    acc = session.get(Account, uuid.UUID(body.account_id))
+    acc = session.scalar(select(Account).where(Account.id == uuid.UUID(body.account_id)).with_for_update())
     if acc is None or str(acc.company_id) != str(company_id):
         raise AppError(404, "not_found", "Счёт не найден")
     seed = body.seed if body.seed is not None else settings.forecast_default_seed
+    # Исторический срез только читается: сегодняшние решения не становятся знанием прошлого.
+    PlanFactService(session).run(company_id, acc.id, body.as_of,
+                                 write=body.as_of == datetime.now(UTC).date())
 
     # Собираем снимок только ради data_version — чтобы повторный запрос нашёл тот же прогон.
     snap = build_snapshot(
@@ -65,6 +75,7 @@ def create_forecast(
         data_version=snap.data_version,
         seed=seed,
         created_by=uuid.UUID(user.id),
+        input_snapshot={**ForecastInputCodec.encode(snap.data), "warnings": snap.warnings},
     )
     job = queue.enqueue(
         session,
@@ -157,8 +168,14 @@ def get_explanations(
     if run is None:
         raise AppError(404, "not_found", "Прогноз не найден")
     _require_member(session, user.id, str(run.company_id))
-    # Разбор причин риска по источникам — зона Данила/Димы. Контракт готов, реализации нет.
-    raise not_implemented("Данил/Дима")
+    if run.status != "succeeded":
+        raise AppError(409, "forecast_not_ready", "Дождитесь успешного расчёта прогноза")
+    details = run.details or {}
+    items = [ExplanationItem.model_validate(item) for item in details.get("explanations", [])]
+    return ExplanationsOut(
+        forecast_run_id=str(run.id), available=bool(items), items=items,
+        summary=details.get("summary", "Модель пока не предоставила разбор компонентов риска."),
+    )
 
 
 @router.post("/forecasts/{forecast_id}/scenarios", response_model=JobAccepted, status_code=202)
@@ -174,11 +191,19 @@ def create_scenario(
     if base is None:
         raise AppError(404, "not_found", "Базовый прогноз не найден")
     _require_member(session, user.id, str(base.company_id))
+    if base.base_forecast_id is not None:
+        raise AppError(409, "nested_scenario_not_supported", "Создавайте сценарий от исходного базового прогноза")
+    if base.status != "succeeded":
+        raise AppError(409, "base_not_ready", "Дождитесь успешного расчёта базы")
+    if not base.input_snapshot:
+        raise AppError(409, "snapshot_unavailable", "Пересчитайте базовый прогноз после обновления стенда")
 
     seed = body.seed if body.seed is not None else base.seed
     # mode="json": даты -> ISO-строки, чтобы и JSONB-колонка, и хеш сериализовались одинаково.
     changes = [c.model_dump(mode="json", exclude_none=True) for c in body.changes]
     scenario = {"changes": changes}
+    frozen = replace(ForecastInputCodec.decode(base.input_snapshot), seed=seed,
+                     scenario=[ScenarioChange(**c.model_dump()) for c in body.changes])
     scenario_hash = hashlib.sha256(
         json.dumps(scenario, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
@@ -195,6 +220,8 @@ def create_scenario(
         scenario=scenario,
         scenario_hash=scenario_hash,
         base_forecast_id=base.id,
+        input_snapshot={**ForecastInputCodec.encode(frozen), "warnings": base.input_snapshot.get("warnings", [])},
+        model_version=base.model_version,
     )
     job = queue.enqueue(
         session,
@@ -220,7 +247,10 @@ def _get_or_create_run(
     scenario=None,
     scenario_hash="",
     base_forecast_id=None,
+    input_snapshot=None,
+    model_version=None,
 ) -> ForecastRun:
+    model_version = model_version or getattr(get_forecast_service(), "model_version", MODEL_VERSION)
     # Повтор того же входа (вкл. сценарий) не плодит прогоны — возвращаем существующий.
     existing = session.scalar(
         select(ForecastRun).where(
@@ -228,7 +258,7 @@ def _get_or_create_run(
             ForecastRun.as_of == as_of,
             ForecastRun.horizon_days == horizon_days,
             ForecastRun.data_version == data_version,
-            ForecastRun.model_version == MODEL_VERSION,
+            ForecastRun.model_version == model_version,
             ForecastRun.seed == seed,
             ForecastRun.scenario_hash == scenario_hash,
         )
@@ -241,13 +271,14 @@ def _get_or_create_run(
         as_of=as_of,
         horizon_days=horizon_days,
         data_version=data_version,
-        model_version=MODEL_VERSION,
+        model_version=model_version,
         seed=seed,
         scenario_hash=scenario_hash,
         scenario=scenario,
         base_forecast_id=base_forecast_id,
         status="pending",
         created_by=created_by,
+        input_snapshot=input_snapshot,
     )
     session.add(run)
     session.flush()

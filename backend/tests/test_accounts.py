@@ -54,11 +54,23 @@ def test_server_preset_import_preserves_income_expense_and_leading_zero_inn(clie
     }, files={"file": ("C001.csv", csv.encode("utf-8-sig"), "text/csv")})
     assert response.status_code == 200, response.text
     assert response.json()["error_count"] == 0
-    response = client.post(f"/api/v1/imports/{response.json()['import_id']}/commit")
+    import_id = response.json()["import_id"]
+    response = client.post(f"/api/v1/imports/{import_id}/commit")
     assert response.status_code == 200
     assert response.json()["inserted"] == 2
     items = client.get(f"/api/v1/companies/{own}/transactions").json()["items"]
     assert sorted((t["direction"], t["amount_minor"]) for t in items) == [("in", 12050), ("out", 2050)]
+    assert all(t["category_source"] == "auto" for t in items)
+    transaction_id = items[0]["id"]
+    assert client.patch(f"/api/v1/transactions/{transaction_id}/category", json={"category": "rent"}).status_code == 200
+    invalid = client.patch(f"/api/v1/transactions/{transaction_id}/category", json={"category": "unknown"})
+    assert invalid.status_code == 422
+    # Повторный commit обновляет автоматические категории, но сохраняет ручную правку.
+    assert client.post(f"/api/v1/imports/{import_id}/commit").status_code == 200
+    refreshed = client.get(f"/api/v1/companies/{own}/transactions").json()["items"]
+    manual = next(t for t in refreshed if t["id"] == transaction_id)
+    assert manual["category"] == "rent"
+    assert manual["category_source"] == "manual"
     from sqlalchemy import select
 
     from app.core.models import BankTransaction

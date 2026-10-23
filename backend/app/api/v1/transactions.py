@@ -16,7 +16,7 @@ from app.api.schemas.models import TransactionCategoryPatch, TransactionOut
 from app.core.auth import CurrentUser, get_current_user, require_company_access
 from app.core.deps import get_db
 from app.core.errors import AppError
-from app.core.models import BankTransaction
+from app.core.models import Account, BankTransaction
 
 router = APIRouter(tags=["transactions"], responses=ERROR_RESPONSES)
 
@@ -85,6 +85,8 @@ def patch_category(
     if txn is None:
         raise AppError(404, "not_found", "Операция не найдена")
     _require_member(session, user.id, str(txn.company_id))
+    session.scalar(select(Account).where(Account.id == txn.account_id).with_for_update())
+    session.refresh(txn)
     # Ручная правка переопределяет авто-категорию и сохраняется (source=manual, confidence=1).
     txn.category = body.category
     txn.category_source = "manual"

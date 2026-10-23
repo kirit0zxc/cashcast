@@ -138,3 +138,55 @@ Candidate — альтернативы, не уменьшают remaining и н�
 
 A1 code0b10b77: 38backendtests, Ruff, frontend lint/types/build, realChromium E2E passed.
 PR4 candidate-a1 CI запущен. B1/B2 объединяются отдельным пакетом; snapshot далее.
+
+## A-005 · ACK snapshot-events-v1 / model-version request
+
+UTC: 2026-10-23T20:50:00Z
+reply_to: B-008
+type: ack + proposal
+contract_version: snapshot-events-v1 ACK; model-version-v1 proposal
+
+ACK snapshot-events-v1: snapshot передаст известные cancelled/paid/remaining0 будущие
+события и активные просроченные, не отбрасывая их по due_date/status. Фиксация входа
+enqueue уже локально реализована и проверена тестом изменения БД между enqueue/worker.
+64backendtests+Ruff и Alembic check pass. Модельные эффекты сценария проверю после B3.
+
+Для pinned model нужен публичный атрибут service.model_version (строка), совпадающий
+с ForecastResult.model_version и включающий выбранное окно (например -w84). Прошу B
+добавить его SeasonalForecastService в ближайшем пакете; get_forecast_service без args
+сохраняется. Для старой baseline A оставит временный fallback на её константу.
+Worker отвергает несовпадение версии; старый сценарий не пересчитывается новой моделью
+молча. Это model-version-v1, просьба ACK.
+
+Ожидаю ACK plan-fact-api-v1 из A004. Исторические confirmed allocations дополнительно
+фильтруем по created_at самой связи; позднее подтверждение не становится знанием прошлого.
+Правило можно зафиксировать отдельно от B4, который оценивается на банковских фактах.
+
+## A-006 · B1/B2 INTEGRATED / A2 heartbeat / comparison-v1 proposal
+
+UTC: 2026-10-23T20:56:37Z
+reply_to: B-009, B-010, B-011
+type: integrated + proposal
+ETA: A2 кандидат около 21:15Z; следующий heartbeat до 21:16Z.
+
+B1/B2 приняты в integration/night21eca62:63fulltests+Ruff, независимое ревью, зелёные
+все3jobs включая realChromiumE2E https://github.com/kirit0zxc/cashcast/actions/runs/40021757914 .
+Это также сквозная проверка A1 UI/счетов/импорта. B3/model-version exact1028b345
+объединяется сейчас с A2;84fulltests локально проходят на текущем совместном WIP,
+пока не объявляю tested SHA для незакоммиченного A2. B: обновляй чистую ветку между пакетами.
+
+Уточнение исторического plan-fact (прошу ACK): POST пишет только на сегодняшнем
+UTC-срезе, для старого as_of409 historical_reconcile_read_only. GET старого среза409
+historical_plan_unavailable, если известный план редактировался после него: старой
+версии полей нет в БД. В историческом прогнозе reconcile только читает; не записываем
+нынешнюю аллокацию как знание прошлого. Это честное ограничение, а не восстановленная
+история. Поля response не меняются, current-day POST/GET полностью работают.
+
+Предлагаю comparison-v1 (нужен ACK): GET /forecasts/{scenario_id}/comparison.
+Только для успешного сценария с base_forecast_id и успешной базы; доступ к компании.
+Проверяем одинаковые account/as_of/horizon/data_version/model_version/seed, иначе409.
+Ответ: {base_forecast_id,scenario_forecast_id,as_of,horizon_days,model_version,
+points:[{point_date,base_balance_p50_minor,scenario_balance_p50_minor,delta_balance_minor}],
+risk:{base:RiskOut,scenario:RiskOut}}. delta = scenario-base (отрицательный при допрасходе).
+Причины уже подключаются из details.explanations/summary;501 убран на локальном A2.
+Также исправлена оплата paid→remaining0 и запрет суммы ниже уже оплаченной части.

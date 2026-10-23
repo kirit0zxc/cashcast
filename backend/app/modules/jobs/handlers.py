@@ -11,10 +11,10 @@ from datetime import UTC, date, datetime
 
 from sqlalchemy.orm import Session
 
+from app.core.forecast_input import ForecastInputCodec
 from app.core.models import ForecastPoint, ForecastRun
 from app.modules.contracts import ScenarioChange
 from app.modules.forecasting.service import get_forecast_service
-from app.modules.forecasting.snapshot import build_snapshot
 
 
 def handle_forecast(session: Session, payload: dict) -> dict:
@@ -27,16 +27,12 @@ def handle_forecast(session: Session, payload: dict) -> dict:
     run.status = "running"
     session.flush()
 
-    scenario = _parse_scenario(run.scenario)
-    snap = build_snapshot(
-        session,
-        account_id=str(run.account_id),
-        as_of=run.as_of,
-        horizon_days=run.horizon_days,
-        seed=run.seed,
-        scenario=scenario,
-    )
-    result = get_forecast_service().run(snap.data)
+    if not run.input_snapshot:
+        raise ValueError("snapshot_unavailable")
+    data = ForecastInputCodec.decode(run.input_snapshot)
+    result = get_forecast_service().run(data)
+    if result.model_version != run.model_version:
+        raise ValueError("pinned_model_unavailable")
 
     # Чистим прежние точки (повторный расчёт того же снимка перезаписывает результат).
     session.query(ForecastPoint).filter(ForecastPoint.forecast_run_id == run.id).delete()
@@ -55,9 +51,9 @@ def handle_forecast(session: Session, payload: dict) -> dict:
         )
 
     run.model_version = result.model_version
-    run.opening_balance_minor = snap.opening_balance_minor
+    run.opening_balance_minor = data.opening_balance_minor
     run.assumptions = result.assumptions
-    run.data_warnings = [*snap.warnings, *result.data_warnings]
+    run.data_warnings = [*run.input_snapshot.get("warnings", []), *result.data_warnings]
     run.risk_available = result.risk.available
     run.first_negative_date = result.risk.first_negative_date
     run.max_deficit_minor = result.risk.max_deficit_minor

@@ -172,8 +172,8 @@ def test_scenario_creates_separate_run(client, session_factory, logged_in) -> No
     assert len(scenario["points"]) == 30
 
 
-def test_explanations_not_implemented_yet(client, session_factory, logged_in) -> None:
-    # Контракт ручки есть, реализация — за Данилом/Димой: ожидаем честный 501.
+def test_explanations_wait_for_successful_forecast(client, session_factory, logged_in) -> None:
+    # До worker нет компонентов расчёта; после него ответ не должен быть заглушкой501.
     company_id = logged_in["company_id"]
     account_id = logged_in["account_id"]
     files = {"file": ("s.csv", _statement_csv(date(2026, 3, 1)), "text/csv")}
@@ -187,5 +187,8 @@ def test_explanations_not_implemented_yet(client, session_factory, logged_in) ->
         json={"account_id": account_id, "as_of": "2026-03-01", "horizon_days": 30},
     ).json()["forecast_run_id"]
     resp = client.get(f"/api/v1/forecasts/{forecast_id}/explanations")
-    assert resp.status_code == 501
-    assert resp.json()["error"]["code"] == "not_implemented"
+    assert resp.status_code == 409
+    _run_worker_until_idle(session_factory)
+    resp = client.get(f"/api/v1/forecasts/{forecast_id}/explanations")
+    assert resp.status_code == 200, resp.text
+    assert resp.json()["forecast_run_id"] == forecast_id

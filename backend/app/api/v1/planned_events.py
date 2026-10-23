@@ -40,10 +40,14 @@ def create_event(
     user: CurrentUser = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> PlannedEventOut:
+    if body.currency != "RUB":
+        raise AppError(422, "unsupported_currency", "Плановые события MVP поддерживают только RUB")
     if body.account_id:
-        acc = session.get(Account, uuid.UUID(body.account_id))
+        acc = session.scalar(select(Account).where(Account.id == uuid.UUID(body.account_id)).with_for_update())
         if acc is None or str(acc.company_id) != str(company_id):
             raise AppError(404, "not_found", "Счёт не найден")
+        if acc.currency != body.currency:
+            raise AppError(422, "currency_mismatch", "Валюта события должна совпадать с валютой счёта")
     event = PlannedEvent(
         company_id=company_id,
         account_id=uuid.UUID(body.account_id) if body.account_id else None,
@@ -76,17 +80,23 @@ def patch_event(
     if event is None:
         raise AppError(404, "not_found", "Плановое событие не найдено")
     _require_member(session, user.id, str(event.company_id))
+    if event.account_id is not None:
+        # Общая с reconcile блокировка: изменение суммы не обгоняет подтверждение оплаты.
+        session.scalar(select(Account).where(Account.id == event.account_id).with_for_update())
+        session.refresh(event)
 
     if body.due_date is not None:
         event.due_date = body.due_date
     if body.amount_minor is not None:
         # Пересчитываем остаток пропорционально уже оплаченной части.
         paid = event.amount_minor - event.remaining_amount_minor
+        if body.amount_minor < paid:
+            raise AppError(422, "amount_below_paid", "Сумма не может быть меньше уже оплаченной части")
         event.amount_minor = body.amount_minor
         event.remaining_amount_minor = max(0, body.amount_minor - paid)
     if body.status is not None:
         event.status = body.status
-        if body.status == "cancelled":
+        if body.status in {"cancelled", "paid"}:
             event.remaining_amount_minor = 0
     session.flush()
     return _to_out(event)

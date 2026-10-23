@@ -16,8 +16,9 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
 
 from app.core.errors import AppError
-from app.core.models import BankTransaction, DailyBalance, StatementImport
+from app.core.models import Account, BankTransaction, DailyBalance, StatementImport
 from app.modules.imports.parser import ColumnMapping, ParseResult, parse_statement
+from app.modules.integration.categories import TransactionCategorization
 
 
 @dataclass(frozen=True, slots=True)
@@ -81,9 +82,13 @@ class ImportService:
         imp = self._session.get(StatementImport, import_id)
         if imp is None or str(imp.company_id) != str(company_id):
             raise AppError(404, "not_found", "Импорт не найден")
+        # Та же блокировка у snapshot/reconcile/manual category: вход не смешивает версии.
+        self._session.scalar(select(Account).where(Account.id == imp.account_id).with_for_update())
+        self._session.refresh(imp)
         if imp.status == "failed":
             raise AppError(409, "import_failed", "Импорт содержит ошибки и не может быть подтверждён")
         if imp.status == "committed":
+            TransactionCategorization(self._session).refresh(imp.account_id)
             # Повторный commit идемпотентен: отдаём сохранённую статистику.
             return {"import_id": str(imp.id), "status": "committed", **imp.stats}
 
@@ -94,6 +99,7 @@ class ImportService:
 
         inserted = self._insert_transactions(imp, parsed)
         self._insert_balances(imp, parsed)
+        TransactionCategorization(self._session).refresh(imp.account_id)
 
         stats = {**_stats(parsed), "inserted": inserted, "skipped_existing": len(parsed.rows) - inserted}
         imp.status = "committed"

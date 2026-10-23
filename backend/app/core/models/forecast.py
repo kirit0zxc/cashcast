@@ -81,6 +81,8 @@ class ForecastRun(Base):
     probability_any_negative: Mapped[float | None] = mapped_column(Float)
     # Вклад компонентов и связанные события — для ручки explanations (структура у Данила/Димы).
     details: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    # Только enqueue заполняет снимок; worker/scenario используют его без чтения новых фактов.
+    input_snapshot: Mapped[dict | None] = mapped_column(JSONB)
     error_code: Mapped[str | None] = mapped_column(String(100))
     created_by: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("app_user.id", ondelete="SET NULL")
