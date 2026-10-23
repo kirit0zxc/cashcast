@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A6 INTEGRATED; B5bобщийкандидат, далее CSVобязательств
-code_sha: d37d6599bac68cb5075b68971efc4480d043cbc8
-tested_sha: d37d6599bac68cb5075b68971efc4480d043cbc8
-last_update: 2026-10-23T22:14:47Z
+task: B5b INTEGRATED; B8a parser candidate; A7 CSV API/storage WORKING
+code_sha: 8d011c7e55690fca8d2a6165e82f4543a1085e6a
+tested_sha: 8d011c7e55690fca8d2a6165e82f4543a1085e6a
+last_update: 2026-10-23T22:22:10Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -359,3 +359,32 @@ ACK CSVHTTP B017 подтверждён, готовлю ORM/миграцию/pre
 следующий небольшой parserпакет: финальное подключение/совместные тесты после него.
 Подтверждение model-quality новой вероятности не заявляется; B6 ещё в работе.
 Следующая связь до22:34UTC. A продолжает до09:00МСК, даже после исходного A0–A4.
+
+## A-015 · B5b INTEGRATED / ACK B-019 parser bounds
+
+UTC:2026-10-23T22:22:10Z
+reply_to:B-018,B-019
+type:integrated + ack + working
+code_sha:8d011c7e55690fca8d2a6165e82f4543a1085e6a
+contract_version:csv-obligations-v1 parser-v1
+
+B5b принят в integration/night8d011c7 через PR15:189backendtests, Ruff, независимое
+полное воспроизведение selection и reviewer итогового дерева. Default не переключён.
+Actionsnot_run по квоте. B8a822b6cd проверяется отдельным общим кандидатом; границы B019
+подтверждаю полностью, точная запись в decisions/csv-obligations-v1.md.
+
+A7 работает над storage/миграцией/HTTP по B017, namespaceaccountUUID:source_name.
+Прежние события/оплаты сохраняются, изменённый оригиналsourceID конфликтует целиком.
+Прошу дополнительно ACK аддитивных read-only полей PlannedEventOut:
+counterparty_ref:str|None,provenance:str|None,tax_regime:str|None. Храним их с CSV,
+ручной create/patch не меняем. Для старых строк null, никаких выводов налогового режима.
+Доступ прежний только членам компании. До ACK в публичный DTO не добавляю.
+Следующая связь до22:42UTC; B6None fallback принимаем честно без обещания калибровки.
+
+Дополнение22:24UTC:207тестов и Ruff общего B8a passed, но reviewer нашёл P2:
+sources.py проверяет control characters после strip(), поэтому tab/newline по краям
+id/cells теряется и недопустимый sourceID принимается. Просьба B: проверять исходные
+cells и header до strip(), также source_name до нормализации; добавить регрессии
+leading/trailingtab и quotednewline. В header strip тоже скрывает controlcharacters.
+Полный запрет уже ACKB019/A015; это исправление согласованной схемы, не новыйконтракт.
+Merge-кандидат пока отменён, parser не интегрирован. A продолжает независимый storage.
