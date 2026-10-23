@@ -68,6 +68,23 @@ def test_enqueue_freezes_inputs_and_scenario_keeps_original_base(client, session
     explanations = client.get(f"/api/v1/forecasts/{scenario_id}/explanations").json()
     assert explanations["available"] is True
     assert explanations["items"]
+    comparison = client.get(f"/api/v1/forecasts/{scenario_id}/comparison")
+    assert comparison.status_code == 200, comparison.text
+    assert comparison.json()["base_forecast_id"] == base["forecast_run_id"]
+    assert len(comparison.json()["points"]) == 30
+    assert comparison.json()["points"][-1]["delta_balance_minor"] == -100000
+    for change in [{"kind": "add_expense"}, {"kind": "delay_event", "target_id": "missing", "shift_days": 1},
+                   {"kind": "reduce_irregular_inflow", "factor": 1.5},
+                   {"kind": "increase_recurring", "factor": 0.5}]:
+        assert client.post(f"/api/v1/forecasts/{base['forecast_run_id']}/scenarios",
+                           json={"changes": [change]}).status_code == 422
+    assert client.get(f"/api/v1/forecasts/{base['forecast_run_id']}/comparison").status_code == 409
+    # Другой seed нарушает парное сравнение; API сообщает это явно.
+    unpaired = client.post(f"/api/v1/forecasts/{base['forecast_run_id']}/scenarios", json={
+        "changes": [{"kind": "add_expense", "amount_minor": 100000, "on_date": "2026-03-05"}], "seed": 99,
+    }).json()
+    _run_worker_until_idle(session_factory)
+    assert client.get(f"/api/v1/forecasts/{unpaired['forecast_run_id']}/comparison").status_code == 409
     # Новый базовый запрос, напротив, видит исправленные входы и имеет новую версию.
     updated = client.post(f"/api/v1/companies/{company}/forecasts", json=request).json()
     assert updated["forecast_run_id"] != base["forecast_run_id"]

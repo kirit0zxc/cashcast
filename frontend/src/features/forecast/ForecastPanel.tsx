@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { CashCastApi, money, probability, type Accepted, type Forecast, type Job } from "../../shared/api";
 import { Explanations } from "./Explanations";
+import { ScenarioPanel } from "./ScenarioPanel";
 
 export function ForecastPanel({ api, companyId, accountId, initialDate }: {
   api: CashCastApi; companyId: string; accountId: string; initialDate: string;
@@ -38,7 +39,8 @@ export function ForecastPanel({ api, companyId, accountId, initialDate }: {
     {job.data?.status === "failed" && <p role="alert">Расчёт не выполнен: {job.data.error_code}</p>}
     {[mutation.error, job.error, forecast.error].filter(Boolean).map((e, i) => <p role="alert" key={i}>{e!.message}</p>)}
     {forecast.data && <><ForecastView forecast={forecast.data} />
-      <Explanations api={api} forecastId={forecast.data.id} /></>}
+      <Explanations api={api} forecastId={forecast.data.id} />
+      <ScenarioPanel key={forecast.data.id} api={api} base={forecast.data} /></>}
   </section>;
 }
 

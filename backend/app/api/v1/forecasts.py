@@ -6,7 +6,7 @@ import hashlib
 import json
 import uuid
 from dataclasses import replace
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from fastapi import APIRouter, Depends, Response
 from sqlalchemy import select
@@ -204,6 +204,26 @@ def create_scenario(
     scenario = {"changes": changes}
     frozen = replace(ForecastInputCodec.decode(base.input_snapshot), seed=seed,
                      scenario=[ScenarioChange(**c.model_dump()) for c in body.changes])
+    # Ошибки формы/цели возвращаются сразу, не превращаются в ретраи фонового задания.
+    events = {e.id: e for e in frozen.planned_events}
+    groups = {g.group_id for g in frozen.recurrences}
+    for change in frozen.scenario:
+        valid = True
+        if change.kind == "add_expense":
+            valid = bool(change.amount_minor and change.on_date and
+                         frozen.as_of < change.on_date <= frozen.as_of + timedelta(days=frozen.horizon_days))
+        elif change.kind == "delay_event":
+            event = events.get(change.target_id)
+            valid = bool(event and event.status in {"planned", "partially_paid"}
+                         and event.remaining_amount_minor > 0 and change.shift_days is not None
+                         and change.shift_days >= 0)
+        elif change.kind == "reduce_irregular_inflow":
+            valid = change.factor is not None and 0 <= change.factor <= 1
+        elif change.kind == "increase_recurring":
+            valid = (change.factor is not None and change.factor >= 1 and bool(groups)
+                     and (change.target_id is None or change.target_id in groups))
+        if not valid:
+            raise AppError(422, "invalid_scenario", "Проверьте поля сценария и наличие цели в базовом снимке")
     scenario_hash = hashlib.sha256(
         json.dumps(scenario, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()

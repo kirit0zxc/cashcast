@@ -29,7 +29,8 @@ def test_foreign_forecasts_jobs_and_accounts_are_not_disclosed(client, session_f
         session.add(job)
         session.flush()
         run_id, job_id, account_id = str(run.id), str(job.id), str(foreign_account.id)
-    for path in [f"/forecasts/{run_id}", f"/forecasts/{run_id}/explanations", f"/jobs/{job_id}"]:
+    for path in [f"/forecasts/{run_id}", f"/forecasts/{run_id}/explanations",
+                 f"/forecasts/{run_id}/comparison", f"/jobs/{job_id}"]:
         assert client.get(f"/api/v1{path}").status_code == 404
     response = client.post(f"/api/v1/companies/{own}/forecasts", json={
         "account_id": account_id, "as_of": "2026-01-01", "horizon_days": 30,

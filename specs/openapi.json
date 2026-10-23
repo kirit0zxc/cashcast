@@ -1771,6 +1771,89 @@
           }
         }
       }
+    },
+    "/api/v1/forecasts/{forecast_id}/comparison": {
+      "get": {
+        "tags": [
+          "comparisons"
+        ],
+        "summary": "Compare Forecasts",
+        "operationId": "compare_forecasts_api_v1_forecasts__forecast_id__comparison_get",
+        "parameters": [
+          {
+            "name": "forecast_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Forecast Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastComparison"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Ещё не реализовано",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2017,6 +2100,51 @@
         ],
         "title": "CompanyBrief"
       },
+      "ComparedPoint": {
+        "properties": {
+          "point_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Point Date"
+          },
+          "base_balance_p50_minor": {
+            "type": "integer",
+            "title": "Base Balance P50 Minor"
+          },
+          "scenario_balance_p50_minor": {
+            "type": "integer",
+            "title": "Scenario Balance P50 Minor"
+          },
+          "delta_balance_minor": {
+            "type": "integer",
+            "title": "Delta Balance Minor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "point_date",
+          "base_balance_p50_minor",
+          "scenario_balance_p50_minor",
+          "delta_balance_minor"
+        ],
+        "title": "ComparedPoint"
+      },
+      "ComparedRisk": {
+        "properties": {
+          "base": {
+            "$ref": "#/components/schemas/RiskOut"
+          },
+          "scenario": {
+            "$ref": "#/components/schemas/RiskOut"
+          }
+        },
+        "type": "object",
+        "required": [
+          "base",
+          "scenario"
+        ],
+        "title": "ComparedRisk"
+      },
       "ConfirmedMatchOut": {
         "properties": {
           "planned_event_id": {
@@ -2185,6 +2313,52 @@
           "message"
         ],
         "title": "FieldError"
+      },
+      "ForecastComparison": {
+        "properties": {
+          "base_forecast_id": {
+            "type": "string",
+            "title": "Base Forecast Id"
+          },
+          "scenario_forecast_id": {
+            "type": "string",
+            "title": "Scenario Forecast Id"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "horizon_days": {
+            "type": "integer",
+            "title": "Horizon Days"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/ComparedPoint"
+            },
+            "type": "array",
+            "title": "Points"
+          },
+          "risk": {
+            "$ref": "#/components/schemas/ComparedRisk"
+          }
+        },
+        "type": "object",
+        "required": [
+          "base_forecast_id",
+          "scenario_forecast_id",
+          "as_of",
+          "horizon_days",
+          "model_version",
+          "points",
+          "risk"
+        ],
+        "title": "ForecastComparison"
       },
       "ForecastOut": {
         "properties": {

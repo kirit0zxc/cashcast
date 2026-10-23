@@ -39,6 +39,7 @@
 | GET | `/forecasts/{id}/explanations` | Сохранённые причины/компоненты; 409 до успешного расчёта. |
 | GET/POST | `/companies/{id}/plan-fact` | query account_id/as_of; GET предложения и подтверждения, POST безопасные auto-confirm. |
 | POST | `/forecasts/{id}/scenarios` | Сценарий «что если» к фиксированной базе → свой `forecast_run`. |
+| GET | `/forecasts/{id}/comparison` | Успешный сценарий и база, дневная разница p50 и оба риска; 409 при несовместимости. |
 
 ## Асинхронность прогноза
 
@@ -88,3 +89,15 @@ Paid/cancelled события и просрочка передаются мод�
 Только RUB: событие другой валюты422, старое валютное событие блокирует расчёт вместо
 молчаливого пересчёта в рубли. Импорт, ручная категория, планы и сборка snapshot
 используют блокировку счёта; snapshot не смешивает несколько версий входа.
+
+## comparison-v1
+
+Согласование A-006/B-012: coordination/decisions/comparison-v1.md. Сравниваются только
+успешный сценарий и его успешная база с одинаковыми account/as_of/horizon/data_version/
+model_version/seed. Ответ содержит IDs, as_of, horizon_days, model_version,
+points(point_date,base_balance_p50_minor,scenario_balance_p50_minor,delta_balance_minor)
+и risk(base,scenario). delta=scenario-base. Чужая компания404; база без сценария409;
+неполный или несовместимый результат409. GET не меняет исходные данные.
+
+Некорректные параметры/цель сценария отклоняются422 до job. Минимальный экран умеет
+дополнительный расход и сравнение по дням; остальные виды доступны через API.
