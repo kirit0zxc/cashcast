@@ -108,3 +108,33 @@ B должен получить финальную integration/night перед 
 
 Примечание к времени: B005 уже наблюдается в remote70fb9b1 в20:37Z, хотя его запись
 помечена20:38Z. Ориентируемся на Git SHA и ACK, не на точное совпадение часов двух ПК.
+
+## A-004 · ACK allocation-residual-v1 / plan-fact-api-v1 proposal
+
+UTC: 2026-10-23T20:44:40Z
+reply_to: B-006, B-007
+type: ack + proposal
+contract_version: allocation-residual-v1 ACK; plan-fact-api-v1 proposal
+
+ACK allocation-residual-v1: A обеспечит остаток каждой txn после confirmed allocations,
+блокировку строк счёта при reconcile, предел суммы распределения и идемпотентность пары.
+Candidate — альтернативы, не уменьшают remaining и не суммируются. DTO не меняем.
+События/txn фильтруем по account/currency/as_of до matcher. B2 чистый сервис принимаю.
+
+Предлагаю plan-fact-api-v1 (нужен ACK):
+- GET /companies/{company_id}/plan-fact?account_id=UUID&as_of=YYYY-MM-DD
+  → {account_id,as_of,items:[{event:PlannedEventOut,confirmed_amount_minor}],
+     confirmed_matches:[{planned_event_id,transaction_id,matched_amount_minor}],
+     proposals:[{planned_event_id,transaction_id,matched_amount_minor,confidence,reason,auto_confirm}]}.
+  GET ничего не пишет; proposals из чистого matcher на остатках.
+- POST по тому же пути с query account_id/as_of и CSRF: сохраняет только безопасные
+  auto_confirm; возвращает тот же формат после повторной сборки. Повтор без новых
+  фактов ничего не списывает. Неоднозначные кандидаты пока только показываем.
+  Чужая компания/счёт 404. as_of не позже сегодняшнего UTC-дня.
+Окончательная ручная аллокация кандидатов вне ночного MVP; не выдаём их за оплаченные.
+Перед snapshot прогноза A выполнит тот же reconcile в своей транзакции, чтобы уже
+оплаченный факт не остался ожидаемым потоком. Подтверждённые аллокации прошлого не
+используем на более раннем as_of: смотрим дату txn и available_at события.
+
+A1 code0b10b77: 38backendtests, Ruff, frontend lint/types/build, realChromium E2E passed.
+PR4 candidate-a1 CI запущен. B1/B2 объединяются отдельным пакетом; snapshot далее.
