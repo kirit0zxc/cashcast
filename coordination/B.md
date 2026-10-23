@@ -1,11 +1,11 @@
 # Статус B
 
 state: WORKING
-task: B5b alternative comparison; registry READY
-base_sha: 21eca62dc8d1f3f7d54544cb272db9c9e9a130e9
-code_sha: f9201dbe522f6d9c032a7ab378624524cfde2eb2
-tested_sha: f9201dbe522f6d9c032a7ab378624524cfde2eb2
-last_update: 2026-10-23T21:55:00Z
+task: B6 calibration running; B5b READY; CSV adapter next small package
+base_sha: 420a8fd
+code_sha: 88c56b6e45f047c5fe5b2f9760f9364f3c14077f
+tested_sha: 88c56b6e45f047c5fe5b2f9760f9364f3c14077f
+last_update: 2026-10-23T22:05:41Z
 contract_version: archive-v1 + wiring-v1.1 + allocation-residual-v1 + snapshot-events-v1 + model-version-v1 + plan-fact-api-v1 + comparison-v1 ACK
 
 ## B-001 · CHECK-IN
@@ -475,3 +475,37 @@ namespaced source_ref, auth/CSRF/изоляция и historical_plan_unavailable
 не объявляется мной VERIFIED. B5b сравнение всё ещё не запускалось: пишу инвариантные
 тесты исследовательского движка, затем фиксированный selection Jan–Mar.
 Следующий heartbeat до22:15UTC; ETA сравнения с профилем ~20минут.
+
+## B-018 · READY B5b alternatives/profile; B6 WORKING
+
+UTC:2026-10-23T22:05:41Z
+reply_to:A-012
+type:ready + heartbeat
+task:B5b
+code_sha:88c56b6e45f047c5fe5b2f9760f9364f3c14077f
+tested_sha:88c56b6e45f047c5fe5b2f9760f9364f3c14077f
+base_sha:420a8fd
+
+Готов пакет сравнения/preregistered point-selection, текущий default не переключён.
+268общихfolds/8040дней/104developmentкомпании, только Jan–Mar и границаApr30.
+MAE₽:baseline2446278.34,seasonal1328239.15,EWM1399894.33,winsor1322081.74,trend1423881.26.
+Winsor gain0.46%<5%, остальные хуже; сохраняюseasonal1.0-w84. Короткая история8folds
+не улучшилась противbaseline, раскрыто в B5-REPORT.md. Риск raw всё ещё хуже ориентира,
+никакой калиброванной вероятности этим пакетом не заявлено. B6 уже запущен отдельно.
+
+Resource P2 изревью исправлен индексом/cached identities в shared schedule;3000split
+и calendarmax регрессии. Frozenlegacy/реестр/default неизменны. Профиль1–180дней,
+source hashes, exclusions/cohorts и reproducible команда — evaluation/selection-v2.json
+и evaluation/B5-REPORT.md. Последний run71.13s, reviewer независимо полностью повторил
+численные метрики/решение, совпадение точное; время не сравнивалось на равенство.
+
+Author:133puretests; fullbackend179passed на выделенной cashcast_b_test/PostgreSQL17,
+Ruff . ../evaluation изbackend, diff-checkpassed. Reviewer133trackedpuretests,
+Ruff/diff/sourcehashespassed. Fingerprint9файлов:
+ed55e237d19de96ec78cda396c986a9db2d2eaba0111f9e6929268d34fbc524b.
+Tree:c327cec799bc8e91051014cc719fbbcb650df2b8. Actionsnot_run поnight-ci-quota-v1.
+
+A012 прочитан. ACKquota/CSVHTTP уже отправленB017/6bcf21a — прошу сверить свежую Bветку.
+Риск fit/check/test считается (~1мин); чтобы разблокировать A, следующий небольшой
+пакет будет CSVparser безHTTP/ORM, ETA~10мин. Затем B6продуктовый quality fallback.
+Следующий heartbeat до22:25UTC. Полный B5–B10 ещё не закончен.
