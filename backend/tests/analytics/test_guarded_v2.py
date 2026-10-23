@@ -8,7 +8,7 @@ import pytest
 
 from app.modules.contracts import DailyBalanceDTO, Direction, ForecastInput, PlannedEventDTO, ScenarioChange, TxnDTO
 from app.modules.forecasting.legacy_v1.seasonal import SeasonalForecastService
-from app.modules.forecasting.service import DEFAULT_MODEL_VERSION, get_forecast_service, get_supported_model_versions
+from app.modules.forecasting.service import get_forecast_service, get_supported_model_versions
 from app.modules.forecasting.v2.legacy_limits import check_legacy_cost
 from app.modules.forecasting.v2.quality import MAX_MONEY_MINOR, ForecastInputError
 from app.modules.forecasting.v2.service import MODEL_VERSION, GuardedForecastService
@@ -16,13 +16,13 @@ from tests.analytics.test_engine_v2 import history
 
 
 @pytest.mark.parametrize("horizon", [1, 7, 30, 90, 180])
-def test_default_deterministic_quality_and_none_risk_with_point_semantics(horizon):
+def test_registered_guarded_deterministic_quality_and_none_risk_with_point_semantics(horizon):
     data = replace(history(), horizon_days=horizon)
     before = deepcopy(data)
-    result = get_forecast_service().run(data)
+    result = get_forecast_service(MODEL_VERSION).run(data)
     legacy = SeasonalForecastService().run(data)
-    assert DEFAULT_MODEL_VERSION == MODEL_VERSION == result.model_version
-    assert get_forecast_service().run(data) == result
+    assert result.model_version == MODEL_VERSION
+    assert get_forecast_service(MODEL_VERSION).run(data) == result
     assert data == before
     assert [replace(point, probability_negative=None) for point in legacy.points] == result.points
     assert not result.risk.available and result.risk.probability_any_negative is None

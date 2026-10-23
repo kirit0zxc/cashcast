@@ -79,3 +79,22 @@ Reviewer воспроизвёл12.34→1200коп при localcontext.prec2 из
 Добавлена регрессия precision2→1234коп. Поля сверх1000символов теперь отклоняются
 до int-конверсии (5000цифр не вызывают Python ValueError).18source tests passed.
 Повтор проверки обоснован исправлением денежной точности и resource guard.
+
+## B-ATT-008 · B6 posthoc audit и активация default
+
+UTC:2026-10-23T22:27:00Z; исходныйdc8fb4f; задачаB6.
+Предрегистрация выбрала logit-intercept обоих каналов: Brier point-estimate gates
+fit/check/test пройдены. Первоначальный общий leadtime вводил в заблуждение:8из12
+testpositivefolds ужеnegativeopening. По собственной гипотезе и независимому аудиту
+добавлены описательные cohorts и persistence, без ретюнинга параметров/порогов.
+Leadtime теперь только для нового разрыва при неотрицательном opening. Fit новых
+gapfolds1/check2, dailypositive3/4 — меньше заранее заданного минимума. Product None
+выбран консервативно; этот posthoc gate не объявляется пререгистрированным успехом.
+
+Первый полный тест с переключением default2.0:236passed/1failed, A-owned
+test_worker_keeps_queued_model_when_default_factory_changes жёстко ждалстроку1.0-w84.
+Фактическая queued2.0 сохранилась и job succeeded, подмены версии не было.
+Чужой тест не редактировался: default оставлен1.0 до согласованной активации с A,
+2.0 зарегистрирована явно. Полный повтор237passed, Ruffpassed. Предложение A —
+запоминать model_version после enqueue, а не жёстко кодировать старый default.
+После A-ACK будет отдельный default-switch и совместный тест2.0 через приложение.

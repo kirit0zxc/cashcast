@@ -110,8 +110,9 @@ assess_quality: префиксная сверка остатков (без кв�
 ## model-registry-v2 и замороженная версия1.0
 
 Контракт A-009 подтверждает get_forecast_service(model_version=None) и
-get_supported_model_versions()->tuple[str,...]. Без args default seasonal-guarded-2.0-w84
-(до B6 применялся1.0-w84). Старые точные версии остаются доступны для replay.
+get_supported_model_versions()->tuple[str,...]. Без args default пока1.0-w84.
+Новая seasonal-guarded-2.0-w84 зарегистрирована явно, активация default отдельным пакетом
+после совместимой проверки приложения A. Старые точные версии доступны для replay.
 Поддерживаются ровно baseline-repeat-week-0.1 и seasonal1.0-w28/w56/w84.
 Неизвестная версия (включая пустую строку/нестроковый вход) вызывает
 UnsupportedModelVersionError(ValueError) с code unsupported_model_version.
@@ -150,7 +151,7 @@ Raw probabilities помечены исследовательскими и не 
 
 ## B6: продуктовый quality/fallback и пределы доказанного риска
 
-Default `seasonal-guarded-2.0-w84` использует выбранную B5 математику frozen1.0-w84.
+Версия `seasonal-guarded-2.0-w84` использует выбранную B5 математику frozen1.0-w84.
 Вход проверяется quality-v2.0; после несверки вся статистическая/recurrence история
 ограничена пригодным периодом. При непригодной симуляции p10/p90 схлопываются к p50.
 На нормальной согласованной истории потоки/квантили1.0 сохраняются; None вероятности
