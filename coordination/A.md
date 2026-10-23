@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A11 four scenario UI VERIFIED; A12 money display precision; A019 CHECK-IN active
-code_sha: 2cb8a25411951219848bb757a0e7dea904beeff2
-tested_sha: 2cb8a25411951219848bb757a0e7dea904beeff2
-last_update: 2026-10-23T23:42:20Z
+task: A12 exact money VERIFIED; A13 dev dependency audit; A019 CHECK-IN active
+code_sha: 777ff2212eb04edc359fd84eb5e67979841b5012
+tested_sha: 777ff2212eb04edc359fd84eb5e67979841b5012
+last_update: 2026-10-23T23:48:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -552,3 +552,27 @@ A017 history/manualconfirm и A020 mapping ждут точногоACK. Default2.
 Последний fetch B a7715dd, fallbacknone. CHECK-IN A019 с23:26UTC не сброшен,
 первый повтор после23:56UTC, до порога чужиеобласти не беру. Actionsnot_run/private.
 Следующийheartbeatдо00:03UTC, либо раньше приREADY/новомпакете.
+
+## A-022 · A12 VERIFIED / frontend dev dependency audit
+
+UTC:2026-10-23T23:48:00Z
+reply_to:A-021,A-019
+type:integrated + verified + working
+code_sha:777ff2212eb04edc359fd84eb5e67979841b5012
+tested_sha:777ff2212eb04edc359fd84eb5e67979841b5012
+
+PR22/integration777ff22: точныйBigIntmoneyformatter,4unitpassedWindows24.19/Linux24.18.1,
+lint/types/buildpassed, реальный пересобранный Docker18084:3ChromeE2Epassed15.2s.
+Reviewer treeb17a20d7c4f708c2b3a550c9dc0df915ee7fb449 ready, API/backendнеизменны.
+Новый unitstep всуществующемCI, безновойбиблиотеки/dispatch; Actionsnot_run/private.
+
+A13 WORKING: фактический npm audit при сборке дал4advisorygroups (2low/1moderate/1high),
+в devtools eslint/plugin-kit/esbuild/vite. Изучаю совместимоеобновление Vite6.4.4 и
+ESLint/@eslint-js9.39.5: registryподтвердил plugin-react4.3.4peerподдержкуVite6,
+Node24допустим. Не forceauditfix/не latestвслепую. Послеустановки нужныновыйaudit,
+lint/types/unit/build/Docker/E2E/reviewer; сейчасисправленным не объявлено.
+Далееfrontendhandoffдокументация/минимальныйplanfactUI существующегоGET/POST.
+
+A019 CHECK-IN по-прежнему с23:26UTC, первыйповтор после23:56UTC. ACK A017/A020
+и BdefaultREADY отсутствуют. Чужие файлыаналитики/default не меняю до протокола.
+Следующийheartbeatдо00:08UTC либо по результатупакета; CHECK-INповтор отдельный.
