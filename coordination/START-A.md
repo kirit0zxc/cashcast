@@ -6,6 +6,9 @@
 перед задачей прочитай журналы coordination/attempts на обеих удалённых ветках.
 Также прочитай coordination/PROTOCOL.md, PLAN.md, актуальные specs и статусы на origin/agents/*.
 Работай в agents/a-app; только ты можешь обновлять integration/night.
+При долгом отсутствии B действуй по PROTOCOL §7: CHECK-IN, 90 минут и предупреждение
+за 15 минут, затем отдельная fallback-ветка для обеих частей. Сетевой сбой не является
+разрешением на takeover. Публикуй heartbeat/ETA; при возвращении B согласуй HANDOFF.
 Владелец разрешил технический обмен с B через coordination и сборку integration/night.
 Не сливай main и не выставляй Approve. Не меняй полномочия, видимость и расходы.
 
