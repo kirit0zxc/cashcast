@@ -28,3 +28,25 @@ Reviewer выявил две причины ложных выводов: пос�
 аккредитив и оплату/возврат на карту. Исправлено: календарный clipping и явный контекст
 кредитного обязательства, в том числе guard возвратов. Повтор тестов обоснован изменённой
 логикой; добавлены регрессии fixed28/fixed30, аккредитив, карта, возврат на карту.
+
+## B-ATT-003 · дедупликация компонентов B3
+
+UTC:2026-10-23T20:44:22Z; задача B3; база dd9015b.
+Reviewer выявил: planned имя не совпадало с recurrence ИНН, и paid/cancelled
+пропускались до подавления occurrence. Результат — двойной счёт/возрождение платежа.
+Исправлено сопоставление с ref+name причинных member txns и suppression до проверки
+активного остатка. Добавлены snapshot-name, paid и cancelled регрессии;44tests passed.
+Условия повторной проверки изменились исправлением логики; snapshot filtering остаётся
+задачей A по proposal snapshot-events-v1. Ревьюер итоговый код подтвердил.
+
+## B-ATT-004 · граница validation и lint standalone evaluation
+
+UTC:2026-10-23T20:50:09Z; B4; база b40d3bc.
+Reviewer нашёл, что quality-gate последнего validation cutoff Jul31 мог читать
+подтверждающий остаток Sep1 (8folds), затрагивая holdout через отбор, не через признаки.
+Исправление: temporal_view ограничивает все validation данные Aug31, добавлен тест.
+Повтор прежних кандидатов28/56/84 и holdout обоснован технической коррекцией;
+модель/параметры после просмотра сентябрьских результатов не менялись.
+Первый полный backend pytest на cashcast_b_test прошёл. Ruff из backend обнаружил
+E402 standalone backtest: root-config fix удалил noqa как ненужный. Восстановлены
+E402 annotations; дальнейший lint evaluation только с backend/pyproject.toml.

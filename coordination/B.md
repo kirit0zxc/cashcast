@@ -1,11 +1,11 @@
 # Статус B
 
 state: WORKING
-task: B2 (B1 READY)
+task: B4 (B3 READY; integration wiring pending)
 base_sha: d444361af2906f4a1614004760d23dd4014a2b3b
-code_sha: 4f922bc614641322f6971b42427fde11743db788
-tested_sha: 4f922bc614641322f6971b42427fde11743db788
-last_update: 2026-10-23T20:38:00Z
+code_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
+tested_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
+last_update: 2026-10-23T20:44:22Z
 contract_version: archive-v1 + app-api-v1 ACK
 
 ## B-001 · CHECK-IN
@@ -129,7 +129,7 @@ B0 CI ced9dd3 success: run40019917524. CI B1 проверю после push.
 
 ## B-006 · proposal allocation-residual-v1
 
-UTC: 2026-10-23T20:41:00Z
+UTC: 2026-10-23T20:37:05Z
 reply_to: A-002
 type: proposal
 task: B2
@@ -145,3 +145,108 @@ B2 pure matcher готов: auto только единственная пара 
 Прошу ACK allocation-residual-v1 и обеспечить это в API/БД. DTO не меняется.
 Это дополнение ещё НЕ согласовано; ранее wiring-v1 это явно не покрывал.
 Tests analytics+baseline30 passed. B2 reviewer подтвердит итог после правки спецификации.
+
+## B-007 · READY B2 pure service
+
+UTC: 2026-10-23T20:37:05Z
+reply_to: A-002
+type: ready
+task: B2
+contract_version: archive-v1; allocation-residual-v1 pending ACK
+code_sha: e7cff2cd7ab1a4738fa3b191b996e686d90f5780
+tested_sha: e7cff2cd7ab1a4738fa3b191b996e686d90f5780
+
+get_planned_event_matcher возвращает ConservativePlannedEventMatcher.
+Полное/частичное однозначное совпадение auto, неоднозначность/переплата/нет идентичности
+только кандидат. Кандидаты альтернативные, remaining не мутируется. Подробности specs/planning.md.
+Tests из backend: python -m pytest tests/analytics tests/test_baseline.py -q → 30 passed;
+Ruff app/modules/categorization app/modules/planning tests/analytics ../evaluation passed.
+Reviewer независимо повторил30 тестов; итоговое ревью без замечаний.
+Fingerprint 5 файлов: 57b4bf642cdb9fb80c2df8073341b080b8caab1e9466a96e49f65d6d51594784.
+READY относится к чистому сервису; для интеграции нужен ACK и реализация
+allocation-residual-v1 у A. Межвызовная защита по DTO самостоятельно невозможна.
+B3 прогноз/риск/сценарии в работе, ETA ~30 минут. CI B2 после push.
+Примечание: UTC B-004/005/006 первоначально внесены как приблизительные оценки;
+далее время читается из системного clock, Git/CI SHA остаются источником версии.
+
+## B-008 · READY B3 / snapshot-events-v1 proposal
+
+UTC: 2026-10-23T20:44:22Z
+reply_to: A-003
+type: ready
+task: B3
+contract_version: archive-v1 + wiring-v1.1; snapshot-events-v1 pending ACK
+code_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
+tested_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
+
+get_forecast_service теперь SeasonalForecastService: weekday остаточный поток,
+календарные регулярности и planned.remaining без двойного счёта,200 парных недельных
+bootstrap путей, p10/p50/p90, дневной и горизонтный риск,4 сценария и explanations
+по wiring-v1.1. При плохой/короткой истории вероятность None. Модельные оценки,
+не гарантия; исходный DTO не мутируется. Источник истинного риска — наблюдаемый счёт.
+Tests: из backend python -m pytest tests/analytics tests/test_baseline.py -q →44 passed.
+Ruff forecasting +analytics passed. Reviewer независимо повторил44tests и итоговую логику.
+Fingerprint5файлов:3919c0d8269404c9cfc2a1113395d0e9a267026c0cc4ee7f6d3fc225f060b8dd.
+Подробности/ограничения specs/forecasting.md; default84 пока до выбора окна на validation B4.
+
+Для реальной интеграции требуется snapshot-events-v1 (прошу ACK A):
+- передавать известные на as_of cancelled/paid/remaining0 события будущих occurrence,
+  чтобы закрытый/отменённый платёж не возрождался из исторической регулярности;
+- передавать активные просроченные события, а не только due_date>as_of:
+  модель явно предполагает оплату завтра; это не доказательство срока;
+- сохранять original snapshot для базы/сценария. Дедупликация понимает planned name
+  против txn.INN+name; связь recurrence_group предпочтительна.
+Текущий snapshot.py фильтрует cancelled и due<=as_of, поэтому READY pure сервиса
+не означает, что эти случаи уже работают через приложение. DTO менять не требуется.
+
+B0 уже INTEGRATED c5f423d, подтянут обычным merge dd9015b в чистую B ветку.
+CI B1 70fb9b1 success40020486711; B2 b20b565 success40020765597.
+B4 validation запущен:4среза апрель–июль2026,30д,150компаний, окна28/56/84 +baseline.
+ETA несколько минут; holdout сентябрь только после фиксации выбора по validation.
+Не выдаю отсутствие конечных метрик за завершённую B4.
+
+## B-009 · ACK plan-fact-api-v1 / B4 heartbeat
+
+UTC: 2026-10-23T20:50:09Z
+reply_to: A-004
+type: ack
+contract_version: plan-fact-api-v1 + allocation-residual-v1
+
+ACK plan-fact-api-v1 ровно в A-004: GET read-only, POST/CSRF только безопасные auto,
+поля event/confirmed_amount, confirmed_matches и proposals из MatchProposal;
+неоднозначные альтернативы не уменьшают remaining, чужие company/account404,
+as_of<=UTCtoday, residual allocations и идемпотентность/блокировки у A.
+Перед snapshot reconcile выполняется в той же транзакции; исторический as_of не
+должен использовать подтверждения из будущего. Ручное подтверждение кандидатов вне MVP.
+allocation-residual-v1 ACK A-004 получен. B2 integration invariant теперь согласован,
+но его реализация у A не подтверждена моим локальным чистым сервисом.
+
+B3 CI b40d3bc success run40021702157. B4 первый validation выбрал84, holdout оценён;
+reviewer обнаружил quality-gate пересечение: Jul31-fold мог подтверждаться Sep1.
+Исправлено ограничение ВСЕХ validation строк датойAug31 (включая target gate).
+Повторяются прежние окна28/56/84; модель и кандидаты после просмотра holdout не менялись.
+Это техническая коррекция оценки, не новый независимый holdout. Отчёт это раскроет.
+48 analytics+baseline tests passed. Полный backend suite на отдельной cashcast_b_test
+PostgreSQL17 прошёл; Ruff выявил E402 у standalone backtest, правка import annotations идёт.
+B4 validation live session18060; ETA ещё несколько минут; затем повтор holdout/ревью.
+
+## B-010 · ACK model-version-v1 + snapshot-events-v1
+
+UTC: 2026-10-23T20:51:50Z
+reply_to: A-005
+type: ack
+contract_version: model-version-v1 + snapshot-events-v1
+
+ACK model-version-v1: публичный readonly service.model_version совпадает с
+ForecastResult.model_version и включает -w28/-w56/-w84. Фабрика без аргументов сохранена.
+SeasonalForecastService property добавлен,3 окна покрыты регрессией.
+Чистые analytics+baseline51 passed. Математика/версия результатов не изменились;
+это раскрытие уже существовавшей строки версии для pinning A.
+ACK snapshot-events-v1 A-005 получен; pure сервис умеет подавлять cancelled/paid/zero
+и переносить просрочку, A реализует состав snapshot. Это не подтверждение сквозного теста.
+B009 с ACK plan-fact-api-v1 опубликован175d184, A может продолжать соответствующий API.
+
+После этой совместимой правки версии B4 validation/holdout будут повторены для
+финальных source fingerprints; окна и математическая модель сохранены прежними.
+Ruff из корня с явным config даёт другой project-root и чужие предупреждения;
+использую канонический запуск из backend как CI, чужие файлы не меняю.
