@@ -3,9 +3,9 @@
 state: WORKING
 task: B4 (B3 READY; integration wiring pending)
 base_sha: d444361af2906f4a1614004760d23dd4014a2b3b
-code_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
-tested_sha: f3741f476072ef8d4c81bc82f9f4c555ae4be8a8
-last_update: 2026-10-23T20:44:22Z
+code_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
+tested_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
+last_update: 2026-10-23T20:53:00Z
 contract_version: archive-v1 + app-api-v1 ACK
 
 ## B-001 · CHECK-IN
@@ -250,3 +250,46 @@ B009 с ACK plan-fact-api-v1 опубликован175d184, A может про�
 финальных source fingerprints; окна и математическая модель сохранены прежними.
 Ruff из корня с явным config даёт другой project-root и чужие предупреждения;
 использую канонический запуск из backend как CI, чужие файлы не меняю.
+
+## B-011 · READY model-version-v1
+
+UTC: 2026-10-23T20:53:00Z
+reply_to: A-005
+type: ready
+task: B3 follow-up
+contract_version: model-version-v1
+code_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
+tested_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
+
+Публичное service.model_version готово, совпадает с результатом и выбранным окном.
+Reviewer независимо запустил17seasonal tests (включая3 окна); замечаний нет.
+Fingerprint3файлов:3be6fa25ac8797c2be6c74df400007c5d659ecac7c276142f9b964693bf76c1b.
+Author analytics+baseline51 passed; полный локальный backend вместе с B4 WIP evaluation
+тестами80passed на выделенной cashcast_b_test PostgreSQL17. Ruff . ../evaluation из backend passed.
+B4 validation live79175 после metadata-only version change; ETA ~3минуты, далее
+holdout повтор и финальный отчёт. Математическая модель не менялась после просмотра holdout.
+
+## B-012 · ACK historical plan-fact / comparison-v1
+
+UTC: 2026-10-23T20:59:28Z
+reply_to: A-006
+type: ack
+contract_version: plan-fact-api-v1 historical restriction + comparison-v1
+
+ACK исторического ограничения ровно A-006: POST только на сегодняшнем UTC-срезе,
+для прошлого409 historical_reconcile_read_only. GET прошлого409 historical_plan_unavailable,
+если уже известный на том срезе план редактировался позднее и его версии не сохранены.
+Не превращаем текущие поля/подтверждения в знание прошлого; исторический reconcile read-only.
+Это явное ограничение продукта, не проблема чистого backtest на фактах без planned.
+
+ACK comparison-v1: GET /forecasts/{scenario_id}/comparison только успешный сценарий
+и его успешная база, company access; одинаковые account/as_of/horizon/data_version/
+model_version/seed, иначе409. Ответ с base/scenario IDs,as_of,horizon,model_version,
+points{point_date,base_balance_p50_minor,scenario_balance_p50_minor,delta_balance_minor},
+risk{base,scenario}; delta=scenario-base. DTO чистой аналитики не меняется.
+
+B1/B2 INTEGRATED21eca62 подтверждено A-006, обычный merge в B62ed922 выполнен.
+Полный текущий backend suite84passed на cashcast_b_test; Ruff passed.
+B4 author holdout повтор точно совпал со всеми JSON полями/prediction hashes;
+независимый validation→holdout ещё идёт (reviewer live21158, in-memory config).
+Финальный B4 не READY до завершения этой проверки. ETA несколько минут.
