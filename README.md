@@ -252,6 +252,8 @@ React/TypeScript/Vite/Recharts → nginx → FastAPI/SQLAlchemy/Pydantic → Pos
 worker того же backend-образа читает PostgreSQL jobs с lease. Статистика на CPU без
 внешнего LLM и без обязательного GPU. [Архитектура](specs/architecture.md),
 [модель данных](specs/data-model.md), [API](specs/api.md), [аналитика](specs/forecasting.md).
+[Передача утреннему фронтенду](specs/frontend-handoff.md): готовые ручки, ограничения
+и сценарии, которые должны сохраниться после редизайна.
 
 Ночью A владеет приложением/интеграцией, B — аналитикой. [AGENTS.md](AGENTS.md),
 [протокол](coordination/PROTOCOL.md), [очередь B до08:00](coordination/NIGHT-B-FULL.md).

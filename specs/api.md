@@ -1,8 +1,10 @@
-# Контракт API v1 (черновик для согласования)
+# Контракт API v1 · реализованная ночная версия
 
 Базовый префикс: `/api/v1`. Полная машинная спецификация — [`openapi.json`](openapi.json),
 генерируется из Pydantic-схем командой `python -m app.scripts.export_openapi`.
-**Это предложение, а не замороженный контракт** — меняем согласованно на первой синхронизации.
+Перечисленные ручки реализованы по согласованным решениям A/B. Новые предложения в
+coordination/decisions не являются реализованными API до ACK и проверенного пакета.
+Для утреннего интерфейса: [frontend-handoff.md](frontend-handoff.md).
 
 ## Общие правила
 
@@ -29,6 +31,8 @@
 | GET | `/import-presets` | Именованные mapping CSV, `{items:[{id,name,mapping}]}`; нужна сессия. |
 | POST | `/companies/{id}/imports` | Загрузка выписки (multipart: `file`, `account_id`, `mapping`). Preview: ошибки строк, дубли, период. |
 | POST | `/imports/{id}/commit` | Подтвердить импорт; идемпотентно, повтор не создаёт дубли. |
+| POST | `/companies/{id}/obligation-imports` | Preview CSV обязательств с источником, датой доступности и ошибками строк. |
+| POST | `/obligation-imports/{id}/commit` | Атомарный commit без сброса оплаты/отмены, проверка sourceID-конфликтов. |
 | GET | `/companies/{id}/transactions` | Операции; курсорная пагинация (`items`, `next_cursor`), фильтры. |
 | PATCH | `/transactions/{id}/category` | Ручная правка категории (source=manual). |
 | GET/POST | `/companies/{id}/planned-events` | Список и создание плановых счетов/обязательств. |
