@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { CashCastApi, money, probability, type Accepted, type Forecast, type Job } from "../../shared/api";
+import { Explanations } from "./Explanations";
 
 export function ForecastPanel({ api, companyId, accountId, initialDate }: {
   api: CashCastApi; companyId: string; accountId: string; initialDate: string;
@@ -36,7 +37,8 @@ export function ForecastPanel({ api, companyId, accountId, initialDate }: {
     {working && <p role="status">Задание: {job.data?.status ?? "отправляем"}. Ожидаем worker…</p>}
     {job.data?.status === "failed" && <p role="alert">Расчёт не выполнен: {job.data.error_code}</p>}
     {[mutation.error, job.error, forecast.error].filter(Boolean).map((e, i) => <p role="alert" key={i}>{e!.message}</p>)}
-    {forecast.data && <ForecastView forecast={forecast.data} />}
+    {forecast.data && <><ForecastView forecast={forecast.data} />
+      <Explanations api={api} forecastId={forecast.data.id} /></>}
   </section>;
 }
 

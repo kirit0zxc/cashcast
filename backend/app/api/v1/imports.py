@@ -6,6 +6,7 @@ import dataclasses
 import uuid
 
 from fastapi import APIRouter, Depends, File, Form, UploadFile
+from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from app.api.schemas.common import ERROR_RESPONSES
@@ -32,7 +33,7 @@ async def create_import(
     session: Session = Depends(get_db),
     settings: Settings = Depends(get_settings),
 ) -> ImportPreviewResponse:
-    content = await file.read()
+    content = await file.read(settings.max_upload_bytes + 1)
     if len(content) > settings.max_upload_bytes:
         raise AppError(413, "file_too_large", "Файл превышает допустимый размер")
 
@@ -40,7 +41,10 @@ async def create_import(
     if acc is None or str(acc.company_id) != str(company_id):
         raise AppError(404, "not_found", "Счёт не найден")
 
-    mapping_in = ColumnMappingIn.model_validate_json(mapping)
+    try:
+        mapping_in = ColumnMappingIn.model_validate_json(mapping)
+    except ValidationError:
+        raise AppError(422, "invalid_mapping", "Некорректное соответствие колонок CSV") from None
     col_map = ColumnMapping(**mapping_in.model_dump())
     result = ImportService(session).preview(
         company_id=str(company_id),

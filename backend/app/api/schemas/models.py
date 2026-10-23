@@ -7,6 +7,8 @@ from typing import Literal
 
 from pydantic import BaseModel, EmailStr, Field
 
+from app.modules.contracts import Category
+
 Direction = Literal["in", "out"]
 
 
@@ -42,7 +44,7 @@ class ColumnMappingIn(BaseModel):
     external_id: str | None = None
     currency: str | None = None
     balance: str | None = None
-    delimiter: str = ","
+    delimiter: str = Field(default=",", min_length=1, max_length=1)
     encoding: str = "utf-8-sig"
 
 
@@ -90,7 +92,7 @@ class TransactionOut(BaseModel):
 
 
 class TransactionCategoryPatch(BaseModel):
-    category: str = Field(min_length=1, max_length=50)
+    category: Category
 
 
 # --- Planned events ---
@@ -205,7 +207,7 @@ class ScenarioChangeIn(BaseModel):
     kind: Literal["delay_event", "reduce_irregular_inflow", "add_expense", "increase_recurring"]
     target_id: str | None = None
     shift_days: int | None = None
-    factor: float | None = Field(default=None, gt=0, le=2)
+    factor: float | None = Field(default=None, ge=0, le=2)
     amount_minor: int | None = Field(default=None, gt=0)
     on_date: date | None = None
 
