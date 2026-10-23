@@ -1,12 +1,12 @@
 # Статус B
 
 state: WORKING
-task: B4 (B3 READY; integration wiring pending)
-base_sha: d444361af2906f4a1614004760d23dd4014a2b3b
-code_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
-tested_sha: 1028b3451244107f77e7ae3f3133ef7f40dd59e0
-last_update: 2026-10-23T20:53:00Z
-contract_version: archive-v1 + app-api-v1 ACK
+task: B5b alternatives/frozen legacy; B5a READY
+base_sha: 21eca62dc8d1f3f7d54544cb272db9c9e9a130e9
+code_sha: 2727fddedd80fa8a4868ba435e25395db851d78e
+tested_sha: 2727fddedd80fa8a4868ba435e25395db851d78e
+last_update: 2026-10-23T21:40:36Z
+contract_version: archive-v1 + wiring-v1.1 + allocation-residual-v1 + snapshot-events-v1 + model-version-v1 + plan-fact-api-v1 + comparison-v1 ACK
 
 ## B-001 · CHECK-IN
 
@@ -293,3 +293,133 @@ B1/B2 INTEGRATED21eca62 подтверждено A-006, обычный merge в 
 B4 author holdout повтор точно совпал со всеми JSON полями/prediction hashes;
 независимый validation→holdout ещё идёт (reviewer live21158, in-memory config).
 Финальный B4 не READY до завершения этой проверки. ETA несколько минут.
+
+## B-013 · READY B4 / итог B0–B4
+
+UTC: 2026-10-23T21:01:32Z
+reply_to: A-006
+type: ready
+task: B4
+contract_version: archive-v1 + agreed wiring; comparison-v1 ACK в B-012
+code_sha: 331b6f24629032648b5ded8b0b69e75d33c9e554
+tested_sha: 331b6f24629032648b5ded8b0b69e75d33c9e554
+
+B0–B4 реализованы и проверены. B4: воспроизводимый rolling backtest, фиксированный
+validation выбор84, отдельная сентябрьская оценка, сравнение с baseline, метрики риска,
+cohorts/исключения, исходные hashes и ограничения в evaluation/REPORT.md и JSON.
+Reviewer независимо повторил validation→config→holdout: ВСЕ поля JSON exact match;
+source fingerprints соответствуют коду;51 analytics+baseline tests и Ruff passed.
+Fingerprint8 B4файлов: eb4ec04162a4350d2fd3459436f8267c98ccb0769da50183ef203858ee7e1d12.
+
+Авторские команды (из backend):
+- .venv/Scripts/python.exe -m pytest tests/analytics tests/test_baseline.py -q →51 passed, без БД.
+- CC_TEST_DATABASE_URL на выделенную cashcast_b_test PostgreSQL17;
+  .venv/Scripts/python.exe -m pytest -o addopts='' -q →84 passed,1 upstream warning.
+- .venv/Scripts/ruff.exe check . ../evaluation →passed.
+Backtest из корня (ZIP вне Git):
+- backend/.venv/Scripts/python.exe evaluation/backtest.py --zip ../cashflow_dataset_participants.zip --phase validation --config evaluation/selected-config.json --output evaluation/validation.json
+- backend/.venv/Scripts/python.exe evaluation/backtest.py --zip ../cashflow_dataset_participants.zip --phase holdout --config evaluation/selected-config.json --output evaluation/holdout.json
+Повтор holdout автором дал exact JSON+prediction_sha256; reviewer повторил обе фазы.
+
+Измерения: validation517folds/15510дней, выбран84 по MAE; holdout122folds/3660дней.
+MAE остатка1072364.48₽ против baseline2775628.60₽; это абсолютная ошибка, не accuracy.
+Риск доступен117folds: Brier0.107358 хуже constant validation0.056426;19false alarms
+и7true при пороге0.5. Калибровка не подтверждена. Short-history улучшения нет.
+Нет эталонной accuracy категорий/matching, нет истинных внешних счетов, не проведён
+split новых компаний. Исправленный повтор уже просмотренного holdout раскрыт честно.
+Сырая ZIP/CSV и секреты не опубликованы. Модель после просмотра holdout не подбиралась.
+
+Предыдущие готовые code SHA:
+B0 92d12fdd82c2ac1ccc91309fc726caccc57d1e80;
+B1 4f922bc614641322f6971b42427fde11743db788;
+B2 e7cff2cd7ab1a4738fa3b191b996e686d90f5780;
+B3 f3741f476072ef8d4c81bc82f9f4c555ae4be8a8;
+B3.1 model-version 1028b3451244107f77e7ae3f3133ef7f40dd59e0.
+B0/B1/B2 INTEGRATED в21eca62 (A-006), B подтянул его обычным merge62ed922.
+B3/B3.1/B4 передаются этим итоговым SHA, совместная A2 проверка ещё не VERIFIED.
+A: обычный merge331b6f2 включает всё, в том числе модель и версии; не cherry-pick.
+A продолжает snapshot/reconcile/explanations/scenario/comparison и общий кандидат/CI.
+Собственная очередь B0–B4 закончена; калибровка/новый holdout — дальнейшее улучшение,
+не выдуманное доказательство готовой вероятности. В main/integration B не пишет.
+CI финального pushed SHA проверю после публикации; сейчас не объявляю его зелёным.
+
+## B-014 · ACK новой цели B5–B10 / план пакетов
+
+UTC: 2026-10-23T21:29:23Z
+reply_to: A-007
+type: ack + proposal
+task: B5–B10
+contract_version: NIGHT-B-FULL 5d80b71; model-registry-v2 proposal
+base_sha: 5bf8cd0134f8776a26cb3b4848fe7cc62a711961
+checkpoint_sha: 5e7c2bd22debb74f2284815be5f9c138a5ead7af
+
+Подтверждаю прямую расширенную цель владельца: законченная аналитика B5–B10,
+до08:00МСК24.10.2026 (05:00UTC). B0–B4 VERIFIED A007/5bf8cd0 не повторяю.
+Собственная ветка чистая; принятая интеграция5bf8cd0 уже в checkpoint5e7c2bd,
+fetch origin/agents/a-app5d80b71 выполнен, новые AGENTS/START/NIGHT/PLAN прочитаны.
+В main/integration/night не пишу. В конце срока checkpoint и честный аудит незавершённого.
+
+Порядок небольших пакетов:
+1. B5a: quality-gates/валидация/ресурсные пределы/горизонты1–180 и совместимый реестр версий.
+2. B5b: заранее зафиксированный эксперимент: альтернативы point forecast, profile CPU/memory,
+   сравнение baseline+старыйseasonal на одинаковых временных срезах.
+3. B6: отдельные fit/calibration/threshold-check/retrospective-test и company split;
+   Brier/reliability/false alarms/lead time/интервалы, проверенный probability-None fallback.
+4. B7: категоризация и устойчивые раздельные обязательства, циклы/календарь/состав источников.
+5. B8: распределение оплат/бюджеты + CSV будущих обязательств по согласованному адаптеру;
+   атомарность и HTTP/ORM остаются у A.
+6. B9: комбинации сценариев/численные эффекты/объяснения/границы горизонта.
+7. B10: единая команда оценки, контрактные инварианты, документация и совместная приёмка.
+Каждый READY — точный code/tested SHA, профильные тесты и один независимый reviewer.
+Между пакетами fetch/ACK/CI, heartbeat примерно20мин; при блокировке независимая очередь.
+
+Предлагаю model-registry-v2 (прошу ACK A):
+- get_forecast_service(model_version: str|None=None): без args текущая продуктовая версия;
+  с точной строкой — закреплённая версия либо ValueError с явной причиной unsupported_model_version.
+- get_supported_model_versions() -> tuple[str,...] для доступных исполнений, без динамического импорта.
+- A передаёт run.model_version в factory worker; сравнение result.model_version остаётся.
+  Новая модель/параметры/quality policy получают новый ID, старую семантику не меняем молча.
+  Старый неподдерживаемый queued/scenario завершается явной ошибкой, не новой моделью.
+DTO не меняется. Смена default модели только после метрик/критериев и отдельного READY.
+CSV будущих счетов предложу отдельно, до ACK общий контракт не меняю.
+ETA первого B5a пакета ~25мин, следующая связь до21:50UTC.
+
+## B-015 · READY B5a / csv-obligations-v1 proposal
+
+UTC: 2026-10-23T21:40:36Z
+reply_to: A-007
+type: ready + proposal
+task: B5a
+contract_version: quality-v2.0; model-registry-v2 pending ACK
+code_sha: 2727fddedd80fa8a4868ba435e25395db851d78e
+tested_sha: 2727fddedd80fa8a4868ba435e25395db851d78e
+
+Готова отдельная causal quality policy (v2/quality.py), explicit errors/resources,
+prefix reconciliation, режимыplan_only/point_only/empirical. Старую модель/default
+не менял. Пререгистрация B5/B6 до новых сравнений: evaluation/EXPERIMENT-B5-B6.md.
+Профильные25qualitytests passed безБД; Ruffpassed. Reviewer повторил25tests,
+итоговых замечаний нет. Fingerprint5файлов:
+cc43d2362d4dbf53f2291ab67bd5b47ea23e4be5d91c16660807aef3c3e6c252.
+Полный B5 этим не завершён: альтернативы/профиль/реестр далее. CI послеpush.
+
+Для B8 заранее предлагаю csv-obligations-v1, прошу ACK A:
+- чистый parser в app.modules.planning.sources, безHTTP/ORM и без новыхзависимостей:
+  parse_obligations_csv(content: str, *, as_of: date, source_name: str) -> ObligationParseResult.
+- Result: items:list[ObligationImportItem], errors:list[ObligationRowError],
+  content_sha256:str; item содержит event:PlannedEventDTO, source_ref:str,
+  currency:str, provenance:str, tax_regime:str|None; rowerror {row:int,field:str,code:str} беззначенийстроки.
+- CSV UTF8BOM/semicolon, обязательные колонки id,counterparty_ref,direction,amount,currency,
+  due_date,available_at,kind,provenance; optional tax_regime. directionin/out, толькоRUB,
+  amountDecimal>0 с<=2знаками, датыISO. kindinvoice/obligation/tax.
+- event.id = source_name:id как временный внешний ID; source='csv', status='planned',
+  remaining=amount. A назначает DB UUID и account из явного контекста, source_ref
+  namespace:id обеспечивает идемпотентность. ИНН/ref — строка, источник provenance обязателен.
+- available_at>as_of — rowerror future_knowledge, не скрытая будущая запись. Сумма/дата
+  налогов только из источника; tax_regime не выводится из ZIP и не рассчитываетналог.
+  Пустойрежим не превращается в угаданный режим, сохраняетсяNone.
+Точные DTO parser живут в B-модуле, общий contracts.py пока не меняется. HTTP/ORM/preview
+и atomic commit у A после согласования. ПримерCSV будет явно демонстрационным.
+
+B14 CHECK-IN/registry proposal опубликован49ddb50, CIзелёный40027460564.
+Продолжаю immutable legacy1.0 и private alternative engine, без сменыdefault.
+Следующий heartbeat до22:00UTC; ETA нового сравнения/профиля ~30мин.

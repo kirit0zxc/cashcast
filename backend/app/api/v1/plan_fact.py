@@ -32,11 +32,13 @@ def _response(account_id: uuid.UUID, as_of: date, data: dict) -> PlanFactOut:
 
 @router.get("/companies/{company_id}/plan-fact", response_model=PlanFactOut)
 def plan_fact(company_id: uuid.UUID, account_id: uuid.UUID, as_of: date,
-              _company: str = Depends(require_company_access), session: Session = Depends(get_db)) -> PlanFactOut:
+              _company: str = Depends(require_company_access),
+              session: Session = Depends(get_db, scope="function")) -> PlanFactOut:
     return _response(account_id, as_of, PlanFactService(session).run(company_id, account_id, as_of))
 
 
 @router.post("/companies/{company_id}/plan-fact", response_model=PlanFactOut)
 def reconcile(company_id: uuid.UUID, account_id: uuid.UUID, as_of: date,
-              _company: str = Depends(require_company_access), session: Session = Depends(get_db)) -> PlanFactOut:
+              _company: str = Depends(require_company_access),
+              session: Session = Depends(get_db, scope="function")) -> PlanFactOut:
     return _response(account_id, as_of, PlanFactService(session).run(company_id, account_id, as_of, write=True))

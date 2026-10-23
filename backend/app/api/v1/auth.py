@@ -46,7 +46,7 @@ def _set_session_cookies(response: Response, settings: Settings, token: str, csr
 def login(
     body: LoginRequest,
     response: Response,
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
     settings: Settings = Depends(get_settings),
 ) -> MeResponse:
     user = session.scalar(select(User).where(func.lower(User.email) == body.email.lower()))
@@ -72,7 +72,7 @@ def login(
 @router.get("/me", response_model=MeResponse)
 def me(
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> MeResponse:
     import uuid
 
@@ -83,7 +83,7 @@ def me(
 def logout(
     response: Response,
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
     settings: Settings = Depends(get_settings),
 ) -> Response:
     # Выход — удаление серверной сессии, а не только cookie.

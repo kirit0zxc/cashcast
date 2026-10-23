@@ -26,7 +26,7 @@ def handle_forecast(session: Session, payload: dict) -> dict:
     if not run.input_snapshot:
         raise ValueError("snapshot_unavailable")
     data = ForecastInputCodec.decode(run.input_snapshot)
-    result = get_forecast_service().run(data)
+    result = get_forecast_service(run.model_version).run(data)
     if result.model_version != run.model_version:
         raise ValueError("pinned_model_unavailable")
 

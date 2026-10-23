@@ -30,7 +30,7 @@ async def create_import(
     file: UploadFile = File(...),
     _company: str = Depends(require_company_access),
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
     settings: Settings = Depends(get_settings),
 ) -> ImportPreviewResponse:
     content = await file.read(settings.max_upload_bytes + 1)
@@ -61,7 +61,7 @@ async def create_import(
 def commit_import(
     import_id: uuid.UUID,
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> ImportCommitResponse:
     from app.core.models import StatementImport
 

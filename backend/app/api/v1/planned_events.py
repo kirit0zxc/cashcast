@@ -22,7 +22,7 @@ router = APIRouter(tags=["planned-events"], responses=ERROR_RESPONSES)
 def list_events(
     company_id: uuid.UUID,
     _company: str = Depends(require_company_access),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> list[PlannedEventOut]:
     rows = session.scalars(
         select(PlannedEvent)
@@ -38,7 +38,7 @@ def create_event(
     body: PlannedEventIn,
     _company: str = Depends(require_company_access),
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> PlannedEventOut:
     if body.currency != "RUB":
         raise AppError(422, "unsupported_currency", "Плановые события MVP поддерживают только RUB")
@@ -74,7 +74,7 @@ def patch_event(
     event_id: uuid.UUID,
     body: PlannedEventPatch,
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> PlannedEventOut:
     event = session.get(PlannedEvent, event_id)
     if event is None:

@@ -42,7 +42,7 @@ def list_transactions(
     limit: int = Query(default=50, ge=1, le=200),
     cursor: str | None = None,
     _company: str = Depends(require_company_access),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> Page[TransactionOut]:
     stmt = select(BankTransaction).where(BankTransaction.company_id == company_id)
     if account_id:
@@ -78,7 +78,7 @@ def list_transactions(
 def patch_category(
     transaction_id: uuid.UUID,
     body: TransactionCategoryPatch,
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
     user: CurrentUser = Depends(get_current_user),
 ) -> TransactionOut:
     txn = session.get(BankTransaction, transaction_id)
