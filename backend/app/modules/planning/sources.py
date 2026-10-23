@@ -8,7 +8,6 @@ import io
 import re
 from dataclasses import dataclass
 from datetime import date
-from decimal import Decimal
 
 from app.modules.contracts import Direction, PlannedEventDTO
 
@@ -111,6 +110,8 @@ def parse_obligations_csv(content: str, *, as_of: date, source_name: str) -> Obl
             for field, value in values.items():
                 if len(value) > 1000 or _has_control(value):
                     errors.append(ObligationRowError(row, field, "invalid_text_length_or_control"))
+            if len(errors) != before:
+                continue
             external_id = values["id"]
             source_ref = f"{source_name}:{external_id}"
             if not external_id or ":" in external_id or len(external_id) > 128 or len(source_ref) > 200:
@@ -126,7 +127,9 @@ def parse_obligations_csv(content: str, *, as_of: date, source_name: str) -> Obl
             if not re.fullmatch(r"[0-9]+(?:\.[0-9]{1,2})?", values["amount"]):
                 errors.append(ObligationRowError(row, "amount", "invalid_decimal_amount"))
             else:
-                amount = int(Decimal(values["amount"]) * 100)
+                # Целые копейки не зависят от глобального Decimal precision/rounding.
+                whole, _, fraction = values["amount"].partition(".")
+                amount = int(whole) * 100 + int(fraction.ljust(2, "0"))
                 if not 0 < amount <= MAX_SOURCE_AMOUNT_MINOR:
                     errors.append(ObligationRowError(row, "amount", "amount_out_of_range"))
             if values["currency"] != "RUB":

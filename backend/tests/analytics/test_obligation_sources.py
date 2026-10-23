@@ -3,6 +3,7 @@
 import hashlib
 from dataclasses import asdict
 from datetime import date
+from decimal import localcontext
 
 import pytest
 
@@ -82,3 +83,13 @@ def test_mixed_rows_return_preview_but_caller_must_block_partial_commit():
     tax = VALUES.copy()
     tax[-1] = "SOURCE_DECLARED_REGIME"
     assert parse(tax).items[0].tax_regime == "SOURCE_DECLARED_REGIME"
+
+
+def test_money_independent_of_decimal_context_and_huge_fields_rejected_before_int():
+    with localcontext() as context:
+        context.prec = 2
+        assert parse().items[0].event.amount_minor == 1234
+    values = VALUES.copy()
+    values[3] = "9" * 5000
+    result = parse(values)
+    assert not result.items and result.errors[0].code == "invalid_text_length_or_control"
