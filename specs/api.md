@@ -275,6 +275,17 @@ Delay_event проверяет календарную выполнимость d
 сохраняют retry и прежний предел попыток; незаконченная запись результата откатывается.
 Политика других видов заданий не меняется. Формат jobs/forecast ответов прежний.
 
+Явный новый POST forecast/scenario после исчерпанного временного сбоя может вернуть
+те же job_id/forecast_run_id со статусомpending и ещё3попытками. Это не бесконечный
+автоматический retry. Требуются owner, прежний frozeninput и оба terminalfailed;
+allowlist:ConnectionError/TimeoutError/OperationalError/InterfaceError/
+DisconnectionError/lease_expired_attempts_exhausted. Unknown/permanent не возобновляются,
+legacy без snapshot не заполняется текущими фактами. Attempts не сбрасывается,
+max_attempts увеличивается до attempts+3; конкурентные POST дают один новый бюджет.
+Pending/running/succeeded возвращаются без такого изменения и без ожидания Job lock
+живого handler. Job→run блокируются в том же порядке, что worker; HTTP rollback
+откатывает весь recovery. Модель/input/lineage/hash и успешный base не меняются.
+
 ## Граничные состояния планов и бюджет сверки
 
 PATCH закрытого paid/cancelled плана с другой суммой или другим статусом возвращает

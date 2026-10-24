@@ -39,6 +39,7 @@ from app.modules.forecasting.snapshot import build_snapshot
 from app.modules.forecasting.v2.quality import ForecastInputError, validate_input
 from app.modules.integration.plan_fact import PlanFactService
 from app.modules.jobs import queue
+from app.modules.jobs.recovery import ForecastRetryRecovery
 
 router = APIRouter(tags=["forecasts"], responses=ERROR_RESPONSES)
 
@@ -94,6 +95,7 @@ def create_forecast(
         company_id=str(company_id),
         dedupe_key=f"forecast:{run.id}",
     )
+    ForecastRetryRecovery(session).resume(run, job)
     response.headers["Location"] = f"/api/v1/jobs/{job.id}"
     return JobAccepted(job_id=str(job.id), forecast_run_id=str(run.id), status=job.status)
 
@@ -277,6 +279,7 @@ def create_scenario(
         company_id=str(base.company_id),
         dedupe_key=f"forecast:{run.id}",
     )
+    ForecastRetryRecovery(session).resume(run, job)
     response.headers["Location"] = f"/api/v1/jobs/{job.id}"
     return JobAccepted(job_id=str(job.id), forecast_run_id=str(run.id), status=job.status)
 

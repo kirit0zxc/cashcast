@@ -50,7 +50,11 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
     return api.post<Accepted>(`/forecasts/${base.id}/scenarios`, { changes: [change] });
   }, onSuccess: async value => {
     setAccepted(value);
-    await cache.invalidateQueries({ queryKey: ["forecast-history"] });
+    await Promise.all([
+      cache.invalidateQueries({ queryKey: ["job", value.job_id] }),
+      cache.invalidateQueries({ queryKey: ["comparison", value.forecast_run_id] }),
+      cache.invalidateQueries({ queryKey: ["forecast-history"] }),
+    ]);
   } });
   const job = useQuery({ queryKey: ["job", accepted?.job_id],
     queryFn: ({ signal }) => api.request<Job>(`/jobs/${accepted!.job_id}`, { signal }), enabled: !!accepted,

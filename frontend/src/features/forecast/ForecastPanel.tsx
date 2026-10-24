@@ -23,6 +23,9 @@ export function ForecastPanel({ api, companyId, accountId, initialDate }: {
       setAccepted(data);
       // Enqueue может выполнить auto-reconcile; job остаётся в этом компоненте.
       await Promise.all([
+        // Явный recovery может вернуть тот же ID после cached failed.
+        cache.invalidateQueries({ queryKey: ["job", data.job_id] }),
+        cache.invalidateQueries({ queryKey: ["forecast", data.forecast_run_id] }),
         cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] }),
         cache.invalidateQueries({ queryKey: ["plan-fact", companyId, accountId] }),
         cache.invalidateQueries({ queryKey: ["forecast-history", companyId, accountId] }),
