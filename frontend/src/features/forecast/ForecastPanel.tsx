@@ -3,6 +3,7 @@ import { money, probability, type Forecast } from "../../shared/api";
 import { Explanations } from "./Explanations";
 import { CashGapPanel } from "./CashGapPanel";
 import { ForecastHistory } from "./ForecastHistory";
+import { ProbabilityNotice } from "./ProbabilityNotice";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
 import { useAccount } from "../../app/account-context";
 import { Leaders, Tabs, dayMonth, dmy } from "../../ui/Blank";
@@ -97,6 +98,7 @@ export function ForecastView({ forecast: f }: { forecast: Forecast }) {
         ["Модель", f.model_version],
       ]} />
       <p data-testid="calculation-mode" className="note">{calculationText(f)}</p>
+      <ProbabilityNotice forecast={f} />
       {!f.risk.available && <p>Вероятность разрыва не подтверждена. Даты и суммы дефицита по медиане — в карточке ниже.</p>}
       {[...f.assumptions, ...f.data_warnings].length > 0 && <ul className="plain">
         {[...f.assumptions, ...f.data_warnings].map((s, i) => <li key={i}>{s}</li>)}</ul>}
@@ -106,6 +108,7 @@ export function ForecastView({ forecast: f }: { forecast: Forecast }) {
 
 function DailyTable({ forecast: f }: { forecast: Forecast }) {
   return <section className="panel flat">
+    <ProbabilityNotice forecast={f} />
     <div className="panel-head"><div><h2>Дневные значения и происхождение расчёта</h2>
       <span className="label">Прогноз {f.id} · версия входа {f.data_version}</span></div></div>
     <div className="pad">

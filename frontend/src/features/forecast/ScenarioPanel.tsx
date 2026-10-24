@@ -124,7 +124,7 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
         <div className={`kpi${comparison.data.risk.scenario.probability_any_negative === null ? " na" : ""}`}>
           <span className="label">Вероятность минуса</span>
           <div className="v">{probability(comparison.data.risk.base.probability_any_negative)} → {probability(comparison.data.risk.scenario.probability_any_negative)}</div>
-          <div className="s">модельная, база → сценарий</div></div>
+          <div className="s">модельная, не откалибрована; база → сценарий</div></div>
       </div>
       <div className="panel" style={{ marginTop: 24 }}>
         <span className="label">Медиана остатка · база и сценарий</span>

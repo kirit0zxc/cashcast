@@ -50,6 +50,17 @@ class CashGapReader:
         except ForecastInputError as error:
             raise AppError(422, error.code, "Некорректный сохранённый вход прогноза") from None
         result["warnings"] = list(dict.fromkeys([*result["warnings"], *(run.data_warnings or [])]))
+        policy = (run.details or {}).get("risk_probability", {})
+        if (preview is None and policy.get("status") == "estimated_uncalibrated"
+                and run.probability_any_negative is not None):
+            result.update(probability=run.probability_any_negative, probability_status="estimated_uncalibrated",
+                          probability_reason=policy["reason"])
+        elif preview is not None:
+            result["probability_reason"] = (
+                "Здесь изменяется только медианный остаток. Для вероятности после действия создайте отдельный сценарий."
+            )
+        elif policy.get("reason"):
+            result["probability_reason"] = policy["reason"]
         return CashGapOut.model_validate(
             {**result, "forecast_id": str(run.id), "model_version": run.model_version, "data_version": run.data_version}
         )

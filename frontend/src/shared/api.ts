@@ -61,7 +61,8 @@ export interface Forecast {
   base_forecast_id: string | null;
   opening_balance_minor: number | null; assumptions: string[]; data_warnings: string[];
   risk: { available: boolean; first_negative_date: string | null;
-    max_deficit_minor: number | null; probability_any_negative: number | null };
+    max_deficit_minor: number | null; probability_any_negative: number | null;
+    probability_status?: "unavailable" | "estimated_uncalibrated"; probability_calibrated?: false };
   points: Point[];
 }
 export class ApiError extends Error {

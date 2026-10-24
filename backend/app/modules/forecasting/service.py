@@ -8,18 +8,21 @@ from app.modules.contracts import Direction, ForecastInput, ForecastResult, Fore
 from app.modules.forecasting.legacy_v1.baseline import MODEL_VERSION as BASELINE_VERSION
 from app.modules.forecasting.legacy_v1.baseline import BaselineForecastService
 from app.modules.forecasting.legacy_v1.seasonal import SeasonalForecastService
+from app.modules.forecasting.v2.estimated import MODEL_VERSION as ESTIMATED_VERSION
+from app.modules.forecasting.v2.estimated import EstimatedForecastService
 from app.modules.forecasting.v2.legacy_limits import check_legacy_cost, check_output_budget
 from app.modules.forecasting.v2.quality import validate_input
 from app.modules.forecasting.v2.service import MODEL_VERSION as GUARDED_VERSION
 from app.modules.forecasting.v2.service import GuardedForecastService
 
-DEFAULT_MODEL_VERSION = GUARDED_VERSION
+DEFAULT_MODEL_VERSION = ESTIMATED_VERSION
 _SUPPORTED = (
     BASELINE_VERSION,
     "seasonal-block-bootstrap-1.0-w28",
     "seasonal-block-bootstrap-1.0-w56",
     "seasonal-block-bootstrap-1.0-w84",
     GUARDED_VERSION,
+    ESTIMATED_VERSION,
 )
 
 
@@ -69,4 +72,6 @@ def get_forecast_service(model_version: str | None = None) -> ForecastService:
     version = DEFAULT_MODEL_VERSION if model_version is None else model_version
     if not isinstance(version, str) or version not in _SUPPORTED:
         raise UnsupportedModelVersionError()
+    if version == ESTIMATED_VERSION:
+        return EstimatedForecastService()
     return GuardedForecastService() if version == GUARDED_VERSION else _PinnedLegacyService(version)

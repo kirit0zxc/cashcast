@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "../app/account-context";
 import { Link, navigate } from "../app/router";
 import { ForecastState } from "../features/forecast/ForecastPanel";
+import { ProbabilityNotice } from "../features/forecast/ProbabilityNotice";
 import type { PulseReport, Status } from "../features/pulse/types";
 import { money, probability, type Forecast, type PlanFact, type PlannedEvent } from "../shared/api";
 import { useCompanyCanWrite } from "../shared/company-permissions";
@@ -102,6 +103,7 @@ function Report({ forecast: f }: { forecast: Forecast }) {
         : <div className="kpi"><span className="label">Вероятность минуса</span>
           <div className="v">{probability(f.risk.probability_any_negative)}</div><div className="s">за горизонт прогноза</div></div>}
     </section>
+    <ProbabilityNotice forecast={f} />
 
     <section className="grid2">
       <div>
