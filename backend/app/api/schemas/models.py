@@ -182,6 +182,11 @@ class CalculationOut(BaseModel):
     reused_history: bool
     bootstrap_paths_generated: int
     source_forecast_id: str | None = None
+    categorized_transactions: int | None = None
+    reused_transactions: int | None = None
+    recurrence_buckets_recomputed: int | None = None
+    daily_aggregates_changed: int | None = None
+    trajectory_values_updated: int | None = None
 
 
 class ForecastOut(BaseModel):

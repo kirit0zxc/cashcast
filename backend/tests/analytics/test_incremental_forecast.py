@@ -40,10 +40,11 @@ def test_add_edit_cancel_and_json_restart_equal_full_without_history_or_random(d
         changed = replace(data, planned_events=plans, data_version=str(index))
         expected = engine.run(changed)
         state = json.loads(json.dumps(first.details[STATE_KEY]))
-        with (patch("app.modules.forecasting.v2.incremental_engine._history", side_effect=AssertionError("history")),
-              patch("app.modules.forecasting.v2.incremental_engine.get_recurrence_detector",
+        with (patch("app.modules.forecasting.v2.incremental_history.get_categorizer",
+                    side_effect=AssertionError("history")),
+              patch("app.modules.forecasting.v2.incremental_history.get_recurrence_detector",
                     side_effect=AssertionError("recurrence")),
-              patch("app.modules.forecasting.v2.incremental_engine.random.Random", side_effect=AssertionError("RNG"))):
+              patch("app.modules.forecasting.v2.incremental_paths.random.Random", side_effect=AssertionError("RNG"))):
             updated = engine.run(changed, state=state)
         assert comparable(updated) == comparable(expected)
         assert updated.details["calculation"]["mode"] == "incremental"
@@ -52,14 +53,13 @@ def test_add_edit_cancel_and_json_restart_equal_full_without_history_or_random(d
     assert original == engine.run(data)
 
 
-@pytest.mark.parametrize("field", ["txns", "daily_balances", "as_of", "seed", "horizon_days",
-                                  "opening_balance_minor", "scenario", "account_id"])
+@pytest.mark.parametrize("field", ["as_of", "seed", "horizon_days", "scenario", "account_id"])
 def test_non_calendar_change_invalidates_checkpoint(field):
     data = history()
     state = GuardedForecastService().run(data).details[STATE_KEY]
     values = {
         "txns": [replace(data.txns[0], amount_minor=999), *data.txns[1:]],
-        "daily_balances": [], "as_of": data.as_of + timedelta(days=1), "seed": data.seed + 1,
+        "daily_balances": [], "as_of": data.as_of - timedelta(days=1), "seed": data.seed + 1,
         "horizon_days": 31, "opening_balance_minor": data.opening_balance_minor + 1,
         "scenario": [ScenarioChange("add_expense", amount_minor=1, on_date=data.as_of + timedelta(days=1))],
         "account_id": "other",
@@ -73,7 +73,12 @@ def test_corrupted_and_old_state_falls_back_to_full():
     full = engine.run(data)
     broken = deepcopy(full.details[STATE_KEY])
     broken["prepared"]["residual_paths"][0][0] += 1
-    for state in (None, {}, broken, {**full.details[STATE_KEY], "version": "old"}):
+    for state in (None, {}, broken, {**full.details[STATE_KEY], "version": "old"},
+                  {**full.details[STATE_KEY], "context": None},
+                  {**full.details[STATE_KEY], "context": []},
+                  {k: v for k, v in full.details[STATE_KEY].items() if k != "fingerprint"},
+                  *({**full.details[STATE_KEY], "fingerprint": value}
+                    for value in (None, [], "bad", "z" * 64))):
         assert engine.run(data, state=state) == full
 
 

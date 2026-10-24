@@ -19,10 +19,10 @@ class ForecastCheckpointRepository:
         candidates = self.session.scalars(select(ForecastRun).where(
             ForecastRun.id != run.id, ForecastRun.company_id == run.company_id,
             ForecastRun.account_id == run.account_id, ForecastRun.model_version == run.model_version,
-            ForecastRun.as_of == run.as_of, ForecastRun.horizon_days == run.horizon_days,
+            ForecastRun.as_of <= run.as_of, ForecastRun.horizon_days == run.horizon_days,
             ForecastRun.seed == run.seed, ForecastRun.scenario_hash == "",
             ForecastRun.status == "succeeded",
-        ).order_by(ForecastRun.created_at.desc(), ForecastRun.id.desc()).limit(8)).all()
+        ).order_by(ForecastRun.as_of.desc(), ForecastRun.created_at.desc(), ForecastRun.id.desc()).limit(8)).all()
         for candidate in candidates:
             state = (candidate.details or {}).get(STATE_KEY)
             if IncrementalState.unpack(data, state) is not None:

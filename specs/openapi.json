@@ -2759,6 +2759,61 @@
               }
             ],
             "title": "Source Forecast Id"
+          },
+          "categorized_transactions": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categorized Transactions"
+          },
+          "reused_transactions": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reused Transactions"
+          },
+          "recurrence_buckets_recomputed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recurrence Buckets Recomputed"
+          },
+          "daily_aggregates_changed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daily Aggregates Changed"
+          },
+          "trajectory_values_updated": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trajectory Values Updated"
           }
         },
         "type": "object",

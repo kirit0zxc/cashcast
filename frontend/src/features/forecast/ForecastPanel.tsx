@@ -104,7 +104,9 @@ function ForecastView({ forecast: f }: { forecast: Forecast }) {
   return <>
     <p>Модель: {f.model_version}. Начальный остаток: {money(f.opening_balance_minor)}.</p>
     <p data-testid="calculation-mode">{f.calculation?.mode === "incremental"
-      ? "Частичное обновление: календарь пересчитан, история и траектории переиспользованы."
+      ? f.calculation.reason === "observed_data_changed"
+        ? "Частичное обновление: новые факты учтены, сохранённое состояние прогноза обновлено по изменениям."
+        : "Частичное обновление: календарь пересчитан, история и траектории переиспользованы."
       : f.calculation ? "Полный расчёт: подготовлена история и рассчитан прогноз."
         : "Сохранённый прогноз: сведения о режиме расчёта отсутствуют."}</p>
     <p>Первый минус по медиане: {f.risk.first_negative_date ?? (f.risk.available ? "не прогнозируется" : "нет оценки")}.
@@ -126,6 +128,11 @@ function ForecastView({ forecast: f }: { forecast: Forecast }) {
       <p>Прогноз {f.id}. Версия входа {f.data_version}.</p>
       {f.calculation && <p>Причина: {f.calculation.reason}. Новых траекторий: {f.calculation.bootstrap_paths_generated}.
         {f.calculation.source_forecast_id && ` Источник истории: ${f.calculation.source_forecast_id}.`}</p>}
+      {f.calculation?.categorized_transactions != null && <p>
+        Операций обработано заново: {f.calculation.categorized_transactions}; переиспользовано: {f.calculation.reused_transactions}.
+        Групп регулярностей проверено: {f.calculation.recurrence_buckets_recomputed}.
+        Дневных сумм затронуто: {f.calculation.daily_aggregates_changed}.
+      </p>}
       <div className="scroll"><table><thead><tr><th>Дата</th><th>Приход</th><th>Расход</th><th>Остаток p50</th>
         <th>Вероятность минуса за день</th></tr></thead><tbody>
         {f.points.map(p => <tr key={p.point_date}><td>{p.point_date}</td><td>{money(p.inflow_minor)}</td>

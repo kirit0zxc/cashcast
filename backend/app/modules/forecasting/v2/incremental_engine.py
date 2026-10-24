@@ -2,23 +2,20 @@
 
 from __future__ import annotations
 
-import random
 from collections import defaultdict
 from dataclasses import replace
-from datetime import date, timedelta
-from statistics import mean
+from datetime import timedelta
 
 from app.core.forecast_input import ForecastInputCodec
 from app.modules.contracts import Direction, ForecastInput, ForecastPointDTO, ForecastResult, RiskSummary
-from app.modules.forecasting.legacy_v1.factories import get_recurrence_detector
 from app.modules.forecasting.legacy_v1.seasonal import (
     MODEL_VERSION,
-    _history,
     _money,
     _quantile,
-    _recurring_history_ids,
     _schedule,
 )
+from app.modules.forecasting.v2.incremental_history import IncrementalHistory
+from app.modules.forecasting.v2.incremental_paths import IncrementalPaths
 
 
 class IncrementalSeasonalService:
@@ -26,8 +23,8 @@ class IncrementalSeasonalService:
         if not 20 <= paths <= 2000:
             raise ValueError("Число траекторий должно быть20–2000")
         self.paths = paths
-        if lookback_days not in {28, 56, 84}:
-            raise ValueError("Окно истории должно быть28,56 или84 дня")
+        if lookback_days != 84:
+            raise ValueError("Инкрементальная модель использует окно84дня")
         self.lookback_days = lookback_days
 
     @property
@@ -38,59 +35,26 @@ class IncrementalSeasonalService:
     def run(self, data: ForecastInput, prepared: dict | None = None) -> ForecastResult:
         if not 1 <= data.horizon_days <= 366:
             raise ValueError("Горизонт должен быть1–366 дней")
-        if prepared is None:
-            txns, _balances, days, warnings, reliable = _history(data, self.lookback_days)
-            groups = get_recurrence_detector().detect(txns, data.as_of)
-            excluded_count, weekday, residual = self._statistics(txns, groups, days)
-        else:
-            # История совпала по полному fingerprint; категории и регулярности уже вычислены.
-            txns = sorted(data.txns, key=lambda txn: (txn.booked_on, txn.id))
-            txns = [replace(txn, category=prepared["categories"][txn.id]) for txn in txns]
-            groups = ForecastInputCodec.decode(prepared["groups_snapshot"]).recurrences
-            days = [date.fromisoformat(day) for day in prepared["days"]]
-            warnings, reliable = prepared["warnings"], prepared["reliable"]
-            excluded_count = prepared["excluded_count"]
-            weekday = {int(key): value for key, value in prepared["weekday"].items()}
+        history = IncrementalHistory()
+        txns, groups, days, warnings, reliable, excluded_count, weekday, residual = history.prepare(data, prepared)
         clean = replace(data, txns=txns)
         state, schedule = _schedule(clean, groups)
         fixed = defaultdict(lambda: [0, 0])
         for day, direction, amount, _kind, _ref in schedule:
             fixed[day][0 if direction == Direction.IN else 1] += amount
         future = [data.as_of + timedelta(days=offset) for offset in range(1, data.horizon_days + 1)]
+        sampler = IncrementalPaths(self.paths)
+        residual_paths = sampler.update(data, days, future, reliable, residual, prepared)
         trajectories = [[] for _ in future]
-        negative_any = 0
-        if reliable and prepared is None:
-            rng = random.Random(data.seed)  # noqa: S311 -- закреплённая симуляция
-            starts = {
-                weekday_index: [
-                    index for index, day in enumerate(days) if day.weekday() == weekday_index and index + 6 < len(days)
-                ]
-                for weekday_index in range(7)
-            }
-            for _path in range(self.paths):
-                balance = data.opening_balance_minor
-                any_negative = False
-                block_start = 0
-                for index, day in enumerate(future):
-                    if index % 7 == 0:
-                        block_start = rng.choice(starts[day.weekday()])
-                    incoming, outgoing = residual[days[block_start + index % 7]]
-                    balance += _money(incoming * state.inflow_factor) - outgoing + fixed[day][0] - fixed[day][1]
-                    trajectories[index].append(balance)
-                    any_negative |= balance < 0
-                negative_any += any_negative
         cumulative = 0
-        residual_paths = []
         for index, day in enumerate(future):
             cumulative += fixed[day][0] - fixed[day][1]
-            if prepared is not None and reliable:
-                trajectories[index] = [value + cumulative for value in prepared["residual_paths"][index]]
-            residual_paths.append([value - cumulative for value in trajectories[index]])
-        if prepared is not None and reliable:
-            negative_any = sum(any(day[path] < 0 for day in trajectories) for path in range(self.paths))
+            trajectories[index] = [value + cumulative for value in residual_paths[index]]
+        negative_any = sum(any(day[path] < 0 for day in trajectories) for path in range(self.paths)) if reliable else 0
+        self.metrics = {**history.metrics, **sampler.metrics}
         # В JSONB сохраняем только внутреннее состояние, оно не входит в публичный ответ API.
         self.prepared = {
-            "categories": {txn.id: txn.category for txn in txns},
+            "history": history.state, **sampler.state,
             "groups_snapshot": ForecastInputCodec.encode(replace(
                 data, txns=[], daily_balances=[], planned_events=[], recurrences=groups, scenario=[],
             )),
@@ -175,17 +139,3 @@ class IncrementalSeasonalService:
                 ],
             },
         )
-
-    @staticmethod
-    def _statistics(txns, groups, days):
-        # Этот этап и выбор недельных блоков не запускаются при обновлении календаря.
-        excluded = _recurring_history_ids(groups, txns)
-        residual = defaultdict(lambda: [0, 0])
-        for txn in txns:
-            if txn.id not in excluded:
-                residual[txn.booked_on][0 if txn.direction == Direction.IN else 1] += txn.amount_minor
-        weekday = {}
-        for index in range(7):
-            samples = [residual[day] for day in days if day.weekday() == index]
-            weekday[index] = [mean(pair[i] for pair in samples) if samples else 0 for i in range(2)]
-        return len(excluded), weekday, residual

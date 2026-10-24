@@ -55,11 +55,13 @@ def test_api_plan_update_reuses_committed_state_and_import_change_requires_full(
     changed_id = enqueue()
     assert changed_id != base_id
     # Новый worker/Session восстанавливает checkpoint из PostgreSQL, не из process cache.
-    with patch("app.modules.forecasting.v2.incremental_engine.random.Random", side_effect=AssertionError("bootstrap")):
+    with patch("app.modules.forecasting.v2.incremental_paths.random.Random", side_effect=AssertionError("bootstrap")):
         _run_worker_until_idle(session_factory)
     changed = output(changed_id)
     assert changed["status"] == "succeeded"
-    assert changed["calculation"] == {
+    assert {key: changed["calculation"][key] for key in (
+        "mode", "reason", "reused_history", "bootstrap_paths_generated", "source_forecast_id",
+    )} == {
         "mode": "incremental", "reason": "planned_events_changed", "reused_history": True,
         "bootstrap_paths_generated": 0, "source_forecast_id": base_id,
     }
@@ -76,8 +78,8 @@ def test_api_plan_update_reuses_committed_state_and_import_change_requires_full(
         session.commit()
     new_history_id = enqueue()
     _run_worker_until_idle(session_factory)
-    assert output(new_history_id)["calculation"]["mode"] == "full"
-    assert output(new_history_id)["calculation"]["source_forecast_id"] is None
+    assert output(new_history_id)["calculation"]["mode"] == "incremental"
+    assert output(new_history_id)["calculation"]["reason"] == "observed_data_changed"
     # Идемпотентность не выдаётся за новое инкрементальное выполнение.
     assert enqueue() == new_history_id
 
@@ -108,3 +110,51 @@ def test_repository_does_not_reuse_checkpoint_across_account_or_tenant(
         setattr(base, foreign_field, account.id if foreign_field == "account_id" else company.id)
         session.flush()
         assert repo.find(run, data) == (None, None)
+
+
+def test_csv_new_day_updates_previous_forecast_and_duplicate_import_is_not_a_new_delta(
+    client, session_factory, context,
+):
+    company, account = context["company_id"], context["account_id"]
+    today = datetime.now(UTC).date()
+    mapping = {"date": "date", "amount": "amount", "balance": "balance", "external_id": "op_id"}
+
+    def upload(content):
+        response = client.post(f"/api/v1/companies/{company}/imports", data={
+            "account_id": account, "mapping": json.dumps(mapping),
+        }, files={"file": ("ledger-delta.csv", content, "text/csv")})
+        assert response.status_code == 200, response.text
+        committed = client.post(f"/api/v1/imports/{response.json()['import_id']}/commit")
+        assert committed.status_code == 200, committed.text
+        return committed.json()
+
+    def forecast(day):
+        response = client.post(f"/api/v1/companies/{company}/forecasts", json={
+            "account_id": account, "as_of": day.isoformat(), "horizon_days": 30,
+        })
+        assert response.status_code == 202, response.text
+        _run_worker_until_idle(session_factory)
+        return client.get(f"/api/v1/forecasts/{response.json()['forecast_run_id']}").json()
+
+    upload(_statement_csv(today))
+    old = forecast(today - timedelta(days=1))
+    opening = old["opening_balance_minor"]
+    delta = ("date,amount,balance,op_id\n"
+             f"{today},100.00,{(opening + 10000) / 100:.2f},new-in\n"
+             f"{today},-33.00,{(opening + 6700) / 100:.2f},new-out\n")
+    assert upload(delta)["inserted"] == 2
+    updated = forecast(today)
+    assert updated["status"] == "succeeded"
+    assert updated["calculation"]["mode"] == "incremental"
+    assert updated["calculation"]["reason"] == "observed_data_changed"
+    assert updated["calculation"]["categorized_transactions"] == 2
+    assert updated["calculation"]["reused_transactions"] == 28
+    assert updated["opening_balance_minor"] == opening + 6700
+    with session_factory() as session:
+        run = session.get(ForecastRun, updated["id"])
+        from tests.analytics.test_incremental_ledger import reference
+        expected = reference(ForecastInputCodec.decode(run.input_snapshot))
+        assert updated["points"] == json.loads(json.dumps([asdict(p) for p in expected.points], default=str))
+    assert client.get(f"/api/v1/forecasts/{old['id']}").json() == old
+    upload(delta)
+    assert forecast(today)["id"] == updated["id"]

@@ -53,7 +53,10 @@ export interface Point {
 }
 export interface Forecast {
   calculation?: { mode: "full" | "incremental"; reason: string; reused_history: boolean;
-    bootstrap_paths_generated: number; source_forecast_id: string | null } | null;
+    bootstrap_paths_generated: number; source_forecast_id: string | null;
+    categorized_transactions?: number | null; reused_transactions?: number | null;
+    recurrence_buckets_recomputed?: number | null; daily_aggregates_changed?: number | null;
+    trajectory_values_updated?: number | null } | null;
   id: string; as_of: string; model_version: string; data_version: string; status: string;
   base_forecast_id: string | null;
   opening_balance_minor: number | null; assumptions: string[]; data_warnings: string[];

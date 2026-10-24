@@ -41,8 +41,7 @@ class GuardedForecastService:
         prepared = IncrementalState.unpack(data, state)
         if prepared is None:
             check_legacy_cost(clean)
-        else:
-            IncrementalState.check_schedule_budget(clean, prepared)
+        # Для дельты ресурсный guard выполняется по новым группам до календаря/исключений.
         engine = IncrementalSeasonalService()
         try:
             result = (SeasonalForecastService().run(clean) if data.scenario
@@ -146,11 +145,15 @@ class GuardedForecastService:
         }
         details["calculation"] = {
             "mode": "incremental" if prepared is not None else "full",
-            "reason": "planned_events_changed" if prepared is not None else
+            "reason": ("planned_events_changed" if state["fingerprint"] == IncrementalState.fingerprint(data)
+                       else "observed_data_changed") if prepared is not None else
                       ("scenario_requires_full" if data.scenario else "no_compatible_checkpoint"),
             "reused_history": prepared is not None,
-            "bootstrap_paths_generated": 0 if prepared is not None else result.details["paths"],
+            "bootstrap_paths_generated": result.details["paths"] if data.scenario else
+                                         engine.metrics["bootstrap_paths_generated"],
         }
+        if not data.scenario:
+            details["calculation"].update(engine.metrics)
         if not data.scenario:
             details[STATE_KEY] = IncrementalState.pack(data, engine.prepared)
         assumptions = [value for value in result.assumptions if "вероятности модельные" not in value]
