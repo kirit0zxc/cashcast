@@ -15,11 +15,12 @@ export function money(minor: number | null): string {
 }
 
 // Десятичная строка превращается в копейки до отправки; лишние знаки не округляем.
-export function rublesToMinor(value: string): number {
+export function rublesToMinor(value: string, allowZero = false): number {
   if (!/^\d+([.,]\d{1,2})?$/.test(value)) throw new Error("Введите сумму с точностью до копеек");
   const [whole, fraction = ""] = value.replace(",", ".").split(".");
   const minor = Number(whole) * 100 + Number((fraction + "00").slice(0, 2));
-  if (!Number.isSafeInteger(minor) || minor <= 0 || minor > 9_000_000_000_000_000) {
+  // Нулевая стоимость разрешена явно; обычные операции по-прежнему строго положительны.
+  if (!Number.isSafeInteger(minor) || minor < 0 || (!allowZero && minor === 0) || minor > 9_000_000_000_000_000) {
     throw new Error("Сумма вне допустимого диапазона");
   }
   return minor;

@@ -19,6 +19,7 @@ export function PlannedEvents({ api, companyId, accountId, onChanged }: {
   const key = ["planned-events", companyId, accountId];
   const [amount, setAmount] = useState("");
   const [direction, setDirection] = useState<"in" | "out">("out");
+  const [category, setCategory] = useState("");
   const [due, setDue] = useState(new Date(Date.now() + 5 * 86400000).toISOString().slice(0, 10));
   const [counterparty, setCounterparty] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
@@ -28,7 +29,7 @@ export function PlannedEvents({ api, companyId, accountId, onChanged }: {
   async function changed() { await client.invalidateQueries({ queryKey: key }); onChanged(); }
   const create = useMutation({ mutationFn: () => api.post<PlannedEvent>(`/companies/${companyId}/planned-events`, {
     account_id: accountId, amount_minor: rublesToMinor(amount), direction, due_date: due,
-    kind: "manual", counterparty_name: counterparty.trim() || null,
+    kind: "manual", counterparty_name: counterparty.trim() || null, category: category || null,
   }), onSuccess: async () => { setAmount(""); await changed(); } });
   const cancel = useMutation({ mutationFn: (id: string) => api.patch<PlannedEvent>(`/planned-events/${id}`, {
     status: "cancelled",
@@ -44,6 +45,13 @@ export function PlannedEvents({ api, companyId, accountId, onChanged }: {
         <label>Движение по плану<select disabled={create.isPending} value={direction}
           onChange={e => setDirection(e.target.value as "in" | "out")}>
           <option value="out">Расход</option><option value="in">Поступление</option></select></label>
+        <label>Категория плана<select disabled={create.isPending} value={category}
+          onChange={e => { setCategory(e.target.value); create.reset(); }}>
+          <option value="">Не указана</option><option value="purchases">Закупки</option>
+          <option value="sales">Выручка</option><option value="tax">Налоги</option>
+          <option value="payroll">Зарплата</option><option value="rent">Аренда</option>
+          <option value="loan">Кредит</option><option value="other">Прочее</option>
+        </select></label>
         <label>Планируемая сумма, ₽<input required inputMode="decimal" disabled={create.isPending}
           value={amount} onChange={e => { setAmount(e.target.value); create.reset(); }} /></label>
         <label>Плановая дата<input required type="date" disabled={create.isPending}
