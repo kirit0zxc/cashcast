@@ -121,6 +121,8 @@ class PlannedEventDTO:
     available_at: date
     counterparty_ref: str | None = None
     recurrence_group: str | None = None
+    # Необязательное поле v1: старые frozen-снимки читаются с category=None.
+    category: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

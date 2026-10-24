@@ -7,6 +7,7 @@ import { ForecastHistory } from "./ForecastHistory";
 import { ScenarioPanel } from "./ScenarioPanel";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
 import { PulsePanel } from "../pulse/PulsePanel";
+import { CashGapPanel } from "./CashGapPanel";
 
 export function ForecastPanel({ api, companyId, accountId, initialDate, autoRun, onDateChange }: {
   api: CashCastApi; companyId: string; accountId: string; initialDate: string;
@@ -92,6 +93,7 @@ export function ForecastPanel({ api, companyId, accountId, initialDate, autoRun,
     </p>}
     {forecast.data?.status === "succeeded" && <><ForecastView forecast={forecast.data} />
       <Explanations api={api} forecastId={forecast.data.id} />
+      <CashGapPanel key={forecast.data.id} api={api} forecastId={forecast.data.id} />
       <PulsePanel key={forecast.data.id} api={api} forecastId={forecast.data.id} />
       {forecast.data.base_forecast_id ? <button type="button" onClick={() => {
         setAccepted(null); setSaved({ id: forecast.data!.base_forecast_id!, job_id: null });
@@ -112,7 +114,7 @@ export function ForecastView({ forecast: f }: { forecast: Forecast }) {
     <p>Первый минус по медиане: {f.risk.first_negative_date ?? (f.risk.available ? "не прогнозируется" : "нет оценки")}.
       Максимальный дефицит: {money(f.risk.max_deficit_minor)}.
       Модельная вероятность минуса за горизонт: {probability(f.risk.probability_any_negative)}.</p>
-    {!f.risk.available && <p>Оценка риска недоступна: смотрите ограничения данных.</p>}
+    {!f.risk.available && <p>Вероятность разрыва не подтверждена. Даты и суммы дефицита по медиане — в карточке ниже.</p>}
     <div className="chart" role="img" aria-label="Прогноз остатка: p10, медиана, p90">
       <ResponsiveContainer width="100%" height={280}><LineChart data={f.points}>
         <CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="point_date" />

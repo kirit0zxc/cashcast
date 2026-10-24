@@ -200,7 +200,7 @@ def validate_input(data: ForecastInput, limits: ResourceLimits = ResourceLimits(
         ):
             raise ForecastInputError("invalid_forecast_input", "Некорректное состояние планового события")
         seen_events.add(event.id)
-        for value in (event.counterparty_ref, event.recurrence_group):
+        for value in (event.counterparty_ref, event.recurrence_group, event.category):
             _optional_text(value)
         for value in (event.kind, event.source):
             _identifier(value, "event.kind/source")

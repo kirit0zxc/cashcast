@@ -3036,6 +3036,202 @@
           }
         }
       }
+    },
+    "/api/v1/forecasts/{forecast_id}/cash-gaps": {
+      "get": {
+        "tags": [
+          "cash-gaps"
+        ],
+        "summary": "Get Cash Gaps",
+        "operationId": "get_cash_gaps_api_v1_forecasts__forecast_id__cash_gaps_get",
+        "parameters": [
+          {
+            "name": "forecast_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Forecast Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CashGapOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/forecasts/{forecast_id}/cash-gap-preview": {
+      "post": {
+        "tags": [
+          "cash-gaps"
+        ],
+        "summary": "Preview Cash Gaps",
+        "operationId": "preview_cash_gaps_api_v1_forecasts__forecast_id__cash_gap_preview_post",
+        "parameters": [
+          {
+            "name": "forecast_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Forecast Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashGapPreview"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CashGapOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3317,6 +3513,167 @@
           "bootstrap_paths_generated"
         ],
         "title": "CalculationOut"
+      },
+      "CashGapOut": {
+        "properties": {
+          "forecast_id": {
+            "type": "string",
+            "title": "Forecast Id"
+          },
+          "method_version": {
+            "type": "string",
+            "const": "cash-gaps-1.0",
+            "title": "Method Version",
+            "default": "cash-gaps-1.0"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "horizon_end": {
+            "type": "string",
+            "format": "date",
+            "title": "Horizon End"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "data_version": {
+            "type": "string",
+            "title": "Data Version"
+          },
+          "base": {
+            "$ref": "#/components/schemas/GapSummary"
+          },
+          "preview": {
+            "$ref": "#/components/schemas/GapSummary"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/GapPoint"
+            },
+            "type": "array",
+            "title": "Points"
+          },
+          "flows": {
+            "items": {
+              "$ref": "#/components/schemas/GapFlow"
+            },
+            "type": "array",
+            "title": "Flows"
+          },
+          "causes": {
+            "items": {
+              "$ref": "#/components/schemas/GapCause"
+            },
+            "type": "array",
+            "title": "Causes"
+          },
+          "causes_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Causes Date"
+          },
+          "causes_balance_minor": {
+            "type": "integer",
+            "title": "Causes Balance Minor"
+          },
+          "probability": {
+            "type": "null",
+            "title": "Probability"
+          },
+          "probability_status": {
+            "type": "string",
+            "const": "unavailable",
+            "title": "Probability Status",
+            "default": "unavailable"
+          },
+          "probability_reason": {
+            "type": "string",
+            "title": "Probability Reason"
+          },
+          "quality_mode": {
+            "type": "string",
+            "title": "Quality Mode"
+          },
+          "improvement_minor": {
+            "type": "integer",
+            "title": "Improvement Minor"
+          },
+          "financing_cost_minor": {
+            "type": "integer",
+            "title": "Financing Cost Minor"
+          },
+          "debt_beyond_horizon_minor": {
+            "type": "integer",
+            "title": "Debt Beyond Horizon Minor"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "forecast_id",
+          "as_of",
+          "horizon_end",
+          "model_version",
+          "data_version",
+          "base",
+          "preview",
+          "points",
+          "flows",
+          "causes",
+          "causes_date",
+          "causes_balance_minor",
+          "probability_reason",
+          "quality_mode",
+          "improvement_minor",
+          "financing_cost_minor",
+          "debt_beyond_horizon_minor",
+          "warnings"
+        ],
+        "title": "CashGapOut"
+      },
+      "CashGapPreview": {
+        "properties": {
+          "actions": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/GapDelay"
+                },
+                {
+                  "$ref": "#/components/schemas/GapFunding"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "kind",
+                "mapping": {
+                  "delay": "#/components/schemas/GapDelay",
+                  "financing": "#/components/schemas/GapFunding"
+                }
+              }
+            },
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Actions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "actions"
+        ],
+        "title": "CashGapPreview"
       },
       "Category": {
         "type": "string",
@@ -4179,6 +4536,333 @@
           "as_of"
         ],
         "title": "ForecastRequest"
+      },
+      "GapCause": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "amount_minor": {
+            "type": "integer",
+            "title": "Amount Minor"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "evidence": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "planned",
+              "estimated",
+              "scenario"
+            ],
+            "title": "Evidence"
+          },
+          "source_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Ref"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "date",
+          "amount_minor",
+          "label",
+          "evidence"
+        ],
+        "title": "GapCause"
+      },
+      "GapDelay": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "delay",
+            "title": "Kind"
+          },
+          "flow_id": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Flow Id"
+          },
+          "to_date": {
+            "type": "string",
+            "format": "date",
+            "title": "To Date"
+          },
+          "payment_delay_agreed": {
+            "type": "boolean",
+            "title": "Payment Delay Agreed",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "flow_id",
+          "to_date"
+        ],
+        "title": "GapDelay"
+      },
+      "GapEpisode": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "existing",
+              "new"
+            ],
+            "title": "Kind"
+          },
+          "first_negative_date": {
+            "type": "string",
+            "format": "date",
+            "title": "First Negative Date"
+          },
+          "last_negative_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Last Negative Date"
+          },
+          "recovery_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recovery Date"
+          },
+          "observed_days": {
+            "type": "integer",
+            "title": "Observed Days"
+          },
+          "duration_is_lower_bound": {
+            "type": "boolean",
+            "title": "Duration Is Lower Bound"
+          },
+          "max_deficit_minor": {
+            "type": "integer",
+            "title": "Max Deficit Minor"
+          },
+          "worst_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Worst Date"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "first_negative_date",
+          "last_negative_date",
+          "recovery_date",
+          "observed_days",
+          "duration_is_lower_bound",
+          "max_deficit_minor",
+          "worst_date"
+        ],
+        "title": "GapEpisode"
+      },
+      "GapFlow": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "source_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Ref"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "amount_minor": {
+            "type": "integer",
+            "title": "Amount Minor"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "evidence": {
+            "type": "string",
+            "enum": [
+              "planned",
+              "estimated",
+              "scenario"
+            ],
+            "title": "Evidence"
+          },
+          "delay_allowed": {
+            "type": "boolean",
+            "title": "Delay Allowed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "source_ref",
+          "date",
+          "amount_minor",
+          "label",
+          "evidence",
+          "delay_allowed"
+        ],
+        "title": "GapFlow"
+      },
+      "GapFunding": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "financing",
+            "title": "Kind"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "amount_minor": {
+            "type": "integer",
+            "maximum": 9000000000000000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Amount Minor"
+          },
+          "repayment_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Repayment Date"
+          },
+          "cost_minor": {
+            "type": "integer",
+            "maximum": 9000000000000000.0,
+            "minimum": 0.0,
+            "title": "Cost Minor"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "date",
+          "amount_minor",
+          "repayment_date",
+          "cost_minor"
+        ],
+        "title": "GapFunding"
+      },
+      "GapPoint": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "base_minor": {
+            "type": "integer",
+            "title": "Base Minor"
+          },
+          "preview_minor": {
+            "type": "integer",
+            "title": "Preview Minor"
+          },
+          "delta_minor": {
+            "type": "integer",
+            "title": "Delta Minor"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "date",
+          "base_minor",
+          "preview_minor",
+          "delta_minor"
+        ],
+        "title": "GapPoint"
+      },
+      "GapSummary": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "gap",
+              "no_gap",
+              "insufficient_data"
+            ],
+            "title": "Status"
+          },
+          "opening_already_negative": {
+            "type": "boolean",
+            "title": "Opening Already Negative"
+          },
+          "first_new_gap_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First New Gap Date"
+          },
+          "max_deficit_minor": {
+            "type": "integer",
+            "title": "Max Deficit Minor"
+          },
+          "total_negative_days": {
+            "type": "integer",
+            "title": "Total Negative Days"
+          },
+          "episodes": {
+            "items": {
+              "$ref": "#/components/schemas/GapEpisode"
+            },
+            "type": "array",
+            "title": "Episodes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "opening_already_negative",
+          "first_new_gap_date",
+          "max_deficit_minor",
+          "total_negative_days",
+          "episodes"
+        ],
+        "title": "GapSummary"
       },
       "ImportCommitResponse": {
         "properties": {
