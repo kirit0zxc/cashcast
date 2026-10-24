@@ -13,9 +13,11 @@ export const ROUTES = [
   { path: "/pulse", title: "Финансовый пульс" },
 ] as const;
 export const ASSISTANT_ROUTE = { path: "/assistant", title: "ИИ-ассистент" } as const;
-export type RoutePath = (typeof ROUTES)[number]["path"] | typeof ASSISTANT_ROUTE.path;
+// Справочная страница вне меню: открывается ссылками из прогноза и пояснения риска.
+export const QUALITY_ROUTE = { path: "/quality", title: "Насколько точен прогноз" } as const;
+export type RoutePath = (typeof ROUTES)[number]["path"] | typeof ASSISTANT_ROUTE.path | typeof QUALITY_ROUTE.path;
 
-const known = new Set<string>([...ROUTES.map(r => r.path), ASSISTANT_ROUTE.path]);
+const known = new Set<string>([...ROUTES.map(r => r.path), ASSISTANT_ROUTE.path, QUALITY_ROUTE.path]);
 const DEFAULT: RoutePath = "/overview";
 
 function subscribe(notify: () => void) {

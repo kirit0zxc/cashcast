@@ -4,6 +4,7 @@ import { Link, navigate } from "../app/router";
 import { ForecastState } from "../features/forecast/ForecastPanel";
 import { ProbabilityNotice } from "../features/forecast/ProbabilityNotice";
 import { GapBanner, openCashGaps } from "../features/forecast/GapBanner";
+import { FirstSteps } from "./FirstSteps";
 import { medianGap } from "../features/forecast/median-gap";
 import type { PulseReport, Status } from "../features/pulse/types";
 import { money, probability, type Forecast, type PlanFact, type PlannedEvent } from "../shared/api";
@@ -38,6 +39,7 @@ export function OverviewPage() {
     {!ready && !c.working && !c.loading && <Empty title={f?.base_forecast_id ? "Открыт сценарий" : "Нет сохранённого прогноза"}
       text={f?.base_forecast_id ? "Обзор показывает базовый прогноз. Откройте его в разделе «Прогноз»."
         : "Загрузите выписку или нажмите «Рассчитать» — обзор соберётся из результата."} />}
+    {!ready && !c.working && !c.loading && !f?.base_forecast_id && <FirstSteps />}
     {ready && <Report forecast={ready} />}
   </>;
 }

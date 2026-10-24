@@ -1,7 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { useAccount } from "../app/account-context";
-import { ASSISTANT_ROUTE, ROUTES, navigate, type RoutePath } from "../app/router";
+import { ASSISTANT_ROUTE, QUALITY_ROUTE, ROUTES, navigate, type RoutePath } from "../app/router";
+import { QualityPage } from "./QualityPage";
 import { ForecastPanel, ForecastState } from "../features/forecast/ForecastPanel";
 import { ScenarioPanel } from "../features/forecast/ScenarioPanel";
 import { StatementImport } from "../features/imports/StatementImport";
@@ -33,6 +34,8 @@ export function Pages({ route }: { route: RoutePath }) {
       lead="Что будет с остатком, если изменить одно событие. База и реальные планы не меняются."><ScenariosPage /></Page>;
     case "/pulse": return <Page route={route}
       lead="Касса, расходы и клиенты по тому же сохранённому прогнозу. Просмотр ничего не меняет."><PulsePage /></Page>;
+    case "/quality": return <Page route={route}
+      lead="Как мы проверяли, можно ли заранее предсказать кассовый разрыв, и что получилось."><QualityPage /></Page>;
     case "/assistant": return <Page route={route}
       lead="Спросите о деньгах счёта обычными словами — Юми ответит таблицей или графиком."><AssistantPage /></Page>;
   }
@@ -42,10 +45,11 @@ function Page({ route, lead, action, children }: {
   route: RoutePath; lead?: string; action?: ReactNode; children: ReactNode;
 }) {
   const index = ROUTES.findIndex(r => r.path === route);
-  const title = index >= 0 ? ROUTES[index].title : ASSISTANT_ROUTE.title;
+  const title = index >= 0 ? ROUTES[index].title : route === QUALITY_ROUTE.path ? QUALITY_ROUTE.title : ASSISTANT_ROUTE.title;
+  const label = route === QUALITY_ROUTE.path ? "Справка" : `Раздел ${String(index >= 0 ? index + 1 : 9).padStart(2, "0")}`;
   return <>
     <div className="page-title"><div>
-      <span className="label">Раздел {String(index >= 0 ? index + 1 : 9).padStart(2, "0")}</span>
+      <span className="label">{label}</span>
       <h1>{title}</h1>{lead && <p>{lead}</p>}</div>{action}</div>
     {children}
   </>;
