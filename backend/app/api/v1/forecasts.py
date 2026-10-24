@@ -238,6 +238,9 @@ def create_scenario(
     ).hexdigest()
     _validate_before_enqueue(frozen)
 
+    # Как и базовый прогноз, сериализуем поиск/создание по счёту. Иначе две
+    # вкладки читают отсутствие run и одна получает unique violation вместо 202.
+    session.scalar(select(Account.id).where(Account.id == base.account_id).with_for_update())
     run = _get_or_create_run(
         session,
         company_id=base.company_id,
