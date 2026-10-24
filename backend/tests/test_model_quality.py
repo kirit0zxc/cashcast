@@ -26,6 +26,11 @@ def test_packaged_report_matches_measured_sources_and_schema():
     assert report.release["allowed"] is False
     assert report.selection_policy["selected"] is None
     assert report.calibration["positives"] == 8
+    candidate = next(item.data for item in report.evidence if item.path.endswith("risk-candidate-v2-results.json"))
+    assert candidate["model"] == "research-berka-gap-liquidity-v2"
+    assert candidate["production_activated"] is False
+    assert candidate["results"]["test_unseen_accounts"]["candidate"]["fp"] == 15
+    assert candidate["results"]["test_unseen_accounts"]["baseline"]["fp"] == 14
 
 
 def test_report_identical_across_windows_and_linux_line_endings(tmp_path):
