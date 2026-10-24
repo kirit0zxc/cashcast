@@ -84,6 +84,14 @@ class PlanFactService:
             for proposal in proposals:
                 if not proposal.auto_confirm:
                     continue
+                # Старое candidate/rejected-решение не расходует сумму, но занимает
+                # пару. Под общей блокировкой счёта сохраняем его, как ручная сверка.
+                existing = self.session.scalar(select(PlannedEventMatch.id).where(
+                    PlannedEventMatch.planned_event_id == uuid.UUID(proposal.planned_event_id),
+                    PlannedEventMatch.transaction_id == uuid.UUID(proposal.transaction_id),
+                ))
+                if existing is not None:
+                    raise AppError(409, "allocation_conflict", "Для этой пары уже сохранено другое решение")
                 event = by_id[proposal.planned_event_id]
                 # Чистый matcher гарантирует единственность; повторно проверяем бюджет на границе БД.
                 remaining_txn = next(t.amount_minor for t in inputs if t.id == proposal.transaction_id)

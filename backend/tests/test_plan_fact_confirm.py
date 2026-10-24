@@ -246,6 +246,34 @@ def test_legacy_nonconfirmed_decision_is_not_overwritten_silently(client, contex
         assert link.status == status and link.reason == "Прежнее решение"
 
 
+@pytest.mark.parametrize("status", ["candidate", "rejected"])
+@pytest.mark.parametrize("trigger", ["reconcile", "forecast"])
+def test_auto_paths_preserve_existing_nonconfirmed_decision(
+    client, context, session_factory, status, trigger,
+):
+    """Автосверка, включая вызов из прогноза, не обходит прежнее решение."""
+    events, txn = _source(session_factory, context)
+    with session_factory.begin() as session:
+        session.add(PlannedEventMatch(
+            planned_event_id=uuid.UUID(events[0]), transaction_id=uuid.UUID(txn),
+            matched_amount_minor=10000, status=status, method="manual", reason="Прежнее решение",
+        ))
+    today = datetime.now(UTC).date().isoformat()
+    if trigger == "reconcile":
+        response = client.post(f"/api/v1/companies/{context[0]}/plan-fact",
+                               params={"account_id": context[2], "as_of": today})
+    else:
+        response = client.post(f"/api/v1/companies/{context[0]}/forecasts",
+                               json={"account_id": context[2], "as_of": today})
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "allocation_conflict"
+    with session_factory() as session:
+        assert session.get(PlannedEvent, events[0]).remaining_amount_minor == 10000
+        links = session.scalars(select(PlannedEventMatch)).all()
+        assert len(links) == 1
+        assert (links[0].status, links[0].method, links[0].reason) == (status, "manual", "Прежнее решение")
+
+
 def test_manual_confirm_and_auto_reconcile_serialize_without_changing_recorded_method(client, context, session_factory):
     events, txn = _source(session_factory, context)
     path = f"/api/v1/companies/{context[0]}/plan-fact"
