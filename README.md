@@ -187,6 +187,9 @@ seed/входа/модели/горизонта, иначе409. Ошибки е�
 PostgreSQL хранится в именованном volume `<compose-project>_pgdata`. Не меняй project name
 при обычном перезапуске: это выберет другую БД. `stop`/`start`, `restart`, `down` без `-v`
 сохраняют данные. **Не используй down -v для рабочего демо.**
+Долгоживущие сервисы используют `restart: unless-stopped`: Docker перезапускает
+завершившийся процесс, но уважает намеренный `stop`. Контейнер миграций одноразовый,
+без автоперезапуска. Это не замена запущенному Docker Desktop и не кластерная HA.
 
 ```powershell
 docker compose --env-file infra/.env -f infra/docker-compose.yml stop
@@ -205,6 +208,48 @@ docker cp "${taskPgId}:/tmp/cashcast.dump" ./cashcast.dump
 Имена пользователя/БД заменить, если менял env. Дамп содержит финансовые данные:
 храни отдельно от Git. Восстановление проверяй в отдельной пустой БД через `pg_restore`,
 не поверх рабочего стенда. Резервная копия не заменяет исходный ZIP.
+
+Проверка восстановления в **новом отдельном Compose project**, PowerShell
+(defaults пользователя/БД cashcast; для другого env замени параметры):
+
+```powershell
+$taskRestoreProject = 'cashcast-restore-check'
+$taskRestoreEnv = @{
+  POSTGRES_USER='cashcast'; POSTGRES_PASSWORD='cashcast'; POSTGRES_DB='cashcast'
+  CC_DATABASE_URL='postgresql+psycopg://cashcast:cashcast@postgres:5432/cashcast'
+  CC_SEED_DEMO='false'; CC_APP_ENV='dev'; CC_COOKIE_SECURE='false'; WEB_PORT='18089'
+}
+$taskPreviousEnv = @{}
+foreach ($taskKey in $taskRestoreEnv.Keys) {
+  $taskPreviousEnv[$taskKey] = [Environment]::GetEnvironmentVariable($taskKey, 'Process')
+}
+try {
+  # Process-env приоритетнее .env; API/worker/migrate явно используют новую local postgres.
+  foreach ($taskKey in $taskRestoreEnv.Keys) {
+    [Environment]::SetEnvironmentVariable($taskKey, $taskRestoreEnv[$taskKey], 'Process')
+  }
+  docker compose -p $taskRestoreProject -f infra/docker-compose.yml up -d --wait --wait-timeout 60 postgres
+  if ($LASTEXITCODE -ne 0) { throw 'Тестовая PostgreSQL не готова' }
+  $taskRestorePgId = docker compose -p $taskRestoreProject -f infra/docker-compose.yml ps -q postgres
+  $taskTableCount = docker exec $taskRestorePgId psql -U cashcast -d cashcast -Atc "SELECT count(*) FROM pg_tables WHERE schemaname='public'"
+  if ($LASTEXITCODE -ne 0 -or $taskTableCount -ne '0') { throw 'БД не пустая; восстановление остановлено' }
+  docker cp ./cashcast.dump "${taskRestorePgId}:/tmp/cashcast.dump"
+  if ($LASTEXITCODE -ne 0) { throw 'Копирование дампа не выполнено' }
+  docker exec $taskRestorePgId pg_restore --exit-on-error --no-owner -U cashcast -d cashcast /tmp/cashcast.dump
+  if ($LASTEXITCODE -ne 0) { throw 'Восстановление не выполнено' }
+  docker compose -p $taskRestoreProject -f infra/docker-compose.yml up -d --build
+  # Открой http://localhost:18089, войди учётной записью из восстановленного дампа.
+} finally {
+  foreach ($taskKey in $taskRestoreEnv.Keys) {
+    [Environment]::SetEnvironmentVariable($taskKey, $taskPreviousEnv[$taskKey], 'Process')
+  }
+}
+```
+
+Повторный запуск инструкции на уже заполненной БД останавливается до pg_restore.
+Исходный Compose project и volume не изменяются. `finally` возвращает прежние
+переменные окружения, в том числе WEB_PORT. Ночная проверка восстановления и очереди:
+[coordination/A22-RESILIENCE.md](coordination/A22-RESILIENCE.md).
 
 ## Проверки разработки
 

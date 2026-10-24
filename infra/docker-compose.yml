@@ -5,6 +5,7 @@ name: cashcast
 services:
   postgres:
     image: postgres:16.10-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-cashcast}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cashcast}
@@ -33,6 +34,7 @@ services:
     restart: "no"
 
   api:
+    restart: unless-stopped
     build:
       context: ../backend
     environment:
@@ -48,6 +50,7 @@ services:
       - "8000"  # видно только внутри сети compose
 
   worker:
+    restart: unless-stopped
     build:
       context: ../backend
     command: ["python", "-m", "app.worker"]
@@ -60,6 +63,7 @@ services:
         condition: service_completed_successfully
 
   web:
+    restart: unless-stopped
     build:
       context: ../frontend
     ports:
