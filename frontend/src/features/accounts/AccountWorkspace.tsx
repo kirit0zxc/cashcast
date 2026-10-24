@@ -6,6 +6,7 @@ import { ForecastPanel } from "../forecast/ForecastPanel";
 import { PlannedEvents } from "../planning/PlannedEvents";
 import { PlanFactPanel } from "../planning/PlanFactPanel";
 import { CashCastApi } from "../../shared/api";
+import { AssistantPanel } from "../assistant/AssistantPanel";
 
 interface Account { id: string; company_id: string; name: string; currency: string }
 
@@ -32,6 +33,8 @@ function AccountTools({ api, companyId, accountId }: { api: CashCastApi; company
   const [version, setVersion] = useState(0);
   const [ledgerVersion, setLedgerVersion] = useState(0);
   return <>
+    <AssistantPanel api={api} companyId={companyId} accountId={accountId} asOf={lastDate}
+      onChanged={() => setLedgerVersion(v => v + 1)} />
     <StatementImport api={api} companyId={companyId} accountId={accountId}
       onCommit={date => {
         if (date) setLastDate(date);

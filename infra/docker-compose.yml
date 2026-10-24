@@ -41,6 +41,9 @@ services:
       CC_DATABASE_URL: ${CC_DATABASE_URL:-postgresql+psycopg://cashcast:cashcast@postgres:5432/cashcast}
       CC_APP_ENV: ${CC_APP_ENV:-dev}
       CC_COOKIE_SECURE: ${CC_COOKIE_SECURE:-false}
+      CC_OPENROUTER_API_KEY: ${CC_OPENROUTER_API_KEY:-}
+      CC_ASSISTANT_MODEL: ${CC_ASSISTANT_MODEL:-deepseek/deepseek-v4.1-flash-1017}
+      CC_ASSISTANT_DAILY_TURNS: ${CC_ASSISTANT_DAILY_TURNS:-100}
     depends_on:
       postgres:
         condition: service_healthy

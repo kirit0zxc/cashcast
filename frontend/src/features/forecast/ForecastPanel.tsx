@@ -100,7 +100,7 @@ export function ForecastPanel({ api, companyId, accountId, initialDate, autoRun,
 }
 
 // График хранит копейки; рубли используются только в подписях.
-function ForecastView({ forecast: f }: { forecast: Forecast }) {
+export function ForecastView({ forecast: f }: { forecast: Forecast }) {
   return <>
     <p>Модель: {f.model_version}. Начальный остаток: {money(f.opening_balance_minor)}.</p>
     <p data-testid="calculation-mode">{f.calculation?.mode === "incremental"
