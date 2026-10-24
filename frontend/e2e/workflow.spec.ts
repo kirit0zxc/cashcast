@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { expectStatementPreview, go } from "./fixtures/app";
 
 // Файл строится в памяти и безопасен для повторного запуска: импорт идемпотентен.
 function statement() {
@@ -19,9 +20,10 @@ test("login → account → preview/commit → worker forecast → logout", asyn
   await page.getByLabel("Пароль", { exact: true }).fill("demo-password");
   await page.getByRole("button", { name: "Войти", exact: true }).click();
   await expect(page.getByRole("combobox", { name: "Счёт", exact: true })).toContainText("Расчётный счёт");
+  await go(page, "Импорт данных");
   await page.getByLabel("CSV-файл").setInputFiles({ name: "e2e.csv", mimeType: "text/csv", buffer: statement() });
   await page.getByRole("button", { name: "Проверить файл", exact: true }).click();
-  await expect(page.getByText(/Строк: 14\. Ошибок: 0/)).toBeVisible();
+  await expectStatementPreview(page, 14);
   // Одинаковый сценарий проверяется и против production web, и против Vite/StrictMode.
   let automaticPosts = 0;
   const countAutomatic = (request: { method(): string; url(): string }) => {
@@ -34,6 +36,8 @@ test("login → account → preview/commit → worker forecast → logout", asyn
   await expect(page.getByRole("status").filter({ hasText: "Добавлено:" })).toBeVisible();
   await expect(page.getByRole("status").filter({ hasText: "Результат сохранённого импорта." })).toBeVisible();
   await expect(page.getByText("При повторном подтверждении возвращается та же сводка; операции заново не добавляются.", { exact: true })).toBeVisible();
+  // Прогноз пересчитан событием импорта, пока раздел «Прогноз» был закрыт.
+  await go(page, "Прогноз");
   await expect(page.getByLabel("Дата среза", { exact: true })).toHaveValue("2026-08-14");
   await expect(page.getByRole("img", { name: "Прогноз остатка: p10, медиана, p90", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Рассчитать", exact: true })).toBeEnabled();
@@ -41,9 +45,11 @@ test("login → account → preview/commit → worker forecast → logout", asyn
   page.off("request", countAutomatic);
   await page.getByRole("button", { name: "Рассчитать", exact: true }).click();
   await expect(page.getByRole("img", { name: "Прогноз остатка: p10, медиана, p90", exact: true })).toBeVisible();
-  await page.getByText("Дневные значения и происхождение расчёта", { exact: true }).click();
-  await expect(page.getByRole("cell", { name: "2026-09-13", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Причины риска и компоненты", exact: true })).toBeVisible();
+  await page.getByRole("tab", { name: "По дням", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Дневные значения и происхождение расчёта", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "2026-09-13", exact: true })).toBeVisible();
+  await go(page, "Сценарии");
   await page.getByRole("combobox", { name: "Вид сценария", exact: true }).selectOption("delay_event");
   await expect(page.getByRole("button", { name: "Проверить сценарий", exact: true })).toBeDisabled();
   await expect(page.getByText("В сохранённой базе нет будущего поступления. Добавьте план и пересчитайте базу.")).toBeVisible();
