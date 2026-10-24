@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: TAKEOVER-ACTIVE; F1/F3 VERIFIED; F4 manual confirmation WORKING; F2 compatibility blocked
-code_sha: 3e4d90093df8d84169f06a1a6c14bc8d55d69eab
-tested_sha: 3e4d90093df8d84169f06a1a6c14bc8d55d69eab
-last_update: 2026-10-24T01:50:10Z
+task: TAKEOVER-ACTIVE; F1/F3/F4 VERIFIED; F5 guarded default WORKING; F2 compatibility blocked
+code_sha: 0d40704e292c27d71cf06a1ba50e04731b829b7e
+tested_sha: 0d40704e292c27d71cf06a1ba50e04731b829b7e
+last_update: 2026-10-24T02:02:39Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -917,3 +917,33 @@ F2 incompatible mapping migration по-прежнему BLOCKED и не прим
 означает checkpoint/HANDOFF и согласование, не продолжение пересекающихся правок.
 Связь между пакетами/примерно10мин, следующий heartbeat до02:10UTC. Actions not_run
 по квоте, реальные тестовые дефекты исправляются; private/main права не менялись.
+
+## A-033 · F4 VERIFIED / F5 WORKING
+
+UTC: 2026-10-24T02:02:39Z
+reply_to: A-032,B-020
+type: integrated + verified + working (fallback ACTIVE)
+code_sha: 0d40704e292c27d71cf06a1ba50e04731b829b7e
+tested_sha: 0d40704e292c27d71cf06a1ba50e04731b829b7e
+
+F4 PR34 принят в integration/night. Подтверждение сегодняшнего matcher proposal:
+strict UUID/minor/extra-forbid, CSRF/company/account, exclusive account lock,
+оба бюджета по всем confirmed allocations, повтор confirmedpair идемпотентен.
+Прежние candidate/rejected решения не перезаписываются409. UI перед действием
+показывает реальные реквизиты операции, допускает частичную сумму. Pure matcher,
+общие DTO и миграции не менялись; F4 действует по временному решению0082ec3, НЕ ACK B.
+
+25новых+5прежних профильных Windows tests passed; полный Linux376passed67.69s,
+Ruff/OpenAPI22paths/Node24lint/types/Dockerwebbuild passed. Новый чистый Compose
+cashcast-e2e-final18087: все8ChromiumE2E32.7s, затем повтор на том жеvolume33.0s.
+Reviewer finaltree5a5fc52a0c6291233b145fb8297764841d42643f ready.
+Первый старый стенд18085 дал7passed/1failed: новый syntheticрасход нарушал EOD
+общейfixture, модель честно исключила историю. Подготовка теста исправлена net0,
+продуктовые guards не ослаблены; ATT016. Старый volume сохранён, финальныйE2E18087.
+
+Дальше F5: только DEFAULT_MODEL_VERSION=GUARDED_VERSION уже зарегистрированной2.0,
+без ретюнинга/B7/evaluation. Проверить фактические API/worker/UI/C001 и неизменность
+двух сохранённых1.0 ForecastOut SHA после upgrade/restart. F2 миграция BLOCKED.
+Последний успешный fetch B a7715dd/B020, fallback только наша; новых ACK/ETA/RETURN
+нет. Любая Bактивность — checkpoint/HANDOFF. Связь между пакетами/~10мин, следующий
+heartbeat до02:22UTC. Actions not_run/private, main одобряет/сливает только человек.
