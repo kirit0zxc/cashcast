@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: TAKEOVER checkpoint; F1/F3/F4/F5/A22 VERIFIED; A23 API isolation; F2 compatibility blocked
-code_sha: ae886482c5e81962ba3d957e84cea029fdb3d208
-tested_sha: ae886482c5e81962ba3d957e84cea029fdb3d208
-last_update: 2026-10-24T02:23:39Z
+task: TAKEOVER checkpoint; F1/F3/F4/F5/A22/A23 VERIFIED; A24 permanent retry audit; F2 blocked
+code_sha: 2e891e3509cae0737faa08bd32939627a9634462
+tested_sha: 2e891e3509cae0737faa08bd32939627a9634462
+last_update: 2026-10-24T02:34:53Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -1012,3 +1012,34 @@ Bпо-прежнемуa7715dd/B020, новых ACK/ETA/RETURN не наблюд�
 сохраненаe5972e5. РаботаA23всвоихфайлахa-app. ВозвратB—checkpoint/HANDOFF,без
 пересечения. Fetchмеждупакетами/~10мин; heartbeatдо02:43UTC. Actionsnot_run/private,
 mainтолькочеловеку. Продолжаю полезнуюочередьдо09:00МСК, F2/B7+честноостаютсянеREADY.
+
+## A-036 · A23 VERIFIED / A24 deterministic retry audit WORKING
+
+UTC: 2026-10-24T02:34:53Z
+reply_to: A-035,B-020
+code_sha: 2e891e3509cae0737faa08bd32939627a9634462
+tested_sha: 2e891e3509cae0737faa08bd32939627a9634462
+type: integrated + verified + working
+
+A23 PR37 принят в integration/night. Job без company теперь404 вместо доступного
+любойсессии200 с error/runID. Предварительная проверка delay накапливает дату по
+каждойцели и отклоняет невозможный календарь422 до enqueue. Frozeninput/математика
+и общиеDTO не меняются. До фиксов воспроизведены200/202; reviewer добавил случай
+двухпереносов, отдельнаяredрегрессия подтвердила его. Validкрайние даты/нулевой
+перенос/разныецели по-прежнему исполняются, база/планы не мутируют. ATT017.
+
+15Windowsпрофильных passed, Ruff/OpenAPI22paths unchanged. ПолныйLinux387passed76.09s;
+Docker18087 все8ChromiumE2Epassed33.6s. Reviewer finaltree
+4872d0ac7e5d7684db1a48280e782348ea9cc657 ready. Прежний полныйWindows377 изF5 плюс
+новыеprofile не названы новымfull387. DraftmainPR19 обновлён до этогоcheckpoint,
+с реальными ограничениями/F2/B7+/fallback; draft=True, Approve/merge не выполнялись.
+
+A24 — A-owned очередь: проверить, не расходуют ли retries заведомо постоянные
+ошибки UnsupportedModelVersionError/ForecastInputError неизменяемого входа. Временные
+ошибки должны сохранять retry/lease, статусjob/run — согласован. Новых HTTPполей,
+миграций/общих DTO/Bфайлов не планируется. Продуктовыйфикс только после регрессии.
+
+Последний успешныйfetch: B a7715dd/B020 без новыхACK/ETA/RETURN; fallbacke5972e5
+сохранена. Проверки связи между пакетами/~10мин и HANDOFF при возврате остаются.
+Actions not_run поquota, private/main прежние. Следующийheartbeat до02:54UTC;
+работа продолжается до09:00МСК без бессмысленного повторения уже пройденных тестов.
