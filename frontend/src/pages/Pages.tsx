@@ -36,8 +36,8 @@ export function Pages({ route }: { route: RoutePath }) {
       lead="Касса, расходы и клиенты по тому же сохранённому прогнозу. Просмотр ничего не меняет."><PulsePage /></Page>;
     case "/quality": return <Page route={route}
       lead="Как мы проверяли, можно ли заранее предсказать кассовый разрыв, и что получилось."><QualityPage /></Page>;
-    case "/assistant": return <Page route={route}
-      lead="Спросите о деньгах счёта обычными словами — Юми ответит таблицей или графиком."><AssistantPage /></Page>;
+    // Чат без заголовка страницы: сверху только переписка, снизу панель ввода.
+    case "/assistant": return <AssistantPage />;
   }
 }
 
