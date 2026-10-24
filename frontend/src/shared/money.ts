@@ -25,3 +25,9 @@ export function rublesToMinor(value: string, allowZero = false): number {
   }
   return minor;
 }
+
+// Копейки → строка для поля ввода («1234,56»), без форматирования разрядов.
+export function minorToInput(minor: number): string {
+  const value = BigInt(minor);
+  return `${value / 100n},${(value % 100n).toString().padStart(2, "0")}`;
+}

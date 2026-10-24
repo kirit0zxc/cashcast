@@ -1,0 +1,20 @@
+/* Дизайн-токены варианта A «Спецификация»: технический бланк, радужность только в ауре статуса. */
+:root {
+  --paper: #f1f0ec;
+  --panel: #e6e5e0;
+  --ink: #141414;
+  --ink-2: #4a4a48;
+  --muted: #8a8984;
+  --rule: #141414;
+  --hatch: #d9d8d2;
+  --accent: #ff6f8e;
+  --coral: #d9452f;
+  --ok-ink: #1d6b45;
+
+  --sans: "Onest", "Segoe UI", Arial, sans-serif;
+  --mono: "JetBrains Mono", Consolas, monospace;
+
+  --gap: 24px;
+  --pad: 18px;
+  color-scheme: light;
+}

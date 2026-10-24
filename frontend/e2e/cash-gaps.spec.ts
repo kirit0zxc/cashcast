@@ -1,24 +1,28 @@
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 import { scenarioStatement } from "./fixtures/scenario-statement";
+import { login, go, expectStatementPreview } from "./fixtures/app";
 import type { Accepted } from "../src/shared/api";
 import type { CashGapReport } from "../src/features/forecast/cash-gaps";
 
 test("cash gap: real import, worker, episode and financing preview preserve saved plans", async ({ page }) => {
   const fixture = scenarioStatement();
   const day = (offset: number) => new Date(Date.parse(fixture.today) + offset * 86400000).toISOString().slice(0, 10);
-  await page.goto("/");
-  await page.getByLabel("Email", { exact: true }).fill("demo@example.com");
-  await page.getByLabel("Пароль", { exact: true }).fill("demo-password");
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await login(page);
   await page.getByRole("combobox", { name: "Счёт", exact: true }).selectOption({ label: "Расчётный счёт · RUB" });
+  await go(page, "Импорт данных");
   await page.getByLabel("CSV-файл", { exact: true }).setInputFiles({
     name: "cash-gap-synthetic.csv", mimeType: "text/csv", buffer: fixture.buffer,
   });
   await page.getByRole("button", { name: "Проверить файл", exact: true }).click();
-  await expect(page.getByText(new RegExp(`Строк: ${fixture.rowCount}\\. Ошибок: 0`))).toBeVisible();
+  await expectStatementPreview(page, fixture.rowCount);
+  const importedForecast = page.waitForResponse(r => r.url().endsWith("/forecasts") && r.request().method() === "POST");
   await page.getByRole("button", { name: "Подтвердить импорт", exact: true }).click();
+  expect((await importedForecast).status()).toBe(202);
+  await expect(page.getByText(/Результат сохранённого импорта/)).toBeVisible();
+  await go(page, "Прогноз");
   await expect(page.getByTestId("cash-gap-panel").getByText("Исходный прогноз", { exact: true })).toBeVisible();
+  await go(page, "Плановые платежи");
   await page.getByLabel("Планируемая сумма, ₽", { exact: true }).fill("9000000");
   await page.getByRole("combobox", { name: "Категория плана", exact: true }).selectOption("purchases");
   await page.getByLabel("Плановая дата", { exact: true }).fill(day(5));
@@ -31,6 +35,7 @@ test("cash gap: real import, worker, episode and financing preview preserve save
     const accepted = await (await forecastReply).json() as Accepted;
     await expect.poll(async () => (await (await page.request.get(`/api/v1/jobs/${accepted.job_id}`)).json()).status,
       { timeout: 30000 }).toBe("succeeded");
+    await go(page, "Прогноз");
     const path = `/api/v1/forecasts/${accepted.forecast_run_id}`;
     const panel = page.getByTestId("cash-gap-panel");
     await expect(panel).toContainText("Есть дефицит по медиане");
@@ -72,6 +77,7 @@ test("cash gap: real import, worker, episode and financing preview preserve save
     expect(delayed.base).toEqual(original.base);
     expect(await (await page.request.get(`/api/v1/companies/${company}/planned-events`)).json()).toEqual(before);
   } finally {
+    await go(page, "Плановые платежи");
     await page.getByTestId(`planned-event-${plan.id}`).getByRole("button", { name: "Отменить", exact: true }).click();
   }
 });

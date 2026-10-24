@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { SpecLines } from "../../ui/SpecChart";
 import { CashCastApi, money, rublesToMinor } from "../../shared/api";
 import type { CashGapReport, GapAction, GapSummary } from "./cash-gaps";
 
@@ -15,7 +15,7 @@ function GapCard({ summary, title }: { summary: GapSummary; title: string }) {
     {summary.opening_already_negative && <p>На дату среза деньги уже в минусе. Это существующий дефицит.</p>}
     <p>Первый новый разрыв: {summary.first_new_gap_date ?? "не выявлен по медиане"}.
       Максимальная нехватка: {money(summary.max_deficit_minor)}. Дней в минусе: {summary.total_negative_days}.</p>
-    {summary.episodes.length > 0 && <div className="table-wrap"><table><thead><tr>
+    {summary.episodes.length > 0 && <div className="scroll"><table className="ops"><thead><tr>
       <th>Тип</th><th>Начало</th><th>Длительность</th><th>Восстановление</th><th>Нехватка</th>
     </tr></thead><tbody>{summary.episodes.map(e => <tr key={e.first_negative_date}>
       <td>{e.kind === "existing" ? "Уже был" : "Новый"}</td><td>{e.first_negative_date}</td>
@@ -59,7 +59,7 @@ export function CashGapPanel({ api, forecastId }: { api: CashCastApi; forecastId
       <p>{report.probability_reason}</p>
       <details><summary>Из чего складывается минимум {report.causes_date}: {money(report.causes_balance_minor)}</summary>
         <p>Состав расчёта, а не доказательство причин. Планы могут не исполниться.</p>
-        <div className="table-wrap"><table><thead><tr><th>Дата</th><th>Компонент</th><th>Основание</th><th>Сумма</th></tr></thead>
+        <div className="scroll"><table className="ops"><thead><tr><th>Дата</th><th>Компонент</th><th>Основание</th><th>Сумма</th></tr></thead>
           <tbody>{report.causes.map((c, i) => <tr key={i}><td>{c.date}</td><td>{c.label}</td>
             <td>{evidence[c.evidence] ?? c.evidence}</td><td>{money(c.amount_minor)}</td></tr>)}</tbody></table></div>
       </details>
@@ -96,13 +96,13 @@ export function CashGapPanel({ api, forecastId }: { api: CashCastApi; forecastId
           Стоимость финансирования: {money(report.financing_cost_minor)}.
           Долг за горизонтом: {money(report.debt_beyond_horizon_minor)}.</p>
         <p>Платежи не изменены. Результат относится только к указанным датам и суммам.</p>
-        <div role="img" aria-label="Сравнение остатков до и после действия">
-          <ResponsiveContainer width="100%" height={260}><LineChart data={report.points}>
-            <CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="date" />
-            <YAxis width={110} tickFormatter={v => money(Number(v))} /><Tooltip formatter={v => money(Number(v))} />
-            <Line name="База" dataKey="base_minor" stroke="#315d9d" dot={false} />
-            <Line name="Гипотеза" dataKey="preview_minor" stroke="#15803d" dot={false} />
-          </LineChart></ResponsiveContainer>
+        <div>
+          <SpecLines dates={report.points.map(p => p.date)} label="Сравнение остатков до и после действия"
+            series={[
+              { name: "База", values: report.points.map(p => p.base_minor), style: "ink" },
+              { name: "Гипотеза", values: report.points.map(p => p.preview_minor), style: "dash" },
+            ]} />
+          <div className="legend"><span>Сплошная — база</span><span>Пунктир — гипотеза</span></div>
         </div>
         <button type="button" onClick={() => preview.reset()}>Сбросить сравнение</button>
       </div>}

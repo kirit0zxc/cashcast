@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { CashCastApi, money, type Forecast, type Job } from "../../shared/api";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
 import { ForecastView } from "../forecast/ForecastPanel";
 import { PulseView } from "../pulse/PulsePanel";
 import type { PulseReport } from "../pulse/types";
 import type { ChatCard, ChatReply } from "./types";
+import { SpecLines } from "../../ui/SpecChart";
 
 const labels: Record<string, string> = {
   amount_minor: "Сумма", remaining_amount_minor: "Осталось оплатить", direction: "Направление",
@@ -25,6 +25,9 @@ const labels: Record<string, string> = {
 const values: Record<string, string> = { in: "Приход", out: "Расход", pending: "Ожидает подтверждения",
   confirmed: "Выполнено", cancelled: "Отменено", planned: "Запланировано", paid: "Оплачено",
   partially_paid: "Частично оплачено", statement: "Выписка", obligations: "Обязательства" };
+
+const KINDS: Record<string, string> = { table: "таблица", forecast: "прогноз", comparison: "сценарий", pulse: "пульс",
+  action: "предложение действия", job: "расчёт", import: "импорт" };
 
 function cell(key: string, value: unknown): string {
   if (value == null) return "—";
@@ -47,7 +50,7 @@ export function DataTable({ data }: { data: Record<string, unknown> }) {
   const keys = [...new Set(rows.flatMap(r => Object.keys(r)))].filter(k =>
     !["account_id", "company_id", "input_snapshot", "_incremental_state"].includes(k));
   return <>
-    {rows.length ? <div className="scroll"><table><thead><tr>
+    {rows.length ? <div className="scroll"><table className="ops"><thead><tr>
       {keys.map(k => <th key={k}>{labels[k] ?? k}</th>)}</tr></thead><tbody>
       {rows.map((row, i) => <tr key={i}>{keys.map(k => <td key={k}>{cell(k, row[k])}</td>)}</tr>)}
     </tbody></table></div> : <p>Нет данных за выбранный период.</p>}
@@ -68,15 +71,17 @@ function ActionCard({ card, api, companyId, accountId, onReply }: CardProps) {
   const canWrite = useCompanyCanWrite();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [state, setState] = useState(String(card.data.status));
+  // Статус берём из истории чата: её обновляет ответ сервера на confirm/cancel.
+  const state = String(card.data.status);
   const expired = Date.parse(String(card.data.expires_at)) <= Date.now();
   async function decide(decision: "confirm" | "cancel") {
     setBusy(true); setError("");
     try {
       const result = await api.post<ChatReply>(`/companies/${companyId}/accounts/${accountId}/assistant/actions/${card.data.action_id}`,
         { decision });
-      const actual = result.cards.find(c => c.kind === "action")?.data.status;
-      setState(String(actual ?? state)); onReply(result, actual === "confirmed");
+      const action = result.cards.find(c => c.kind === "action") ?? null;
+      const actual = action?.data.status;
+      onReply(result, actual === "confirmed" ? action : null);
     } catch (e) { setError(e instanceof Error ? e.message : "Не удалось подтвердить"); }
     finally { setBusy(false); }
   }
@@ -108,24 +113,24 @@ function JobCard({ api, card }: CardProps) {
 }
 
 interface CardProps { card: ChatCard; api: CashCastApi; companyId: string; accountId: string;
-  onReply: (reply: ChatReply, changed: boolean) => void }
+  /** confirmed — карточка действия, если сервер подтвердил запись; иначе null. */
+  onReply: (reply: ChatReply, confirmed: ChatCard | null) => void }
 
 export function ChatCardView(props: CardProps) {
   const { card } = props;
-  return <section className="assistant-card"><h4>{card.title}</h4>
+  return <section className={`assistant-card kind-${card.kind}`}><span className="label">{KINDS[card.kind] ?? card.kind}</span><h3>{card.title}</h3>
     {card.kind === "action" ? <ActionCard {...props} />
       : card.kind === "forecast" ? card.data.status === "succeeded"
         ? <ForecastView forecast={card.data as unknown as Forecast} /> : <DataTable data={card.data} />
       : card.kind === "pulse" ? <PulseView data={card.data as unknown as PulseReport} />
       : card.kind === "job" ? <JobCard {...props} />
       : card.kind === "comparison" ? <>
-        <div className="chart" role="img" aria-label="Сравнение базы и сценария в чате">
-          <ResponsiveContainer width="100%" height={250}><LineChart data={card.data.points as Record<string, unknown>[]}>
-            <CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="point_date" />
-            <YAxis width={100} tickFormatter={v => money(Number(v))} /><Tooltip formatter={v => money(Number(v))} />
-            <Line dataKey="base_balance_p50_minor" name="База" stroke="#315d9d" dot={false} />
-            <Line dataKey="scenario_balance_p50_minor" name="Сценарий" stroke="#a45a22" dot={false} />
-          </LineChart></ResponsiveContainer></div><DataTable data={card.data} />
+        <SpecLines label="Сравнение базы и сценария в чате" markMin={false}
+          dates={(card.data.points as { point_date: string }[]).map(p => p.point_date)} series={[
+            { name: "сценарий", style: "ink", values: (card.data.points as { scenario_balance_p50_minor: number }[]).map(p => p.scenario_balance_p50_minor) },
+            { name: "база", style: "dash", values: (card.data.points as { base_balance_p50_minor: number }[]).map(p => p.base_balance_p50_minor) },
+          ]} />
+        <details><summary>Таблица по дням</summary><DataTable data={card.data} /></details>
       </> : <DataTable data={card.data} />}
   </section>;
 }

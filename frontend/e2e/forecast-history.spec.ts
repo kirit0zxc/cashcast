@@ -1,14 +1,13 @@
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "node:crypto";
+import { go, login } from "./fixtures/app";
 
 test("saved history paginates after reload and opens base/scenario without enqueue", async ({ page }) => {
   const tag = randomUUID();
   const today = new Date().toISOString().slice(0, 10);
   const due = new Date(Date.now() + 5 * 86400000).toISOString().slice(0, 10);
-  await page.goto("/");
-  await page.getByLabel("Email", { exact: true }).fill("demo@example.com");
-  await page.getByLabel("Пароль", { exact: true }).fill("demo-password");
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await login(page);
+  await go(page, "Плановые платежи");
   await page.getByRole("combobox", { name: "Движение по плану", exact: true }).selectOption("in");
   await page.getByLabel("Планируемая сумма, ₽", { exact: true }).fill("12,34");
   await page.getByLabel("Плановая дата", { exact: true }).fill(due);
@@ -17,6 +16,7 @@ test("saved history paginates after reload and opens base/scenario without enque
   const planRow = page.getByRole("table", { name: "Плановые платежи", exact: true }).getByRole("row")
     .filter({ hasText: `История ${tag}` });
   await expect(planRow).toBeVisible();
+  await go(page, "Прогноз");
   await page.getByLabel("Дата среза", { exact: true }).fill(today);
   const response = page.waitForResponse(r => r.url().endsWith("/forecasts") && r.request().method() === "POST");
   await page.getByRole("button", { name: "Рассчитать", exact: true }).click();
@@ -47,13 +47,17 @@ test("saved history paginates after reload and opens base/scenario without enque
   page.on("request", request => {
     if (request.method() === "POST" && /\/(forecasts|scenarios)$/.test(new URL(request.url()).pathname)) enqueues++;
   });
-  await page.getByText("История расчётов", { exact: true }).click();
+  await page.getByRole("tab", { name: "История расчётов", exact: true }).click();
   await expect(page.getByTestId(`history-row-${scenario.forecast_run_id}`)).toBeVisible();
   await page.getByTestId(`history-row-${scenario.forecast_run_id}`).getByRole("button", { name: "Открыть", exact: true }).click();
   await expect(chart).toBeVisible();
+  // Открытый сценарий не даёт строить сценарий от сценария; база открывается без job.
+  await go(page, "Сценарии");
   await expect(page.getByRole("combobox", { name: "Вид сценария", exact: true })).toHaveCount(0);
   await page.getByRole("button", { name: "Открыть исходный прогноз", exact: true }).click();
   await expect(page.getByRole("combobox", { name: "Вид сценария", exact: true })).toBeVisible();
+  await go(page, "Прогноз");
+  await page.getByRole("tab", { name: "История расчётов", exact: true }).click();
   await expect(page.getByTestId(`history-row-${baseId}`)).toHaveCount(0);
   await page.getByRole("button", { name: "Следующие 10 расчётов", exact: true }).click();
   await expect(page.getByTestId(`history-row-${baseId}`)).toBeVisible();
@@ -61,6 +65,7 @@ test("saved history paginates after reload and opens base/scenario without enque
   await expect(chart).toBeVisible();
   expect(await (await page.request.get(`/api/v1/forecasts/${baseId}`)).json()).toEqual(original);
   expect(enqueues).toBe(0);
+  await go(page, "Плановые платежи");
   await planRow.getByRole("button", { name: "Отменить", exact: true }).click();
   await expect(planRow).toContainText("Отменён");
 });

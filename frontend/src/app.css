@@ -1,31 +1,52 @@
-/* Минимальное оформление проверочного UI; визуальная переработка запланирована утром. */
-:root { font-family: system-ui, sans-serif; color: #172b41; background: #f3f5f7; }
-body { margin: 0; }
-main { max-width: 1150px; margin: auto; padding: 20px; }
-header { margin-bottom: 20px; }
-.panel { background: white; border: 1px solid #cbd3dc; border-radius: 8px; padding: 20px; margin-bottom: 18px; }
+/* Базовое оформление в стиле варианта A «Спецификация». Токены — в styles/tokens.css. */
+@import "./styles/tokens.css";
+@import "./styles/shell.css";
+
+* { box-sizing: border-box; }
+html { background: var(--paper); }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.45; }
+main { max-width: 1240px; margin: auto; padding: 20px 28px 32px; }
+header { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--rule); }
+h1, h2, h3 { font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+h1 { font-size: 34px; margin: 0 0 8px; }
+h2 { font-size: 20px; margin: 4px 0 14px; }
+h3 { font-size: 16px; margin: 16px 0 10px; }
+
+/* Панели: сплошная рамка; .narrow — форма входа. */
+.panel { position: relative; background: var(--paper); border: 1px solid var(--ink); padding: var(--pad); margin-bottom: var(--gap); }
+.panel.dash { border-style: dashed; }
 .narrow { max-width: 420px; }
 .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: end; }
-label { display: grid; gap: 6px; margin-bottom: 12px; }
-input, select, textarea, button { font: inherit; padding: 9px; border: 1px solid #9babbc; border-radius: 4px; }
-button { cursor: pointer; background: #e6edf6; color: #172b41; }
-button:disabled { opacity: .55; cursor: default; }
-textarea { width: 95%; font-family: monospace; }
-details { margin: 14px 0; }
-[role=alert] { color: #a71c25; }
+
+/* Подписи и элементы форм. */
+label { display: grid; gap: 6px; margin-bottom: 12px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); }
+label input, label select, label textarea { text-transform: none; letter-spacing: normal; color: var(--ink); }
+input, select, textarea { font: inherit; font-family: var(--sans); font-size: 14px; padding: 9px 10px; background: var(--paper); color: var(--ink); border: 1px solid var(--ink); border-radius: 0; }
+input[type="file"] { border-style: dashed; }
+textarea { width: 100%; font-family: var(--mono); font-size: 12px; }
+button { font: inherit; font-weight: 700; font-size: 14px; padding: 10px 16px; background: var(--ink); color: var(--paper); border: 1px solid var(--ink); border-radius: 0; cursor: pointer; }
+button:hover:not(:disabled) { background: var(--ink-2); }
+button:disabled { opacity: .45; cursor: default; }
+:is(button, a, input, select, textarea, summary):focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Раскрывающиеся блоки и сообщения. */
+details { margin: 14px 0; border-top: 1px dotted var(--ink); padding-top: 10px; }
+summary { cursor: pointer; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+[role="alert"] { color: var(--coral); }
+[role="status"] { font-family: var(--mono); font-size: 12px; }
+small { display: block; max-width: 420px; color: var(--ink-2); }
+
+/* Таблицы: пунктир между строками, моно-заголовки, табличные цифры. */
 .scroll { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
-th, td { text-align: left; border-bottom: 1px solid #d9e0e7; padding: 10px; }
-small { display: block; max-width: 380px; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-variant-numeric: tabular-nums; }
+th { font-family: var(--mono); font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); border-bottom: 1px solid var(--ink); }
+th, td { text-align: left; padding: 9px 10px; }
+td { border-bottom: 1px dotted var(--ink); }
+
 .chart { width: 100%; min-width: 0; }
-/* Чат использует тот же график и денежное форматирование, что кабинет. */
-.assistant { border-top: 4px solid #315d9d; }
-.assistant-messages { max-height: 75vh; overflow-y: auto; margin: 18px 0; }
-.assistant-message { padding: 16px; margin: 10px 0; border-radius: 8px; background: #f3f5f7; }
-.assistant-message.user { background: #e9f0fa; }
-.assistant-text { white-space: pre-wrap; overflow-wrap: anywhere; }
-.assistant-card { background: white; border: 1px solid #cbd3dc; border-radius: 6px; padding: 12px; margin: 12px 0; }
-.assistant-action { border-left: 3px solid #b77825; padding-left: 12px; }
-.assistant dt { font-weight: 600; }
-.assistant dd { margin: 3px 0 10px 16px; overflow-wrap: anywhere; }
-.assistant td { max-width: 350px; overflow-wrap: anywhere; }
+
+@media (max-width: 700px) {
+  main { padding: 14px 16px 24px; }
+  h1 { font-size: 28px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

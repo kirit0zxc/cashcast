@@ -3,13 +3,12 @@ import { randomUUID } from "node:crypto";
 import { scenarioStatement } from "./fixtures/scenario-statement";
 import type { Accepted, Forecast } from "../src/shared/api";
 import type { PulseReport } from "../src/features/pulse/types";
+import { expectStatementPreview, go, login } from "./fixtures/app";
 
 test("pulse uses saved forecast and planned outflow; buffer reads do not enqueue or rewrite", async ({ page }) => {
   const fixture = scenarioStatement();
-  await page.goto("/");
-  await page.getByLabel("Email", { exact: true }).fill("demo@example.com");
-  await page.getByLabel("Пароль", { exact: true }).fill("demo-password");
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await login(page);
+  await go(page, "Импорт данных");
   await expect(page.getByLabel("CSV-файл", { exact: true })).toBeVisible();
   // Не смешиваем тестовую выписку с другими счетами на демонстрационном стенде.
   await page.getByRole("combobox", { name: "Счёт", exact: true }).selectOption({ label: "Расчётный счёт · RUB" });
@@ -17,11 +16,14 @@ test("pulse uses saved forecast and planned outflow; buffer reads do not enqueue
     name: "pulse-synthetic.csv", mimeType: "text/csv", buffer: fixture.buffer,
   });
   await page.getByRole("button", { name: "Проверить файл", exact: true }).click();
-  await expect(page.getByText(new RegExp(`Строк: ${fixture.rowCount}\\. Ошибок: 0`))).toBeVisible();
+  await expectStatementPreview(page, fixture.rowCount);
   await page.getByRole("button", { name: "Подтвердить импорт", exact: true }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Добавлено:" })).toBeVisible();
+  await go(page, "Финансовый пульс");
   await expect(page.getByRole("img", { name: "Пульс: сохранённая база и гипотетический план", exact: true })).toBeVisible();
 
   const due = new Date(Date.parse(fixture.today) + 5 * 86400000).toISOString().slice(0, 10);
+  await go(page, "Плановые платежи");
   await page.getByLabel("Планируемая сумма, ₽", { exact: true }).fill("9000000");
   await page.getByLabel("Плановая дата", { exact: true }).fill(due);
   await page.getByLabel("Контрагент по плану", { exact: true }).fill(`Pulse synthetic ${randomUUID()}`);
@@ -31,6 +33,7 @@ test("pulse uses saved forecast and planned outflow; buffer reads do not enqueue
   const plan = await (await planReply).json();
   const accepted = await (await acceptedReply).json() as Accepted;
   await expect.poll(async () => (await (await page.request.get(`/api/v1/jobs/${accepted.job_id}`)).json()).status).toBe("succeeded");
+  await go(page, "Финансовый пульс");
   const panel = page.getByTestId("pulse-panel");
   await expect(panel).toContainText("Возможная нехватка денег");
   const forecast = await (await page.request.get(`/api/v1/forecasts/${accepted.forecast_run_id}`)).json() as Forecast;
@@ -50,6 +53,7 @@ test("pulse uses saved forecast and planned outflow; buffer reads do not enqueue
   expect(posts).toBe(0);
   expect(await (await page.request.get(`/api/v1/forecasts/${accepted.forecast_run_id}`)).json()).toEqual(forecast);
   // Убираем лишь созданный тестом план штатной кнопкой; старый frozen-пульс сохраняется.
+  await go(page, "Плановые платежи");
   await page.getByTestId(`planned-event-${plan.id}`).getByRole("button", { name: "Отменить", exact: true }).click();
   expect(await (await page.request.get(`/api/v1/forecasts/${accepted.forecast_run_id}/pulse`)).json()).toEqual(pulse);
 });
