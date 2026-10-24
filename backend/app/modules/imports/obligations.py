@@ -93,6 +93,7 @@ class ObligationImportService:
                 kind=item["kind"], status="planned", source="csv", source_ref=item["source_ref"],
                 counterparty_ref=item["counterparty_ref"], provenance=item["provenance"],
                 tax_regime=item["tax_regime"], source_payload=item, created_by=imp.uploaded_by,
+                category=item.get("category"),
             ))
             inserted += 1
         imp.status = "committed"

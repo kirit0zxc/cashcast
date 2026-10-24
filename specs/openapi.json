@@ -3724,6 +3724,409 @@
           }
         }
       }
+    },
+    "/api/v1/companies/{company_id}/external-sources": {
+      "get": {
+        "tags": [
+          "external-sources"
+        ],
+        "summary": "Sources",
+        "operationId": "sources_api_v1_companies__company_id__external_sources_get",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalSourcesOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{company_id}/external-sources/{provider}/preview": {
+      "post": {
+        "tags": [
+          "external-sources"
+        ],
+        "summary": "Preview Source",
+        "operationId": "preview_source_api_v1_companies__company_id__external_sources__provider__preview_post",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          },
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "bank",
+                "onec"
+              ],
+              "type": "string",
+              "title": "Provider"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourcePreviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalPreviewOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{company_id}/external-tax-template": {
+      "get": {
+        "tags": [
+          "external-sources"
+        ],
+        "summary": "Download Tax Template",
+        "operationId": "download_tax_template_api_v1_companies__company_id__external_tax_template_get",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{company_id}/external-tax-imports": {
+      "post": {
+        "tags": [
+          "external-sources"
+        ],
+        "summary": "Preview Tax",
+        "operationId": "preview_tax_api_v1_companies__company_id__external_tax_imports_post",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_preview_tax_api_v1_companies__company_id__external_tax_imports_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalPreviewOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3854,6 +4257,26 @@
           "file"
         ],
         "title": "Body_preview_obligations_api_v1_companies__company_id__obligation_imports_post"
+      },
+      "Body_preview_tax_api_v1_companies__company_id__external_tax_imports_post": {
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Account Id"
+          },
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "account_id",
+          "file"
+        ],
+        "title": "Body_preview_tax_api_v1_companies__company_id__external_tax_imports_post"
       },
       "Body_upload_api_v1_companies__company_id__accounts__account_id__assistant_uploads_post": {
         "properties": {
@@ -4788,6 +5211,156 @@
           "items"
         ],
         "title": "ExplanationsOut"
+      },
+      "ExternalPreviewOut": {
+        "properties": {
+          "import_id": {
+            "type": "string",
+            "title": "Import Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "previewed",
+              "committed"
+            ],
+            "title": "Status"
+          },
+          "source_name": {
+            "type": "string",
+            "title": "Source Name"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "total_rows": {
+            "type": "integer",
+            "title": "Total Rows"
+          },
+          "valid_count": {
+            "type": "integer",
+            "title": "Valid Count"
+          },
+          "error_count": {
+            "type": "integer",
+            "title": "Error Count"
+          },
+          "sample_errors": {
+            "items": {
+              "$ref": "#/components/schemas/ObligationRowErrorOut"
+            },
+            "type": "array",
+            "title": "Sample Errors"
+          },
+          "reused": {
+            "type": "boolean",
+            "title": "Reused"
+          },
+          "provider_id": {
+            "type": "string",
+            "enum": [
+              "bank",
+              "onec",
+              "tax"
+            ],
+            "title": "Provider Id"
+          },
+          "mode": {
+            "type": "string",
+            "const": "demo",
+            "title": "Mode",
+            "default": "demo"
+          },
+          "skipped_settled": {
+            "type": "integer",
+            "title": "Skipped Settled"
+          },
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/SourceDocumentOut"
+            },
+            "type": "array",
+            "title": "Documents"
+          },
+          "preview_truncated": {
+            "type": "boolean",
+            "title": "Preview Truncated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "import_id",
+          "status",
+          "source_name",
+          "as_of",
+          "total_rows",
+          "valid_count",
+          "error_count",
+          "sample_errors",
+          "reused",
+          "provider_id",
+          "skipped_settled",
+          "documents",
+          "preview_truncated"
+        ],
+        "title": "ExternalPreviewOut"
+      },
+      "ExternalSourceOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "bank",
+              "onec",
+              "tax"
+            ],
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "mode": {
+            "type": "string",
+            "const": "demo",
+            "title": "Mode",
+            "default": "demo"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "description"
+        ],
+        "title": "ExternalSourceOut"
+      },
+      "ExternalSourcesOut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ExternalSourceOut"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "warning": {
+            "type": "string",
+            "title": "Warning"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "warning"
+        ],
+        "title": "ExternalSourcesOut"
       },
       "FieldError": {
         "properties": {
@@ -7545,6 +8118,99 @@
           "changes"
         ],
         "title": "ScenarioRequest"
+      },
+      "SourceDocumentOut": {
+        "properties": {
+          "source_ref": {
+            "type": "string",
+            "title": "Source Ref"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "document_kind": {
+            "type": "string",
+            "title": "Document Kind"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "in",
+              "out"
+            ],
+            "title": "Direction"
+          },
+          "amount_minor": {
+            "type": "integer",
+            "title": "Amount Minor"
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Due Date"
+          },
+          "available_at": {
+            "type": "string",
+            "format": "date",
+            "title": "Available At"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "provenance": {
+            "type": "string",
+            "title": "Provenance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_ref",
+          "label",
+          "document_kind",
+          "direction",
+          "amount_minor",
+          "due_date",
+          "available_at",
+          "category",
+          "provenance"
+        ],
+        "title": "SourceDocumentOut"
+      },
+      "SourcePreviewRequest": {
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Account Id"
+          },
+          "as_of": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "As Of"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "account_id"
+        ],
+        "title": "SourcePreviewRequest"
       },
       "TransactionCategoryPatch": {
         "properties": {

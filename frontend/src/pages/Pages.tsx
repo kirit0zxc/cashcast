@@ -6,6 +6,7 @@ import { QualityPage } from "./QualityPage";
 import { ForecastPanel, ForecastState } from "../features/forecast/ForecastPanel";
 import { ScenarioPanel } from "../features/forecast/ScenarioPanel";
 import { StatementImport } from "../features/imports/StatementImport";
+import { ExternalSources } from "../features/imports/ExternalSources";
 import { ObligationImport } from "../features/planning/ObligationImport";
 import { PlanFactPanel } from "../features/planning/PlanFactPanel";
 import { PlannedEvents } from "../features/planning/PlannedEvents";
@@ -71,17 +72,21 @@ function ImportPage() {
   const { api, companyId, accountId, statementCommitted, plansChanged } = useAccount();
   const canWrite = useCompanyCanWrite();
   const cache = useQueryClient();
-  const [kind, setKind] = useState<"statement" | "obligations">("statement");
+  const [kind, setKind] = useState<"statement" | "obligations" | "external">("statement");
+  async function externalChanged() {
+    await cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] });
+    plansChanged();
+  }
   if (!canWrite) return <Empty title="Импорт доступен владельцу компании" text="В режиме чтения можно смотреть операции и сохранённые расчёты." />;
   return <>
     <Tabs label="Вид данных" value={kind} onChange={setKind}
-      items={[["statement", "Банковская выписка"], ["obligations", "Счета и обязательства"]]} />
+      items={[["statement", "Банковская выписка"], ["obligations", "Счета и обязательства"],
+        ["external", "Банк, 1С и налоги"]]} />
     {kind === "statement"
       ? <StatementImport api={api} companyId={companyId} accountId={accountId} onCommit={statementCommitted} />
-      : <ObligationImport api={api} companyId={companyId} accountId={accountId} onChanged={async () => {
-        await cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] });
-        plansChanged();
-      }} />}
+      : kind === "external" ? <ExternalSources api={api} companyId={companyId} accountId={accountId}
+        onChanged={externalChanged} />
+        : <ObligationImport api={api} companyId={companyId} accountId={accountId} onChanged={externalChanged} />}
   </>;
 }
 
