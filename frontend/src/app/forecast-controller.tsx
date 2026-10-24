@@ -32,6 +32,9 @@ export interface ForecastController {
   dataChanged: (date?: string) => void;
   /** Открыть сохранённый расчёт без нового задания. */
   open: (entry: Pick<ForecastHistoryEntry, "id" | "as_of" | "job_id" | "error_code">) => void;
+  /** Данные изменены подтверждённым действием ассистента: показанный прогноз устарел. */
+  stale: boolean;
+  markStale: () => void;
 }
 
 // Один контроллер на выбранный счёт. Живёт выше страниц, поэтому переход по меню
@@ -43,6 +46,8 @@ export function useForecastController({ api, companyId, accountId, canWrite }: {
   const cache = useQueryClient();
   const [asOf, setAsOf] = useState(today);
   const [selection, setSelection] = useState<Selection>({ mode: "latest" });
+  // Ассистент не запускает скрытый пересчёт: только отмечает, что прогноз устарел.
+  const [stale, setStale] = useState(false);
   // Последний отправленный запрос; поздний ответ прежнего запроса игнорируется.
   const sequence = useRef(0);
 
@@ -81,6 +86,7 @@ export function useForecastController({ api, companyId, accountId, canWrite }: {
     sequence.current += 1;
     setAsOf(date);
     setSelection({ mode: "none" });
+    setStale(false);
     mutate({ date, seq: sequence.current });
   }, [mutate]);
 
@@ -101,7 +107,8 @@ export function useForecastController({ api, companyId, accountId, canWrite }: {
     .filter((e): e is Error => e instanceof Error);
 
   return {
-    asOf: effectiveAsOf, selection, runId, jobId, job, forecast, working, errors,
+    asOf: effectiveAsOf, selection, runId, jobId, job, forecast, working, errors, stale,
+    markStale: () => setStale(true),
     requesting: mutation.isPending,
     changeDate: date => {
       sequence.current += 1;
@@ -111,7 +118,7 @@ export function useForecastController({ api, companyId, accountId, canWrite }: {
     dataChanged: date => { if (canWrite) enqueue(date ?? effectiveAsOf); },
     open: entry => {
       sequence.current += 1;
-      reset(); setAsOf(entry.as_of);
+      reset(); setAsOf(entry.as_of); setStale(false);
       setSelection({ mode: "run", id: entry.id, jobId: entry.job_id, errorCode: entry.error_code });
     },
   };

@@ -207,6 +207,42 @@ td.neg, .neg { color: var(--coral); }
 details.panel > summary { font-family: var(--sans); font-size: 15px; font-weight: 700; text-transform: none; letter-spacing: 0; }
 .panel .kpis { border-bottom: 0; }
 
+/* Ассистент: бланк переписки. Цвет — только в ауре аватара. */
+.assistant { display: grid; gap: 14px; }
+.assistant-head { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; gap: 16px; align-items: center;
+  padding: 14px; border: 1px solid var(--ink); }
+.assistant-head h2 { margin: 2px 0 4px; font-size: 26px; }
+.assistant-head p { margin: 0; color: var(--ink-2); }
+.assistant-head .avatar { width: 72px; height: 72px; border-radius: 50%; overflow: hidden; border: 1px dashed var(--ink); }
+.assistant-head .avatar canvas { width: 100%; height: 100%; display: block; }
+.assistant-status { display: grid; gap: 6px; justify-items: end; }
+.assistant-status small { max-width: none; font-size: 10px; }
+.prompts { display: flex; flex-wrap: wrap; gap: 8px; }
+.prompts button { font-weight: 400; font-size: 13px; padding: 7px 12px; border-style: dashed; }
+.assistant-messages { display: grid; gap: 12px; }
+.assistant-message { padding: 14px 16px; border: 1px solid var(--ink); background: var(--paper); }
+.assistant-message.user { justify-self: end; max-width: min(640px, 90%); border-style: dashed; background: var(--panel); }
+.assistant-message.assistant { border-left-width: 4px; }
+.assistant-text { white-space: pre-wrap; overflow-wrap: anywhere; margin: 6px 0 0; }
+.assistant-card { margin: 14px 0 0; padding: 14px; border: 1px dotted var(--ink); }
+.assistant-card h3 { margin: 4px 0 10px; }
+.assistant-card .grid2 { gap: 14px; }
+.assistant-card .panel { margin-bottom: 0; }
+.assistant-card td { max-width: 320px; overflow-wrap: anywhere; }
+.assistant-action { border: 1px solid var(--ink); padding: 12px; background: repeating-linear-gradient(-45deg, transparent 0 9px, color-mix(in srgb, var(--hatch) 45%, transparent) 9px 10px); }
+.assistant-action dl { margin: 8px 0; display: grid; gap: 4px; }
+.assistant-action dl div { display: flex; gap: 8px; align-items: baseline; }
+.assistant-action dt { font-family: var(--mono); font-size: 11px; color: var(--ink-2); text-transform: uppercase; }
+.assistant-action dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.composer { display: grid; gap: 8px; padding: 14px; border: 1px solid var(--ink); }
+.composer label { margin: 0; }
+details.panel.dash > form { margin-top: 12px; }
+@media (max-width: 700px) {
+  .assistant-head { grid-template-columns: 56px minmax(0, 1fr); }
+  .assistant-head .avatar { width: 56px; height: 56px; }
+  .assistant-status { grid-column: 1 / -1; justify-items: start; }
+}
+
 /* Вход. */
 .login { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
 .login .panel { width: min(420px, 100%); }

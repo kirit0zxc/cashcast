@@ -36,12 +36,9 @@ export async function expectObligationPreview(page: Page, total: number, valid: 
     `Обязательств в файле\\s*${total}\\s*Корректных\\s*${valid}\\s*Ошибок\\s*${errors}(?!\\d)`));
 }
 
-// Импорт выписки через вкладку «Банковская выписка»: файл → проверка → подтверждение.
-export async function importStatement(page: Page, file: { name: string; buffer: Buffer }, rows: number) {
-  await go(page, "Импорт данных");
-  await page.getByLabel("CSV-файл", { exact: true }).setInputFiles({ name: file.name, mimeType: "text/csv", buffer: file.buffer });
-  await page.getByRole("button", { name: "Проверить файл", exact: true }).click();
-  await expectStatementPreview(page, rows);
-  await page.getByRole("button", { name: "Подтвердить импорт", exact: true }).click();
-  await expect(page.getByRole("status").filter({ hasText: "Добавлено:" })).toBeVisible();
+// Вкладка ассистента — отдельный пункт внизу меню, вне списка разделов.
+export async function goAssistant(page: Page) {
+  const link = page.getByRole("link", { name: /ИИ-ассистент/ });
+  await link.click();
+  await expect(link).toHaveAttribute("aria-current", "page");
 }

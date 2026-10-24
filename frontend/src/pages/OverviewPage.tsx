@@ -27,6 +27,7 @@ export function OverviewPage() {
       {ready && <span className="chip">срез {ready.as_of}</span>}
       {ready && <span className="chip solid">модель {ready.model_version}</span>}
       {c.working && <span className="chip stale">прогноз обновляется</span>}
+      {c.stale && !c.working && <span className="chip stale">прогноз устарел</span>}
       <span style={{ flex: 1 }} />
       {canWrite && <button type="button" className="ghost" onClick={() => navigate("/import")}>Загрузить данные</button>}
       {canWrite && <button type="button" disabled={c.working} onClick={c.run}>Рассчитать</button>}

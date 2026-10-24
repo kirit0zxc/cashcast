@@ -46,6 +46,8 @@ export function ForecastPanel() {
 export function ForecastState() {
   const { forecast: c } = useAccount();
   return <>
+    {c.stale && <p className="errors">Данные изменены подтверждённым действием ассистента — показанный прогноз устарел.
+      Пересчитайте его кнопкой «Рассчитать».</p>}
     {c.working && <p role="status">Задание: {c.job.data?.status ?? "отправляем"}. Ожидаем worker…</p>}
     {c.job.data?.status === "failed" && <p role="alert">Расчёт не выполнен: {c.job.data.error_code}</p>}
     {c.errors.map((e, i) => <p role="alert" key={i}>{e.message}</p>)}

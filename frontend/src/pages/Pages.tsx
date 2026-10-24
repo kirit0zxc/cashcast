@@ -10,6 +10,7 @@ import { PlanFactPanel } from "../features/planning/PlanFactPanel";
 import { PlannedEvents } from "../features/planning/PlannedEvents";
 import { PulsePanel } from "../features/pulse/PulsePanel";
 import { Transactions } from "../features/transactions/Transactions";
+import { AssistantPanel } from "../features/assistant/AssistantPanel";
 import { useCompanyCanWrite } from "../shared/company-permissions";
 import { Empty } from "../ui/Empty";
 import { Tabs, dmy } from "../ui/Blank";
@@ -32,7 +33,8 @@ export function Pages({ route }: { route: RoutePath }) {
       lead="Что будет с остатком, если изменить одно событие. База и реальные планы не меняются."><ScenariosPage /></Page>;
     case "/pulse": return <Page route={route}
       lead="Касса, расходы и клиенты по тому же сохранённому прогнозу. Просмотр ничего не меняет."><PulsePage /></Page>;
-    case "/assistant": return <Page route={route}><AssistantPage /></Page>;
+    case "/assistant": return <Page route={route}
+      lead="Вопросы о деньгах выбранного счёта. Ответы опираются на те же данные API, что и кабинет."><AssistantPage /></Page>;
   }
 }
 
@@ -123,8 +125,7 @@ function PulsePage() {
   </>;
 }
 
-// Ассистент (PR №51) ещё не в main: показываем честное состояние без выдуманных ответов.
+// Ассистент — отдельная вкладка; история чата живёт в AccountProvider.
 function AssistantPage() {
-  return <Empty title="Ассистент появится после слияния PR №51"
-    text="В этой сборке API ассистента нет. Остальные разделы работают без него." />;
+  return <AssistantPanel />;
 }
