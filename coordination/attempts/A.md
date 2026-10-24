@@ -264,3 +264,17 @@ spy подтвердил проход4HTTPпутей в matcher до guard; ма
 сам EOD/дата остаются исходными. Все4fixes только Aowned, безBматематики/DTO.
 Итог414Linux89.64s/414Windows95.92s/8Chrome32.1s; дваreviewer+thirdverifier tree
 5d3391cbe9666c362519af3da191e6661170afa3 READY. Тристарыхриска выделены в reviewотдельно.
+
+## A-ATT-020 · роль по целевой компании и конфликт без смены старого ID
+
+UTC:2026-10-24T03:21:00Z; A26ee251aede7cc337d4682490dcac89c42e984f50a.
+Старый viewerPOSTpreview200, разныеименаодногоnoIDkey молча committed/skipped,
+дваконкурирующихконфликта обаcommitted. Новыерегрессии4red/1pass это подтвердили.
+Не исправлять fingerprintдобавлениемимени/новымhash: повтор старой выписки мог бы
+создать новыеоперации. Ключсохранён; sourcepayload сравнивается до любыхвставок и
+EODupdates. Внутрифайла failed, сledger409transaction_fingerprint_conflict.
+Полностьюидентичные фактыбезID по-прежнему неразличимы — не выдавать это за решённое.
+
+ЦентральнаяCompanyAccessпроверяетцелевуюроль, включаяobject-IDмаршруты. Проверены
+11отказовзаписи безпобочныхэффектов,8чтений200 и ownerдругойкомпании201.
+30Windowsprofile/Ruff/OpenAPIpassed;419Linux88.70s/8Chrome29.2s. Reviewtree07574f4ready.
