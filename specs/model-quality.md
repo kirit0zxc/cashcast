@@ -44,3 +44,11 @@ Evidence содержит полные исходные агрегаты с пу
 5. Выйти из кабинета: тот же запрос возвращает 401.
 
 Ответ можно сохранить как JSON для презентации. OpenAPI: specs/openapi.json.
+
+Дополнительный кандидат v2 доступен в `evidence` с
+`path=evaluation/risk-candidate-v2-results.json`. Его `data.results` содержит парные
+baseline/candidate для всех трёх групп, а `data.reproducibility` — версии и SHA кода.
+Это отдельная исследовательская версия, не замена основных cohorts v1. Поля
+production_activated/probability_calibrated остаются false; предупреждения на новых
+счетах не улучшились, несмотря на рост ранговых метрик. Полный разбор —
+evaluation/RISK-CANDIDATE-V2-REPORT.md.

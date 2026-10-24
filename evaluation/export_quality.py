@@ -7,7 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "backend/app/modules/model_quality/report.json"
-SOURCES = ("berka-risk-results.json", "risk-followup-results.json", "real-data-results.json")
+SOURCES = ("berka-risk-results.json", "risk-followup-results.json", "real-data-results.json",
+           "risk-candidate-v2-results.json")
 
 
 class QualityReportBuilder:
@@ -57,7 +58,7 @@ class QualityReportBuilder:
             raw = (root / "evaluation" / name).read_text(encoding="utf-8").encode("utf-8")
             evidence.append({"path": "evaluation/" + name, "sha256": hashlib.sha256(raw).hexdigest(),
                              "hash_format": "utf8_lf", "data": json.loads(raw)})
-        risk, followup, _flows = (item["data"] for item in evidence)
+        risk, followup, _flows = (item["data"] for item in evidence[:3])
         cohorts = []
         for name, row in risk["results"].items():
             uncertainty = followup.get("retrospective", {}).get(name, {}).get("v1_threshold_005", {}).get("uncertainty")
