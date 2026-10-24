@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: TAKEOVER-ACTIVE limited MVP scope A028; prepare separate fallback branch
-code_sha: 461f6f819036f3e9c9a7aa9fa31cf7d54ae83216
-tested_sha: 461f6f819036f3e9c9a7aa9fa31cf7d54ae83216
-last_update: 2026-10-24T01:14:16Z
+task: TAKEOVER-ACTIVE; F1 VERIFIED; F3 forecast history WORKING; F2 compatibility blocked
+code_sha: 9483d18b56f1a6455b9ce11d67e9407ff8119a23
+tested_sha: 9483d18b56f1a6455b9ce11d67e9407ff8119a23
+last_update: 2026-10-24T01:29:02Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -851,3 +851,38 @@ Main по-прежнему только человек; один интегра�
 1131операция, повтор без дублей, все4численных сценария и два ForecastOut SHA после
 рестарта postgres/api/worker/web совпали. Пока модель1.0; будущая2.0/миграция ещё не
 проверены на этом стенде. Синтетические браузерные данные остаются отдельно на18085.
+
+## A-031 · F1 VERIFIED / F3 WORKING / F2 compatibility gate
+
+UTC: 2026-10-24T01:29:02Z
+reply_to: A-030,B-020
+type: integrated + verified + working (fallback ACTIVE)
+code_sha: 9483d18b56f1a6455b9ce11d67e9407ff8119a23
+tested_sha: 9483d18b56f1a6455b9ce11d67e9407ff8119a23
+fallback_branch: agents/fallback-a-20261024t0114z
+
+Временное решение опубликовано0082ec3121993cf0aa3609b23ce13ddbf5889045 до кода.
+F1 PR32 принят в integration/night9483d18: изменённый bank ID отклоняет файл409,
+внутрифайловый конфликт failed preview; обычные повторы/категории/no-ID прежние.
+Все проверки источников до ledger/balance writes под account lock. 17 новых тестов,
+до фикса15падали. Windows профиль CSV/границ/конфликтов и Ruff passed. Полный Linux:
+330passed58.38s; Docker API/worker18085 и6ChromiumE2Epassed24.9s. OpenAPI unchanged.
+Независимый reviewer treee4917dd6a63c098a94a3ad3d03c266176a226fa1 ready.
+
+F2 в старом предложении не обратно совместим: drop прежнего unique допускает
+несколько mappings, а старое приложение выбирает только по rawSHA; новый NOT NULL
+ломает старые вставки без mapping_sha. Независимый reviewer подтвердил. Поэтому
+эта миграция к существующему volume не применяется, предложение остаётся отдельным
+до совместимого дизайна/решения человека. Никакого обхода через изменённые bytes SHA.
+
+Дальше F3: история сохранённых расчётов по принятому временному forecast-history-v1,
+с company/account cursor, nullable legacy job, без enqueue. Потом F4 manual confirm
+и F5 фактическая активация зарегистрированной2.0. Чистая математика/B7/evaluation
+не перехватываются. Новые данные/вероятности не выдумываются.
+
+Последний успешный fetch: B по-прежнемуa7715dd/B020, единственная fallback-ветка
+наша9483d18; новых ACK/ETA/RETURN нет. Состояние процесса на ПК B неизвестно.
+При возврате — checkpoint/HANDOFF и согласование, не параллельная работа. A.md
+обновляется в agents/a-app; следующий пакет берёт её проверенные metadata обычным
+merge. Actions not_run/private, main только человеку. Следующая связь до01:49UTC,
+fetch между пакетами/примерно каждые10мин во время fallback.
