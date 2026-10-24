@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { useAccount } from "../../app/account-context";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
-import { Aura } from "../../ui/Aura";
+import { YumiAvatar } from "./YumiAvatar";
 import { ChatCardView } from "./ChatCards";
 import { MarkdownMessage } from "./MarkdownMessage";
 
@@ -30,7 +30,8 @@ export function AssistantPanel() {
   }
   return <section className="assistant" aria-label="ИИ-ассистент CashCast">
     <div className="assistant-head">
-      <div className="avatar"><Aura tone="assistant" cell={4} /></div>
+      <YumiAvatar mood={chat.busy ? "thinking" : chat.error ? "error"
+        : chat.entries.at(-1)?.role === "assistant" ? "success" : "idle"} />
       <div>
         <span className="label">ИИ-ассистент</span>
         <h2>Юми</h2>
