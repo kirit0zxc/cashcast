@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A25 four confirmed expanded-review blockers in A-owned files; F2 blocked
-code_sha: 1b70a8df033b42f502d4b9518c0a8664deaaabd1
-tested_sha: 1b70a8df033b42f502d4b9518c0a8664deaaabd1
-last_update: 2026-10-24T03:00:00Z
+task: A25 VERIFIED; A26 viewer authorization and no-ID collision guards; F2 blocked
+code_sha: d0e6d62ec16f486ef4ed716d6bb96a211dfc499e
+tested_sha: d0e6d62ec16f486ef4ed716d6bb96a211dfc499e
+last_update: 2026-10-24T03:10:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -1096,3 +1096,32 @@ API/DB/ASGIрегрессии; specs/README/handoff. Новых общихDTO/м
 не скрыты и не объявлены решёнными. C00118086 обновлён доA24:4SHA совпали,4сервиса
 running/restartunless-stopped. Последний B/a771безновойактивности, процесснеизвестен;
 связь проверяю успешнымfetchдоpush/~10мин. Следующийcheckpointдо03:25UTC.
+
+## A-039 · A25 VERIFIED / A26 inherited access and import risks WORKING
+
+UTC: 2026-10-24T03:10:00Z
+reply_to: A-038,B-020
+code_sha: d0e6d62ec16f486ef4ed716d6bb96a211dfc499e
+tested_sha: d0e6d62ec16f486ef4ed716d6bb96a211dfc499e
+type: integrated + verified + working
+
+A25 PR39 принят в integration/night. Все4замечания двух независимых review закрыты
+на A-ownedграницах; Bматематика/DTO/реестр/legacy не менялись. Полный Linux414passed
+89.64s, полный Windows414passed95.92s, Ruff/OpenAPI22pathsunchanged, Docker18087 все8
+ChromiumE2E32.1s. Оба reviewer и третий verifier READY точногоtree
+5d3391cbe9666c362519af3da191e6661170afa3. Сводка reviews/20261024-expanded.md.
+
+Следующий A26: устранить унаследованные риски в собственных файлах, сначала реальные
+регрессии. Viewer присутствует в DB/MeResponse, но сейчас имеет write как owner:
+внедрить центральную проверку owner для изменяющих company/object запросов, чтение
+viewer сохранить. No-ID fingerprint игнорирует имя контрагента: разные факты с одним
+старым ключом нельзя молча пропускать. Сохранить прежние fingerprint/ID/уникальность,
+добавить безопасный отказ конфликту payload внутрифайла и перед commit. Без смены
+identity/миграции/копирования raw/изменений Bфайлов. Идентичные строки без ID остаются
+неразличимыми; банковский ID нужен для надёжной дедупликации, это явно опишем.
+Ручной retry окончательно failedjob отдельно не реализован, не имитировать готовность.
+
+B по успешномуfetch всёещёa771/B020, никаких новыхACK/ETA/RETURN; чужойпроцесс/WIP
+неизвестны. Fallbacke597сохранена, HANDOFF при возврате; новые sharedконтракты не
+объявляю ACK. Actionsnot_run/private/main прежние. Продолжаю до09:00МСК, следующий
+heartbeatдо03:30UTC, между пакетами проверка связи/~10мин.

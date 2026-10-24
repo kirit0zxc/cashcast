@@ -244,3 +244,23 @@ transient/инойkind по-прежнему retry. Job/run terminal атома�
 Не ослаблять assertion и не добавлять sleep: выбрать точный UUID. Итог все8passed
 28.2s, затем manualconfirmation повторно2.5s. ПолныйLinux391passed78.48s, Windows
 profile15, Ruff/Nodepassed. Reviewer finaltree9fb75c0d54f22a53f4cc94cdd03082be4b09f415.
+
+## A-ATT-019 · расширенное ревью: тесты одного event loop и финансовых границ
+
+UTC:2026-10-24T03:10:00Z; A25d0e6d62ec16f486ef4ed716d6bb96a211dfc499e.
+Обычный TestClient/два потока не воспроизводили взаимную блокировку syncSQL async
+upload и function-scope cleanup другого запроса. Новая регрессия использует один
+ASGIloop, реальный Account lock и внешний observer pg_blocking_pids. Неограниченный
+async timeout не спасает заблокированныйloop; отрицательный тест ограничен DB2s.
+Первая statementпопытка ошиблась атрибутом session/_session testwrapper, исправлена;
+это не доказательство productdefect. После исправления wrapper обаupload реально
+дали500 на ожиданииlock; sync endpoints/file.file.read устранили оба.
+
+7plan-regressions воспроизвели invalidstatus/amount/reopen,2noop ужепроходили;
+5openingregressions дали старый EOD/потерянный расход/неверный202overflow. Resource
+spy подтвердил проход4HTTPпутей в matcher до guard; максимальный100Mнабор не запускали.
+Нельзя усекать proposals: это меняет неоднозначность/может разрешить falseauto.
+Старые frozeninput не чинятся заднимчислом; новыеopening содержат известные факты,
+сам EOD/дата остаются исходными. Все4fixes только Aowned, безBматематики/DTO.
+Итог414Linux89.64s/414Windows95.92s/8Chrome32.1s; дваreviewer+thirdverifier tree
+5d3391cbe9666c362519af3da191e6661170afa3 READY. Тристарыхриска выделены в reviewотдельно.
