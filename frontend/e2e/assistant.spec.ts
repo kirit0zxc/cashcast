@@ -25,6 +25,8 @@ test("assistant CSV stays a preview until human confirmation; cancel and repeat 
   const transactionsUrl = `/api/v1/companies/${companyId}/transactions?account_id=${data.account_id}&limit=200`;
   const before = await (await page.request.get(transactionsUrl)).json();
   await expect(chat.getByTestId("assistant-action").first()).toContainText("Ожидает подтверждения");
+  // Идентификаторы счёта не попадают в основной список параметров, только в «Технические параметры».
+  await expect(chat.getByTestId("assistant-action").first().locator(":scope > dl")).not.toContainText(data.account_id);
   await chat.getByRole("button", { name: "Отменить предложение", exact: true }).first().click();
   await expect(chat.getByTestId("assistant-action").first()).toContainText("Отменено");
   // Чат того же счёта переживает переход в другой раздел и обратно.
