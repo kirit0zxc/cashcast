@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: TAKEOVER checkpoint; F1/F3/F4/F5/A22/A23/A24 VERIFIED; expanded review and current demo; F2 blocked
+task: A25 four confirmed expanded-review blockers in A-owned files; F2 blocked
 code_sha: 1b70a8df033b42f502d4b9518c0a8664deaaabd1
 tested_sha: 1b70a8df033b42f502d4b9518c0a8664deaaabd1
-last_update: 2026-10-24T02:51:00Z
+last_update: 2026-10-24T03:00:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -1068,3 +1068,31 @@ handoff/матрицы. Исправлять только подтверждён
 fallbacke5972e5 сохранена, F2 incompatiblemigration не применялась. Дальнейшие
 проверки fetch между пакетами/~10мин; при возврате HANDOFF/ACK перед пересечением.
 Main без Approve/merge. Продолжаю до09:00МСК; heartbeat до03:11UTC.
+
+## A-038 · expanded review BLOCKED / A25 WORKING
+
+UTC: 2026-10-24T03:00:00Z
+reply_to: A-037,B-020
+code_sha: 1b70a8df033b42f502d4b9518c0a8664deaaabd1
+type: blocked + working
+
+Два независимых ревьюера нашли4проверяемыхдефекта. Общая1b70ещёНЕготова к main:
+1. Asyncupload с syncSQL может блокировать ASGIloop и commit другого запроса того
+же счёта. Ограниченная2sDBtimeout регрессия дала500 для обоихupload. A-owned фикс:
+sync FastAPI endpoints/file.file.read, чтобы SQL/CSV шли вthreadpool без новогоDTO.
+2. PATCH суммы paidплана оставляетpaid/remaining>0 и блокирует новыйforecast422;
+cancelled→planned сохраняет0. Проверяю консервативные terminalguards и нормализацию
+partial→paid при точном закрытии остатка. Без новыхполей/истории/reopenобещаний.
+3. 2000планов×50000операций дают100млнmatchingpairs. A-owned PlanFactService должен
+проверять отдельный бюджет до matcher, без опасного усечения кандидатов.
+4. Snapshot берёт старый EOD, но не прибавляет уже известные факты после его даты.
+Исправлю A-owned snapshot с явным предупреждением о расчётном остатке; сам EOD и
+математика/реестр/замороженные старыеinput не меняются. Никаких правок Bmatcher.
+
+Точные файлы A25: api/v1/imports.py,obligations.py,planned_events.py; core matching
+budget; modules/integration/plan_fact.py; forecasting/snapshot.py (A-owned); новые
+API/DB/ASGIрегрессии; specs/README/handoff. Новых общихDTO/миграций/моделей нет.
+Старые viewerwrite/noIDfingerprint/finalfailedretry ограничения отдельно triage,
+не скрыты и не объявлены решёнными. C00118086 обновлён доA24:4SHA совпали,4сервиса
+running/restartunless-stopped. Последний B/a771безновойактивности, процесснеизвестен;
+связь проверяю успешнымfetchдоpush/~10мин. Следующийcheckpointдо03:25UTC.
