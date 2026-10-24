@@ -10,11 +10,6 @@ import { Pages } from "../pages/Pages";
 
 interface Account { id: string; company_id: string; name: string; currency: string }
 
-const dateLine = () => {
-  const d = new Date();
-  return `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}.`;
-};
-
 // App → AppShell → CompanyPermission → AccountProvider → страницы.
 // Компания и счёт общие для всех разделов; смена любого из них сбрасывает контекст счёта.
 export function AppShell({ user, logout, logoutError }: {
@@ -34,7 +29,7 @@ export function AppShell({ user, logout, logoutError }: {
     ? selectedAccount : accounts.data?.items[0]?.id ?? "";
 
   return <>
-    <div className="topline"><span>cashcast.</span><span>финансовый&nbsp;пульс.</span><span>{dateLine()}</span></div>
+    <div className="topline">cashcast.</div>
     <div className="shell">
       <Sidebar route={route} user={user} logout={logout} logoutError={logoutError} />
       <main>
