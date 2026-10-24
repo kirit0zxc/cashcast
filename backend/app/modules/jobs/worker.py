@@ -54,6 +54,9 @@ def run_once(factory: sessionmaker, *, worker_id: str, lease_seconds: int) -> bo
             logger.info("job done id=%s kind=%s", job_id, kind)
         except Exception as exc:
             session.rollback()
+            # Закреплённая неизвестная модель и некорректный frozen input не
+            # исправляются повтором. Политика других обработчиков остаётся прежней.
+            permanent = kind == "forecast" and isinstance(exc, (ForecastInputError, UnsupportedModelVersionError))
             # Только известные аналитические исключения содержат безопасный машинный code.
             error_code = (
                 exc.code if isinstance(exc, (ForecastInputError, UnsupportedModelVersionError))
@@ -65,7 +68,7 @@ def run_once(factory: sessionmaker, *, worker_id: str, lease_seconds: int) -> bo
                 # После rollback право мог забрать другой worker: старый не пишет его статус.
                 if j2 is None or j2.status != "running" or j2.locked_by != worker_id or j2.attempts != attempt:
                     return True
-                queue.mark_failed(s2, j2, error_code=error_code)
+                queue.mark_failed(s2, j2, error_code=error_code, retryable=not permanent)
                 if j2.status == "failed" and j2.kind == "forecast":
                     mark_forecast_failed(s2, j2.payload, j2.last_error)
                 s2.commit()

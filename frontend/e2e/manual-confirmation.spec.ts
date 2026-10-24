@@ -65,10 +65,11 @@ test("ambiguous payment is reviewed and split manually without double allocation
   expect(retry.status()).toBe(200);
   const planRows = page.getByRole("table", { name: "Плановые платежи", exact: true }).getByRole("row").filter({ hasText: name });
   await expect(planRows).toHaveCount(2);
-  await expect(planRows.first()).toContainText("Частично");
+  await expect(page.getByTestId(`planned-event-${events[0]}`)).toContainText("Частично");
   // Не оставляем синтетические обязательства открытыми для следующих расчётов.
-  await planRows.first().getByRole("button", { name: "Отменить", exact: true }).click();
-  await expect(planRows.first()).toContainText("Отменён");
-  await planRows.nth(1).getByRole("button", { name: "Отменить", exact: true }).click();
-  await expect(planRows.nth(1)).toContainText("Отменён");
+  for (const eventId of events) {
+    const row = page.getByTestId(`planned-event-${eventId}`);
+    await row.getByRole("button", { name: "Отменить", exact: true }).click();
+    await expect(row).toContainText("Отменён");
+  }
 });

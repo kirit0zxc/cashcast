@@ -47,7 +47,7 @@ export function PlannedEvents({ api, companyId, accountId, onChanged }: {
     {events.data && rows.length === 0 && <p>На выбранном счёте пока нет плановых платежей.</p>}
     {rows.length > 0 && <div className="scroll"><table aria-label="Плановые платежи"><thead><tr>
       <th>Дата</th><th>Контрагент</th><th>Движение</th><th>Сумма / остаток</th><th>Источник</th><th>Статус</th><th>Действие</th>
-    </tr></thead><tbody>{rows.map(e => <tr key={e.id}>
+    </tr></thead><tbody>{rows.map(e => <tr key={e.id} data-testid={`planned-event-${e.id}`}>
       <td>{e.due_date}</td><td>{e.counterparty_name ?? e.counterparty_ref ?? "—"}</td>
       <td>{e.direction === "in" ? "Поступление" : "Расход"}</td>
       <td>{money(e.amount_minor)} / {money(e.remaining_amount_minor)}</td>

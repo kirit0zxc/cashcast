@@ -7,7 +7,7 @@ import pytest
 from sqlalchemy import select
 
 from app.core.forecast_input import ForecastInputCodec
-from app.core.models import BankTransaction, DailyBalance, ForecastRun, Job
+from app.core.models import BankTransaction, DailyBalance, ForecastRun
 from tests.test_integration import (
     _run_worker_until_idle,
     _statement_csv,
@@ -115,7 +115,6 @@ def test_unknown_pinned_model_fails_explicitly_without_default_fallback(client, 
     }).json()
     with session_factory() as session:
         session.get(ForecastRun, accepted["forecast_run_id"]).model_version = "unknown-model"
-        session.get(Job, accepted["job_id"]).max_attempts = 1
         session.commit()
     _run_worker_until_idle(session_factory)
     job = client.get("/api/v1/jobs/" + accepted["job_id"]).json()

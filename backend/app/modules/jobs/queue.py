@@ -107,11 +107,12 @@ def mark_succeeded(session: Session, job: Job, result: dict | None = None) -> No
     session.flush()
 
 
-def mark_failed(session: Session, job: Job, *, error_code: str, retry_in_seconds: int = 30) -> None:
+def mark_failed(session: Session, job: Job, *, error_code: str, retry_in_seconds: int = 30,
+                retryable: bool = True) -> None:
     now = datetime.now(UTC)
     # last_error — только код/тип, без текста исключения (там могут быть данные клиента).
     job.last_error = error_code
-    if job.attempts >= job.max_attempts:
+    if not retryable or job.attempts >= job.max_attempts:
         job.status = "failed"
         job.finished_at = now
     else:
