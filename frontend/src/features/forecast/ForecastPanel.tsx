@@ -4,6 +4,7 @@ import { Explanations } from "./Explanations";
 import { CashGapPanel } from "./CashGapPanel";
 import { ForecastHistory } from "./ForecastHistory";
 import { ProbabilityNotice } from "./ProbabilityNotice";
+import { medianGap } from "./median-gap";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
 import { useAccount } from "../../app/account-context";
 import { Leaders, Tabs, dayMonth, dmy } from "../../ui/Blank";
@@ -69,6 +70,7 @@ function calculationText(f: Forecast) {
 // График хранит копейки; рубли используются только в подписях.
 export function ForecastView({ forecast: f }: { forecast: Forecast }) {
   const last = f.points.at(-1);
+  const gap = medianGap(f);
   return <div className="grid2 top0">
     <section className="panel">
       <span className="dots" aria-hidden="true">● ● ●</span>
@@ -85,10 +87,9 @@ export function ForecastView({ forecast: f }: { forecast: Forecast }) {
       <span className="label">Главное</span>
       <Leaders rows={[
         ["Начальный остаток", money(f.opening_balance_minor)],
-        ["Первый день в минусе", f.risk.first_negative_date ? dayMonth(f.risk.first_negative_date)
-          : f.risk.available ? "не прогнозируется" : "нет оценки"],
-        ["Максимальный дефицит", f.risk.max_deficit_minor === null && !f.risk.first_negative_date
-          ? "нет" : money(f.risk.max_deficit_minor)],
+        ["Первый день в минусе", gap.firstNegativeDate ? dayMonth(gap.firstNegativeDate)
+          : gap.hasForecast ? "не выявлен по медиане" : "нет точек прогноза"],
+        ["Максимальный дефицит по медиане", money(gap.maxDeficitMinor)],
         ["Вероятность уйти в минус", f.risk.probability_any_negative === null ? "не оценивается" : probability(f.risk.probability_any_negative)],
         [last ? `На ${dmy(last.point_date)}` : "На конец прогноза", last ? money(last.balance_p50_minor) : "нет данных"],
       ]} />

@@ -90,7 +90,8 @@ def _negative_days(ops: Sequence[Operation], start: date, end: date, balances=No
     return sum(1 for v in days.values() if v is not None and v < 0)
 
 
-def _cash_block(ops, company_id, as_of, buffer_minor, cfg, stress, curve=None, cash_available=True):
+def _cash_block(ops, company_id, as_of, buffer_minor, cfg, stress, curve=None,
+                cash_available=True, cash_reliable=True):
     curve = curve if curve is not None else build_base_curve(ops, company_id, as_of)
     plan = plan_rescue(curve, ops, PlannerConfig(buffer_minor=buffer_minor, display_days=curve.horizon_days))
     warn = plan.base_if_owner_withdraws or plan.base
@@ -105,6 +106,8 @@ def _cash_block(ops, company_id, as_of, buffer_minor, cfg, stress, curve=None, c
         status = "risk"
     elif below_soon or fragile or gap is not None:
         status = "watch"
+    elif not cash_reliable:
+        status = "unknown"
     else:
         status = "ok"
 
@@ -112,7 +115,10 @@ def _cash_block(ops, company_id, as_of, buffer_minor, cfg, stress, curve=None, c
     best = next((v for v in plan.variants if v.resolved), plan.variants[-1] if plan.variants else None)
     credit = next((a for a in best.actions if a.kind == "credit"), None) if best else None
     if status == "unknown":
-        message = "Недостаточно данных для прогноза остатка."
+        message = ("По сохранённой медиане минус не выявлен, но пригодной истории или актуального "
+                   "согласованного остатка недостаточно, чтобы исключить кассовый разрыв."
+                   if cash_available and curve.flows and not cash_reliable else
+                   "Недостаточно данных для прогноза остатка.")
     elif gap is not None:
         message = f"Возможная нехватка денег {gap:%d.%m}: не хватит до {rub(warn['max_deficit_minor'])}" + (
             " — если выводить деньги из бизнеса как обычно." if only_if_owner else "."
@@ -352,6 +358,7 @@ def build_pulse(
     ledger: bool = False,
     balances: dict[date, int] | None = None,
     cash_available: bool = True,
+    cash_reliable: bool = True,
 ) -> PulseReport:
     cfg = cfg or PulseConfig()
     history = [op for op in operations if op.op_date <= as_of]
@@ -360,7 +367,8 @@ def build_pulse(
     rating = rate_counterparties(history, company_id, as_of)
     curve_for_stress = curve if curve is not None else build_base_curve(history, company_id, as_of)
     stress = stress_clients(curve_for_stress, history, rating=rating)
-    cash = _cash_block(history, company_id, as_of, buffer_minor, cfg, stress, curve_for_stress, cash_available)
+    cash = _cash_block(history, company_id, as_of, buffer_minor, cfg, stress,
+                       curve_for_stress, cash_available, cash_reliable)
     cash.pop("_plan")
     money = _money_block(history, company_id, as_of, industry, cash, ledger=ledger, balances=balances)
     clients = _clients_block(rating, stress, cfg)
@@ -368,6 +376,10 @@ def build_pulse(
     money["status"] = "unknown" if not history else "watch" if losses >= cfg.money_watch_minor else "ok"
 
     status = max((cash["status"], clients["status"], money["status"]), key=_STATUS_RANK.__getitem__)
+    # Спокойный аудит расходов не подтверждает достаточность данных прогноза.
+    # Сигналы watch/risk при этом сохраняют приоритет над неизвестностью.
+    if cash["status"] == "unknown" and status == "ok":
+        status = "unknown"
     parts = [cash["message"]]
     if money["findings"]:
         parts.append("Найдены статьи расходов и возможности; проверьте отдельные варианты ниже.")
