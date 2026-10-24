@@ -22,18 +22,18 @@ import { OverviewPage } from "./OverviewPage";
 export function Pages({ route }: { route: RoutePath }) {
   switch (route) {
     case "/overview": return <OverviewPage />;
-    case "/operations": return <Page route={route} lead="Только фактическое движение денег по выбранному счёту."
+    case "/operations": return <Page route={route} lead="Все движения денег по счёту."
       action={<ImportButton />}><OperationsPage /></Page>;
     case "/import": return <Page route={route}
-      lead="Сначала проверьте файл. Данные появятся в кабинете только после подтверждения."><ImportPage /></Page>;
+      lead="Файл сначала проверяется, в кабинет попадает только после подтверждения."><ImportPage /></Page>;
     case "/payments": return <Page route={route}><PaymentsPage /></Page>;
     case "/reconciliation": return <Page route={route}><ReconciliationPage /></Page>;
     case "/forecast": return <Page route={route}
-      lead="Сколько денег ожидается на счёте за период прогноза и когда может не хватить."><ForecastPanel /></Page>;
+      lead="Сколько денег будет на счёте и когда может не хватить."><ForecastPanel /></Page>;
     case "/scenarios": return <Page route={route}
-      lead="Что будет с остатком, если изменить одно событие. База и реальные планы не меняются."><ScenariosPage /></Page>;
+      lead="Что будет с остатком, если что-то пойдёт не по плану. Реальные данные не меняются."><ScenariosPage /></Page>;
     case "/pulse": return <Page route={route}
-      lead="Касса, расходы и клиенты по тому же сохранённому прогнозу. Просмотр ничего не меняет."><PulsePage /></Page>;
+      lead="Касса, расходы и клиенты — что проверить и что сделать."><PulsePage /></Page>;
     case "/quality": return <Page route={route}
       lead="Как мы проверяли, можно ли заранее предсказать кассовый разрыв, и что получилось."><QualityPage /></Page>;
     // Чат без заголовка страницы: сверху только переписка, снизу панель ввода.

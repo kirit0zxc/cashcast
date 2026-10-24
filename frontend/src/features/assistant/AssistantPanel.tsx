@@ -79,7 +79,7 @@ export function AssistantPanel() {
         <button disabled={chat.busy || !input.trim() || !enabled}>Отправить ассистенту</button>
       </form>
       <div className="dock-foot">
-        <small>Реквизиты и назначения платежей Юми не видит. Не пишите в чат пароли. Enter — отправить, Shift+Enter — новая строка.</small>
+        <small>Реквизиты платежей Юми не видит. Enter — отправить.</small>
         <button type="button" className="link" disabled={chat.busy || !chat.entries.length} onClick={chat.clear}>Очистить чат</button>
       </div>
     </div>

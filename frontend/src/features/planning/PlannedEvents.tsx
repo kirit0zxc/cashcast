@@ -102,8 +102,7 @@ export function PlannedEvents({ api, companyId, accountId, onChanged }: {
             onClose={() => setEditing(null)} />
         </td></tr>}
       </Fragment>)}</tbody></table></div>}
-      <div className="pager"><small>Оплату проверяем по банковским операциям. Подтверждение и частичное распределение —
-        в разделе «Сверка оплат». Отменённый план нельзя возобновить.</small></div>
+      <div className="pager"><small>Оплаты подтверждаются в разделе «Сверка оплат».</small></div>
     </section>
   </>;
 }

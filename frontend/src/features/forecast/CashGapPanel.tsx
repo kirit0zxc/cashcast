@@ -58,14 +58,13 @@ export function CashGapPanel({ api, forecastId }: { api: CashCastApi; forecastId
     {query.isPending && <p role="status">Загружаем сохранённый расчёт…</p>}
     {query.error && <p role="alert">{query.error.message}</p>}
     {report && <>
-      <p>Срез {report.as_of}, горизонт до {report.horizon_end}. Остатки на конец дня.</p>
+      <p className="note">Прогноз с {report.as_of} по {report.horizon_end}, остатки на конец дня.</p>
       <GapCard summary={report.base} title="Исходный прогноз" />
       {report.probability != null && <p data-testid="gap-probability">
         Модельная вероятность минуса за период: <strong>{probability(report.probability)}</strong>.
         {" "}Оценка не откалибрована.</p>}
-      <p>{report.probability_reason}</p>
       <details><summary>Из чего складывается минимум {report.causes_date}: {money(report.causes_balance_minor)}</summary>
-        <p>Состав расчёта, а не доказательство причин. Планы могут не исполниться.</p>
+        <p className="note">Это состав расчёта, а не доказанные причины.</p>
         <div className="scroll"><table className="ops"><thead><tr><th>Дата</th><th>Компонент</th><th>Основание</th><th>Сумма</th></tr></thead>
           <tbody>{report.causes.map((c, i) => <tr key={i}><td>{c.date}</td><td>{c.label}</td>
             <td>{evidence[c.evidence] ?? c.evidence}</td><td>{money(c.amount_minor)}</td></tr>)}</tbody></table></div>
@@ -113,7 +112,8 @@ export function CashGapPanel({ api, forecastId }: { api: CashCastApi; forecastId
         </div>
         <button type="button" onClick={() => preview.reset()}>Сбросить сравнение</button>
       </div>}
-      <details><summary>Ограничения и качество данных: {report.quality_mode}</summary>
+      <details><summary>Ограничения и качество данных</summary>
+        <p className="note">{report.probability_reason}</p>
         <ul>{report.warnings.map(w => <li key={w}>{w}</li>)}</ul>
       </details>
     </>}

@@ -11,8 +11,7 @@ export function ProbabilityNotice({ forecast }: { forecast: Forecast }) {
   const value = forecast.risk.probability_any_negative;
   if (value != null) {
     return <p className="note" data-testid="probability-notice">
-      Риск уйти в минус: деньги заканчиваются хотя бы на один день {outOfHundred(value)}.
-      {" "}Это модельная оценка, не откалибрована: 0% и 100% — не гарантия.
+      Деньги заканчиваются хотя бы на день {outOfHundred(value)} — модельная оценка, не откалибрована.
       {" "}<Link to="/quality">Насколько точен прогноз →</Link></p>;
   }
   const gap = probabilityGap(forecast);

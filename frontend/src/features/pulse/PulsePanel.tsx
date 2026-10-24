@@ -54,7 +54,6 @@ export function PulsePanel({ api, forecastId }: { api: CashCastApi; forecastId: 
           ["Первая нехватка", query.data.cash.first_gap_date ? dayMonth(query.data.cash.first_gap_date)
             : query.data.cash.status === "unknown" ? "оценка недоступна" : "не выявлена по медиане"],
         ]} />}
-        <small>Что может случиться и что можно сделать. Данные того же сохранённого прогноза; просмотр не меняет платежи.</small>
       </div>
     </div>
     {error && <p role="alert">{error}</p>}

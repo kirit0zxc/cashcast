@@ -140,8 +140,7 @@ function Report({ forecast: f }: { forecast: Forecast }) {
       </div>
       <div className="stack">
         <div className="panel dash"><span className="label">Текущие плановые платежи</span>
-          <p className="note">Список на сегодня. Прогноз использует только планы, известные на {day(f.as_of)},
-            {" "}в пределах своего горизонта{last ? ` до ${day(last.point_date)}` : ""}.</p>
+          <p className="note">Список на сегодня. В прогнозе — планы, известные на {day(f.as_of)}.</p>
           {plans.error && <p role="alert">{plans.error.message}</p>}
           {plans.data && !upcoming.length && <p>Плановых платежей нет.</p>}
           <ul className="list">{upcoming.map(e => <li key={e.id}>
