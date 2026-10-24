@@ -1,0 +1,17 @@
+/* Плашка кассового разрыва на обзоре и объяснение риска. */
+.gap-banner { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; justify-content: space-between;
+  margin-bottom: 22px; padding: 16px 18px; border: 2px solid var(--ink); background: var(--paper); }
+.gap-banner > div { flex: 1 1 320px; min-width: 0; }
+.gap-banner b { display: block; font-size: 22px; letter-spacing: -.02em; line-height: 1.2; margin: 4px 0 6px; }
+.gap-banner p { margin: 0; color: var(--ink-2); }
+.gap-banner.tone-risk { border-color: var(--coral); box-shadow: inset 6px 0 0 var(--coral); }
+.gap-banner.tone-risk b { color: var(--coral); }
+.gap-banner.tone-ok { border-style: dashed; }
+.gap-banner.tone-unknown { border-style: dashed; border-color: var(--muted); }
+.prob-gap { display: grid; gap: 8px; justify-items: start; }
+.prob-gap p { margin: 0; }
+.kpi .label .tag { font-size: 9px; padding: 1px 4px; margin-left: 4px; vertical-align: middle; }
+@media (max-width: 700px) {
+  .gap-banner b { font-size: 18px; }
+  .gap-banner button { width: 100%; }
+}

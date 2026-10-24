@@ -1,6 +1,7 @@
 /* Базовое оформление в стиле варианта A «Спецификация». Токены — в styles/tokens.css. */
 @import "./styles/tokens.css";
 @import "./styles/shell.css";
+@import "./styles/gap.css";
 
 * { box-sizing: border-box; }
 html { background: var(--paper); }
