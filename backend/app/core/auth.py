@@ -15,10 +15,11 @@ from fastapi import Depends, Request
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.company_access import CompanyAccess
 from app.core.config import Settings, get_settings
 from app.core.deps import get_db
 from app.core.errors import AppError
-from app.core.models import CompanyMember, User, UserSession
+from app.core.models import User, UserSession
 from app.core.security import token_hash
 
 
@@ -32,7 +33,7 @@ class CurrentUser:
 
 def get_current_user(
     request: Request,
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
     settings: Settings = Depends(get_settings),
 ) -> CurrentUser:
     token = request.cookies.get(settings.session_cookie_name)
@@ -58,11 +59,9 @@ def get_current_user(
 
 def require_company_access(
     company_id: uuid.UUID,
+    request: Request,
     user: CurrentUser = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> str:
-    member = session.get(CompanyMember, {"company_id": company_id, "user_id": uuid.UUID(user.id)})
-    if member is None:
-        # 404, а не 403: не подтверждаем даже существование чужой компании.
-        raise AppError(404, "not_found", "Компания не найдена")
+    CompanyAccess(session).require(user.id, company_id, write=request.method not in {"GET", "HEAD", "OPTIONS"})
     return str(company_id)

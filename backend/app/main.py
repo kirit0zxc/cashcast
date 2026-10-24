@@ -6,7 +6,19 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.api.v1 import auth, forecasts, health, imports, planned_events, transactions
+from app.api.v1 import (
+    accounts,
+    auth,
+    comparisons,
+    forecast_history,
+    forecasts,
+    health,
+    imports,
+    obligations,
+    plan_fact,
+    planned_events,
+    transactions,
+)
 from app.core.config import get_settings
 from app.core.db import make_engine, make_session_factory
 from app.core.errors import install_error_handlers
@@ -39,7 +51,8 @@ def create_app() -> FastAPI:
     app.add_middleware(RequestContextMiddleware)
     install_error_handlers(app)
 
-    for module in (health, auth, imports, transactions, planned_events, forecasts):
+    for module in (health, auth, accounts, imports, obligations, transactions, planned_events,
+                   plan_fact, forecasts, forecast_history, comparisons):
         app.include_router(module.router, prefix=API_PREFIX)
     return app
 

@@ -37,7 +37,10 @@ class BaselineForecastService:
         warnings: list[str] = []
 
         window_start = data.as_of - timedelta(days=_LOOKBACK_DAYS)
-        recent = [t for t in data.txns if window_start < t.booked_on <= data.as_of]
+        recent = [
+            t for t in data.txns
+            if t.account_id == data.account_id and window_start < t.booked_on <= data.as_of
+        ]
         if not recent:
             warnings.append("Нет операций за последнюю неделю до даты среза: потоки приняты нулевыми.")
 
@@ -51,6 +54,8 @@ class BaselineForecastService:
         planned_in: dict[date, int] = defaultdict(int)
         planned_out: dict[date, int] = defaultdict(int)
         for ev in data.planned_events:
+            if ev.available_at > data.as_of:
+                continue
             if ev.status in {"paid", "cancelled"} or ev.remaining_amount_minor <= 0:
                 continue
             bucket = planned_in if ev.direction == Direction.IN else planned_out

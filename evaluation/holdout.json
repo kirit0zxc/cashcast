@@ -1,0 +1,164 @@
+{
+  "phase": "holdout",
+  "dataset_sha256": "e753802b7f7a2eecb7b5a558f9923b529e711c40fe431774750904b62ec79987",
+  "seed": 42,
+  "horizon_days": 30,
+  "source_fingerprints": {
+    "evaluation/backtest.py": "6e34e4536340351836df2f9342459b096179afb7f0cca515de7916cecdbadcc4",
+    "backend/app/modules/forecasting/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/forecasting/baseline.py": "c6ce3dde8cb8d1671a396a2d924a5d431b9261adbf7ccabf39c9766aa4d66dfb",
+    "backend/app/modules/forecasting/scenarios.py": "cb17d4728bf4768b42333b172beea15ed7b9ab3704cf1fede9b7c1222a45af12",
+    "backend/app/modules/forecasting/seasonal.py": "c8168da80235d87aa3e88f80fe599fe942433a75ce3ce9810d25a71984140d04",
+    "backend/app/modules/forecasting/service.py": "94351fe97237039fb751cc9e7c1a85891ccdec523a59d4f96b37b5d95ec4b909",
+    "backend/app/modules/planning/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/planning/matching.py": "4157a5955b923c79f721e2c6a0483030fcda861ea5957cd09758f497f96a7cfb",
+    "backend/app/modules/planning/recurrence.py": "e82b0e9d60790292dc30ce60e28516402c16caa0bc38c367c63d8ec37d7a420d",
+    "backend/app/modules/planning/service.py": "9a5836ab812425a312acf878fc8baa533af28c4a773ffafcb2d25b76d7626b9d",
+    "backend/app/modules/categorization/service.py": "c63bdb186476bb6c6cf0adcfabc4c9972e69b8bea2c70ed4ddd75aef34912e3f",
+    "backend/app/modules/contracts.py": "7d3dd05e8501cfd4d8fd8473ff0666b2a701f80f19081b2ea9a827e224b8edb2"
+  },
+  "selected_lookback_days": 84,
+  "provenance": "Синтетический датасет организаторов, all_operations.csv только один раз; не smoke.",
+  "limitations": [
+    "Временная проверка тех же компаний; отдельный split по новым компаниям не выполнен.",
+    "Дневные цели условны при полноте выгрузки; несверенные/непокрытые цели исключены.",
+    "Истинных счетов/обязательств и эталонных категорий нет; planned_events пусты.",
+    "Риск проверяет наблюдаемый минус счёта с пополнениями владельца, не скрытый дефицит.",
+    "Покрытие интервала и Brier измерены, калибровка вероятности не гарантируется."
+  ],
+  "models": {
+    "baseline": {
+      "days": 3660,
+      "folds": 122,
+      "balance_mae_minor": 277562860.4964481,
+      "balance_rmse_minor": 654819491.1775428,
+      "final_balance_mae_minor": 458458280.5081967,
+      "inflow_wape": 0.9786897996317525,
+      "outflow_wape": 1.5117667948922415,
+      "risk_days": 0,
+      "risk_folds": 0,
+      "interval_p10_p90_coverage": null,
+      "daily_negative_brier": null,
+      "any_negative_brier": null,
+      "risk_reference_probability": 0.0465587044534413,
+      "risk_reference_brier": null,
+      "risk_always_zero_brier": null,
+      "any_negative_positives": 0,
+      "any_negative_precision_at_half": null,
+      "any_negative_recall_at_half": null,
+      "cohorts": {
+        "short": {
+          "days": 120,
+          "balance_mae_minor": 135456037.325
+        },
+        "established": {
+          "days": 3540,
+          "balance_mae_minor": 282380040.94293785
+        }
+      }
+    },
+    "seasonal_w84": {
+      "days": 3660,
+      "folds": 122,
+      "balance_mae_minor": 107236447.58688524,
+      "balance_rmse_minor": 268638655.56012946,
+      "final_balance_mae_minor": 141865582.27868852,
+      "inflow_wape": 0.7702263650796566,
+      "outflow_wape": 1.1254500586206202,
+      "risk_days": 3510,
+      "risk_folds": 117,
+      "interval_p10_p90_coverage": 0.7743589743589744,
+      "daily_negative_brier": 0.04773575498575498,
+      "any_negative_brier": 0.10735811965811966,
+      "risk_reference_probability": 0.0465587044534413,
+      "risk_reference_brier": 0.05642564576082581,
+      "risk_always_zero_brier": 0.05982905982905983,
+      "any_negative_positives": 7,
+      "any_negative_precision_at_half": 0.2692307692307692,
+      "any_negative_recall_at_half": 1.0,
+      "cohorts": {
+        "short": {
+          "days": 120,
+          "balance_mae_minor": 136792439.575
+        },
+        "established": {
+          "days": 3540,
+          "balance_mae_minor": 106234549.55338983
+        }
+      }
+    }
+  },
+  "per_cutoff": {
+    "2026-08-31": {
+      "baseline": {
+        "days": 3660,
+        "folds": 122,
+        "balance_mae_minor": 277562860.4964481,
+        "balance_rmse_minor": 654819491.1775428,
+        "final_balance_mae_minor": 458458280.5081967,
+        "inflow_wape": 0.9786897996317525,
+        "outflow_wape": 1.5117667948922415,
+        "risk_days": 0,
+        "risk_folds": 0,
+        "interval_p10_p90_coverage": null,
+        "daily_negative_brier": null,
+        "any_negative_brier": null,
+        "risk_reference_probability": 0.0465587044534413,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": null,
+        "any_negative_positives": 0,
+        "any_negative_precision_at_half": null,
+        "any_negative_recall_at_half": null,
+        "cohorts": {
+          "short": {
+            "days": 120,
+            "balance_mae_minor": 135456037.325
+          },
+          "established": {
+            "days": 3540,
+            "balance_mae_minor": 282380040.94293785
+          }
+        }
+      },
+      "seasonal_w84": {
+        "days": 3660,
+        "folds": 122,
+        "balance_mae_minor": 107236447.58688524,
+        "balance_rmse_minor": 268638655.56012946,
+        "final_balance_mae_minor": 141865582.27868852,
+        "inflow_wape": 0.7702263650796566,
+        "outflow_wape": 1.1254500586206202,
+        "risk_days": 3510,
+        "risk_folds": 117,
+        "interval_p10_p90_coverage": 0.7743589743589744,
+        "daily_negative_brier": 0.04773575498575498,
+        "any_negative_brier": 0.10735811965811966,
+        "risk_reference_probability": 0.0465587044534413,
+        "risk_reference_brier": 0.05642564576082581,
+        "risk_always_zero_brier": 0.05982905982905983,
+        "any_negative_positives": 7,
+        "any_negative_precision_at_half": 0.2692307692307692,
+        "any_negative_recall_at_half": 1.0,
+        "cohorts": {
+          "short": {
+            "days": 120,
+            "balance_mae_minor": 136792439.575
+          },
+          "established": {
+            "days": 3540,
+            "balance_mae_minor": 106234549.55338983
+          }
+        }
+      }
+    }
+  },
+  "excluded_folds": {
+    "stale_opening": 8,
+    "unreconciled_future_target": 1,
+    "unverified_end_coverage": 19
+  },
+  "prediction_sha256": {
+    "baseline": "30ad816497730c953b8387c6888fcf55895ea5c2ceb05bef66e010404f612c64",
+    "seasonal_w84": "f843721d172e16d33be88563624e51e500485a691d91f4f2ea19f94322e697db"
+  }
+}

@@ -18,7 +18,7 @@ RUN uv sync --frozen --no-dev --no-install-project
 # Затем код приложения и миграции.
 COPY app ./app
 COPY migrations ./migrations
-COPY alembic.ini ./
+COPY alembic.ini migrate_and_seed.sh ./
 
 # Непривилегированный пользователь.
 RUN useradd --create-home --uid 10001 appuser && chown -R appuser:appuser /app

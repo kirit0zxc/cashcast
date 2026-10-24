@@ -1,0 +1,30 @@
+{
+  "lookback_days": 84,
+  "selection_metric": "balance_mae_minor",
+  "selection_cutoffs": [
+    "2026-04-30",
+    "2026-05-31",
+    "2026-06-30",
+    "2026-07-31"
+  ],
+  "dataset_sha256": "e753802b7f7a2eecb7b5a558f9923b529e711c40fe431774750904b62ec79987",
+  "source_fingerprints": {
+    "evaluation/backtest.py": "6e34e4536340351836df2f9342459b096179afb7f0cca515de7916cecdbadcc4",
+    "backend/app/modules/forecasting/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/forecasting/baseline.py": "c6ce3dde8cb8d1671a396a2d924a5d431b9261adbf7ccabf39c9766aa4d66dfb",
+    "backend/app/modules/forecasting/scenarios.py": "cb17d4728bf4768b42333b172beea15ed7b9ab3704cf1fede9b7c1222a45af12",
+    "backend/app/modules/forecasting/seasonal.py": "c8168da80235d87aa3e88f80fe599fe942433a75ce3ce9810d25a71984140d04",
+    "backend/app/modules/forecasting/service.py": "94351fe97237039fb751cc9e7c1a85891ccdec523a59d4f96b37b5d95ec4b909",
+    "backend/app/modules/planning/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/planning/matching.py": "4157a5955b923c79f721e2c6a0483030fcda861ea5957cd09758f497f96a7cfb",
+    "backend/app/modules/planning/recurrence.py": "e82b0e9d60790292dc30ce60e28516402c16caa0bc38c367c63d8ec37d7a420d",
+    "backend/app/modules/planning/service.py": "9a5836ab812425a312acf878fc8baa533af28c4a773ffafcb2d25b76d7626b9d",
+    "backend/app/modules/categorization/service.py": "c63bdb186476bb6c6cf0adcfabc4c9972e69b8bea2c70ed4ddd75aef34912e3f",
+    "backend/app/modules/contracts.py": "7d3dd05e8501cfd4d8fd8473ff0666b2a701f80f19081b2ea9a827e224b8edb2"
+  },
+  "seed": 42,
+  "paths": 200,
+  "validation_data_end": "2026-08-31",
+  "validation_risk_prevalence": 0.0465587044534413,
+  "note": "Выбор среди сезонных окон по validation; baseline отдельно, без выбора на holdout."
+}

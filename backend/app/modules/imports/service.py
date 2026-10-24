@@ -2,7 +2,8 @@
 
 preview: разобрать файл, вернуть статистику и первые строки, ничего не фиксируя в ledger.
 commit: записать операции и дневные остатки. Повтор того же файла (тот же sha) не создаёт дубли:
-на уровне БД стоит уникальный ключ (account_id, fingerprint) — конфликт игнорируется.
+на уровне БД стоит уникальный ключ (account_id, fingerprint). Внешний ID с тем же
+содержимым пропускается; изменённый источник отклоняет весь файл до записи фактов.
 """
 
 from __future__ import annotations
@@ -16,8 +17,10 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
 
 from app.core.errors import AppError
-from app.core.models import BankTransaction, DailyBalance, StatementImport
+from app.core.models import Account, BankTransaction, DailyBalance, StatementImport
+from app.modules.imports.identity import BankOperationIdentity
 from app.modules.imports.parser import ColumnMapping, ParseResult, parse_statement
+from app.modules.integration.categories import TransactionCategorization
 
 
 @dataclass(frozen=True, slots=True)
@@ -47,6 +50,15 @@ class ImportService:
         mapping: ColumnMapping,
         uploaded_by: str | None,
     ) -> PreviewResult:
+        account = self._session.scalar(select(Account).where(
+            Account.id == account_id, Account.company_id == company_id,
+        ).with_for_update())
+        if account is None:
+            raise AppError(404, "not_found", "Счёт не найден")
+        if account.currency != "RUB":
+            raise AppError(422, "unsupported_currency", "Импорт поддерживает только RUB")
+        if not filename or len(filename) > 255 or "\x00" in filename:
+            raise AppError(422, "invalid_import", "Недопустимое имя файла или длина более255символов")
         sha = hashlib.sha256(content).hexdigest()
         # Идемпотентность входа: тот же файл в тот же счёт — возвращаем прежний импорт.
         existing = self._session.scalar(
@@ -81,9 +93,13 @@ class ImportService:
         imp = self._session.get(StatementImport, import_id)
         if imp is None or str(imp.company_id) != str(company_id):
             raise AppError(404, "not_found", "Импорт не найден")
+        # Та же блокировка у snapshot/reconcile/manual category: вход не смешивает версии.
+        self._session.scalar(select(Account).where(Account.id == imp.account_id).with_for_update())
+        self._session.refresh(imp)
         if imp.status == "failed":
             raise AppError(409, "import_failed", "Импорт содержит ошибки и не может быть подтверждён")
         if imp.status == "committed":
+            TransactionCategorization(self._session).refresh(imp.account_id)
             # Повторный commit идемпотентен: отдаём сохранённую статистику.
             return {"import_id": str(imp.id), "status": "committed", **imp.stats}
 
@@ -92,8 +108,10 @@ class ImportService:
         if not parsed.ok:
             raise AppError(409, "import_failed", "Импорт содержит ошибки и не может быть подтверждён")
 
+        self._validate_existing_transactions(imp, parsed)
         inserted = self._insert_transactions(imp, parsed)
         self._insert_balances(imp, parsed)
+        TransactionCategorization(self._session).refresh(imp.account_id)
 
         stats = {**_stats(parsed), "inserted": inserted, "skipped_existing": len(parsed.rows) - inserted}
         imp.status = "committed"
@@ -101,6 +119,22 @@ class ImportService:
         imp.committed_at = datetime.now(UTC)
         self._session.flush()
         return {"import_id": str(imp.id), "status": "committed", **stats}
+
+    def _validate_existing_transactions(self, imp: StatementImport, parsed: ParseResult) -> None:
+        # Account lock уже удерживается. Проверяем все источники до новых фактов,
+        # остатков и категоризации; ошибка откатывает весь импорт одним отказом.
+        incoming = {row.fingerprint: row for row in parsed.rows}
+        fingerprints = list(incoming)
+        for offset in range(0, len(fingerprints), 1000):
+            existing = self._session.scalars(select(BankTransaction).where(
+                BankTransaction.account_id == imp.account_id,
+                BankTransaction.fingerprint.in_(fingerprints[offset:offset + 1000]),
+            ))
+            for transaction in existing:
+                if not BankOperationIdentity.matches(transaction, incoming[transaction.fingerprint]):
+                    external = incoming[transaction.fingerprint].external_id is not None
+                    raise AppError(409, "transaction_id_conflict" if external else "transaction_fingerprint_conflict",
+                                   "Ключ операции уже сохранён с другим содержимым; импорт не выполнен")
 
     def _insert_transactions(self, imp: StatementImport, parsed: ParseResult) -> int:
         inserted = 0
@@ -122,7 +156,7 @@ class ImportService:
                     external_id=row.external_id,
                     fingerprint=row.fingerprint,
                 )
-                # Повтор по (account_id, fingerprint) — пропускаем: законные дубли не плодим и не теряем.
+                # Источники с внешним ID уже проверены; одинаковый факт не дублируем.
                 .on_conflict_do_nothing(constraint="uq_bank_transaction_account_fp")
                 .returning(BankTransaction.id)
             )

@@ -1,0 +1,908 @@
+{
+  "experiment": "B5-selection-v2",
+  "dataset_sha256": "e753802b7f7a2eecb7b5a558f9923b529e711c40fe431774750904b62ec79987",
+  "phase_end": "2026-04-30",
+  "cutoffs": [
+    "2026-01-31",
+    "2026-02-28",
+    "2026-03-31"
+  ],
+  "split": "sha256(company_id).digest()[0] %5 !=0 development; heldout excluded",
+  "source_sha256": {
+    "evaluation/select_v2.py": "cfa0eb77c018b2570a14f13a9000f1e4e524007177f624235d061bfa1b4afe8e",
+    "evaluation/backtest.py": "6e34e4536340351836df2f9342459b096179afb7f0cca515de7916cecdbadcc4",
+    "evaluation/EXPERIMENT-B5-B6.md": "0fcd175b42fd26ee2af427e96c2e9b8a4407638d929e0091827967d0959846b6",
+    "backend/app/modules/contracts.py": "7d3dd05e8501cfd4d8fd8473ff0666b2a701f80f19081b2ea9a827e224b8edb2",
+    "backend/app/modules/forecasting/legacy_v1/__init__.py": "cd8a61a7c0eb5db353011088b930b125598c008aaf7a75cc9b2fe79bdd88588a",
+    "backend/app/modules/forecasting/legacy_v1/baseline.py": "7c94eeafa53290bf30247350f065243f1711665ca1df78b0be0717b6fa14d559",
+    "backend/app/modules/forecasting/legacy_v1/categorization.py": "c63bdb186476bb6c6cf0adcfabc4c9972e69b8bea2c70ed4ddd75aef34912e3f",
+    "backend/app/modules/forecasting/legacy_v1/factories.py": "0b689417aeddf579106fb759dd1225324074ff3961b116d93e78ecf5b9cdd07a",
+    "backend/app/modules/forecasting/legacy_v1/recurrence.py": "cf361cd837f36e66bac8708ae4ffcbad3a64d74f2872132a1e9b7c2356620cf5",
+    "backend/app/modules/forecasting/legacy_v1/scenarios.py": "cb17d4728bf4768b42333b172beea15ed7b9ab3704cf1fede9b7c1222a45af12",
+    "backend/app/modules/forecasting/legacy_v1/seasonal.py": "d1a5da1caa713d5a93f981e99cc92bd013de3d3d29d4619f426fd2957a6cde0d",
+    "backend/app/modules/forecasting/seasonal.py": "edf7eaaed1196286135edf4ba85eac60cd447adaafdcd44bd36e6c721a07f7fb",
+    "backend/app/modules/forecasting/scenarios.py": "cb17d4728bf4768b42333b172beea15ed7b9ab3704cf1fede9b7c1222a45af12",
+    "backend/app/modules/forecasting/v2/engine.py": "f4f1e1bb560d143b510803d9e41d3f2af4334e3f627c37997f86ea3a95c14632",
+    "backend/app/modules/forecasting/v2/quality.py": "730334fd7a9c39956bea8248c591b1fba55a034a5209a7d379370df28a066650",
+    "backend/app/modules/categorization/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/categorization/service.py": "c63bdb186476bb6c6cf0adcfabc4c9972e69b8bea2c70ed4ddd75aef34912e3f",
+    "backend/app/modules/planning/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/planning/matching.py": "4157a5955b923c79f721e2c6a0483030fcda861ea5957cd09758f497f96a7cfb",
+    "backend/app/modules/planning/recurrence.py": "e82b0e9d60790292dc30ce60e28516402c16caa0bc38c367c63d8ec37d7a420d",
+    "backend/app/modules/planning/service.py": "9a5836ab812425a312acf878fc8baa533af28c4a773ffafcb2d25b76d7626b9d"
+  },
+  "selection": {
+    "method": "legacy_w84",
+    "gates": {
+      "ewm": {
+        "mae_gain": -0.053947495125834743,
+        "worsening_cutoffs_over_10pct": 0,
+        "runtime_ratio": 1.4535210769553768,
+        "accepted": false
+      },
+      "winsor": {
+        "mae_gain": 0.004635769843300053,
+        "worsening_cutoffs_over_10pct": 0,
+        "runtime_ratio": 1.3925277533642058,
+        "accepted": false
+      },
+      "trend": {
+        "mae_gain": -0.07200669622754519,
+        "worsening_cutoffs_over_10pct": 1,
+        "runtime_ratio": 1.391136598543359,
+        "accepted": false
+      }
+    },
+    "rule": "EXPERIMENT-B5-B6.md; fixed before evaluation"
+  },
+  "models": {
+    "baseline": "baseline-repeat-week-0.1",
+    "legacy_w84": "seasonal-block-bootstrap-1.0-w84",
+    "ewm": "research-weekday-ewm-2.0-w84-p200",
+    "winsor": "research-weekday-winsor-2.0-w84-p200",
+    "trend": "research-weekday-trend-2.0-w84-p200"
+  },
+  "reports": {
+    "baseline": {
+      "days": 8040,
+      "folds": 268,
+      "balance_mae_minor": 244627833.99340796,
+      "balance_rmse_minor": 720723211.5348176,
+      "final_balance_mae_minor": 407819450.85820895,
+      "inflow_wape": 1.1157929196546763,
+      "outflow_wape": 1.4314139594512116,
+      "risk_days": 0,
+      "risk_folds": 0,
+      "interval_p10_p90_coverage": null,
+      "daily_negative_brier": null,
+      "any_negative_brier": null,
+      "risk_reference_probability": null,
+      "risk_reference_brier": null,
+      "risk_always_zero_brier": null,
+      "any_negative_positives": 0,
+      "any_negative_precision_at_half": null,
+      "any_negative_recall_at_half": null,
+      "cohorts": {
+        "short": {
+          "days": 240,
+          "balance_mae_minor": 109781285.9375
+        },
+        "established": {
+          "days": 7800,
+          "balance_mae_minor": 248776958.54897436
+        }
+      }
+    },
+    "legacy_w84": {
+      "days": 8040,
+      "folds": 268,
+      "balance_mae_minor": 132823915.13432837,
+      "balance_rmse_minor": 395372186.6474837,
+      "final_balance_mae_minor": 183017096.29104477,
+      "inflow_wape": 0.7989798467418423,
+      "outflow_wape": 1.130364135244587,
+      "risk_days": 7710,
+      "risk_folds": 257,
+      "interval_p10_p90_coverage": 0.8010376134889754,
+      "daily_negative_brier": 0.03623026588845655,
+      "any_negative_brier": 0.09756731517509727,
+      "risk_reference_probability": null,
+      "risk_reference_brier": null,
+      "risk_always_zero_brier": 0.054474708171206226,
+      "any_negative_positives": 14,
+      "any_negative_precision_at_half": 0.28,
+      "any_negative_recall_at_half": 1.0,
+      "cohorts": {
+        "short": {
+          "days": 240,
+          "balance_mae_minor": 117885375.50833334
+        },
+        "established": {
+          "days": 7800,
+          "balance_mae_minor": 133283562.5074359
+        }
+      }
+    },
+    "ewm": {
+      "days": 8040,
+      "folds": 268,
+      "balance_mae_minor": 139989432.64863184,
+      "balance_rmse_minor": 417720485.1022643,
+      "final_balance_mae_minor": 201576821.88432837,
+      "inflow_wape": 0.814398003960523,
+      "outflow_wape": 1.1528577826654323,
+      "risk_days": 7710,
+      "risk_folds": 257,
+      "interval_p10_p90_coverage": 0.7561608300907912,
+      "daily_negative_brier": 0.03604206549935149,
+      "any_negative_brier": 0.09703035019455253,
+      "risk_reference_probability": null,
+      "risk_reference_brier": null,
+      "risk_always_zero_brier": 0.054474708171206226,
+      "any_negative_positives": 14,
+      "any_negative_precision_at_half": 0.29545454545454547,
+      "any_negative_recall_at_half": 0.9285714285714286,
+      "cohorts": {
+        "short": {
+          "days": 240,
+          "balance_mae_minor": 116107401.45833333
+        },
+        "established": {
+          "days": 7800,
+          "balance_mae_minor": 140724264.3775641
+        }
+      }
+    },
+    "winsor": {
+      "days": 8040,
+      "folds": 268,
+      "balance_mae_minor": 132208174.0340796,
+      "balance_rmse_minor": 395246733.837618,
+      "final_balance_mae_minor": 177103528.90298507,
+      "inflow_wape": 0.7532119566009736,
+      "outflow_wape": 1.0850086603042215,
+      "risk_days": 7710,
+      "risk_folds": 257,
+      "interval_p10_p90_coverage": 0.7363164721141375,
+      "daily_negative_brier": 0.03734043774319066,
+      "any_negative_brier": 0.09427470817120623,
+      "risk_reference_probability": null,
+      "risk_reference_brier": null,
+      "risk_always_zero_brier": 0.054474708171206226,
+      "any_negative_positives": 14,
+      "any_negative_precision_at_half": 0.2765957446808511,
+      "any_negative_recall_at_half": 0.9285714285714286,
+      "cohorts": {
+        "short": {
+          "days": 240,
+          "balance_mae_minor": 125383873.15833333
+        },
+        "established": {
+          "days": 7800,
+          "balance_mae_minor": 132418152.5225641
+        }
+      }
+    },
+    "trend": {
+      "days": 8040,
+      "folds": 268,
+      "balance_mae_minor": 142388126.4431592,
+      "balance_rmse_minor": 422811547.02973765,
+      "final_balance_mae_minor": 205254451.0447761,
+      "inflow_wape": 0.8074538115762351,
+      "outflow_wape": 1.1421585942588721,
+      "risk_days": 7710,
+      "risk_folds": 257,
+      "interval_p10_p90_coverage": 0.7814526588845655,
+      "daily_negative_brier": 0.0399080869001297,
+      "any_negative_brier": 0.10757422178988327,
+      "risk_reference_probability": null,
+      "risk_reference_brier": null,
+      "risk_always_zero_brier": 0.054474708171206226,
+      "any_negative_positives": 14,
+      "any_negative_precision_at_half": 0.27450980392156865,
+      "any_negative_recall_at_half": 1.0,
+      "cohorts": {
+        "short": {
+          "days": 240,
+          "balance_mae_minor": 113227769.28333333
+        },
+        "established": {
+          "days": 7800,
+          "balance_mae_minor": 143285368.20192307
+        }
+      }
+    }
+  },
+  "by_cutoff": {
+    "2026-01-31": {
+      "baseline": {
+        "days": 2940,
+        "folds": 98,
+        "balance_mae_minor": 235214855.78265306,
+        "balance_rmse_minor": 723946019.6191797,
+        "final_balance_mae_minor": 366709949.7653061,
+        "inflow_wape": 1.2018244087386767,
+        "outflow_wape": 1.5100972904934338,
+        "risk_days": 0,
+        "risk_folds": 0,
+        "interval_p10_p90_coverage": null,
+        "daily_negative_brier": null,
+        "any_negative_brier": null,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": null,
+        "any_negative_positives": 0,
+        "any_negative_precision_at_half": null,
+        "any_negative_recall_at_half": null,
+        "cohorts": {
+          "short": {
+            "days": 120,
+            "balance_mae_minor": 166894328.71666667
+          },
+          "established": {
+            "days": 2820,
+            "balance_mae_minor": 238122112.2535461
+          }
+        }
+      },
+      "legacy_w84": {
+        "days": 2940,
+        "folds": 98,
+        "balance_mae_minor": 123900283.95,
+        "balance_rmse_minor": 362298486.86716086,
+        "final_balance_mae_minor": 157149105.81632653,
+        "inflow_wape": 0.8461736081425848,
+        "outflow_wape": 1.1407169029477988,
+        "risk_days": 2820,
+        "risk_folds": 94,
+        "interval_p10_p90_coverage": 0.7968085106382978,
+        "daily_negative_brier": 0.02962284574468085,
+        "any_negative_brier": 0.0775531914893617,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.06382978723404255,
+        "any_negative_positives": 6,
+        "any_negative_precision_at_half": 0.35294117647058826,
+        "any_negative_recall_at_half": 1.0,
+        "cohorts": {
+          "short": {
+            "days": 120,
+            "balance_mae_minor": 208643970.60833332
+          },
+          "established": {
+            "days": 2820,
+            "balance_mae_minor": 120294169.62411347
+          }
+        }
+      },
+      "ewm": {
+        "days": 2940,
+        "folds": 98,
+        "balance_mae_minor": 134240696.6329932,
+        "balance_rmse_minor": 384131899.96168554,
+        "final_balance_mae_minor": 160025033.41836736,
+        "inflow_wape": 0.8701596478947752,
+        "outflow_wape": 1.1968570446917155,
+        "risk_days": 2820,
+        "risk_folds": 94,
+        "interval_p10_p90_coverage": 0.7535460992907801,
+        "daily_negative_brier": 0.0332231914893617,
+        "any_negative_brier": 0.0826779255319149,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.06382978723404255,
+        "any_negative_positives": 6,
+        "any_negative_precision_at_half": 0.4,
+        "any_negative_recall_at_half": 1.0,
+        "cohorts": {
+          "short": {
+            "days": 120,
+            "balance_mae_minor": 200636951.225
+          },
+          "established": {
+            "days": 2820,
+            "balance_mae_minor": 131415324.09716313
+          }
+        }
+      },
+      "winsor": {
+        "days": 2940,
+        "folds": 98,
+        "balance_mae_minor": 122564061.1829932,
+        "balance_rmse_minor": 364547930.9299815,
+        "final_balance_mae_minor": 153137022.58163264,
+        "inflow_wape": 0.8010420284552394,
+        "outflow_wape": 1.084881751428556,
+        "risk_days": 2820,
+        "risk_folds": 94,
+        "interval_p10_p90_coverage": 0.7439716312056738,
+        "daily_negative_brier": 0.02944104609929078,
+        "any_negative_brier": 0.07381303191489362,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.06382978723404255,
+        "any_negative_positives": 6,
+        "any_negative_precision_at_half": 0.35294117647058826,
+        "any_negative_recall_at_half": 1.0,
+        "cohorts": {
+          "short": {
+            "days": 120,
+            "balance_mae_minor": 219596969.225
+          },
+          "established": {
+            "days": 2820,
+            "balance_mae_minor": 118435001.26631206
+          }
+        }
+      },
+      "trend": {
+        "days": 2940,
+        "folds": 98,
+        "balance_mae_minor": 137892690.82380953,
+        "balance_rmse_minor": 404982789.8568401,
+        "final_balance_mae_minor": 181931927.48979592,
+        "inflow_wape": 0.8669509705969541,
+        "outflow_wape": 1.176578915340383,
+        "risk_days": 2820,
+        "risk_folds": 94,
+        "interval_p10_p90_coverage": 0.7698581560283688,
+        "daily_negative_brier": 0.037791923758865247,
+        "any_negative_brier": 0.09688590425531915,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.06382978723404255,
+        "any_negative_positives": 6,
+        "any_negative_precision_at_half": 0.3333333333333333,
+        "any_negative_recall_at_half": 1.0,
+        "cohorts": {
+          "short": {
+            "days": 120,
+            "balance_mae_minor": 200683024.05833334
+          },
+          "established": {
+            "days": 2820,
+            "balance_mae_minor": 135220761.75
+          }
+        }
+      }
+    },
+    "2026-02-28": {
+      "baseline": {
+        "days": 2820,
+        "folds": 94,
+        "balance_mae_minor": 261671757.76985815,
+        "balance_rmse_minor": 748712858.2847248,
+        "final_balance_mae_minor": 444486054.9148936,
+        "inflow_wape": 1.1544955215320871,
+        "outflow_wape": 1.2926840036221534,
+        "risk_days": 0,
+        "risk_folds": 0,
+        "interval_p10_p90_coverage": null,
+        "daily_negative_brier": null,
+        "any_negative_brier": null,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": null,
+        "any_negative_positives": 0,
+        "any_negative_precision_at_half": null,
+        "any_negative_recall_at_half": null,
+        "cohorts": {
+          "short": {
+            "days": 90,
+            "balance_mae_minor": 60879946.9
+          },
+          "established": {
+            "days": 2730,
+            "balance_mae_minor": 268291268.01831502
+          }
+        }
+      },
+      "legacy_w84": {
+        "days": 2820,
+        "folds": 94,
+        "balance_mae_minor": 154503805.13120568,
+        "balance_rmse_minor": 499106988.76530516,
+        "final_balance_mae_minor": 220570153.29787233,
+        "inflow_wape": 0.8858257214993727,
+        "outflow_wape": 1.074987343422923,
+        "risk_days": 2670,
+        "risk_folds": 89,
+        "interval_p10_p90_coverage": 0.7835205992509363,
+        "daily_negative_brier": 0.041019653558052434,
+        "any_negative_brier": 0.09924719101123596,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.056179775280898875,
+        "any_negative_positives": 5,
+        "any_negative_precision_at_half": 0.2631578947368421,
+        "any_negative_recall_at_half": 1.0,
+        "cohorts": {
+          "short": {
+            "days": 90,
+            "balance_mae_minor": 21950646.51111111
+          },
+          "established": {
+            "days": 2730,
+            "balance_mae_minor": 158873689.48131868
+          }
+        }
+      },
+      "ewm": {
+        "days": 2820,
+        "folds": 94,
+        "balance_mae_minor": 162874279.26347518,
+        "balance_rmse_minor": 528591801.31766677,
+        "final_balance_mae_minor": 248774472.5319149,
+        "inflow_wape": 0.8922236988688805,
+        "outflow_wape": 1.0864038227354098,
+        "risk_days": 2670,
+        "risk_folds": 89,
+        "interval_p10_p90_coverage": 0.7258426966292135,
+        "daily_negative_brier": 0.04020873595505618,
+        "any_negative_brier": 0.0990685393258427,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.056179775280898875,
+        "any_negative_positives": 5,
+        "any_negative_precision_at_half": 0.25,
+        "any_negative_recall_at_half": 0.8,
+        "cohorts": {
+          "short": {
+            "days": 90,
+            "balance_mae_minor": 35091743.56666667
+          },
+          "established": {
+            "days": 2730,
+            "balance_mae_minor": 167086890.33040294
+          }
+        }
+      },
+      "winsor": {
+        "days": 2820,
+        "folds": 94,
+        "balance_mae_minor": 156525267.96241134,
+        "balance_rmse_minor": 503520442.1940249,
+        "final_balance_mae_minor": 229653604.55319148,
+        "inflow_wape": 0.8287928131648378,
+        "outflow_wape": 1.0342452537142182,
+        "risk_days": 2670,
+        "risk_folds": 89,
+        "interval_p10_p90_coverage": 0.7247191011235955,
+        "daily_negative_brier": 0.04446591760299626,
+        "any_negative_brier": 0.1005876404494382,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.056179775280898875,
+        "any_negative_positives": 5,
+        "any_negative_precision_at_half": 0.2777777777777778,
+        "any_negative_recall_at_half": 1.0,
+        "cohorts": {
+          "short": {
+            "days": 90,
+            "balance_mae_minor": 27243960.388888888
+          },
+          "established": {
+            "days": 2730,
+            "balance_mae_minor": 160787289.0912088
+          }
+        }
+      },
+      "trend": {
+        "days": 2820,
+        "folds": 94,
+        "balance_mae_minor": 159149453.65957448,
+        "balance_rmse_minor": 519727460.54842913,
+        "final_balance_mae_minor": 239944892.24468085,
+        "inflow_wape": 0.875906375208792,
+        "outflow_wape": 1.0625842617913486,
+        "risk_days": 2670,
+        "risk_folds": 89,
+        "interval_p10_p90_coverage": 0.7730337078651686,
+        "daily_negative_brier": 0.04104047752808989,
+        "any_negative_brier": 0.10137865168539326,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.056179775280898875,
+        "any_negative_positives": 5,
+        "any_negative_precision_at_half": 0.2631578947368421,
+        "any_negative_recall_at_half": 1.0,
+        "cohorts": {
+          "short": {
+            "days": 90,
+            "balance_mae_minor": 20847313.777777776
+          },
+          "established": {
+            "days": 2730,
+            "balance_mae_minor": 163708864.86446887
+          }
+        }
+      }
+    },
+    "2026-03-31": {
+      "baseline": {
+        "days": 2280,
+        "folds": 76,
+        "balance_mae_minor": 235684979.12061402,
+        "balance_rmse_minor": 680123682.2906111,
+        "final_balance_mae_minor": 415478270.93421054,
+        "inflow_wape": 0.9797504861169604,
+        "outflow_wape": 1.510045459066814,
+        "risk_days": 0,
+        "risk_folds": 0,
+        "interval_p10_p90_coverage": null,
+        "daily_negative_brier": null,
+        "any_negative_brier": null,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": null,
+        "any_negative_positives": 0,
+        "any_negative_precision_at_half": null,
+        "any_negative_recall_at_half": null,
+        "cohorts": {
+          "short": {
+            "days": 30,
+            "balance_mae_minor": 28033131.933333334
+          },
+          "established": {
+            "days": 2250,
+            "balance_mae_minor": 238453670.41644445
+          }
+        }
+      },
+      "legacy_w84": {
+        "days": 2280,
+        "folds": 76,
+        "balance_mae_minor": 117516101.92850877,
+        "balance_rmse_minor": 271785170.66892564,
+        "final_balance_mae_minor": 169925987.18421054,
+        "inflow_wape": 0.6524021066411998,
+        "outflow_wape": 1.182330937037033,
+        "risk_days": 2220,
+        "risk_folds": 74,
+        "interval_p10_p90_coverage": 0.8274774774774775,
+        "daily_negative_brier": 0.038863265765765764,
+        "any_negative_brier": 0.12097027027027027,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.04054054054054054,
+        "any_negative_positives": 3,
+        "any_negative_precision_at_half": 0.21428571428571427,
+        "any_negative_recall_at_half": 1.0,
+        "cohorts": {
+          "short": {
+            "days": 30,
+            "balance_mae_minor": 42655182.1
+          },
+          "established": {
+            "days": 2250,
+            "balance_mae_minor": 118514247.52622223
+          }
+        }
+      },
+      "ewm": {
+        "days": 2280,
+        "folds": 76,
+        "balance_mae_minor": 119097334.59254386,
+        "balance_rmse_minor": 281871977.1331881,
+        "final_balance_mae_minor": 196780718.0526316,
+        "inflow_wape": 0.6683893292051761,
+        "outflow_wape": 1.1843574881970902,
+        "risk_days": 2220,
+        "risk_folds": 74,
+        "interval_p10_p90_coverage": 0.7959459459459459,
+        "daily_negative_brier": 0.03461153153153153,
+        "any_negative_brier": 0.11281047297297297,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.04054054054054054,
+        "any_negative_positives": 3,
+        "any_negative_precision_at_half": 0.23076923076923078,
+        "any_negative_recall_at_half": 1.0,
+        "cohorts": {
+          "short": {
+            "days": 30,
+            "balance_mae_minor": 21036176.066666666
+          },
+          "established": {
+            "days": 2250,
+            "balance_mae_minor": 120404816.70622222
+          }
+        }
+      },
+      "winsor": {
+        "days": 2280,
+        "folds": 76,
+        "balance_mae_minor": 114567598.11491229,
+        "balance_rmse_minor": 256780144.54741812,
+        "final_balance_mae_minor": 143011561.90789473,
+        "inflow_wape": 0.6182944943199306,
+        "outflow_wape": 1.142046057961512,
+        "risk_days": 2220,
+        "risk_folds": 74,
+        "interval_p10_p90_coverage": 0.7405405405405405,
+        "daily_negative_brier": 0.038804966216216215,
+        "any_negative_brier": 0.1126739864864865,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.04054054054054054,
+        "any_negative_positives": 3,
+        "any_negative_precision_at_half": 0.16666666666666666,
+        "any_negative_recall_at_half": 0.6666666666666666,
+        "cohorts": {
+          "short": {
+            "days": 30,
+            "balance_mae_minor": 42951227.2
+          },
+          "established": {
+            "days": 2250,
+            "balance_mae_minor": 115522483.06044444
+          }
+        }
+      },
+      "trend": {
+        "days": 2280,
+        "folds": 76,
+        "balance_mae_minor": 127453757.13201754,
+        "balance_rmse_minor": 291236170.66025615,
+        "final_balance_mae_minor": 192421633.09210527,
+        "inflow_wape": 0.6676589041486337,
+        "outflow_wape": 1.1977307016403096,
+        "risk_days": 2220,
+        "risk_folds": 74,
+        "interval_p10_p90_coverage": 0.8063063063063063,
+        "daily_negative_brier": 0.04123425675675676,
+        "any_negative_brier": 0.1286027027027027,
+        "risk_reference_probability": null,
+        "risk_reference_brier": null,
+        "risk_always_zero_brier": 0.04054054054054054,
+        "any_negative_positives": 3,
+        "any_negative_precision_at_half": 0.21428571428571427,
+        "any_negative_recall_at_half": 1.0,
+        "cohorts": {
+          "short": {
+            "days": 30,
+            "balance_mae_minor": 40548116.7
+          },
+          "established": {
+            "days": 2250,
+            "balance_mae_minor": 128612499.00444445
+          }
+        }
+      }
+    }
+  },
+  "skipped": {
+    "unverified_end_coverage": 24,
+    "stale_opening": 19,
+    "unreconciled_future_target": 12,
+    "no_past_balance": 31
+  },
+  "cohorts": {
+    "established": 260,
+    "short": 8
+  },
+  "company_macro": {
+    "baseline": {
+      "companies": 104,
+      "mean_mae_minor": 242398319.01837608,
+      "median_mae_minor": 93390532.2638889
+    },
+    "legacy_w84": {
+      "companies": 104,
+      "mean_mae_minor": 132872021.24636751,
+      "median_mae_minor": 45355042.891666666
+    },
+    "ewm": {
+      "companies": 104,
+      "mean_mae_minor": 139402834.75737178,
+      "median_mae_minor": 47270355.87777778
+    },
+    "winsor": {
+      "companies": 104,
+      "mean_mae_minor": 132219997.03194444,
+      "median_mae_minor": 47576516.86111111
+    },
+    "trend": {
+      "companies": 104,
+      "mean_mae_minor": 141210786.41891026,
+      "median_mae_minor": 47530840.59444444
+    }
+  },
+  "timing_without_tracemalloc": {
+    "baseline": {
+      "total_seconds": 0.044648599898209795,
+      "median_seconds": 0.00017194999963976443,
+      "max_seconds": 0.0004002000205218792
+    },
+    "legacy_w84": {
+      "total_seconds": 10.57481149994419,
+      "median_seconds": 0.042684199986979365,
+      "max_seconds": 0.13561169998138212
+    },
+    "ewm": {
+      "total_seconds": 15.370711399998982,
+      "median_seconds": 0.06105659999593627,
+      "max_seconds": 0.15740789999836124
+    },
+    "winsor": {
+      "total_seconds": 14.725718500267249,
+      "median_seconds": 0.0582773000060115,
+      "max_seconds": 0.17472769998130389
+    },
+    "trend": {
+      "total_seconds": 14.711007300269557,
+      "median_seconds": 0.05784360000689048,
+      "max_seconds": 0.16046970000024885
+    }
+  },
+  "profiles": {
+    "baseline": {
+      "1": {
+        "seconds_with_tracemalloc": 0.00031949998810887337,
+        "peak_python_bytes": 1416,
+        "points": 1,
+        "transactions": 2514
+      },
+      "7": {
+        "seconds_with_tracemalloc": 0.0003310000174678862,
+        "peak_python_bytes": 2720,
+        "points": 7,
+        "transactions": 2514
+      },
+      "30": {
+        "seconds_with_tracemalloc": 0.0007297999982256442,
+        "peak_python_bytes": 7880,
+        "points": 30,
+        "transactions": 2514
+      },
+      "90": {
+        "seconds_with_tracemalloc": 0.0017702000041026622,
+        "peak_python_bytes": 21320,
+        "points": 90,
+        "transactions": 2514
+      },
+      "180": {
+        "seconds_with_tracemalloc": 0.003348900005221367,
+        "peak_python_bytes": 41656,
+        "points": 180,
+        "transactions": 2514
+      }
+    },
+    "legacy_w84": {
+      "1": {
+        "seconds_with_tracemalloc": 0.16810750000877306,
+        "peak_python_bytes": 687004,
+        "points": 1,
+        "transactions": 2514
+      },
+      "7": {
+        "seconds_with_tracemalloc": 0.16965099997469224,
+        "peak_python_bytes": 677484,
+        "points": 7,
+        "transactions": 2514
+      },
+      "30": {
+        "seconds_with_tracemalloc": 0.20294109999667853,
+        "peak_python_bytes": 677484,
+        "points": 30,
+        "transactions": 2514
+      },
+      "90": {
+        "seconds_with_tracemalloc": 0.2936508000129834,
+        "peak_python_bytes": 1200836,
+        "points": 90,
+        "transactions": 2514
+      },
+      "180": {
+        "seconds_with_tracemalloc": 0.47903299998142757,
+        "peak_python_bytes": 1988337,
+        "points": 180,
+        "transactions": 2514
+      }
+    },
+    "ewm": {
+      "1": {
+        "seconds_with_tracemalloc": 0.36839859999599867,
+        "peak_python_bytes": 899187,
+        "points": 1,
+        "transactions": 2514
+      },
+      "7": {
+        "seconds_with_tracemalloc": 0.5832136999815702,
+        "peak_python_bytes": 985595,
+        "points": 7,
+        "transactions": 2514
+      },
+      "30": {
+        "seconds_with_tracemalloc": 0.6626812999893446,
+        "peak_python_bytes": 1038573,
+        "points": 30,
+        "transactions": 2514
+      },
+      "90": {
+        "seconds_with_tracemalloc": 2.0328461000171956,
+        "peak_python_bytes": 1578305,
+        "points": 90,
+        "transactions": 2514
+      },
+      "180": {
+        "seconds_with_tracemalloc": 1.92991889998666,
+        "peak_python_bytes": 2371690,
+        "points": 180,
+        "transactions": 2514
+      }
+    },
+    "winsor": {
+      "1": {
+        "seconds_with_tracemalloc": 0.32743410000693984,
+        "peak_python_bytes": 899187,
+        "points": 1,
+        "transactions": 2514
+      },
+      "7": {
+        "seconds_with_tracemalloc": 0.39354809999349527,
+        "peak_python_bytes": 899187,
+        "points": 7,
+        "transactions": 2514
+      },
+      "30": {
+        "seconds_with_tracemalloc": 0.4630013000278268,
+        "peak_python_bytes": 986928,
+        "points": 30,
+        "transactions": 2514
+      },
+      "90": {
+        "seconds_with_tracemalloc": 0.7599460000055842,
+        "peak_python_bytes": 1525956,
+        "points": 90,
+        "transactions": 2514
+      },
+      "180": {
+        "seconds_with_tracemalloc": 1.0443711999978404,
+        "peak_python_bytes": 2336941,
+        "points": 180,
+        "transactions": 2514
+      }
+    },
+    "trend": {
+      "1": {
+        "seconds_with_tracemalloc": 0.3218730000080541,
+        "peak_python_bytes": 899187,
+        "points": 1,
+        "transactions": 2514
+      },
+      "7": {
+        "seconds_with_tracemalloc": 0.38623289999668486,
+        "peak_python_bytes": 899187,
+        "points": 7,
+        "transactions": 2514
+      },
+      "30": {
+        "seconds_with_tracemalloc": 0.4608765000011772,
+        "peak_python_bytes": 986607,
+        "points": 30,
+        "transactions": 2514
+      },
+      "90": {
+        "seconds_with_tracemalloc": 0.7271373000112362,
+        "peak_python_bytes": 1525755,
+        "points": 90,
+        "transactions": 2514
+      },
+      "180": {
+        "seconds_with_tracemalloc": 1.0554616999870632,
+        "peak_python_bytes": 2336620,
+        "points": 180,
+        "transactions": 2514
+      }
+    }
+  },
+  "elapsed_seconds": 71.13126190000912,
+  "limitations": [
+    "Синтетические данные; не банковская гарантия.",
+    "Отсутствие строки условно нулевой день; полнота не доказана.",
+    "Риск raw исследовательский, не калиброван этой point-selection оценкой.",
+    "Peak memory только Python allocator одного расчёта, не RSS всего процесса."
+  ]
+}

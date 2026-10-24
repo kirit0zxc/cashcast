@@ -1,0 +1,110 @@
+# Попытки агента B
+
+Этот журнал редактирует только B. Неудачных запусков B пока не зарегистрировано.
+Перед задачей читать связанный журнал A на origin/agents/a-app.
+
+Шаблон: ID; задача; UTC; code SHA; среда/версии; подход/команда без секретов;
+наблюдаемый результат; доказательство; причина (подтверждена/гипотеза);
+условия повторения; ссылка на новую попытку.
+
+Повтор чужой неудачной попытки допускается при записанном обосновании: новая версия,
+устранённая причина, другая среда либо проверка ещё не доказанной гипотезы.
+
+## B-ATT-001 · окружение uv в Windows sandbox
+
+UTC: 2026-10-23T20:28:00Z; задача B0; base d444361.
+Первый uv sync --frozen не смог сохранить interpreter cache в sandbox profile.
+Ошибка: Access denied при persist cache; продуктовые тесты не запускались.
+Повтор обоснован изменением условий: доступ к пользовательскому uv cache вне sandbox.
+Повтор uv sync --frozen успешен, Python 3.12.15, зависимости из lock без изменений.
+Docker version в sandbox отказал в доступе к pipe; вне sandbox server 29.8.2.
+Это ограничения окружения, не отсутствие Docker и не дефект продукта.
+
+## B-ATT-002 · ревью эвристик B1
+
+UTC: 2026-10-23T20:36:00Z; база ced9dd3; задача B1.
+Reviewer выявил две причины ложных выводов: последние дни месяца смешивали fixed28/30
+с истинным концом месяца; широкое слово кредит смешивало кредитное обязательство,
+аккредитив и оплату/возврат на карту. Исправлено: календарный clipping и явный контекст
+кредитного обязательства, в том числе guard возвратов. Повтор тестов обоснован изменённой
+логикой; добавлены регрессии fixed28/fixed30, аккредитив, карта, возврат на карту.
+
+## B-ATT-003 · дедупликация компонентов B3
+
+UTC:2026-10-23T20:44:22Z; задача B3; база dd9015b.
+Reviewer выявил: planned имя не совпадало с recurrence ИНН, и paid/cancelled
+пропускались до подавления occurrence. Результат — двойной счёт/возрождение платежа.
+Исправлено сопоставление с ref+name причинных member txns и suppression до проверки
+активного остатка. Добавлены snapshot-name, paid и cancelled регрессии;44tests passed.
+Условия повторной проверки изменились исправлением логики; snapshot filtering остаётся
+задачей A по proposal snapshot-events-v1. Ревьюер итоговый код подтвердил.
+
+## B-ATT-004 · граница validation и lint standalone evaluation
+
+UTC:2026-10-23T20:50:09Z; B4; база b40d3bc.
+Reviewer нашёл, что quality-gate последнего validation cutoff Jul31 мог читать
+подтверждающий остаток Sep1 (8folds), затрагивая holdout через отбор, не через признаки.
+Исправление: temporal_view ограничивает все validation данные Aug31, добавлен тест.
+Повтор прежних кандидатов28/56/84 и holdout обоснован технической коррекцией;
+модель/параметры после просмотра сентябрьских результатов не менялись.
+Первый полный backend pytest на cashcast_b_test прошёл. Ruff из backend обнаружил
+E402 standalone backtest: root-config fix удалил noqa как ненужный. Восстановлены
+E402 annotations; дальнейший lint evaluation только с backend/pyproject.toml.
+
+## B-ATT-005 · границы quality-v2.0
+
+UTC:2026-10-23T21:40:36Z; задачаB5a; code2727fdd.
+Reviewer выявил обход общего текстового лимита через события/вложенные DTO и сырой
+TypeError при malformed direction/status. Исправлено: общий ограниченный итеративный
+обход DTO, explicit typeguards, лимит depth/узлов/stack,25quality регрессийpassed.
+Повтор обоснован изменением валидатора; итоговое независимое ревью одобрено.
+
+## B-ATT-006 · B5 export и ресурсный бюджет
+
+UTC:2026-10-23T22:02:00Z; база6bcf21a; задачаB5b.
+Первый selection-run дошёл до экспорта, затем AttributeError baseline.model_version:
+baseline отдаёт версию в ForecastResult. Исправлен экспорт result.model_version;
+неполный артефакт не использовался. Второй run завершён:268folds, legacy_w84 сохранён.
+Reviewer нашёл недооценку сложности shared _schedule: list-membership по memberIDs
+и повторный identity scan на каждую event×occurrence. Индекс by_id и cache identities
+убирают эти множители, frozen legacy_v1 не меняется. Добавлены3000split и calendar
+date.max регрессии. Повтор selection обоснован оптимизацией/runtime и source hashes;
+метрики ошибок и решение идентичны. Итоговый run71.13сек, никакого подбора по test.
+
+## B-ATT-007 · CSV точность при изменённом Decimal context
+
+UTC:2026-10-23T22:12:32Z; исходный1d92c30; B8a.
+Reviewer воспроизвёл12.34→1200коп при localcontext.prec2 из-за Decimal*100.
+Исправлен перевод проверенных десятичных цифр целой арифметикой, без ambient context.
+Добавлена регрессия precision2→1234коп. Поля сверх1000символов теперь отклоняются
+до int-конверсии (5000цифр не вызывают Python ValueError).18source tests passed.
+Повтор проверки обоснован исправлением денежной точности и resource guard.
+
+## B-ATT-008 · B6 posthoc audit и активация default
+
+UTC:2026-10-23T22:27:00Z; исходныйdc8fb4f; задачаB6.
+Предрегистрация выбрала logit-intercept обоих каналов: Brier point-estimate gates
+fit/check/test пройдены. Первоначальный общий leadtime вводил в заблуждение:8из12
+testpositivefolds ужеnegativeopening. По собственной гипотезе и независимому аудиту
+добавлены описательные cohorts и persistence, без ретюнинга параметров/порогов.
+Leadtime теперь только для нового разрыва при неотрицательном opening. Fit новых
+gapfolds1/check2, dailypositive3/4 — меньше заранее заданного минимума. Product None
+выбран консервативно; этот posthoc gate не объявляется пререгистрированным успехом.
+
+Первый полный тест с переключением default2.0:236passed/1failed, A-owned
+test_worker_keeps_queued_model_when_default_factory_changes жёстко ждалстроку1.0-w84.
+Фактическая queued2.0 сохранилась и job succeeded, подмены версии не было.
+Чужой тест не редактировался: default оставлен1.0 до согласованной активации с A,
+2.0 зарегистрирована явно. Полный повтор237passed, Ruffpassed. Предложение A —
+запоминать model_version после enqueue, а не жёстко кодировать старый default.
+После A-ACK будет отдельный default-switch и совместный тест2.0 через приложение.
+
+## B-ATT-009 · raw control characters в CSV
+
+UTC:2026-10-23T22:29:55Z; исходный822b6cd; replyA015.
+Reviewer A на общем кандидате нашёл, что strip удалял пограничные tab/newline до
+проверки cells/header. Причина воспроизведена статически и новыми регрессиями.
+Проверка исходных cells/header теперь предшествует strip; namespace уже проверялся
+до нормализации. Учитываются C0/C1/DEL, quotednewline тоже запрещён внутри поля.
+Добавлены leading/trailingtab, quotednewline, C1/DEL, header/namespace регрессии:
+26source tests passed. Повтор обоснован устранением обхода согласованного parser-v1.

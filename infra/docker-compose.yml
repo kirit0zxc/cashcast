@@ -5,6 +5,7 @@ name: cashcast
 services:
   postgres:
     image: postgres:16.10-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-cashcast}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cashcast}
@@ -33,6 +34,7 @@ services:
     restart: "no"
 
   api:
+    restart: unless-stopped
     build:
       context: ../backend
     environment:
@@ -48,6 +50,7 @@ services:
       - "8000"  # видно только внутри сети compose
 
   worker:
+    restart: unless-stopped
     build:
       context: ../backend
     command: ["python", "-m", "app.worker"]
@@ -60,10 +63,11 @@ services:
         condition: service_completed_successfully
 
   web:
+    restart: unless-stopped
     build:
       context: ../frontend
     ports:
-      - "${WEB_PORT:-8080}:80"  # единственный публичный порт
+      - "127.0.0.1:${WEB_PORT:-8080}:80"  # локальный стенд, без публикации в LAN
     depends_on:
       - api
 

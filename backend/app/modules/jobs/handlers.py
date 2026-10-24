@@ -1,20 +1,16 @@
-"""Обработчики заданий. Пока один: расчёт прогноза (baseline). Данил заменит модель внутри.
-
-Обработчик читает ForecastRun по id из payload, собирает снимок, запускает ForecastService,
-сохраняет точки и риск в снимок. Категории/регулярности сейчас не влияют на baseline, но
-снимок уже готов их принять (поля в ForecastInput есть).
-"""
+"""Расчёт закреплённого входа прогноза и синхронизация окончательной ошибки с заданием."""
 
 from __future__ import annotations
 
 from datetime import UTC, date, datetime
+from uuid import UUID
 
 from sqlalchemy.orm import Session
 
+from app.core.forecast_input import ForecastInputCodec
 from app.core.models import ForecastPoint, ForecastRun
 from app.modules.contracts import ScenarioChange
 from app.modules.forecasting.service import get_forecast_service
-from app.modules.forecasting.snapshot import build_snapshot
 
 
 def handle_forecast(session: Session, payload: dict) -> dict:
@@ -27,16 +23,12 @@ def handle_forecast(session: Session, payload: dict) -> dict:
     run.status = "running"
     session.flush()
 
-    scenario = _parse_scenario(run.scenario)
-    snap = build_snapshot(
-        session,
-        account_id=str(run.account_id),
-        as_of=run.as_of,
-        horizon_days=run.horizon_days,
-        seed=run.seed,
-        scenario=scenario,
-    )
-    result = get_forecast_service().run(snap.data)
+    if not run.input_snapshot:
+        raise ValueError("snapshot_unavailable")
+    data = ForecastInputCodec.decode(run.input_snapshot)
+    result = get_forecast_service(run.model_version).run(data)
+    if result.model_version != run.model_version:
+        raise ValueError("pinned_model_unavailable")
 
     # Чистим прежние точки (повторный расчёт того же снимка перезаписывает результат).
     session.query(ForecastPoint).filter(ForecastPoint.forecast_run_id == run.id).delete()
@@ -55,9 +47,9 @@ def handle_forecast(session: Session, payload: dict) -> dict:
         )
 
     run.model_version = result.model_version
-    run.opening_balance_minor = snap.opening_balance_minor
+    run.opening_balance_minor = data.opening_balance_minor
     run.assumptions = result.assumptions
-    run.data_warnings = [*snap.warnings, *result.data_warnings]
+    run.data_warnings = [*run.input_snapshot.get("warnings", []), *result.data_warnings]
     run.risk_available = result.risk.available
     run.first_negative_date = result.risk.first_negative_date
     run.max_deficit_minor = result.risk.max_deficit_minor
@@ -80,6 +72,19 @@ def _parse_scenario(scenario: dict | None) -> list[ScenarioChange]:
             data["on_date"] = date.fromisoformat(data["on_date"])
         changes.append(ScenarioChange(**data))
     return changes
+
+
+def mark_forecast_failed(session: Session, payload: dict, error_code: str) -> None:
+    """Неудача задания не оставляет связанный прогноз вечным pending/running."""
+    try:
+        run_id = UUID(str(payload.get("forecast_run_id")))
+    except ValueError:
+        return
+    run = session.get(ForecastRun, run_id, with_for_update=True)
+    if run is not None and run.status != "succeeded":
+        run.status = "failed"
+        run.error_code = error_code
+        run.finished_at = datetime.now(UTC)
 
 
 # Реестр обработчиков по виду задания. Новые виды добавляются сюда.

@@ -12,7 +12,7 @@ router = APIRouter(tags=["health"])
 
 
 @router.get("/health")
-def health(session: Session = Depends(get_db)) -> dict:
+def health(session: Session = Depends(get_db, scope="function")) -> dict:
     # Лёгкий ping БД: контейнер считается здоровым, только если соединение живо.
     session.execute(text("SELECT 1"))
     return {"status": "ok"}

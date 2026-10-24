@@ -3,19 +3,21 @@
 from __future__ import annotations
 
 import base64
+import binascii
 import uuid
 from datetime import date
 
 from fastapi import APIRouter, Depends, Query
-from sqlalchemy import select
+from sqlalchemy import select, tuple_
 from sqlalchemy.orm import Session
 
 from app.api.schemas.common import ERROR_RESPONSES, Page
 from app.api.schemas.models import TransactionCategoryPatch, TransactionOut
 from app.core.auth import CurrentUser, get_current_user, require_company_access
+from app.core.company_access import CompanyAccess
 from app.core.deps import get_db
 from app.core.errors import AppError
-from app.core.models import BankTransaction
+from app.core.models import Account, BankTransaction
 
 router = APIRouter(tags=["transactions"], responses=ERROR_RESPONSES)
 
@@ -33,7 +35,7 @@ def _decode_cursor(cursor: str) -> tuple[date, str]:
 @router.get("/companies/{company_id}/transactions", response_model=Page[TransactionOut])
 def list_transactions(
     company_id: uuid.UUID,
-    account_id: str | None = None,
+    account_id: uuid.UUID | None = None,
     date_from: date | None = None,
     date_to: date | None = None,
     category: str | None = None,
@@ -41,11 +43,11 @@ def list_transactions(
     limit: int = Query(default=50, ge=1, le=200),
     cursor: str | None = None,
     _company: str = Depends(require_company_access),
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
 ) -> Page[TransactionOut]:
     stmt = select(BankTransaction).where(BankTransaction.company_id == company_id)
     if account_id:
-        stmt = stmt.where(BankTransaction.account_id == uuid.UUID(account_id))
+        stmt = stmt.where(BankTransaction.account_id == account_id)
     if date_from:
         stmt = stmt.where(BankTransaction.booked_on >= date_from)
     if date_to:
@@ -57,10 +59,13 @@ def list_transactions(
 
     # Стабильный порядок для курсора: (booked_on, id). Курсор = последняя отданная пара.
     if cursor:
-        c_date, c_id = _decode_cursor(cursor)
-        stmt = stmt.where(
-            (BankTransaction.booked_on, BankTransaction.id) > (c_date, uuid.UUID(c_id))
-        )
+        try:
+            c_date, c_id = _decode_cursor(cursor)
+            boundary = c_date, uuid.UUID(c_id)
+        except (ValueError, UnicodeError, binascii.Error):
+            raise AppError(422, "invalid_cursor", "Некорректный курсор операций") from None
+        # SQL row comparison сохраняет операции той же даты за границей страницы.
+        stmt = stmt.where(tuple_(BankTransaction.booked_on, BankTransaction.id) > boundary)
     stmt = stmt.order_by(BankTransaction.booked_on, BankTransaction.id).limit(limit + 1)
 
     rows = session.scalars(stmt).all()
@@ -74,13 +79,15 @@ def list_transactions(
 def patch_category(
     transaction_id: uuid.UUID,
     body: TransactionCategoryPatch,
-    session: Session = Depends(get_db),
+    session: Session = Depends(get_db, scope="function"),
     user: CurrentUser = Depends(get_current_user),
 ) -> TransactionOut:
     txn = session.get(BankTransaction, transaction_id)
     if txn is None:
         raise AppError(404, "not_found", "Операция не найдена")
     _require_member(session, user.id, str(txn.company_id))
+    session.scalar(select(Account).where(Account.id == txn.account_id).with_for_update())
+    session.refresh(txn)
     # Ручная правка переопределяет авто-категорию и сохраняется (source=manual, confidence=1).
     txn.category = body.category
     txn.category_source = "manual"
@@ -91,12 +98,7 @@ def patch_category(
 
 
 def _require_member(session: Session, user_id: str, company_id: str) -> None:
-    from app.core.models import CompanyMember
-
-    if session.get(
-        CompanyMember, {"company_id": uuid.UUID(company_id), "user_id": uuid.UUID(user_id)}
-    ) is None:
-        raise AppError(404, "not_found", "Операция не найдена")
+    CompanyAccess(session).require(user_id, company_id, write=True)
 
 
 def _to_out(t: BankTransaction) -> TransactionOut:

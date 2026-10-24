@@ -1,6 +1,6 @@
-"""Фикстуры тестов: локальный PostgreSQL через pgserver (без Docker) и клиент API.
+"""Фикстуры тестов: отдельный PostgreSQL только по CC_TEST_DATABASE_URL и клиент API.
 
-В CI вместо pgserver берётся сервис postgres: если задан CC_DATABASE_URL, используем его.
+Чистые тесты не запускают миграции; интеграционные требуют явную тестовую БД.
 Схема создаётся через Alembic (migrations up) — проверяем ровно то, что поедет в прод.
 """
 
@@ -15,42 +15,49 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
 
+def validate_test_database_url(value: str | None) -> str:
+    """Не позволяем миграциям и очистке тестов затронуть обычную БД."""
+    from sqlalchemy.engine import make_url
+
+    if not value:
+        raise pytest.UsageError("Задайте CC_TEST_DATABASE_URL на отдельную БД с суффиксом _test")
+    url = make_url(value)
+    if url.get_backend_name() != "postgresql" or not (url.database or "").endswith("_test"):
+        raise pytest.UsageError("Тесты разрешены только на PostgreSQL БД с суффиксом _test")
+    return value
+
+
 @pytest.fixture(scope="session")
-def database_url(tmp_path_factory: pytest.TempPathFactory) -> Iterator[str]:
-    external = os.environ.get("CC_DATABASE_URL")
-    if external:
-        # CI: Postgres уже поднят сервисом.
-        yield external
-        return
-    # Локально: портативный Postgres в temp-каталоге, без установки и Docker.
-    import pgserver
-
-    data_dir = tmp_path_factory.mktemp("pgdata")
-    srv = pgserver.get_server(str(data_dir), cleanup_mode="stop")
-    srv.psql("CREATE DATABASE cashcast;")
-    base = srv.get_uri()  # postgresql://postgres:@127.0.0.1:PORT/postgres
-    uri = base.rsplit("/", 1)[0] + "/cashcast"
-    # Драйвер psycopg3 для SQLAlchemy.
-    uri = uri.replace("postgresql://", "postgresql+psycopg://")
-    try:
-        yield uri
-    finally:
-        srv.cleanup()
+def database_url() -> str:
+    return validate_test_database_url(os.environ.get("CC_TEST_DATABASE_URL"))
 
 
-@pytest.fixture(scope="session", autouse=True)
-def _migrate(database_url: str) -> None:
+@pytest.fixture(scope="session")
+def _migrate(database_url: str) -> Iterator[None]:
     # Прогоняем Alembic до head на тестовой БД один раз за сессию.
-    os.environ["CC_DATABASE_URL"] = database_url
     from alembic import command
     from alembic.config import Config
 
-    cfg = Config("alembic.ini")
-    command.upgrade(cfg, "head")
+    from app.core.config import get_settings
+
+    previous = os.environ.get("CC_DATABASE_URL")
+    os.environ["CC_DATABASE_URL"] = database_url
+    get_settings.cache_clear()
+    try:
+        cfg = Config("alembic.ini")
+        command.upgrade(cfg, "head")
+        yield
+    finally:
+        # Возвращаем окружение даже при ошибке миграции; старый кэш не сохраняем.
+        if previous is None:
+            os.environ.pop("CC_DATABASE_URL", None)
+        else:
+            os.environ["CC_DATABASE_URL"] = previous
+        get_settings.cache_clear()
 
 
 @pytest.fixture
-def engine(database_url: str):
+def engine(database_url: str, _migrate):
     eng = create_engine(database_url, future=True)
     yield eng
     eng.dispose()
@@ -62,8 +69,12 @@ def session_factory(engine) -> sessionmaker[Session]:
 
 
 @pytest.fixture(autouse=True)
-def _clean_tables(engine) -> Iterator[None]:
-    # Каждый тест на чистых данных: усечь все таблицы, кроме alembic_version.
+def _clean_tables(request: pytest.FixtureRequest) -> Iterator[None]:
+    # Чистые вычислительные тесты не запрашивают engine и не зависят от PostgreSQL.
+    if "engine" not in request.fixturenames:
+        yield
+        return
+    engine = request.getfixturevalue("engine")
     yield
     with engine.begin() as conn:
         tables = conn.execute(

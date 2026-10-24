@@ -87,6 +87,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -97,8 +107,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -158,6 +168,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -168,8 +188,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -222,6 +242,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -232,8 +262,182 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{company_id}/accounts": {
+      "get": {
+        "tags": [
+          "accounts"
+        ],
+        "summary": "List Accounts",
+        "operationId": "list_accounts_api_v1_companies__company_id__accounts_get",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/import-presets": {
+      "get": {
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Import Presets",
+        "operationId": "import_presets_api_v1_import_presets_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportPresetList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -315,6 +519,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -325,8 +539,18 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Файл превышает допустимый размер",
             "content": {
               "application/json": {
                 "schema": {
@@ -398,6 +622,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -408,8 +642,214 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{company_id}/obligation-imports": {
+      "post": {
+        "tags": [
+          "obligation-imports"
+        ],
+        "summary": "Preview Obligations",
+        "operationId": "preview_obligations_api_v1_companies__company_id__obligation_imports_post",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_preview_obligations_api_v1_companies__company_id__obligation_imports_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObligationPreviewOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Файл превышает допустимый размер",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/obligation-imports/{import_id}/commit": {
+      "post": {
+        "tags": [
+          "obligation-imports"
+        ],
+        "summary": "Commit Obligations",
+        "operationId": "commit_obligations_api_v1_obligation_imports__import_id__commit_post",
+        "parameters": [
+          {
+            "name": "import_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Import Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObligationCommitOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -446,7 +886,8 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "format": "uuid"
                 },
                 {
                   "type": "null"
@@ -592,6 +1033,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -602,8 +1053,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -685,6 +1136,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -695,8 +1156,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -772,6 +1233,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -782,8 +1253,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -863,6 +1334,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -873,8 +1354,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -956,6 +1437,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -966,8 +1457,335 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{company_id}/plan-fact": {
+      "get": {
+        "tags": [
+          "plan-fact"
+        ],
+        "summary": "Plan Fact",
+        "operationId": "plan_fact_api_v1_companies__company_id__plan_fact_get",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          },
+          {
+            "name": "account_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Account Id"
+            }
+          },
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "As Of"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanFactOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "plan-fact"
+        ],
+        "summary": "Reconcile",
+        "operationId": "reconcile_api_v1_companies__company_id__plan_fact_post",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          },
+          {
+            "name": "account_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Account Id"
+            }
+          },
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "As Of"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanFactOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{company_id}/plan-fact/confirm": {
+      "post": {
+        "tags": [
+          "plan-fact"
+        ],
+        "summary": "Confirm Proposal",
+        "operationId": "confirm_proposal_api_v1_companies__company_id__plan_fact_confirm_post",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanFactConfirmRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanFactOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1049,6 +1867,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1059,8 +1887,137 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "forecasts"
+        ],
+        "summary": "List Forecast History",
+        "operationId": "list_forecast_history_api_v1_companies__company_id__forecasts_get",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Company Id"
+            }
+          },
+          {
+            "name": "account_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Account Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_ForecastHistoryItem_"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1132,6 +2089,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1142,8 +2109,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1215,6 +2182,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1225,8 +2202,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1298,6 +2275,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1308,8 +2295,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1391,6 +2378,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1401,8 +2398,101 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/forecasts/{forecast_id}/comparison": {
+      "get": {
+        "tags": [
+          "comparisons"
+        ],
+        "summary": "Compare Forecasts",
+        "operationId": "compare_forecasts_api_v1_forecasts__forecast_id__comparison_get",
+        "parameters": [
+          {
+            "name": "forecast_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Forecast Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastComparison"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1417,10 +2507,55 @@
   },
   "components": {
     "schemas": {
+      "AccountList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AccountOut"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "AccountList"
+      },
+      "AccountOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "company_id": {
+            "type": "string",
+            "title": "Company Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "company_id",
+          "name",
+          "currency"
+        ],
+        "title": "AccountOut"
+      },
       "Body_create_import_api_v1_companies__company_id__imports_post": {
         "properties": {
           "account_id": {
             "type": "string",
+            "format": "uuid",
             "title": "Account Id"
           },
           "mapping": {
@@ -1441,6 +2576,195 @@
           "file"
         ],
         "title": "Body_create_import_api_v1_companies__company_id__imports_post"
+      },
+      "Body_preview_obligations_api_v1_companies__company_id__obligation_imports_post": {
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Account Id"
+          },
+          "source_name": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Source Name"
+          },
+          "as_of": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "As Of"
+          },
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "account_id",
+          "source_name",
+          "file"
+        ],
+        "title": "Body_preview_obligations_api_v1_companies__company_id__obligation_imports_post"
+      },
+      "Category": {
+        "type": "string",
+        "enum": [
+          "sales",
+          "purchases",
+          "payroll",
+          "rent",
+          "tax",
+          "fees",
+          "loan",
+          "transfer",
+          "other"
+        ],
+        "title": "Category"
+      },
+      "ColumnMappingIn": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "title": "Date"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amount"
+          },
+          "inflow": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inflow"
+          },
+          "outflow": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outflow"
+          },
+          "direction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Direction"
+          },
+          "counterparty_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Counterparty Name"
+          },
+          "counterparty_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Counterparty Ref"
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose"
+          },
+          "external_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "External Id"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "balance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Balance"
+          },
+          "delimiter": {
+            "type": "string",
+            "maxLength": 1,
+            "minLength": 1,
+            "title": "Delimiter",
+            "default": ","
+          },
+          "encoding": {
+            "type": "string",
+            "title": "Encoding",
+            "default": "utf-8-sig"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date"
+        ],
+        "title": "ColumnMappingIn"
       },
       "CompanyBrief": {
         "properties": {
@@ -1464,6 +2788,74 @@
           "role"
         ],
         "title": "CompanyBrief"
+      },
+      "ComparedPoint": {
+        "properties": {
+          "point_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Point Date"
+          },
+          "base_balance_p50_minor": {
+            "type": "integer",
+            "title": "Base Balance P50 Minor"
+          },
+          "scenario_balance_p50_minor": {
+            "type": "integer",
+            "title": "Scenario Balance P50 Minor"
+          },
+          "delta_balance_minor": {
+            "type": "integer",
+            "title": "Delta Balance Minor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "point_date",
+          "base_balance_p50_minor",
+          "scenario_balance_p50_minor",
+          "delta_balance_minor"
+        ],
+        "title": "ComparedPoint"
+      },
+      "ComparedRisk": {
+        "properties": {
+          "base": {
+            "$ref": "#/components/schemas/RiskOut"
+          },
+          "scenario": {
+            "$ref": "#/components/schemas/RiskOut"
+          }
+        },
+        "type": "object",
+        "required": [
+          "base",
+          "scenario"
+        ],
+        "title": "ComparedRisk"
+      },
+      "ConfirmedMatchOut": {
+        "properties": {
+          "planned_event_id": {
+            "type": "string",
+            "title": "Planned Event Id"
+          },
+          "transaction_id": {
+            "type": "string",
+            "title": "Transaction Id"
+          },
+          "matched_amount_minor": {
+            "type": "integer",
+            "title": "Matched Amount Minor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "planned_event_id",
+          "transaction_id",
+          "matched_amount_minor"
+        ],
+        "title": "ConfirmedMatchOut"
       },
       "ErrorDetail": {
         "properties": {
@@ -1610,6 +3002,153 @@
           "message"
         ],
         "title": "FieldError"
+      },
+      "ForecastComparison": {
+        "properties": {
+          "base_forecast_id": {
+            "type": "string",
+            "title": "Base Forecast Id"
+          },
+          "scenario_forecast_id": {
+            "type": "string",
+            "title": "Scenario Forecast Id"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "horizon_days": {
+            "type": "integer",
+            "title": "Horizon Days"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/ComparedPoint"
+            },
+            "type": "array",
+            "title": "Points"
+          },
+          "risk": {
+            "$ref": "#/components/schemas/ComparedRisk"
+          }
+        },
+        "type": "object",
+        "required": [
+          "base_forecast_id",
+          "scenario_forecast_id",
+          "as_of",
+          "horizon_days",
+          "model_version",
+          "points",
+          "risk"
+        ],
+        "title": "ForecastComparison"
+      },
+      "ForecastHistoryItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "account_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Account Id"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "horizon_days": {
+            "type": "integer",
+            "title": "Horizon Days"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "running",
+              "succeeded",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "data_version": {
+            "type": "string",
+            "title": "Data Version"
+          },
+          "seed": {
+            "type": "integer",
+            "title": "Seed"
+          },
+          "base_forecast_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base Forecast Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "account_id",
+          "as_of",
+          "horizon_days",
+          "status",
+          "model_version",
+          "data_version",
+          "seed",
+          "base_forecast_id",
+          "created_at",
+          "error_code",
+          "job_id"
+        ],
+        "title": "ForecastHistoryItem"
       },
       "ForecastOut": {
         "properties": {
@@ -1767,6 +3306,7 @@
         "properties": {
           "account_id": {
             "type": "string",
+            "format": "uuid",
             "title": "Account Id"
           },
           "as_of": {
@@ -1784,7 +3324,9 @@
           "seed": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "maximum": 2147483647.0,
+                "minimum": -2147483648.0
               },
               {
                 "type": "null"
@@ -1842,6 +3384,44 @@
           "error_count"
         ],
         "title": "ImportCommitResponse"
+      },
+      "ImportPreset": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "mapping": {
+            "$ref": "#/components/schemas/ColumnMappingIn"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "mapping"
+        ],
+        "title": "ImportPreset"
+      },
+      "ImportPresetList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ImportPreset"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "ImportPresetList"
       },
       "ImportPreviewResponse": {
         "properties": {
@@ -2016,6 +3596,44 @@
         ],
         "title": "LoginRequest"
       },
+      "MatchProposalOut": {
+        "properties": {
+          "planned_event_id": {
+            "type": "string",
+            "title": "Planned Event Id"
+          },
+          "transaction_id": {
+            "type": "string",
+            "title": "Transaction Id"
+          },
+          "matched_amount_minor": {
+            "type": "integer",
+            "title": "Matched Amount Minor"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "auto_confirm": {
+            "type": "boolean",
+            "title": "Auto Confirm"
+          }
+        },
+        "type": "object",
+        "required": [
+          "planned_event_id",
+          "transaction_id",
+          "matched_amount_minor",
+          "confidence",
+          "reason",
+          "auto_confirm"
+        ],
+        "title": "MatchProposalOut"
+      },
       "MeResponse": {
         "properties": {
           "id": {
@@ -2048,6 +3666,147 @@
         ],
         "title": "MeResponse"
       },
+      "ObligationCommitOut": {
+        "properties": {
+          "import_id": {
+            "type": "string",
+            "title": "Import Id"
+          },
+          "status": {
+            "type": "string",
+            "const": "committed",
+            "title": "Status"
+          },
+          "inserted": {
+            "type": "integer",
+            "title": "Inserted"
+          },
+          "skipped_existing": {
+            "type": "integer",
+            "title": "Skipped Existing"
+          }
+        },
+        "type": "object",
+        "required": [
+          "import_id",
+          "status",
+          "inserted",
+          "skipped_existing"
+        ],
+        "title": "ObligationCommitOut"
+      },
+      "ObligationPreviewOut": {
+        "properties": {
+          "import_id": {
+            "type": "string",
+            "title": "Import Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "previewed",
+              "committed"
+            ],
+            "title": "Status"
+          },
+          "source_name": {
+            "type": "string",
+            "title": "Source Name"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "total_rows": {
+            "type": "integer",
+            "title": "Total Rows"
+          },
+          "valid_count": {
+            "type": "integer",
+            "title": "Valid Count"
+          },
+          "error_count": {
+            "type": "integer",
+            "title": "Error Count"
+          },
+          "sample_errors": {
+            "items": {
+              "$ref": "#/components/schemas/ObligationRowErrorOut"
+            },
+            "type": "array",
+            "title": "Sample Errors"
+          },
+          "reused": {
+            "type": "boolean",
+            "title": "Reused"
+          }
+        },
+        "type": "object",
+        "required": [
+          "import_id",
+          "status",
+          "source_name",
+          "as_of",
+          "total_rows",
+          "valid_count",
+          "error_count",
+          "sample_errors",
+          "reused"
+        ],
+        "title": "ObligationPreviewOut"
+      },
+      "ObligationRowErrorOut": {
+        "properties": {
+          "row": {
+            "type": "integer",
+            "title": "Row"
+          },
+          "field": {
+            "type": "string",
+            "title": "Field"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "row",
+          "field",
+          "code"
+        ],
+        "title": "ObligationRowErrorOut"
+      },
+      "Page_ForecastHistoryItem_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ForecastHistoryItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor",
+            "description": "Курсор следующей страницы или null"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "Page[ForecastHistoryItem]"
+      },
       "Page_TransactionOut_": {
         "properties": {
           "items": {
@@ -2076,12 +3835,107 @@
         ],
         "title": "Page[TransactionOut]"
       },
+      "PlanFactConfirmRequest": {
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Account Id"
+          },
+          "planned_event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Planned Event Id"
+          },
+          "transaction_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Transaction Id"
+          },
+          "matched_amount_minor": {
+            "type": "integer",
+            "maximum": 9000000000000000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Matched Amount Minor"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "account_id",
+          "planned_event_id",
+          "transaction_id",
+          "matched_amount_minor"
+        ],
+        "title": "PlanFactConfirmRequest"
+      },
+      "PlanFactItem": {
+        "properties": {
+          "event": {
+            "$ref": "#/components/schemas/PlannedEventOut"
+          },
+          "confirmed_amount_minor": {
+            "type": "integer",
+            "title": "Confirmed Amount Minor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event",
+          "confirmed_amount_minor"
+        ],
+        "title": "PlanFactItem"
+      },
+      "PlanFactOut": {
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "title": "Account Id"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlanFactItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "confirmed_matches": {
+            "items": {
+              "$ref": "#/components/schemas/ConfirmedMatchOut"
+            },
+            "type": "array",
+            "title": "Confirmed Matches"
+          },
+          "proposals": {
+            "items": {
+              "$ref": "#/components/schemas/MatchProposalOut"
+            },
+            "type": "array",
+            "title": "Proposals"
+          }
+        },
+        "type": "object",
+        "required": [
+          "account_id",
+          "as_of",
+          "items",
+          "confirmed_matches",
+          "proposals"
+        ],
+        "title": "PlanFactOut"
+      },
       "PlannedEventIn": {
         "properties": {
           "account_id": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               },
               {
                 "type": "null"
@@ -2099,6 +3953,7 @@
           },
           "amount_minor": {
             "type": "integer",
+            "maximum": 9000000000000000.0,
             "exclusiveMinimum": 0.0,
             "title": "Amount Minor"
           },
@@ -2126,7 +3981,8 @@
           "counterparty_name": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "maxLength": 500
               },
               {
                 "type": "null"
@@ -2148,7 +4004,8 @@
           "category": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "maxLength": 50
               },
               {
                 "type": "null"
@@ -2159,7 +4016,8 @@
           "source_ref": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "maxLength": 200
               },
               {
                 "type": "null"
@@ -2257,6 +4115,39 @@
             ],
             "title": "Counterparty Name"
           },
+          "counterparty_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Counterparty Ref"
+          },
+          "provenance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provenance"
+          },
+          "tax_regime": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tax Regime"
+          },
           "category": {
             "anyOf": [
               {
@@ -2306,6 +4197,7 @@
             "anyOf": [
               {
                 "type": "integer",
+                "maximum": 9000000000000000.0,
                 "exclusiveMinimum": 0.0
               },
               {
@@ -2434,7 +4326,9 @@
           "shift_days": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "maximum": 3650.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -2447,7 +4341,7 @@
               {
                 "type": "number",
                 "maximum": 2.0,
-                "exclusiveMinimum": 0.0
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -2459,6 +4353,7 @@
             "anyOf": [
               {
                 "type": "integer",
+                "maximum": 9000000000000000.0,
                 "exclusiveMinimum": 0.0
               },
               {
@@ -2493,13 +4388,16 @@
               "$ref": "#/components/schemas/ScenarioChangeIn"
             },
             "type": "array",
+            "maxItems": 50,
             "minItems": 1,
             "title": "Changes"
           },
           "seed": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "maximum": 2147483647.0,
+                "minimum": -2147483648.0
               },
               {
                 "type": "null"
@@ -2517,10 +4415,7 @@
       "TransactionCategoryPatch": {
         "properties": {
           "category": {
-            "type": "string",
-            "maxLength": 50,
-            "minLength": 1,
-            "title": "Category"
+            "$ref": "#/components/schemas/Category"
           }
         },
         "type": "object",

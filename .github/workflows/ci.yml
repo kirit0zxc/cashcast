@@ -2,26 +2,36 @@ name: CI
 
 on:
   push:
-    branches: [main, integration/night]
+    branches: [main, integration/night, agents/a-app, agents/b-analytics]
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cashcast-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   backend:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       postgres:
         image: postgres:16.10-alpine
         env:
           POSTGRES_USER: cashcast
           POSTGRES_PASSWORD: cashcast
-          POSTGRES_DB: cashcast
+          POSTGRES_DB: cashcast_test
         ports:
           - 5432:5432
         options: >-
           --health-cmd "pg_isready -U cashcast"
           --health-interval 5s --health-timeout 3s --health-retries 20
     env:
-      CC_DATABASE_URL: postgresql+psycopg://cashcast:cashcast@localhost:5432/cashcast
+      CC_DATABASE_URL: postgresql+psycopg://cashcast:cashcast@localhost:5432/cashcast_test
+      CC_TEST_DATABASE_URL: postgresql+psycopg://cashcast:cashcast@localhost:5432/cashcast_test
     defaults:
       run:
         working-directory: backend
@@ -51,6 +61,7 @@ jobs:
 
   frontend:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: frontend
@@ -67,5 +78,65 @@ jobs:
         run: npm run lint
       - name: Typecheck
         run: npm run typecheck
+      - name: Unit tests
+        run: npm run test:unit
       - name: Build
         run: npm run build
+
+  compose:
+    name: Clean Docker startup
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      WEB_PORT: '18081'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start from an empty database
+        run: docker compose -p cashcast-ci -f infra/docker-compose.yml up -d --build
+      - name: Check API through web gateway
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:18081/api/v1/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          exit 1
+      - name: Diagnostics
+        if: failure()
+        run: docker compose -p cashcast-ci -f infra/docker-compose.yml logs --tail 60
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.1"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install browser test dependencies
+        working-directory: frontend
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Real browser E2E against API and worker
+        working-directory: frontend
+        run: npm run test:e2e
+      - name: Dev frontend keeps automatic forecast usable in StrictMode
+        working-directory: frontend
+        run: |
+          set -euo pipefail
+          CC_DEV_API_TARGET=http://127.0.0.1:18081 node node_modules/vite/bin/vite.js --port 18101 > "$RUNNER_TEMP/cashcast-vite.log" 2>&1 &
+          dev_pid=$!
+          trap 'kill "$dev_pid" 2>/dev/null || true; wait "$dev_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:18101/api/v1/health; then
+              break
+            fi
+            if ! kill -0 "$dev_pid" 2>/dev/null; then
+              cat "$RUNNER_TEMP/cashcast-vite.log"
+              exit 1
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:18101/api/v1/health
+          CC_E2E_BASE_URL=http://127.0.0.1:18101 npm run test:e2e -- workflow.spec.ts
+      - name: Stop isolated CI stack
+        if: always()
+        run: docker compose -p cashcast-ci -f infra/docker-compose.yml down -v
