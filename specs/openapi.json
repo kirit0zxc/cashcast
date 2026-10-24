@@ -2503,6 +2503,117 @@
           }
         }
       }
+    },
+    "/api/v1/forecasts/{forecast_id}/pulse": {
+      "get": {
+        "tags": [
+          "pulse"
+        ],
+        "summary": "Get Pulse",
+        "operationId": "get_pulse_api_v1_forecasts__forecast_id__pulse_get",
+        "parameters": [
+          {
+            "name": "forecast_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Forecast Id"
+            }
+          },
+          {
+            "name": "buffer_minor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 9000000000000000,
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Buffer Minor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PulseOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4226,6 +4337,752 @@
         },
         "type": "object",
         "title": "PlannedEventPatch"
+      },
+      "PulseAction": {
+        "properties": {
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "now",
+              "this_month",
+              "later"
+            ],
+            "title": "Urgency"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "why": {
+            "type": "string",
+            "title": "Why"
+          },
+          "amount_minor": {
+            "type": "integer",
+            "title": "Amount Minor"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "cash",
+              "money",
+              "clients"
+            ],
+            "title": "Source"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "urgency",
+          "title",
+          "why",
+          "amount_minor",
+          "source"
+        ],
+        "title": "PulseAction"
+      },
+      "PulseCash": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "watch",
+              "risk",
+              "unknown"
+            ],
+            "title": "Status"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "first_gap_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Gap Date"
+          },
+          "days_until_gap": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Days Until Gap"
+          },
+          "max_deficit_minor": {
+            "type": "integer",
+            "title": "Max Deficit Minor"
+          },
+          "gap_only_if_owner_withdraws": {
+            "type": "boolean",
+            "title": "Gap Only If Owner Withdraws"
+          },
+          "structural_shortfall": {
+            "type": "boolean",
+            "title": "Structural Shortfall"
+          },
+          "buffer_minor": {
+            "type": "integer",
+            "title": "Buffer Minor"
+          },
+          "buffer_source": {
+            "type": "string",
+            "enum": [
+              "user",
+              "auto"
+            ],
+            "title": "Buffer Source"
+          },
+          "plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PulsePlan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "suggestions": {
+            "items": {
+              "$ref": "#/components/schemas/PulseSuggestion"
+            },
+            "type": "array",
+            "title": "Suggestions"
+          },
+          "chart": {
+            "$ref": "#/components/schemas/PulseChart"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Assumptions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "message",
+          "first_gap_date",
+          "days_until_gap",
+          "max_deficit_minor",
+          "gap_only_if_owner_withdraws",
+          "structural_shortfall",
+          "buffer_minor",
+          "buffer_source",
+          "plan",
+          "suggestions",
+          "chart",
+          "warnings",
+          "assumptions"
+        ],
+        "title": "PulseCash"
+      },
+      "PulseChart": {
+        "properties": {
+          "days": {
+            "items": {
+              "type": "string",
+              "format": "date"
+            },
+            "type": "array",
+            "title": "Days"
+          },
+          "base_minor": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Base Minor"
+          },
+          "if_owner_withdraws_minor": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "If Owner Withdraws Minor"
+          },
+          "after_plan_minor": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "After Plan Minor"
+          },
+          "buffer_minor": {
+            "type": "integer",
+            "title": "Buffer Minor"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "days",
+          "base_minor",
+          "if_owner_withdraws_minor",
+          "after_plan_minor",
+          "buffer_minor"
+        ],
+        "title": "PulseChart"
+      },
+      "PulseClient": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "share": {
+            "type": "number",
+            "title": "Share"
+          },
+          "grade": {
+            "type": "string",
+            "title": "Grade"
+          },
+          "grade_label": {
+            "type": "string",
+            "title": "Grade Label"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "share",
+          "grade",
+          "grade_label"
+        ],
+        "title": "PulseClient"
+      },
+      "PulseClientRisk": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "share": {
+            "type": "number",
+            "title": "Share"
+          },
+          "grade": {
+            "type": "string",
+            "title": "Grade"
+          },
+          "grade_label": {
+            "type": "string",
+            "title": "Grade Label"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reasons"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "share",
+          "grade",
+          "grade_label",
+          "reasons"
+        ],
+        "title": "PulseClientRisk"
+      },
+      "PulseClients": {
+        "properties": {
+          "applicable": {
+            "type": "boolean",
+            "title": "Applicable"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "watch",
+              "risk",
+              "unknown"
+            ],
+            "title": "Status"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "top_client": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PulseClient"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "at_risk": {
+            "items": {
+              "$ref": "#/components/schemas/PulseClientRisk"
+            },
+            "type": "array",
+            "title": "At Risk"
+          },
+          "stress": {
+            "items": {
+              "$ref": "#/components/schemas/PulseStress"
+            },
+            "type": "array",
+            "title": "Stress"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "applicable",
+          "status",
+          "message",
+          "top_client",
+          "at_risk",
+          "stress"
+        ],
+        "title": "PulseClients"
+      },
+      "PulseFinding": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "nature": {
+            "type": "string",
+            "enum": [
+              "loss",
+              "opportunity",
+              "signal",
+              "frozen"
+            ],
+            "title": "Nature"
+          },
+          "certainty": {
+            "type": "string",
+            "enum": [
+              "fact",
+              "estimate"
+            ],
+            "title": "Certainty"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "amount_minor": {
+            "type": "integer",
+            "title": "Amount Minor"
+          },
+          "period": {
+            "type": "string",
+            "enum": [
+              "year",
+              "window"
+            ],
+            "title": "Period"
+          },
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "blocked_by_cash_gap": {
+            "type": "boolean",
+            "title": "Blocked By Cash Gap"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "nature",
+          "certainty",
+          "title",
+          "amount_minor",
+          "period",
+          "evidence",
+          "action",
+          "blocked_by_cash_gap"
+        ],
+        "title": "PulseFinding"
+      },
+      "PulseMoney": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "watch",
+              "risk",
+              "unknown"
+            ],
+            "title": "Status"
+          },
+          "loss_per_year_minor": {
+            "type": "integer",
+            "title": "Loss Per Year Minor"
+          },
+          "opportunity_per_year_minor": {
+            "type": "integer",
+            "title": "Opportunity Per Year Minor"
+          },
+          "opportunity_deferred_minor": {
+            "type": "integer",
+            "title": "Opportunity Deferred Minor"
+          },
+          "one_off_loss_minor": {
+            "type": "integer",
+            "title": "One Off Loss Minor"
+          },
+          "frozen_minor": {
+            "type": "integer",
+            "title": "Frozen Minor"
+          },
+          "signals": {
+            "type": "integer",
+            "title": "Signals"
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/PulseFinding"
+            },
+            "type": "array",
+            "title": "Findings"
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Assumptions"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "loss_per_year_minor",
+          "opportunity_per_year_minor",
+          "opportunity_deferred_minor",
+          "one_off_loss_minor",
+          "frozen_minor",
+          "signals",
+          "findings",
+          "assumptions",
+          "warnings"
+        ],
+        "title": "PulseMoney"
+      },
+      "PulseOut": {
+        "properties": {
+          "forecast_id": {
+            "type": "string",
+            "title": "Forecast Id"
+          },
+          "account_id": {
+            "type": "string",
+            "title": "Account Id"
+          },
+          "company_id": {
+            "type": "string",
+            "title": "Company Id"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "data_version": {
+            "type": "string",
+            "title": "Data Version"
+          },
+          "method_version": {
+            "type": "string",
+            "title": "Method Version"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "watch",
+              "risk",
+              "unknown"
+            ],
+            "title": "Status"
+          },
+          "headline": {
+            "type": "string",
+            "title": "Headline"
+          },
+          "cash": {
+            "$ref": "#/components/schemas/PulseCash"
+          },
+          "money": {
+            "$ref": "#/components/schemas/PulseMoney"
+          },
+          "clients": {
+            "$ref": "#/components/schemas/PulseClients"
+          },
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/PulseAction"
+            },
+            "type": "array",
+            "title": "Actions"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "forecast_id",
+          "account_id",
+          "company_id",
+          "as_of",
+          "model_version",
+          "data_version",
+          "method_version",
+          "status",
+          "headline",
+          "cash",
+          "money",
+          "clients",
+          "actions",
+          "warnings"
+        ],
+        "title": "PulseOut"
+      },
+      "PulsePlan": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "resolved": {
+            "type": "boolean",
+            "title": "Resolved"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/PulseStep"
+            },
+            "type": "array",
+            "title": "Steps"
+          },
+          "credit_minor": {
+            "type": "integer",
+            "title": "Credit Minor"
+          },
+          "credit_cost_minor": {
+            "type": "integer",
+            "title": "Credit Cost Minor"
+          },
+          "holds_if_inflows_drop_20pct": {
+            "type": "boolean",
+            "title": "Holds If Inflows Drop 20Pct"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "resolved",
+          "steps",
+          "credit_minor",
+          "credit_cost_minor",
+          "holds_if_inflows_drop_20pct"
+        ],
+        "title": "PulsePlan"
+      },
+      "PulseStep": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "amount_minor": {
+            "type": "integer",
+            "title": "Amount Minor"
+          },
+          "cost_minor": {
+            "type": "integer",
+            "title": "Cost Minor"
+          },
+          "details": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Details"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "amount_minor",
+          "cost_minor",
+          "details"
+        ],
+        "title": "PulseStep"
+      },
+      "PulseStress": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "delay",
+              "loss"
+            ],
+            "title": "Kind"
+          },
+          "first_gap_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Gap Date"
+          },
+          "creates_gap": {
+            "type": "boolean",
+            "title": "Creates Gap"
+          },
+          "worst_day_shortfall_minor": {
+            "type": "integer",
+            "title": "Worst Day Shortfall Minor"
+          },
+          "basis": {
+            "type": "string",
+            "title": "Basis"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "text",
+          "kind",
+          "first_gap_date",
+          "creates_gap",
+          "worst_day_shortfall_minor",
+          "basis"
+        ],
+        "title": "PulseStress"
+      },
+      "PulseSuggestion": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "details": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Details"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "details"
+        ],
+        "title": "PulseSuggestion"
       },
       "RiskOut": {
         "properties": {
