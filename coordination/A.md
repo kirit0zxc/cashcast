@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A26 VERIFIED; A27 bounded recovery after exhausted transient failures; F2 blocked
-code_sha: ee251aede7cc337d4682490dcac89c42e984f50a
-tested_sha: ee251aede7cc337d4682490dcac89c42e984f50a
-last_update: 2026-10-24T03:21:00Z
+task: A27 VERIFIED; A28 automatic UI refresh after successful financial changes; F2 blocked
+code_sha: 303f5f30edb422bb58c5f19eaeb4fce423f7fa53
+tested_sha: 303f5f30edb422bb58c5f19eaeb4fce423f7fa53
+last_update: 2026-10-24T03:35:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -1155,3 +1155,34 @@ A27 — оставшийся resiliencegap: после трёх временны
 Новыхsharedформатов нет. Bвсёещёa771/B020 поуспешномуfetch, новыхACK/ETA/RETURNнет;
 новыйfallback нерасширяется. Mainчеловеку, private/quotaправила прежние. Heartbeat
 до03:41UTC; проверка связи/~10мин и HANDOFFприRETURN.
+
+## A-041 · A27 VERIFIED / A28 existing API integration WORKING
+
+UTC: 2026-10-24T03:35:00Z
+reply_to: A-040,B-020
+code_sha: 303f5f30edb422bb58c5f19eaeb4fce423f7fa53
+tested_sha: 303f5f30edb422bb58c5f19eaeb4fce423f7fa53
+type: integrated + verified + working
+
+A27 PR41 принят. Явный POST owner возобновляет только исчерпанный временныйfailed
+и сохранённыйinput. Attemptsмонотонен/max+3, Job→Runlock, fastcheckживогоhandler,
+атомарныйrollback, sameIDs/input/model/base. Permanent/unknown/legacyнеповторяются.
+23Windowsprofile/Ruff/OpenAPIpassed; fullLinux429passed97.35s; Node24lint/types/
+4unit/buildpassed; Docker18087 все8Chrome29.3s. Reviewtree3f7e8860eff8cc34359f3d61a9e5e2c4ca7105c0ready.
+НовыйemptyCompose18089: миграции/seed/4сервиса, затем явная syntheticterminalfixture
+длябраузерноготеста; не названо реальным сетевым отказом. Cachedfailedhistory→POST
+→samejob/run→realworker/chart, attempts4/6. FrozenSHA b68cc11bf0fac953b2cbf018ab164a5dfde028378477540e4cc6b138ccc0669c
+до/после совпал. ATT021 отличает обнаруженныйбагпервойреализации и действительныеgates.
+
+A28 — functionalинтеграция existingAPI в минимальномUI бездизайнполировки. После
+успешного CSVcommit/плана/сверки/категории автоматически отправить новый обычный
+POSTforecast, дождатьсяworker, показатьактуальныйграфик. Старыеinput/resultsне менять;
+historyopen/reload/сменаcutoff самиPOSTневызывают, terminalfailed не повторять циклом.
+Защитаотдублированияэффектов/обновленийкэша; дата дляновогоплана todayUTC, категория
+сохраняет выбранныйсрез. НовыхbackendDTO/общихформатов/моделей/миграцийнет.
+Это только изменения черезкабинет: фоновойподпискинавнешниеAPIupdates и математического
+инкрементальногорасчёта не обещаем. Утреннийредизайн долженсохранитьэтуинтеграцию.
+
+B/a771/B020 безновыхACK/ETA/RETURN поуспешномуfetch; свойAownedUIкоднепересекается
+сB. F2blocked/fallbackpreserved/mainprivate/quotaпрежние. Продолжаю до09:00МСК,
+связьмеждупакетами/~10мин, следующийheartbeatдо03:55UTC.

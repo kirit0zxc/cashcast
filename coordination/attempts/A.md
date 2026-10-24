@@ -278,3 +278,18 @@ EODupdates. Внутрифайла failed, сledger409transaction_fingerprint_co
 ЦентральнаяCompanyAccessпроверяетцелевуюроль, включаяobject-IDмаршруты. Проверены
 11отказовзаписи безпобочныхэффектов,8чтений200 и ownerдругойкомпании201.
 30Windowsprofile/Ruff/OpenAPIpassed;419Linux88.70s/8Chrome29.2s. Reviewtree07574f4ready.
+
+## A-ATT-021 · повтор transientfailed и ненужное ожидание живого handler
+
+UTC:2026-10-24T03:35:00Z; A27303f5f30edb422bb58c5f19eaeb4fce423f7fa53.
+Первые7API/workerрегрессий4red/3pass показали вечныйfailed дляbase/scenario/lease/
+конкурентногоPOST. Recoveryтолькоallowlist/exhausted/frozen/owner, attemptsнеreset.
+Перваяреализациябезfastcheck всегда бралаJobFORUPDATE и заставлялаобычный повтор
+runningjob ждатьhandler. Новаяограниченная1sDBрегрессия дала500; раннийstatuscheck
+устраниложидание. Повторпослеlockперепроверяетусловия, fencingattemptsмонотонен.
+
+23Windowsprofile12.52s,429Linux97.35s, Ruff/OpenAPI, Node4unit/build,8Chrome29.3s.
+Настоящий Chromium18089 предварительно открылcachedfailedизhistory. Синтетическое
+состояние3исчерпанныхпопытокподготовлено только вновойemptyDB, затемPOST/worker/chart
+реальны. Это не названо сетевойаварией; триреальныхraiseConnectionError и lostlease
+отдельнопроверены наtestDB. SameIDs/attempt4of6/frozenSHAсовпали, backupC001нетронут.
