@@ -185,6 +185,26 @@ table.ops tr.editing td { background: var(--panel); border-bottom: 1px solid var
 .tabs [role="tab"] { white-space: nowrap; }
 .tabs { overflow-x: auto; }
 
+/* Аналитика: прогноз, сценарии, пульс. */
+.toolbar { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: end; margin-bottom: 18px; padding: 14px; border: 1px dashed var(--ink); }
+.toolbar form label { margin: 0; }
+.toolbar small { flex: 1 1 320px; max-width: none; }
+.toolbar .mono { font-size: 12px; overflow-wrap: anywhere; }
+.grid2.top0, .hero.top0 { padding-top: 0; }
+.hero.top0 { border-bottom: 0; margin-bottom: 18px; }
+.hero h2 { margin: 2px 0 12px; }
+ul.plain { margin: 10px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 13px; }
+ul.plain li + li { margin-top: 4px; }
+.steps { margin: 8px 0 12px; padding-left: 20px; }
+.steps li + li { margin-top: 8px; }
+.bars { margin-top: 12px; display: grid; gap: 12px; }
+.bar .row { font-size: 13px; margin-bottom: 4px; }
+.bar .code { height: 18px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 5px, transparent 5px 8px); }
+td.neg, .neg { color: var(--coral); }
+.list small { margin-top: 2px; }
+details.panel > summary { font-family: var(--sans); font-size: 15px; font-weight: 700; text-transform: none; letter-spacing: 0; }
+.panel .kpis { border-bottom: 0; }
+
 /* Вход. */
 .login { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
 .login .panel { width: min(420px, 100%); }

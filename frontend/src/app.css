@@ -43,11 +43,7 @@ th { font-family: var(--mono); font-size: 11px; font-weight: 400; text-transform
 th, td { text-align: left; padding: 9px 10px; }
 td { border-bottom: 1px dotted var(--ink); }
 
-/* Графики Recharts: моно-подписи осей. */
 .chart { width: 100%; min-width: 0; }
-.recharts-text, .recharts-cartesian-axis-tick-value { font-family: var(--mono); font-size: 11px; fill: var(--ink-2); }
-.recharts-cartesian-grid line { stroke: var(--hatch); }
-.recharts-default-tooltip { background: var(--paper) !important; border: 1px solid var(--ink) !important; border-radius: 0 !important; font-family: var(--mono); font-size: 12px; }
 
 @media (max-width: 700px) {
   main { padding: 14px 16px 24px; }

@@ -12,7 +12,7 @@ import { PulsePanel } from "../features/pulse/PulsePanel";
 import { Transactions } from "../features/transactions/Transactions";
 import { useCompanyCanWrite } from "../shared/company-permissions";
 import { Empty } from "../ui/Empty";
-import { Tabs } from "../ui/Blank";
+import { Tabs, dmy } from "../ui/Blank";
 import { OverviewPage } from "./OverviewPage";
 
 // Переключение раздела только меняет видимую страницу: данные и выбранный расчёт
@@ -26,9 +26,12 @@ export function Pages({ route }: { route: RoutePath }) {
       lead="Сначала проверьте файл. Данные появятся в кабинете только после подтверждения."><ImportPage /></Page>;
     case "/payments": return <Page route={route}><PaymentsPage /></Page>;
     case "/reconciliation": return <Page route={route}><ReconciliationPage /></Page>;
-    case "/forecast": return <Page route={route}><ForecastPanel /></Page>;
-    case "/scenarios": return <Page route={route}><ScenariosPage /></Page>;
-    case "/pulse": return <Page route={route}><PulsePage /></Page>;
+    case "/forecast": return <Page route={route}
+      lead="Остаток на 30 дней по сохранённому расчёту: медиана, коридор p10–p90 и причины."><ForecastPanel /></Page>;
+    case "/scenarios": return <Page route={route}
+      lead="Что будет с остатком, если изменить одно событие. База и реальные планы не меняются."><ScenariosPage /></Page>;
+    case "/pulse": return <Page route={route}
+      lead="Касса, расходы и клиенты по тому же сохранённому прогнозу. Просмотр ничего не меняет."><PulsePage /></Page>;
     case "/assistant": return <Page route={route}><AssistantPage /></Page>;
   }
 }
@@ -89,31 +92,35 @@ function ScenariosPage() {
   const { api, forecast: c } = useAccount();
   const canWrite = useCompanyCanWrite();
   const f = c.forecast.data;
-  return <section className="panel">
+  return <>
     <ForecastState />
     {!c.runId && !c.working && <Empty title="Нет выбранного расчёта"
       text="Рассчитайте прогноз или откройте сохранённый в разделе «Прогноз»." />}
     {f?.status === "succeeded" && <>
-      <p className="mono">База: прогноз на {f.as_of} · {f.id}</p>
+      <section className="toolbar">
+        <span className="chip solid">база</span>
+        <span className="mono">прогноз на {dmy(f.as_of)} · {f.id}</span>
+        {f.base_forecast_id && <button type="button" className="ghost"
+          onClick={() => c.open({ id: f.base_forecast_id!, as_of: f.as_of, job_id: null, error_code: null })}>
+          Открыть исходный прогноз</button>}
+      </section>
       {f.base_forecast_id
-        ? <><p>Открыт сохранённый сценарий. Новый сценарий строится от базового прогноза.</p>
-          <button type="button" onClick={() => c.open({ id: f.base_forecast_id!, as_of: f.as_of, job_id: null, error_code: null })}>
-            Открыть исходный прогноз</button></>
+        ? <Empty title="Открыт сохранённый сценарий" text="Новый сценарий строится от базового прогноза — откройте его кнопкой выше." />
         : canWrite ? <ScenarioPanel key={f.id} api={api} base={f} />
           : <Empty title="Сценарии запускает владелец компании" text="Сценарий создаёт отдельный расчёт на сервере." />}
     </>}
-  </section>;
+  </>;
 }
 
 function PulsePage() {
   const { api, forecast: c } = useAccount();
   const f = c.forecast.data;
-  return <section className="panel">
+  return <>
     <ForecastState />
     {!c.runId && !c.working && <Empty title="Нет выбранного расчёта"
       text="Пульс строится по сохранённому прогнозу. Рассчитайте его или откройте в разделе «Прогноз»." />}
     {f?.status === "succeeded" && <PulsePanel key={f.id} api={api} forecastId={f.id} />}
-  </section>;
+  </>;
 }
 
 // Ассистент (PR №51) ещё не в main: показываем честное состояние без выдуманных ответов.
