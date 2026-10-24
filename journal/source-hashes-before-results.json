@@ -1,0 +1,22 @@
+[
+  {
+    "Path": "C:\\Users\\kirito\\Documents\\Codex\\2026-10-03\\new-chat\\work\\cashcast-model-fallback\\evaluation\\fallback_model\\features.py",
+    "Hash": "10F8431F8C75E88EE8E8DE3B1E7C7EE1C48C66B163710607CA7B3FDC1C091303"
+  },
+  {
+    "Path": "C:\\Users\\kirito\\Documents\\Codex\\2026-10-03\\new-chat\\work\\cashcast-model-fallback\\evaluation\\fallback_model\\data.py",
+    "Hash": "8338C6E7C9C9D2C3EBAE4AF46965B128708B4AAD74BB8CFE46969A23E50B2D2E"
+  },
+  {
+    "Path": "C:\\Users\\kirito\\Documents\\Codex\\2026-10-03\\new-chat\\work\\cashcast-model-fallback\\evaluation\\fallback_model\\metrics.py",
+    "Hash": "0ADE5199E822AD829CDA992E92AF6B4992B41EFC8B289F9B4CEA7ED0EFA3F33D"
+  },
+  {
+    "Path": "C:\\Users\\kirito\\Documents\\Codex\\2026-10-03\\new-chat\\work\\cashcast-model-fallback\\evaluation\\fallback_model\\run.py",
+    "Hash": "A02B68CF69A964967097DD62980263F42A9D6CAA366F06D6F6712604B0B20432"
+  },
+  {
+    "Path": "C:\\Users\\kirito\\Documents\\Codex\\2026-10-03\\new-chat\\work\\cashcast-model-fallback\\experiments\\01_direct_cashflow.py",
+    "Hash": "8187B9A026C536FBEBF184F8AA09DB891EF0EDD3287BB3ACAAA4A091D41F7F07"
+  }
+]

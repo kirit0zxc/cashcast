@@ -1,0 +1,46 @@
+{
+  "train": {
+    "windows": 2136,
+    "positive_reserve": 1916,
+    "eligible_new_gap": 2094,
+    "new_gaps": 24,
+    "positive_companies": 6,
+    "reserve_normalized_quantiles": [
+      0.0,
+      0.862127743074125,
+      2.405612580514328,
+      4.811607904747488,
+      8.25641955953052,
+      16.19132626238483,
+      27.294035016223077
+    ],
+    "excluded": {
+      "no_past_balance": 481,
+      "stale_opening": 90,
+      "unverified_end_coverage": 28,
+      "unreconciled_future_target": 39
+    }
+  },
+  "validation": {
+    "windows": 257,
+    "positive_reserve": 225,
+    "eligible_new_gap": 245,
+    "new_gaps": 2,
+    "positive_companies": 2,
+    "reserve_normalized_quantiles": [
+      0.0,
+      0.5694749996988837,
+      1.8326082954622012,
+      3.680937642632216,
+      6.767084048117967,
+      15.265048537971529,
+      17.97217397226457
+    ],
+    "excluded": {
+      "stale_opening": 19,
+      "no_past_balance": 31,
+      "unreconciled_future_target": 12,
+      "unverified_end_coverage": 24
+    }
+  }
+}

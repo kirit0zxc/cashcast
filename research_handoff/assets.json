@@ -1,0 +1,23 @@
+{
+  "cashcast-research-artifacts.zip": {
+    "sha256": "99a6c45e1eb6acbe961d51bd50a8c380c635ad5c42c503d7b9f7b5ad1a656482",
+    "bytes": 73650297,
+    "contents": "Research caches, small weights, per-window predictions, reports. No source bank CSV."
+  },
+  "cashcast-chronos-13-19.zip": {
+    "sha256": "4d31fb469fc376708a4f6f1d9d799cd478b0db82c67fae1ab769e7fb50be9477",
+    "bytes": 1433795938
+  },
+  "cashcast-chronos-24.zip": {
+    "sha256": "e84bd44a3150e8776f748945c27a1eb782647f8a6af35f54c921e8b123849850",
+    "bytes": 955863982
+  },
+  "cashcast-local-candidate-v18.zip": {
+    "sha256": "5d39f25ea0915b1ecae9a47221806ff8892af88f94b421eac7c8da186d854a61",
+    "bytes": 959877143
+  },
+  "cashcast-risk-addon-v21.zip": {
+    "sha256": "ec41533626295fcd19693993a9db32636dd344bc2b559a8f816ddfbfeb2ad7cd",
+    "bytes": 1599311
+  }
+}

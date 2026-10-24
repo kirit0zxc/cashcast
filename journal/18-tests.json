@@ -1,0 +1,8 @@
+{
+  "total_local_tests": 101,
+  "passed": true,
+  "feature_real_cases": 3,
+  "package_real_cases": 21,
+  "package_edges_passed": true,
+  "db_used": false
+}

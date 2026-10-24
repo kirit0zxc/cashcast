@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "all_five_archives_verified_and_extracted": true,
+  "risk21_manifest_valid": true,
+  "required_checkpoints_present": true,
+  "chronos_metadata_relocated": true,
+  "no_training_or_database_run": true
+}

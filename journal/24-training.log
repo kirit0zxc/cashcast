@@ -1,0 +1,15 @@
+Training Chronos: 100 companies, 300 steps, CPU4
+{'loss': '0.9609', 'grad_norm': '39.29', 'learning_rate': '9.2e-07', 'epoch': '0.08333'}
+{'loss': '0.7138', 'grad_norm': '95.11', 'learning_rate': '8.367e-07', 'epoch': '0.1667'}
+{'loss': '0.6394', 'grad_norm': '46.1', 'learning_rate': '7.533e-07', 'epoch': '0.25'}
+{'loss': '0.8478', 'grad_norm': '54.5', 'learning_rate': '6.7e-07', 'epoch': '0.3333'}
+{'loss': '0.7005', 'grad_norm': '63.74', 'learning_rate': '5.867e-07', 'epoch': '0.4167'}
+{'loss': '1.078', 'grad_norm': '80.29', 'learning_rate': '5.033e-07', 'epoch': '0.5'}
+{'loss': '0.9111', 'grad_norm': '159.7', 'learning_rate': '4.2e-07', 'epoch': '0.5833'}
+{'loss': '0.811', 'grad_norm': '255.4', 'learning_rate': '3.367e-07', 'epoch': '0.6667'}
+{'loss': '0.7545', 'grad_norm': '55.06', 'learning_rate': '2.533e-07', 'epoch': '0.75'}
+{'loss': '0.8099', 'grad_norm': '96.09', 'learning_rate': '1.7e-07', 'epoch': '0.8333'}
+{'loss': '0.6733', 'grad_norm': '40.42', 'learning_rate': '8.667e-08', 'epoch': '0.9167'}
+{'loss': '0.8773', 'grad_norm': '123', 'learning_rate': '3.333e-09', 'epoch': '1'}
+{'train_runtime': '362.5', 'train_samples_per_second': '6.621', 'train_steps_per_second': '0.828', 'train_loss': '0.8148', 'epoch': '1'}
+Fine-tuning completed; original weights unchanged

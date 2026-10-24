@@ -1,0 +1,6 @@
+{
+  "windows_checked": 256,
+  "identity_verified": true,
+  "condition": "opening < max(0, -min(cumulative_netflow))",
+  "zero_balance_is_gap": false
+}

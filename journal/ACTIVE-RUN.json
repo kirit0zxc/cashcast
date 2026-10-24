@@ -1,0 +1,8 @@
+{
+  "experiment": "24_cumulative_flows",
+  "stage": "trained_not_evaluated",
+  "status": "stopped_for_handoff",
+  "training_exit_code": 0,
+  "live_processes": [],
+  "next": "Dima may evaluate saved checkpoints; do not restart training"
+}

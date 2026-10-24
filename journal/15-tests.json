@@ -1,0 +1,7 @@
+{
+  "unique_tests": 84,
+  "passed": true,
+  "ft100_cli_real_weights": true,
+  "forecast_points": 30,
+  "tracked_diff_empty": true
+}
