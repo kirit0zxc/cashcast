@@ -103,6 +103,10 @@ export function ForecastPanel({ api, companyId, accountId, initialDate, autoRun,
 function ForecastView({ forecast: f }: { forecast: Forecast }) {
   return <>
     <p>Модель: {f.model_version}. Начальный остаток: {money(f.opening_balance_minor)}.</p>
+    <p data-testid="calculation-mode">{f.calculation?.mode === "incremental"
+      ? "Частичное обновление: календарь пересчитан, история и траектории переиспользованы."
+      : f.calculation ? "Полный расчёт: подготовлена история и рассчитан прогноз."
+        : "Сохранённый прогноз: сведения о режиме расчёта отсутствуют."}</p>
     <p>Первый минус по медиане: {f.risk.first_negative_date ?? (f.risk.available ? "не прогнозируется" : "нет оценки")}.
       Максимальный дефицит: {money(f.risk.max_deficit_minor)}.
       Модельная вероятность минуса за горизонт: {probability(f.risk.probability_any_negative)}.</p>
@@ -120,6 +124,8 @@ function ForecastView({ forecast: f }: { forecast: Forecast }) {
     <ul>{[...f.assumptions, ...f.data_warnings].map((s, i) => <li key={i}>{s}</li>)}</ul>
     <details><summary>Дневные значения и происхождение расчёта</summary>
       <p>Прогноз {f.id}. Версия входа {f.data_version}.</p>
+      {f.calculation && <p>Причина: {f.calculation.reason}. Новых траекторий: {f.calculation.bootstrap_paths_generated}.
+        {f.calculation.source_forecast_id && ` Источник истории: ${f.calculation.source_forecast_id}.`}</p>}
       <div className="scroll"><table><thead><tr><th>Дата</th><th>Приход</th><th>Расход</th><th>Остаток p50</th>
         <th>Вероятность минуса за день</th></tr></thead><tbody>
         {f.points.map(p => <tr key={p.point_date}><td>{p.point_date}</td><td>{money(p.inflow_minor)}</td>

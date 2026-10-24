@@ -176,6 +176,14 @@ class RiskOut(BaseModel):
     probability_any_negative: float | None
 
 
+class CalculationOut(BaseModel):
+    mode: Literal["full", "incremental"]
+    reason: str
+    reused_history: bool
+    bootstrap_paths_generated: int
+    source_forecast_id: str | None = None
+
+
 class ForecastOut(BaseModel):
     id: str
     account_id: str
@@ -191,6 +199,7 @@ class ForecastOut(BaseModel):
     data_warnings: list[str]
     risk: RiskOut
     points: list[ForecastPointOut]
+    calculation: CalculationOut | None = None
 
 
 class ExplanationItem(BaseModel):
