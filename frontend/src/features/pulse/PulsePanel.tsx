@@ -93,13 +93,13 @@ function CashTab({ p }: { p: PulseReport }) {
       <p>{cash.message}</p>
       {cash.structural_shortfall && <p className="errors">Расходы устойчиво превышают поступления. Перенос платежей или заём могут лишь отложить проблему.</p>}
       <SpecLines label="Пульс: сохранённая база и гипотетический план" dates={days} series={[
-        { name: "медиана", values: cash.chart.base_minor, style: "ink" },
+        { name: "остаток", values: cash.chart.base_minor, style: "ink" },
         ...(cash.chart.after_plan_minor ? [{ name: "после плана", values: cash.chart.after_plan_minor, style: "dash" as const }] : []),
         ...(cash.chart.if_owner_withdraws_minor ? [{ name: "если выводить", values: cash.chart.if_owner_withdraws_minor, style: "thin" as const }] : []),
         { name: "подушка", values: days.map(() => cash.chart.buffer_minor), style: "coral" },
       ]} />
       <div className="legend">
-        <span><i style={{ background: "var(--ink)" }} />сохранённая медиана</span>
+        <span><i style={{ background: "var(--ink)" }} />ожидаемый остаток</span>
         {cash.chart.after_plan_minor && <span><i style={{ background: "repeating-linear-gradient(90deg, var(--ink) 0 5px, transparent 5px 8px)" }} />гипотетический план</span>}
         {cash.chart.if_owner_withdraws_minor && <span><i style={{ background: "var(--ink-2)", height: 2 }} />если выводить как обычно</span>}
         <span><i style={{ background: "var(--coral)", height: 2 }} />подушка</span>

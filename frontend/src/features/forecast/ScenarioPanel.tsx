@@ -92,7 +92,7 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
         onChange={e => { setTarget(e.target.value); resetResult(); }}>
         {targets.length === 0 && <option value="">Нет подходящих платежей</option>}
         {targets.map(item => <option key={item.source_ref} value={item.source_ref!}>
-          {item.detail.date}: {money(item.amount_minor)} · {item.source_ref!.slice(0, 8)}
+          {item.detail.date}: {money(item.amount_minor)} · {item.label} · {item.source_ref}
         </option>)}
       </select></label>}
       {kind === "delay_event" && <label>Задержка, дней<input disabled={pending} type="number" required min={1} max={3650}
@@ -114,9 +114,9 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
     </section>
     {comparison.data && last && <section data-testid="scenario-comparison">
       <div className="kpis">
-        <div className="kpi"><span className="label">Изменение к концу горизонта</span>
+        <div className="kpi"><span className="label">Разница на {last.point_date}</span>
           <div className={`v${last.delta_balance_minor < 0 ? " neg" : ""}`}>{money(last.delta_balance_minor)}</div>
-          <div className="s">сценарий минус база, по медиане</div></div>
+          <div className="s">«что если» минус «как есть»</div></div>
         <div className="kpi"><span className="label">База</span><div className="v">{money(last.base_balance_p50_minor)}</div>
           <div className="s">{last.point_date}</div></div>
         <div className="kpi"><span className="label">Сценарий</span><div className="v">{money(last.scenario_balance_p50_minor)}</div>

@@ -25,8 +25,7 @@ export function OverviewPage() {
   const ready = f?.status === "succeeded" && !f.base_forecast_id ? f : undefined;
   return <>
     <div className="row" style={{ marginBottom: 18 }}>
-      {ready && <span className="chip">срез {ready.as_of}</span>}
-      {ready && <span className="chip solid">модель {ready.model_version}</span>}
+      {ready && <span className="chip">данные на {day(ready.as_of)}</span>}
       {c.working && <span className="chip stale">прогноз обновляется</span>}
       {c.stale && !c.working && <span className="chip stale">прогноз устарел</span>}
       <span style={{ flex: 1 }} />
@@ -70,13 +69,13 @@ function Report({ forecast: f }: { forecast: Forecast }) {
   return <>
     <section className="hero">
       <div>
-        <span className="label">Отчёт · счёт {accountId.slice(0, 8).toUpperCase()}</span>
+        <span className="label">Ваш счёт сейчас</span>
         <h1>Что происходит с&nbsp;деньгами</h1>
         <div className="leader"><span>Факт на</span><i /><span>{day(f.as_of)}</span></div>
         {last && <div className="leader"><span>Прогноз до</span><i /><span>{day(last.point_date)}</span></div>}
         <div className="leader"><span>Режим расчёта</span><i /><span>{f.calculation?.mode === "incremental"
           ? "частичное обновление" : f.calculation ? "полный расчёт" : "нет сведений"}</span></div>
-        <div className="leader"><span>Первый минус по медиане</span><i /><span>{f.risk.first_negative_date
+        <div className="leader"><span>Первый день в минусе</span><i /><span>{f.risk.first_negative_date
           ? day(f.risk.first_negative_date) : f.risk.available ? "не прогнозируется" : "нет оценки"}</span></div>
       </div>
       <div className="statusbox" aria-label="Статус финансового пульса">
@@ -92,16 +91,16 @@ function Report({ forecast: f }: { forecast: Forecast }) {
 
     <section className="kpis">
       <Kpi label="Начальный остаток прогноза" value={f.opening_balance_minor}
-        note={`сохранённый расчёт на ${day(f.as_of)}`} />
+        note={`на ${day(f.as_of)}`} />
       <Kpi label="Минимум в прогнозе" value={min?.balance_p50_minor ?? null}
-        note={min ? `${day(min.point_date)} · по медиане` : "нет точек"} />
-      <Kpi label="На конец горизонта" value={last?.balance_p50_minor ?? null}
-        note={last ? `${day(last.point_date)} · по медиане` : "нет точек"} />
+        note={min ? `${day(min.point_date)} · самый низкий остаток` : "нет данных"} />
+      <Kpi label="На конец прогноза" value={last?.balance_p50_minor ?? null}
+        note={last ? day(last.point_date) : "нет данных"} />
       {f.risk.probability_any_negative === null
         ? <div className="kpi na"><span className="label">Вероятность минуса</span><div className="v">не оценивается</div>
-          <div className="s">модель не даёт вероятность — это не 0%</div></div>
+          <div className="s">данных мало для надёжной оценки — это не 0%</div></div>
         : <div className="kpi"><span className="label">Вероятность минуса</span>
-          <div className="v">{probability(f.risk.probability_any_negative)}</div><div className="s">за горизонт прогноза</div></div>}
+          <div className="v">{probability(f.risk.probability_any_negative)}</div><div className="s">за период прогноза · {points.length} дн.</div></div>}
     </section>
     <ProbabilityNotice forecast={f} />
 
@@ -110,13 +109,13 @@ function Report({ forecast: f }: { forecast: Forecast }) {
         <div className="panel">
           <span className="dots" aria-hidden="true">● ● ●</span>
           <span className="label">Прогноз остатка · {points.length} дн.</span>
-          <h2>Хватит ли денег на ближайший месяц</h2>
+          <h2>Хватит ли денег на период прогноза</h2>
           <SpecChart points={points} label="Обзор: медиана остатка и диапазон p10–p90" />
           <div className="legend">
-            <span><i style={{ background: "var(--ink)" }} />медиана</span>
+            <span><i style={{ background: "var(--ink)" }} />медианный остаток</span>
             <span>{bandAvailable(points)
-              ? <><i style={{ background: "radial-gradient(var(--ink) 30%, transparent 35%) 0 0/4px 4px" }} />диапазон p10–p90</>
-              : "диапазон недоступен — данных мало"}</span>
+              ? <><i style={{ background: "radial-gradient(var(--ink) 30%, transparent 35%) 0 0/4px 4px" }} />возможный разброс</>
+              : "разброс не оценён — данных мало"}</span>
             <Link to="/forecast">таблица по дням →</Link>
           </div>
         </div>

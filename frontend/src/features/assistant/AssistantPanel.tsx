@@ -18,7 +18,7 @@ export function AssistantPanel() {
   const [kind, setKind] = useState("statement");
   const [mapping, setMapping] = useState("");
   const status = useQuery({ queryKey: ["assistant-status"], retry: false,
-    queryFn: ({ signal }) => api.request<{ enabled: boolean; model: string }>("/assistant/status", { signal }) });
+    queryFn: ({ signal }) => api.request<{ enabled: boolean }>("/assistant/status", { signal }) });
   const enabled = !!status.data?.enabled;
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -32,23 +32,20 @@ export function AssistantPanel() {
     <div className="assistant-head">
       <div className="avatar"><Aura tone="assistant" cell={4} /></div>
       <div>
-        <span className="label">09 · ИИ-ассистент · срез {forecast.asOf}</span>
+        <span className="label">ИИ-ассистент</span>
         <h2>Юми</h2>
-        <p>Объясняет данные выбранного счёта, показывает графики и предлагает действия.
-          Все изменения — только после кнопки «Подтвердить действие».</p>
+        <p>Отвечает на вопросы о деньгах этого счёта. Ничего не меняет без вашей кнопки «Подтвердить действие».</p>
       </div>
       <div className="assistant-status">
         {status.isPending && <span className="chip">проверяем…</span>}
-        {status.data && <span className={`chip${enabled ? " solid" : ""}`}>{enabled ? "включён" : "выключен"}</span>}
-        {status.data && <small className="mono">{status.data.model}</small>}
+        {status.data && <span className={`chip${enabled ? " solid" : ""}`}>{enabled ? "на связи" : "недоступна"}</span>}
       </div>
     </div>
-    <p className="note">Сообщения и необходимые финансовые показатели передаются DeepSeek через OpenRouter.
-      Реквизиты и исходные назначения из базы скрываются. Не вводите пароли и ключи.</p>
-    {status.data && !enabled && <div className="empty"><b>Ассистент недоступен</b>
-      Ключ модели на сервере не настроен. Остальные разделы кабинета работают без него.</div>}
+    <p className="note">Реквизиты и назначения платежей ассистенту не показываются. Не пишите в чат пароли и личные данные.</p>
+    {status.data && !enabled && <div className="empty"><b>Ассистент сейчас недоступен</b>
+      Остальные разделы кабинета работают как обычно.</div>}
     {status.error && <p role="alert">{status.error.message}</p>}
-    {forecast.stale && <p className="note">Данные изменены подтверждённым действием — прогноз устарел. Новый расчёт — кнопкой «Рассчитать» или отдельным предложением ассистента.</p>}
+    {forecast.stale && <p className="note">Данные изменились — прогноз устарел. Обновите его кнопкой «Рассчитать» в разделе «Прогноз».</p>}
 
     <div className="prompts">
       {PROMPTS.map(text => <button type="button" className="ghost" key={text}
@@ -56,16 +53,15 @@ export function AssistantPanel() {
     </div>
 
     <div className="assistant-messages" aria-live="polite">
-      {!chat.entries.length && <div className="empty"><b>Чат пуст</b>Спросите о деньгах счёта или выберите подсказку выше.
-        История сохраняется при переходах между разделами и сбрасывается при смене счёта.</div>}
+      {!chat.entries.length && <div className="empty"><b>Чат пуст</b>Задайте вопрос или выберите подсказку выше.</div>}
       {chat.entries.map(entry => <article key={entry.id} className={`assistant-message ${entry.role}`}>
-        <span className="label">{entry.role === "user" ? "Вы" : "Юми · CashCast"}</span>
+        <span className="label">{entry.role === "user" ? "Вы" : "Юми"}</span>
         {entry.role === "assistant" ? <MarkdownMessage text={entry.content} />
           : <p className="assistant-text">{entry.content}</p>}
         {entry.cards.map((card, i) => <ChatCardView key={String(card.data.action_id ?? i)} card={card} api={api}
           companyId={companyId} accountId={accountId} onReply={chat.addReply} />)}
       </article>)}
-      {chat.busy && <p role="status">Ассистент получает данные…</p>}
+      {chat.busy && <p role="status">Юми думает…</p>}
     </div>
     {chat.error && <p role="alert">{chat.error}</p>}
 
@@ -83,9 +79,8 @@ export function AssistantPanel() {
       </select></label><label>Файл для ассистента<input type="file" accept=".csv,text/csv" disabled={chat.busy}
         onChange={e => setFile(e.target.files?.[0] ?? null)} /></label>
       <button disabled={chat.busy || !file}>Проверить CSV в чате</button>
-      <small>Для выписки используется формат организаторов: «;» и UTF-8 BOM. Файл остаётся на сервере CashCast,
-        модели он не передаётся; операции появятся только после подтверждения.</small>
-      {kind === "statement" && <details><summary>Другое соответствие колонок</summary>
+      <small>Юми проверит файл. Операции появятся в кабинете только после вашего подтверждения.</small>
+      {kind === "statement" && <details><summary>Настройка колонок (для специалистов)</summary>
         <label>JSON колонок для чата<textarea value={mapping} disabled={chat.busy} onChange={e => setMapping(e.target.value)} /></label>
       </details>}
     </form></details>}

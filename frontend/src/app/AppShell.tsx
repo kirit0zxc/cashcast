@@ -55,7 +55,7 @@ export function AppShell({ user, logout, logoutError }: {
             <Pages route={route} />
           </AccountProvider>
         </CompanyPermission>}
-        <div className="foot"><span>cashcast · данные из API</span><span>/// {new Date().getFullYear()}</span><span className="barcode" /></div>
+        <div className="foot"><span>cashcast</span><span>/// {new Date().getFullYear()}</span><span className="barcode" /></div>
       </main>
     </div>
   </div>;

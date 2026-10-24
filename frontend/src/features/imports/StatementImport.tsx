@@ -44,13 +44,13 @@ export function StatementImport({ api, companyId, accountId, onCommit }: {
   return <section className="panel">
     <Stepper steps={["Выбрать файл", "Проверить данные", "Подтвердить импорт", "Готово"]} current={step} />
     <h2>История денежных операций</h2>
-    <p>Одна выписка — один счёт: statements/Cxxx.csv. Сводный файл нескольких компаний сюда не загружайте.
-      CSV с разделителем «;», UTF-8 с BOM, русские направления.</p>
+    <p>Загрузите выписку из банка в формате CSV — по одной выписке на счёт.
+      Сначала мы проверим файл и покажем, что нашли.</p>
     <form onSubmit={upload} className="upload">
       <label>CSV-файл<input type="file" accept=".csv,text/csv" disabled={busy}
         onChange={e => { setFile(e.target.files?.[0] ?? null); setPreview(null); setCommit(null); }} /></label>
-      <details><summary>Соответствие колонок</summary>
-        <p>Шаблон participants-v1 с сервера. Меняйте, только если колонки файла названы иначе.</p>
+      <details><summary>Настройка колонок (для специалистов)</summary>
+        <p>Менять не нужно, если файл выгружен в стандартном формате.</p>
         <textarea aria-label="Соответствие колонок" rows={13} value={mapping} disabled={busy}
           onChange={e => { setMapping(e.target.value); setPreview(null); setCommit(null); }} />
       </details>
@@ -75,7 +75,7 @@ export function StatementImport({ api, companyId, accountId, onCommit }: {
     {commit && <div className="done">
       <p role="status">Результат сохранённого импорта. Добавлено: {commit.inserted}. Уже существовали: {commit.skipped_existing}.</p>
       <p>При повторном подтверждении возвращается та же сводка; операции заново не добавляются.</p>
-      <p>Прогноз пересчитывается автоматически на конец периода выписки.</p>
+      <p>Прогноз обновится автоматически.</p>
       <div className="row">
         <button type="button" onClick={() => navigate("/operations")}>Открыть операции</button>
         <button type="button" className="ghost" onClick={() => navigate("/forecast")}>Открыть прогноз</button>
