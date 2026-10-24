@@ -88,6 +88,7 @@ function ActionCard({ card, api, companyId, accountId, onReply }: CardProps) {
   return <div className="assistant-action" data-testid="assistant-action">
     <p><strong>{values[state] ?? state}</strong>. Счёт: {String(card.data.account_id)}.</p>
     <ArgumentsView data={card.data.arguments as Record<string, unknown>} />
+    <small>Точные параметры действия указаны в этой карточке. Обезличивание для модели не меняет их.</small>
     <p>Подтверждение действительно до {new Date(String(card.data.expires_at)).toLocaleTimeString("ru-RU")}.
       Если данные счёта изменились, потребуется новое предложение.</p>
     {state === "pending" && canWrite && <div className="row">

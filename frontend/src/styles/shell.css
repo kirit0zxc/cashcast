@@ -224,6 +224,16 @@ details.panel > summary { font-family: var(--sans); font-size: 15px; font-weight
 .assistant-message.user { justify-self: end; max-width: min(640px, 90%); border-style: dashed; background: var(--panel); }
 .assistant-message.assistant { border-left-width: 4px; }
 .assistant-text { white-space: pre-wrap; overflow-wrap: anywhere; margin: 6px 0 0; }
+.assistant-markdown { overflow-wrap: anywhere; min-width: 0; }
+.assistant-markdown > :first-child { margin-top: 6px; }
+.assistant-markdown > :last-child { margin-bottom: 0; }
+.assistant-markdown :is(h1, h2, h3, h4, h5, h6) { font-size: 1.1rem; margin: 16px 0 8px; }
+.assistant-markdown :is(ul, ol) { padding-left: 24px; }
+.assistant-markdown li + li { margin-top: 4px; }
+.assistant-markdown blockquote { margin: 12px 0; padding-left: 14px; border-left: 2px solid var(--ink); }
+.assistant-markdown pre { white-space: pre; overflow-x: auto; padding: 12px; border: 1px dotted var(--ink); }
+.assistant-markdown code { font-family: var(--mono); font-size: .9em; }
+.assistant-markdown td { max-width: 360px; overflow-wrap: anywhere; }
 .assistant-card { margin: 14px 0 0; padding: 14px; border: 1px dotted var(--ink); }
 .assistant-card h3 { margin: 4px 0 10px; }
 .assistant-card .grid2 { gap: 14px; }

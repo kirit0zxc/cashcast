@@ -4,6 +4,7 @@ import { useAccount } from "../../app/account-context";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
 import { Aura } from "../../ui/Aura";
 import { ChatCardView } from "./ChatCards";
+import { MarkdownMessage } from "./MarkdownMessage";
 
 const PROMPTS = ["Покажи последний прогноз и объясни риски", "Покажи суммы расходов по категориям",
   "Какие действия помогут избежать кассового разрыва?"];
@@ -59,7 +60,8 @@ export function AssistantPanel() {
         История сохраняется при переходах между разделами и сбрасывается при смене счёта.</div>}
       {chat.entries.map(entry => <article key={entry.id} className={`assistant-message ${entry.role}`}>
         <span className="label">{entry.role === "user" ? "Вы" : "Юми · CashCast"}</span>
-        <p className="assistant-text">{entry.content}</p>
+        {entry.role === "assistant" ? <MarkdownMessage text={entry.content} />
+          : <p className="assistant-text">{entry.content}</p>}
         {entry.cards.map((card, i) => <ChatCardView key={String(card.data.action_id ?? i)} card={card} api={api}
           companyId={companyId} accountId={accountId} onReply={chat.addReply} />)}
       </article>)}
