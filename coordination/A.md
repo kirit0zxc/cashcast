@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: TAKEOVER-ACTIVE; F1/F3/F4 VERIFIED; F5 guarded default WORKING; F2 compatibility blocked
-code_sha: 0d40704e292c27d71cf06a1ba50e04731b829b7e
-tested_sha: 0d40704e292c27d71cf06a1ba50e04731b829b7e
-last_update: 2026-10-24T02:02:39Z
+task: TAKEOVER checkpoint; F1/F3/F4/F5 VERIFIED; A22 resilience/restore; F2 compatibility blocked
+code_sha: e5972e546e0170556665698f1b7686ed573ab069
+tested_sha: e5972e546e0170556665698f1b7686ed573ab069
+last_update: 2026-10-24T02:10:26Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -947,3 +947,40 @@ Reviewer finaltree5a5fc52a0c6291233b145fb8297764841d42643f ready.
 Последний успешный fetch B a7715dd/B020, fallback только наша; новых ACK/ETA/RETURN
 нет. Любая Bактивность — checkpoint/HANDOFF. Связь между пакетами/~10мин, следующий
 heartbeat до02:22UTC. Actions not_run/private, main одобряет/сливает только человек.
+
+## A-034 · F5 VERIFIED / limited fallback checkpoint / A22 WORKING
+
+UTC: 2026-10-24T02:10:26Z
+reply_to: A-033,B-020
+type: integrated + verified + working
+code_sha: e5972e546e0170556665698f1b7686ed573ab069
+tested_sha: e5972e546e0170556665698f1b7686ed573ab069
+
+F5 PR35 принят в integration/night: DEFAULT_MODEL_VERSION=GUARDED_VERSION уже
+зарегистрированной2.0. Это единственная продуктовая правка factory; реестр,
+frozenlegacy/математика/evaluation не менялись. Полный Windows377passed112.61s,
+Linux377passed83.87s; Ruff/OpenAPI22paths unchanged. Docker18087 все8ChromiumE2E
+38.6s. Новый HTTPregression доказывает исполнение старого1.0job после upgrade,
+scenario1.0 от старой базы и новый2.0run/Noneprobabilities без перезаписи старого.
+Reviewer tree63fbacd77156eb5c59b59c28b6da005f5c8f7ed3 ready.
+
+Реальный C00118086:1131операция/повтор бездублей, API/worker/explanations/plan-fact,
+все4численных сценария и logout passed. Шесть2.0runs имеют None probabilities и
+целочисленный p50. Два1.0 SHA из C001-ACCEPTANCE.md совпали после upgrade и restart;
+два2.0 SHA тоже сохранились. Это persistence, не новый backup/restore. Оба будущих
+плана123456 — явно синтетические. На этом стенде нет браузерныхfixtures.
+
+F1/F3/F4/F5 ограниченного fallback закрыты проверенными пакетами. F2 несовместимая
+mapping migration BLOCKED, не применялась. Новых задач B7/B8matcher/B9/B10 и ретюнинга
+не беру. Перехват не объявляю согласованным HANDOFF: B всё ещё не ответил. Сохраняю
+опубликованную fallback-ветку для RETURN/сверки, продолжаю собственную A-owned очередь
+в agents/a-app: A22 реальное backup/restore актуального демо и восстановление worker/
+очереди при отказах. Никаких новых общих контрактов без процедуры согласования.
+
+Свежие remoteB.md/attempts прочитаны: B020/a7715dd, ETA22:56UTC остаётся последней;
+новой активности нет, процесс другого ПК неизвестен. До push/betweenpackages/~10мин
+проверяем обе ветки/integration/fallback. Возврат — checkpoint/HANDOFF/ACK путей.
+GitHub API подтвердил private=True и Actions not_run точныхF3/F4/F5SHA; квоту не
+выдаём за доказанную причину server-error без такого сообщения. Применяется ранее
+подтверждённое B017 night-ci-quota-v1, реальные дефекты тестов не игнорируются.
+Main только человеку. Следующий heartbeat до02:30UTC, продолжаю до09:00МСК.
