@@ -1,31 +1,21 @@
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "node:crypto";
+import { scenarioStatement } from "./fixtures/scenario-statement";
 
 // Стабильные ID и остатки не удваивают операции при повторе на том же стенде.
 test("all four scenario forms use the saved base through a real worker", async ({ page }) => {
   const tag = randomUUID();
-  const today = new Date().toISOString().slice(0, 10);
+  const { today, rowCount, buffer } = scenarioStatement();
   const due = new Date(Date.now() + 5 * 86400000).toISOString().slice(0, 10);
-  const lines = ["operation_id;operation_date;amount;direction;counterparty_name;counterparty_inn;payment_purpose;balance_eod"];
-  for (let offset = 70; offset >= 0; offset--) {
-    const day = new Date(Date.parse(today) - offset * 86400000).toISOString().slice(0, 10);
-    const index = Date.parse(day) / 86400000;
-    const rent = index % 7 === 1;
-    const balance = 2_000_000 + index * 5000 - Math.floor((index + 6) / 7) * 7777;
-    lines.push(`scenario-income-${day};${day};50.00;Поступление;Клиент;e2e-scenario-revenue;Выручка;${((balance + (rent ? 7777 : 0)) / 100).toFixed(2)}`);
-    if (rent) {
-      lines.push(`scenario-rent-${day};${day};77.77;Списание;Арендодатель;e2e-scenario-rent;Аренда;${(balance / 100).toFixed(2)}`);
-    }
-  }
   await page.goto("/");
   await page.getByLabel("Email", { exact: true }).fill("demo@example.com");
   await page.getByLabel("Пароль", { exact: true }).fill("demo-password");
   await page.getByRole("button", { name: "Войти", exact: true }).click();
   await page.getByLabel("CSV-файл", { exact: true }).setInputFiles({
-    name: "scenarios.csv", mimeType: "text/csv", buffer: Buffer.from(`\ufeff${lines.join("\n")}\n`),
+    name: "scenarios.csv", mimeType: "text/csv", buffer,
   });
   await page.getByRole("button", { name: "Проверить файл", exact: true }).click();
-  await expect(page.getByText(new RegExp(`Строк: ${lines.length - 1}\\. Ошибок: 0`))).toBeVisible();
+  await expect(page.getByText(new RegExp(`Строк: ${rowCount}\\. Ошибок: 0`))).toBeVisible();
   await page.getByRole("button", { name: "Подтвердить импорт", exact: true }).click();
   await expect(page.getByRole("status").filter({ hasText: "Добавлено:" })).toBeVisible();
   await page.getByRole("combobox", { name: "Движение по плану", exact: true }).selectOption("in");

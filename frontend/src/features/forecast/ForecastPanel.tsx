@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { CashCastApi, money, probability, type Accepted, type Forecast, type Job } from "../../shared/api";
@@ -10,10 +10,18 @@ export function ForecastPanel({ api, companyId, accountId, initialDate }: {
 }) {
   const [asOf, setAsOf] = useState(initialDate);
   const [accepted, setAccepted] = useState<Accepted | null>(null);
+  const cache = useQueryClient();
   const mutation = useMutation({
-    mutationFn: () => api.post<Accepted>(`/companies/${companyId}/forecasts`, {
-      account_id: accountId, as_of: asOf, horizon_days: 30,
-    }), onSuccess: data => setAccepted(data),
+    mutationFn: (requestedDate: string) => api.post<Accepted>(`/companies/${companyId}/forecasts`, {
+      account_id: accountId, as_of: requestedDate, horizon_days: 30,
+    }), onSuccess: async data => {
+      setAccepted(data);
+      // Enqueue может выполнить auto-reconcile; job остаётся в этом компоненте.
+      await Promise.all([
+        cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] }),
+        cache.invalidateQueries({ queryKey: ["plan-fact", companyId, accountId] }),
+      ]);
+    },
   });
   const job = useQuery({
     queryKey: ["job", accepted?.job_id],
@@ -28,10 +36,10 @@ export function ForecastPanel({ api, companyId, accountId, initialDate }: {
   });
   const working = mutation.isPending || (!!accepted && !job.error
     && !["succeeded", "failed"].includes(job.data?.status ?? ""));
-  function submit(event: FormEvent) { event.preventDefault(); setAccepted(null); mutation.mutate(); }
+  function submit(event: FormEvent) { event.preventDefault(); setAccepted(null); mutation.mutate(asOf); }
   return <section className="panel"><h2>2. Прогноз на 30 дней</h2>
     <form onSubmit={submit} className="row">
-      <label>Дата среза<input type="date" required value={asOf} onChange={e => setAsOf(e.target.value)} /></label>
+      <label>Дата среза<input type="date" disabled={working} required value={asOf} onChange={e => setAsOf(e.target.value)} /></label>
       <button disabled={!accountId || working}>Рассчитать</button>
     </form>
     <p>Используем сведения, известные на дату среза. Для выписки выберите её последний день.</p>
