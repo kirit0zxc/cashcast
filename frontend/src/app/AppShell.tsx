@@ -28,7 +28,7 @@ export function AppShell({ user, logout, logoutError }: {
   const accountId = accounts.data?.items.some(a => a.id === selectedAccount)
     ? selectedAccount : accounts.data?.items[0]?.id ?? "";
 
-  return <>
+  return <div className="app">
     <div className="topline">cashcast.</div>
     <div className="shell">
       <Sidebar route={route} user={user} logout={logout} logoutError={logoutError} />
@@ -56,7 +56,7 @@ export function AppShell({ user, logout, logoutError }: {
         <div className="foot"><span>cashcast · данные из API</span><span>/// {new Date().getFullYear()}</span><span className="barcode" /></div>
       </main>
     </div>
-  </>;
+  </div>;
 }
 
 function ReadOnlyNote() {
@@ -68,7 +68,6 @@ function Sidebar({ route, user, logout, logoutError }: {
   route: RoutePath; user: User; logout: () => void; logoutError: string;
 }) {
   return <aside className="side">
-    <div className="brand"><span className="mark" /><b>CashCast</b></div>
     <nav className="nav" aria-label="Разделы">
       {ROUTES.map((r, i) => <Link key={r.path} to={r.path} aria-current={route === r.path ? "page" : undefined}>
         <span className="n">0{i + 1}</span>{r.title}
