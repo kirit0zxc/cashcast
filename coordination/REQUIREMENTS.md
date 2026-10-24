@@ -37,6 +37,12 @@ SHA256 исходногоPDF:b66554190d0972c5159d16d9610930fb59e7d77b36cd7d22774
 4. Утренний specs/frontend-handoff.md подготовлен: OpenAPI, session/CSRF, реальный asyncflow, probabilityNone, история, ручная сверка, per-company роли и автоматическийPOST. Утром сохранить интеграцию при визуальном редизайне.
 5. FreshCompose18089 проверен на пустойБД/A27, C00118086 обновлёнA29 без смены4старыхSHA; минимальный UIA30 проверен18087. Финальный latestcheckpoint/развёртывание и forwardreview уточняются в A.md; draftPR19integration→main остаётся человеку.
 
+Актуализация04:36UTC: C00118086 webA31 проверен реальным браузером и4старымиSHA;
+два независимых forwardreview и третий verifier READY точногоA31tree259bbfe0.
+Свежий dumpA31 восстановлен в новой пустой18090:1131UUID/13полныхForecastOutSHA/2плана
+совпали; новая очередь pending→worker→success/sameIDs и13старыхSHA проверены.
+Условия/размер/SHA: A32-RESTORE-CURRENT.md. Это не новые accuracyметрики/production.
+
 ## Подтверждённые дополнительные исправления
 
 A24 постоянная ошибка входа/модели не расходует transientretry. A25 syncupload не

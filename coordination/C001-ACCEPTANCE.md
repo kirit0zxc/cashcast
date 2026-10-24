@@ -97,3 +97,7 @@ Noneprobability. Фактический preview.period_end=2026-09-29, поэт�
 inserted0 от идемпотентного ответа. Непроверенные сценарии/продакшен здесь не заявлены.
 Backup/restore свежего dump описан отдельно в A22-RESILIENCE.md; его время не переносится
 на более поздние изменения. Текущий развёрнутый SHA после этого checkpoint — A.md.
+
+A31web и последующая повторная browser/4SHAпроверка пройдены. Свежий backup/restore
+на текущем коде с13полнымиForecastOutSHA/1131UUID/двумяпланами описан отдельно в
+[A32-RESTORE-CURRENT.md](A32-RESTORE-CURRENT.md); источник18086 сохранён.

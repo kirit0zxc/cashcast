@@ -349,3 +349,19 @@ C001helper сначала ошибочно требовал delta inserted0 от
 модель2.0/30точек/None и historyбезновогоPOST подтверждены. WholePlaywrightError мог
 вывести автоматическийARIAsnapshot синтетическихстрок; диагностическийcatch заменён
 накороткое имя/первуюстроку безsnapshot. Продуктовыйлоггерrawданные не печатает.
+
+## A-ATT-025 · lossless memory и актуальное восстановление
+
+UTC:2026-10-24T04:36:00Z; productA31ede8edcb8ca94a657eeb14e22b0ef8e37511371a.
+Архив A001..A040 сверялся не только сfilesystemкопией, но и сGitblobисточника.
+40сообщений/байты/SHAcac63bc6e6ab22d20f8c82641486261d8909c19982cf95c66324d8ac729df047
+сохранились. ПустойразделительпослеA040 далwhitespaceEOF; добавленыBEGIN/ENDмаркеры
+внеисходногоблока, не удалён ниодин байт. Amdcurrent13.6KB/attemptsполный.
+
+Свежийbackupкопировалсяdocker cp, не текстовымpipeline. PowerShelltableпосле
+SelectLengthнепоказалаHashполе: повторполучения .Hash выдал полный32fb4e...e023;
+«1» втаблице не считалсяSHA. Новогоvolumeнебыло, доrestorepublictablecount0,
+pg_restore/migrations0. Строгийwholecheckpoint1131UUID/13runs/2плана совпал ДО
+добавленияотдельногопробногоrun. Затем pendingбезworker→реальныйworker/sameIDs,
+13старыхSHAповторнопроверены. Не сравниватьпослеprobeчисловсехrunsс13: ожидается+1.
+Историческая18088копияостановленасvolume, не перезаписана новымdump.
