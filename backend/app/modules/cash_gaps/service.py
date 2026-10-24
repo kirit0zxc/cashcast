@@ -30,10 +30,13 @@ class CashGapService:
                     }
                 )
                 start = None
+        first_new = next((e["first_negative_date"] for e in episodes if e["kind"] == "new"), None)
         return GapSummary(
             status="gap" if episodes else "no_gap" if reliable else "insufficient_data",
             opening_already_negative=balances[0] < 0,
-            first_new_gap_date=next((e["first_negative_date"] for e in episodes if e["kind"] == "new"), None),
+            first_new_gap_date=first_new,
+            days_until_new_gap=(first_new - days[0]).days if first_new else None,
+            required_reserve_minor=max(0, -min(balances)),
             max_deficit_minor=max(0, -min(balances)),
             total_negative_days=sum(e["observed_days"] for e in episodes),
             episodes=episodes,

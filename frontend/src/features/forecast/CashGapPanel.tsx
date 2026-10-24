@@ -13,6 +13,10 @@ function GapCard({ summary, title }: { summary: GapSummary; title: string }) {
     <p>{summary.status === "gap" ? "Есть дефицит по медиане" : summary.status === "no_gap"
       ? "В этом горизонте медиана не уходит в минус" : "Недостаточно данных для вывода об отсутствии разрыва"}.</p>
     {summary.opening_already_negative && <p>На дату среза деньги уже в минусе. Это существующий дефицит.</p>}
+    {summary.days_until_new_gap != null && <p>От даты среза до нового разрыва: {summary.days_until_new_gap} дн.</p>}
+    {!!summary.required_reserve_minor && <p>Резерв на начало прогноза для покрытия дефицита:
+      {" "}{money(summary.required_reserve_minor)}. Расчёт по медиане, без возврата этой суммы;
+      для кредита отдельно проверьте дату возврата и стоимость.</p>}
     <p>Первый новый разрыв: {summary.first_new_gap_date ?? "не выявлен по медиане"}.
       Максимальная нехватка: {money(summary.max_deficit_minor)}. Дней в минусе: {summary.total_negative_days}.</p>
     {summary.episodes.length > 0 && <div className="scroll"><table className="ops"><thead><tr>
