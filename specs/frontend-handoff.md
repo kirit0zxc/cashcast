@@ -25,6 +25,12 @@
 Общая ошибка `{error:{code,message,field_errors,request_id}}`; тело ошибки не `detail`.
 UI должен показывать сообщение и возможность исправить ввод/войти повторно.
 
+Роль из MeResponse относится к каждой компании отдельно. Owner изменяет её данные;
+viewer читает сохранённые данные/историю, но получает403read_only_company для всех
+изменяющих ручек, в том числе preview/forecast/scenario и UUID-object commit/PATCH.
+После редизайна скрыть или отключить такие действия viewer, сохранив чтение/выход.
+Управления ролями в этом API нет. Отсутствие членства остаётся404.
+
 ## Счёт и импорт
 
 `GET /companies/{company}/accounts` →`{items:[{id,company_id,name,currency}]}`.

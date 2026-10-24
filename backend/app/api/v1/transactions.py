@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from app.api.schemas.common import ERROR_RESPONSES, Page
 from app.api.schemas.models import TransactionCategoryPatch, TransactionOut
 from app.core.auth import CurrentUser, get_current_user, require_company_access
+from app.core.company_access import CompanyAccess
 from app.core.deps import get_db
 from app.core.errors import AppError
 from app.core.models import Account, BankTransaction
@@ -97,12 +98,7 @@ def patch_category(
 
 
 def _require_member(session: Session, user_id: str, company_id: str) -> None:
-    from app.core.models import CompanyMember
-
-    if session.get(
-        CompanyMember, {"company_id": uuid.UUID(company_id), "user_id": uuid.UUID(user_id)}
-    ) is None:
-        raise AppError(404, "not_found", "Операция не найдена")
+    CompanyAccess(session).require(user_id, company_id, write=True)
 
 
 def _to_out(t: BankTransaction) -> TransactionOut:

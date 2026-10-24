@@ -164,9 +164,10 @@ def parse_statement(content: bytes, mapping: ColumnMapping) -> ParseResult:
                 result.errors.append(RowError(idx, "row", str(exc)))
                 continue
             if parsed.fingerprint in seen:
-                if parsed.external_id and not BankOperationIdentity.matches(seen[parsed.fingerprint], parsed):
+                if not BankOperationIdentity.matches(seen[parsed.fingerprint], parsed):
                     result.errors.append(RowError(
-                        idx, "external_id", "Один банковский ID имеет различающееся содержимое",
+                        idx, "external_id" if parsed.external_id else "row",
+                        "Один ключ операции имеет различающееся содержимое; нужен однозначный банковский ID",
                     ))
                     continue
                 result.duplicate_rows.append(idx)

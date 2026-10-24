@@ -43,10 +43,12 @@ coordination/decisions/fallback-a-20261024T0114Z-v1.md; он не являетс
 | GET/POST | `/companies/{id}/planned-events` | Список и создание плановых счетов/обязательств. |
 | PATCH | `/planned-events/{id}` | Правка даты/суммы/отмены планового события. |
 | POST | `/companies/{id}/forecasts` | Запуск прогноза → `202` + `job_id` + `forecast_run_id`. |
+| GET | `/companies/{id}/forecasts` | История сохранённых расчётов выбранного account, keyset pagination. |
 | GET | `/jobs/{id}` | Статус задания: pending/running/succeeded/failed. |
 | GET | `/forecasts/{id}` | Снимок прогноза: метаданные, 30+ дневных точек, риск. |
 | GET | `/forecasts/{id}/explanations` | Сохранённые причины/компоненты; 409 до успешного расчёта. |
 | GET/POST | `/companies/{id}/plan-fact` | query account_id/as_of; GET предложения и подтверждения, POST безопасные auto-confirm. |
+| POST | `/companies/{id}/plan-fact/confirm` | Явное подтверждение выбранной полной/частичной оплаты текущего proposal. |
 | POST | `/forecasts/{id}/scenarios` | Сценарий «что если» к фиксированной базе → свой `forecast_run`. |
 | GET | `/forecasts/{id}/comparison` | Успешный сценарий и база, дневная разница p50 и оба риска; 409 при несовместимости. |
 
@@ -292,3 +294,20 @@ active events × available operations ≤100000 до вызова matcher. Пр�
 и чужого счёта исключены. Дата/источник EOD сохраняются; новый остаток расчётный,
 полнота выписки не доказана. При отсутствии EOD прежнее явное допущение0 сохраняется.
 Сохранённые snapshots/jobs/results не мутируют; изменения затрагивают новые входы.
+
+## Права существующих ролей и конфликт старого fingerprint
+
+CompanyMember.owner может читать и изменять данные своей компании. Viewer читает,
+но POST/PATCH компании и object-ID commit/category/plan/scenario возвращают
+403read_only_company до записи; cookie/CSRF и известный UUID не повышают роль.
+Нечлену по-прежнему404. У одного пользователя возможны разные роли в разных
+компаниях; проверяется компания целевого объекта. Login/logout не меняют данные
+компании и остаются доступны. Администрирование ролей отдельным API не добавлено.
+
+Существующие fingerprint банковских операций не меняются, миграций/новых ID нет.
+Содержимое сравнивается для всех ключей, в том числе без external_id: конфликт
+разных контрагентов внутри одного CSV делает preview failed; с сохранённым фактом
+даёт409transaction_fingerprint_conflict до новых операций/остатков/категоризации.
+Внешний ID сохраняет прежний409transaction_id_conflict. Ошибка не содержит rawpayload.
+Ручная категория и дневной остаток исключены из идентичности факта. Идентичные
+операции без ID остаются неразличимы; duplicate_in_file виден до подтверждения.

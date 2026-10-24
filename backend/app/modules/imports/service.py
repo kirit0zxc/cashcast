@@ -123,7 +123,7 @@ class ImportService:
     def _validate_existing_transactions(self, imp: StatementImport, parsed: ParseResult) -> None:
         # Account lock уже удерживается. Проверяем все источники до новых фактов,
         # остатков и категоризации; ошибка откатывает весь импорт одним отказом.
-        incoming = {row.fingerprint: row for row in parsed.rows if row.external_id}
+        incoming = {row.fingerprint: row for row in parsed.rows}
         fingerprints = list(incoming)
         for offset in range(0, len(fingerprints), 1000):
             existing = self._session.scalars(select(BankTransaction).where(
@@ -132,8 +132,9 @@ class ImportService:
             ))
             for transaction in existing:
                 if not BankOperationIdentity.matches(transaction, incoming[transaction.fingerprint]):
-                    raise AppError(409, "transaction_id_conflict",
-                                   "Банковский ID уже сохранён с другим содержимым; импорт не выполнен")
+                    external = incoming[transaction.fingerprint].external_id is not None
+                    raise AppError(409, "transaction_id_conflict" if external else "transaction_fingerprint_conflict",
+                                   "Ключ операции уже сохранён с другим содержимым; импорт не выполнен")
 
     def _insert_transactions(self, imp: StatementImport, parsed: ParseResult) -> int:
         inserted = 0

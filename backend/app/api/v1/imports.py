@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from app.api.schemas.common import ERROR_RESPONSES, ErrorResponse
 from app.api.schemas.models import ColumnMappingIn, ImportCommitResponse, ImportPreviewResponse
 from app.core.auth import CurrentUser, get_current_user, require_company_access
+from app.core.company_access import CompanyAccess
 from app.core.config import Settings, get_settings
 from app.core.deps import get_db
 from app.core.errors import AppError
@@ -77,10 +78,4 @@ def commit_import(
 
 
 def _require_member(session: Session, user_id: str, company_id: str) -> None:
-    from app.core.models import CompanyMember
-
-    member = session.get(
-        CompanyMember, {"company_id": uuid.UUID(company_id), "user_id": uuid.UUID(user_id)}
-    )
-    if member is None:
-        raise AppError(404, "not_found", "Импорт не найден")
+    CompanyAccess(session).require(user_id, company_id, write=True)

@@ -25,6 +25,7 @@ from app.api.schemas.models import (
     ScenarioRequest,
 )
 from app.core.auth import CurrentUser, get_current_user, require_company_access
+from app.core.company_access import CompanyAccess
 from app.core.config import Settings, get_settings
 from app.core.deps import get_db
 from app.core.errors import AppError
@@ -199,7 +200,7 @@ def create_scenario(
     base = session.get(ForecastRun, forecast_id)
     if base is None:
         raise AppError(404, "not_found", "Базовый прогноз не найден")
-    _require_member(session, user.id, str(base.company_id))
+    _require_member(session, user.id, str(base.company_id), write=True)
     if base.base_forecast_id is not None:
         raise AppError(409, "nested_scenario_not_supported", "Создавайте сценарий от исходного базового прогноза")
     if base.status != "succeeded":
@@ -345,10 +346,5 @@ def _get_or_create_run(
     return run
 
 
-def _require_member(session: Session, user_id: str, company_id: str) -> None:
-    from app.core.models import CompanyMember
-
-    if session.get(
-        CompanyMember, {"company_id": uuid.UUID(company_id), "user_id": uuid.UUID(user_id)}
-    ) is None:
-        raise AppError(404, "not_found", "Прогноз не найден")
+def _require_member(session: Session, user_id: str, company_id: str, *, write: bool = False) -> None:
+    CompanyAccess(session).require(user_id, company_id, write=write)
