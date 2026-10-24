@@ -9,7 +9,6 @@ import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/700.css";
 import { App } from "./App";
 
-// Каркас Дианы. Экраны по фичам живут в src/features/*; здесь только корень и провайдеры.
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(

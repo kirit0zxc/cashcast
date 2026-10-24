@@ -25,9 +25,7 @@ export function ForecastPanel() {
           onChange={e => c.changeDate(e.target.value)} /></label>
         <button disabled={!accountId || c.working}>Рассчитать</button>
       </form> : <span className="chip">срез {dmy(c.asOf)}</span>}
-      <small>Используем сведения, известные на дату среза. Для выписки выберите её последний день.
-        {canWrite && " После сохранения данных в кабинете прогноз обновляется автоматически; сохранённые расчёты остаются в истории."}
-        {" "}На сегодняшнем срезе однозначные оплаты сверяются автоматически; неоднозначные подтверждайте вручную.</small>
+      <small>Прогноз на 30 дней вперёд от выбранной даты. После загрузки данных он обновляется сам.</small>
     </section>
     <Tabs label="Прогноз" value={tab} onChange={setTab}
       items={[["result", "Результат"], ["daily", "По дням"], ["history", "История расчётов"]]} />
@@ -48,15 +46,13 @@ export function ForecastPanel() {
 export function ForecastState() {
   const { forecast: c } = useAccount();
   return <>
-    {c.stale && <p className="errors">Данные изменены подтверждённым действием ассистента — показанный прогноз устарел.
-      Пересчитайте его кнопкой «Рассчитать».</p>}
-    {c.working && <p role="status">Задание: {c.job.data?.status ?? "отправляем"}. Ожидаем worker…</p>}
+    {c.stale && <p className="errors">Данные изменились — показанный прогноз устарел. Нажмите «Рассчитать».</p>}
+    {c.working && <p role="status">{c.job.data?.status === "running" ? "Считаем прогноз…" : "Прогноз в очереди…"}</p>}
     {c.loading && !c.working && <p role="status">Загружаем сохранённый прогноз…</p>}
-    {c.job.data?.status === "failed" && <p role="alert">Расчёт не выполнен: {c.job.data.error_code}</p>}
+    {c.job.data?.status === "failed" && <p role="alert">Не удалось посчитать прогноз. Попробуйте ещё раз.</p>}
     {c.errors.map((e, i) => <p role="alert" key={i}>{e.message}</p>)}
     {c.forecast.data && c.forecast.data.status !== "succeeded" && <p role="status">
-      Сохранённый расчёт: {c.forecast.data.status}. Открытие не создаёт новое задание.
-      {c.selection.mode === "run" && c.selection.errorCode && ` Причина: ${c.selection.errorCode}`}
+      {c.forecast.data.status === "failed" ? "Этот расчёт завершился с ошибкой." : "Этот расчёт ещё не готов."}
     </p>}
   </>;
 }
@@ -64,10 +60,9 @@ export function ForecastState() {
 function calculationText(f: Forecast) {
   return f.calculation?.mode === "incremental"
     ? f.calculation.reason === "observed_data_changed"
-      ? "Частичное обновление: новые факты учтены, сохранённое состояние прогноза обновлено по изменениям."
-      : "Частичное обновление: календарь пересчитан, история и траектории переиспользованы."
-    : f.calculation ? "Полный расчёт: подготовлена история и рассчитан прогноз."
-      : "Сохранённый прогноз: сведения о режиме расчёта отсутствуют.";
+      ? "Частичное обновление: новые факты учтены."
+      : "Частичное обновление: учтены изменения в планах."
+    : "Полный расчёт.";
 }
 
 // График хранит копейки; рубли используются только в подписях.
@@ -76,30 +71,29 @@ export function ForecastView({ forecast: f }: { forecast: Forecast }) {
   return <div className="grid2 top0">
     <section className="panel">
       <span className="dots" aria-hidden="true">● ● ●</span>
-      <span className="label">Прогноз остатка · {f.points.length} дн. · срез {dmy(f.as_of)}</span>
+      <span className="label">Остаток на счёте · {f.points.length} дн. от {dmy(f.as_of)}</span>
       <SpecChart points={f.points} label="Прогноз остатка: p10, медиана, p90" />
       <div className="legend">
-        <span><i style={{ background: "var(--ink)" }} />медиана</span>
+        <span><i style={{ background: "var(--ink)" }} />наиболее вероятный остаток</span>
         <span>{bandAvailable(f.points)
-          ? <><i style={{ background: "radial-gradient(var(--ink) 30%, transparent 35%) 0 0/4px 4px" }} />диапазон p10–p90</>
-          : "диапазон недоступен — данных мало"}</span>
+          ? <><i style={{ background: "radial-gradient(var(--ink) 30%, transparent 35%) 0 0/4px 4px" }} />возможный разброс</>
+          : "разброс не оценён — данных мало"}</span>
       </div>
     </section>
     <section className="panel dash">
-      <span className="label">Риск и происхождение</span>
+      <span className="label">Главное</span>
       <Leaders rows={[
         ["Начальный остаток", money(f.opening_balance_minor)],
-        ["Первый минус по медиане", f.risk.first_negative_date ? dayMonth(f.risk.first_negative_date)
+        ["Первый день в минусе", f.risk.first_negative_date ? dayMonth(f.risk.first_negative_date)
           : f.risk.available ? "не прогнозируется" : "нет оценки"],
-        ["Максимальный дефицит", money(f.risk.max_deficit_minor)],
-        ["Вероятность минуса за горизонт", probability(f.risk.probability_any_negative)],
-        ["На конец горизонта", last ? money(last.balance_p50_minor) : "нет точек"],
-        ["Модель", f.model_version],
+        ["Максимальный дефицит", f.risk.max_deficit_minor === null && !f.risk.first_negative_date
+          ? "нет" : money(f.risk.max_deficit_minor)],
+        ["Вероятность уйти в минус", f.risk.probability_any_negative === null ? "не оценивается" : probability(f.risk.probability_any_negative)],
+        ["Через 30 дней", last ? money(last.balance_p50_minor) : "нет данных"],
       ]} />
       <p data-testid="calculation-mode" className="note">{calculationText(f)}</p>
-      {!f.risk.available && <p>Вероятность разрыва не подтверждена. Даты и суммы дефицита по медиане — в карточке ниже.</p>}
-      {[...f.assumptions, ...f.data_warnings].length > 0 && <ul className="plain">
-        {[...f.assumptions, ...f.data_warnings].map((s, i) => <li key={i}>{s}</li>)}</ul>}
+      {[...f.assumptions, ...f.data_warnings].length > 0 && <details><summary>Допущения и качество данных</summary>
+        <ul className="plain">{[...f.assumptions, ...f.data_warnings].map((s, i) => <li key={i}>{s}</li>)}</ul></details>}
     </section>
   </div>;
 }
@@ -107,8 +101,9 @@ export function ForecastView({ forecast: f }: { forecast: Forecast }) {
 function DailyTable({ forecast: f }: { forecast: Forecast }) {
   return <section className="panel flat">
     <div className="panel-head"><div><h2>Дневные значения и происхождение расчёта</h2>
-      <span className="label">Прогноз {f.id} · версия входа {f.data_version}</span></div></div>
-    <div className="pad">
+      <span className="label">Остаток, приход и расход по каждому дню</span></div></div>
+    <details className="pad"><summary>Технические подробности расчёта</summary>
+      <p className="note">Прогноз {f.id} · модель {f.model_version} · версия входа {f.data_version}</p>
       {f.calculation && <p className="note">Причина: {f.calculation.reason}. Новых траекторий: {f.calculation.bootstrap_paths_generated}.
         {f.calculation.source_forecast_id && ` Источник истории: ${f.calculation.source_forecast_id}.`}</p>}
       {f.calculation?.categorized_transactions != null && <p className="note">
@@ -116,10 +111,10 @@ function DailyTable({ forecast: f }: { forecast: Forecast }) {
         Групп регулярностей проверено: {f.calculation.recurrence_buckets_recomputed}.
         Дневных сумм затронуто: {f.calculation.daily_aggregates_changed}.
       </p>}
-    </div>
+    </details>
     <div className="scroll"><table className="ops"><thead><tr><th>Дата</th><th className="num">Приход</th>
-      <th className="num">Расход</th><th className="num">Остаток p10</th><th className="num">Остаток p50</th>
-      <th className="num">Остаток p90</th><th className="num">Вероятность минуса за день</th></tr></thead><tbody>
+      <th className="num">Расход</th><th className="num">Не ниже (p10)</th><th className="num">Остаток</th>
+      <th className="num">Не выше (p90)</th><th className="num">Риск минуса</th></tr></thead><tbody>
       {f.points.map(p => <tr key={p.point_date}><td className="mono">{p.point_date}</td>
         <td className="num">{money(p.inflow_minor)}</td><td className="num">{money(p.outflow_minor)}</td>
         <td className="num">{money(p.balance_p10_minor)}</td>

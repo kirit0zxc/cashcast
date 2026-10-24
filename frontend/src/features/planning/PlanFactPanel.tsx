@@ -45,7 +45,7 @@ export function PlanFactPanel({ api, companyId, accountId, onApplied }: {
   return <section className="panel flat">
     <div className="panel-head">
       <div><h2>Сверка плана и факта</h2>
-        <span className="label">Срез {dmy(today)} UTC · предложения ещё не являются оплатой; альтернативные связи не суммируются</span></div>
+        <span className="label">На {dmy(today)} · предложение — это ещё не оплата, проверьте и подтвердите</span></div>
       {canWrite && <button disabled={busy || !proposals.some(p => p.auto_confirm)}
         onClick={() => apply.mutate()}>Применить однозначные совпадения</button>}
     </div>

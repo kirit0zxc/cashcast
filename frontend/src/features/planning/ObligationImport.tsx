@@ -42,9 +42,10 @@ export function ObligationImport({ api, companyId, accountId, onChanged }: {
   return <section className="panel">
     <Stepper steps={["Выбрать файл", "Проверить данные", "Подтвердить импорт", "Готово"]} current={step} />
     <h2>Будущие поступления и расходы</h2>
-    <p>UTF-8, разделитель «;»: id, counterparty_ref, direction, amount, currency, due_date,
-      available_at, kind, provenance; tax_regime необязателен. Даты — YYYY-MM-DD, суммы — рубли.</p>
-    <details><summary>Правила дат и повторной загрузки</summary>
+    <p>Загрузите файл со счетами, налогами и другими будущими платежами — они появятся в «Плановых платежах».</p>
+    <details><summary>Формат файла (для специалистов)</summary>
+      <p>CSV, UTF-8, разделитель «;». Колонки: id, counterparty_ref, direction, amount, currency, due_date,
+        available_at, kind, provenance; tax_regime необязателен. Даты — ГГГГ-ММ-ДД, суммы — в рублях.</p>
       <p>available_at — дата, когда документ стал известен; проверяем её по текущему дню UTC.</p>
       <p>Название источника и внешний id должны сохраняться при повторной загрузке документа.</p>
     </details>
@@ -74,7 +75,7 @@ export function ObligationImport({ api, companyId, accountId, onChanged }: {
     </div>}
     {committed && <div className="done">
       <p role="status">Обязательств добавлено: {committed.inserted}.
-        Уже существовали: {committed.skipped_existing}. Дата среза переключена на сегодня; прогноз обновляется автоматически.</p>
+        Уже существовали: {committed.skipped_existing}. Прогноз обновляется автоматически.</p>
       <div className="row"><button type="button" onClick={() => navigate("/payments")}>Открыть платежи</button></div>
     </div>}
     {busy && <p role="status">Обрабатываем обязательства…</p>}

@@ -28,13 +28,13 @@ export function Pages({ route }: { route: RoutePath }) {
     case "/payments": return <Page route={route}><PaymentsPage /></Page>;
     case "/reconciliation": return <Page route={route}><ReconciliationPage /></Page>;
     case "/forecast": return <Page route={route}
-      lead="Остаток на 30 дней по сохранённому расчёту: медиана, коридор p10–p90 и причины."><ForecastPanel /></Page>;
+      lead="Сколько денег будет на счёте в ближайшие 30 дней и когда может не хватить."><ForecastPanel /></Page>;
     case "/scenarios": return <Page route={route}
       lead="Что будет с остатком, если изменить одно событие. База и реальные планы не меняются."><ScenariosPage /></Page>;
     case "/pulse": return <Page route={route}
       lead="Касса, расходы и клиенты по тому же сохранённому прогнозу. Просмотр ничего не меняет."><PulsePage /></Page>;
     case "/assistant": return <Page route={route}
-      lead="Вопросы о деньгах выбранного счёта. Ответы опираются на те же данные API, что и кабинет."><AssistantPage /></Page>;
+      lead="Спросите о деньгах счёта обычными словами — Юми ответит таблицей или графиком."><AssistantPage /></Page>;
   }
 }
 
@@ -101,7 +101,7 @@ function ScenariosPage() {
     {f?.status === "succeeded" && <>
       <section className="toolbar">
         <span className="chip solid">база</span>
-        <span className="mono">прогноз на {dmy(f.as_of)} · {f.id}</span>
+        <span>прогноз от {dmy(f.as_of)}</span>
         {f.base_forecast_id && <button type="button" className="ghost"
           onClick={() => c.open({ id: f.base_forecast_id!, as_of: f.as_of, job_id: null, error_code: null })}>
           Открыть исходный прогноз</button>}

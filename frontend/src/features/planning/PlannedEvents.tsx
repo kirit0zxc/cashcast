@@ -60,7 +60,7 @@ export function PlannedEvents({ api, companyId, accountId, onChanged }: {
           onChange={e => { setCounterparty(e.target.value); create.reset(); }} /></label>
         <button disabled={create.isPending}>Добавить платёж</button>
       </form>
-      {create.isSuccess && <p role="status">План сохранён. Дата среза переключена на сегодня; прогноз обновляется автоматически.</p>}
+      {create.isSuccess && <p role="status">План сохранён. Прогноз обновляется автоматически.</p>}
       {create.error && <p role="alert">{create.error.message}</p>}
     </section>}
 

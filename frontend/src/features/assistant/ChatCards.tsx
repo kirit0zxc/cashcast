@@ -48,7 +48,7 @@ export function DataTable({ data }: { data: Record<string, unknown> }) {
   const rows = (Array.isArray(data.items) ? data.items : Array.isArray(data.points) ? data.points : [data])
     .filter((v): v is Record<string, unknown> => !!v && typeof v === "object");
   const keys = [...new Set(rows.flatMap(r => Object.keys(r)))].filter(k =>
-    !["account_id", "company_id", "input_snapshot", "_incremental_state"].includes(k));
+    !["account_id", "company_id", "input_snapshot", "_incremental_state"].includes(k) && !isId(k));
   return <>
     {rows.length ? <div className="scroll"><table className="ops"><thead><tr>
       {keys.map(k => <th key={k}>{labels[k] ?? k}</th>)}</tr></thead><tbody>
@@ -58,6 +58,15 @@ export function DataTable({ data }: { data: Record<string, unknown> }) {
     {!!data.truncated && <p>Показана только часть списка.</p>}
   </>;
 }
+
+const JOB_STATUS: Record<string, string> = { pending: "Прогноз в очереди…", running: "Считаем прогноз…",
+  succeeded: "Прогноз готов.", failed: "Расчёт не удался." };
+// Идентификаторы нужны серверу, а не человеку: прячем их в «Технические параметры».
+const isId = (key: string) => key === "id" || key.endsWith("_id") || key === "action_id";
+function visible(data: Record<string, unknown> = {}) {
+  return Object.fromEntries(Object.entries(data).filter(([k]) => !isId(k)));
+}
+function hidden(data: Record<string, unknown> = {}) { return Object.keys(data).some(isId); }
 
 function ArgumentsView({ data }: { data: Record<string, unknown> }) {
   return <dl>{Object.entries(data).map(([key, value]) => <div key={key}>
@@ -86,11 +95,12 @@ function ActionCard({ card, api, companyId, accountId, onReply }: CardProps) {
     finally { setBusy(false); }
   }
   return <div className="assistant-action" data-testid="assistant-action">
-    <p><strong>{values[state] ?? state}</strong>. Счёт: {String(card.data.account_id)}.</p>
-    <ArgumentsView data={card.data.arguments as Record<string, unknown>} />
-    <small>Точные параметры действия указаны в этой карточке. Обезличивание для модели не меняет их.</small>
-    <p>Подтверждение действительно до {new Date(String(card.data.expires_at)).toLocaleTimeString("ru-RU")}.
-      Если данные счёта изменились, потребуется новое предложение.</p>
+    <p><strong>{values[state] ?? state}</strong></p>
+    <ArgumentsView data={visible(card.data.arguments as Record<string, unknown>)} />
+    {hidden(card.data.arguments as Record<string, unknown>) && <details><summary>Технические параметры</summary>
+      <ArgumentsView data={card.data.arguments as Record<string, unknown>} /></details>}
+    <small>Предложение действует до {new Date(String(card.data.expires_at)).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}.
+      Если данные счёта изменятся, Юми подготовит новое.</small>
     {state === "pending" && canWrite && <div className="row">
       <button type="button" disabled={busy || expired} onClick={() => void decide("confirm")}>Подтвердить действие</button>
       <button type="button" disabled={busy} onClick={() => void decide("cancel")}>Отменить предложение</button>
@@ -107,8 +117,8 @@ function JobCard({ api, card }: CardProps) {
   const forecast = useQuery({ queryKey: ["forecast", card.data.forecast_run_id], retry: false,
     queryFn: () => api.request<Forecast>(`/forecasts/${card.data.forecast_run_id}`),
     enabled: job.data?.status === "succeeded" });
-  return <><p>Расчёт: {job.data?.status ?? "ожидаем"}. ID: {String(card.data.forecast_run_id)}</p>
-    {job.data?.status === "failed" && <p role="alert">Ошибка расчёта: {job.data.error_code}</p>}
+  return <><p>{JOB_STATUS[job.data?.status ?? ""] ?? "Считаем прогноз…"}</p>
+    {job.data?.status === "failed" && <p role="alert">Расчёт не удался. Попробуйте ещё раз.</p>}
     {[job.error, forecast.error].filter(Boolean).map((e, i) => <p role="alert" key={i}>{e!.message}</p>)}
     {forecast.data?.status === "succeeded" && <ForecastView forecast={forecast.data} />}</>;
 }

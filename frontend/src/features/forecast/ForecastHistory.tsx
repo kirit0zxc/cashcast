@@ -29,12 +29,11 @@ export function ForecastHistory({ api, companyId, accountId, disabled, onOpen }:
     {history.data && <>
       {!history.data.items.length && <div className="empty"><b>Сохранённых расчётов пока нет</b>Рассчитайте прогноз — он появится здесь.</div>}
       {history.data.items.length > 0 && <div className="scroll"><table className="ops" aria-label="История расчётов"><thead><tr>
-        <th>Создан</th><th>Дата среза</th><th>Вид</th><th>Модель</th><th>Состояние</th><th>Действие</th>
+        <th>Создан</th><th>Дата среза</th><th>Вид</th><th>Состояние</th><th>Действие</th>
       </tr></thead><tbody>{history.data.items.map(item => <tr key={item.id} data-testid={`history-row-${item.id}`}>
         <td className="mono nowrap">{new Date(item.created_at).toLocaleString("ru-RU")}</td>
         <td className="mono">{item.as_of}</td>
         <td>{item.base_forecast_id ? <span className="tag">Сценарий</span> : "Прогноз"}</td>
-        <td className="mono">{item.model_version}</td>
         <td><span className={`tag${item.status === "succeeded" ? "" : item.status === "failed" ? " status-failed" : " status-partially_paid"}`}>
           {statuses[item.status] ?? item.status}</span>{item.error_code && <small>{item.error_code}</small>}</td>
         <td><button type="button" className="ghost" disabled={disabled} onClick={() => onOpen(item)}>Открыть</button></td>

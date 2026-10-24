@@ -18,7 +18,7 @@ export function Explanations({ api, forecastId }: { api: CashCastApi; forecastId
       {!query.data.available && <p className="note">Подробное объяснение недоступно.</p>}
       <ul className="list">{query.data.items.map((item, index) => <li key={index} className="tagged">
         <span className="tag">{KINDS[item.kind] ?? item.kind}</span>
-        <span>{item.label}{item.source_ref && <small>Источник: {item.source_ref}</small>}</span>
+        <span>{item.label}</span>
         <span className="amt">{item.amount_minor !== null ? money(item.amount_minor) : "—"}</span></li>)}</ul>
     </>}
   </section>;
