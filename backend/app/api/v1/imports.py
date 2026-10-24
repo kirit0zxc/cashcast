@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, File, Form, UploadFile
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from app.api.schemas.common import ERROR_RESPONSES
+from app.api.schemas.common import ERROR_RESPONSES, ErrorResponse
 from app.api.schemas.models import ColumnMappingIn, ImportCommitResponse, ImportPreviewResponse
 from app.core.auth import CurrentUser, get_current_user, require_company_access
 from app.core.config import Settings, get_settings
@@ -22,7 +22,8 @@ from app.modules.imports.service import ImportService
 router = APIRouter(tags=["imports"], responses=ERROR_RESPONSES)
 
 
-@router.post("/companies/{company_id}/imports", response_model=ImportPreviewResponse)
+@router.post("/companies/{company_id}/imports", response_model=ImportPreviewResponse,
+             responses={413: {"model": ErrorResponse, "description": "Файл превышает допустимый размер"}})
 async def create_import(
     company_id: uuid.UUID,
     account_id: uuid.UUID = Form(...),

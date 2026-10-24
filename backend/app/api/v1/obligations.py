@@ -6,7 +6,7 @@ from datetime import UTC, date, datetime
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from sqlalchemy.orm import Session
 
-from app.api.schemas.common import ERROR_RESPONSES
+from app.api.schemas.common import ERROR_RESPONSES, ErrorResponse
 from app.api.schemas.obligations import ObligationCommitOut, ObligationPreviewOut
 from app.api.v1.imports import _require_member
 from app.core.auth import CurrentUser, get_current_user, require_company_access
@@ -19,7 +19,8 @@ from app.modules.imports.obligations import ObligationImportService
 router = APIRouter(tags=["obligation-imports"], responses=ERROR_RESPONSES)
 
 
-@router.post("/companies/{company_id}/obligation-imports", response_model=ObligationPreviewOut)
+@router.post("/companies/{company_id}/obligation-imports", response_model=ObligationPreviewOut,
+             responses={413: {"model": ErrorResponse, "description": "Файл превышает допустимый размер"}})
 async def preview_obligations(
     company_id: uuid.UUID,
     account_id: uuid.UUID = Form(...),

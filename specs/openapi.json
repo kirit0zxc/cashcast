@@ -87,6 +87,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -97,8 +107,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -158,6 +168,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -168,8 +188,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -222,6 +242,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -232,8 +262,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -305,6 +335,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -315,8 +355,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -376,6 +416,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -386,8 +436,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -469,6 +519,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -479,8 +539,18 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Файл превышает допустимый размер",
             "content": {
               "application/json": {
                 "schema": {
@@ -552,6 +622,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -562,8 +642,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -645,6 +725,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -655,8 +745,18 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Файл превышает допустимый размер",
             "content": {
               "application/json": {
                 "schema": {
@@ -728,6 +828,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -738,8 +848,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -923,6 +1033,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -933,8 +1053,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1016,6 +1136,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1026,8 +1156,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1103,6 +1233,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1113,8 +1253,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1194,6 +1334,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1204,8 +1354,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1287,6 +1437,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1297,8 +1457,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1390,6 +1550,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1400,8 +1570,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1491,6 +1661,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1501,8 +1681,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1584,6 +1764,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1594,8 +1784,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1667,6 +1857,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1677,8 +1877,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1750,6 +1950,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1760,8 +1970,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1833,6 +2043,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1843,8 +2063,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -1926,6 +2146,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -1936,8 +2166,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {
@@ -2009,6 +2239,16 @@
               }
             }
           },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Ошибка валидации",
             "content": {
@@ -2019,8 +2259,8 @@
               }
             }
           },
-          "501": {
-            "description": "Ещё не реализовано",
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
             "content": {
               "application/json": {
                 "schema": {

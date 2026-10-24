@@ -31,6 +31,7 @@ ERROR_RESPONSES: dict = {
     401: {"model": ErrorResponse, "description": "Не аутентифицирован"},
     403: {"model": ErrorResponse, "description": "Нет доступа или CSRF"},
     404: {"model": ErrorResponse, "description": "Не найдено"},
+    409: {"model": ErrorResponse, "description": "Конфликт состояния или данных"},
     422: {"model": ErrorResponse, "description": "Ошибка валидации"},
-    501: {"model": ErrorResponse, "description": "Ещё не реализовано"},
+    500: {"model": ErrorResponse, "description": "Внутренняя ошибка без раскрытия входных данных"},
 }
