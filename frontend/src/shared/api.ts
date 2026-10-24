@@ -24,6 +24,12 @@ export interface ObligationPreview {
   sample_errors: { row: number; field: string; code: string }[]; reused: boolean;
 }
 export interface Accepted { job_id: string; forecast_run_id: string; status: string }
+export interface ForecastHistoryEntry {
+  id: string; account_id: string; as_of: string; horizon_days: number;
+  status: string; model_version: string; data_version: string; seed: number;
+  base_forecast_id: string | null; created_at: string; error_code: string | null;
+  job_id: string | null;
+}
 export interface Explanation {
   available: boolean; summary: string;
   items: { kind: string; label: string; amount_minor: number | null; source_ref: string | null;
@@ -37,6 +43,7 @@ export interface Point {
 }
 export interface Forecast {
   id: string; as_of: string; model_version: string; data_version: string; status: string;
+  base_forecast_id: string | null;
   opening_balance_minor: number | null; assumptions: string[]; data_warnings: string[];
   risk: { available: boolean; first_negative_date: string | null;
     max_deficit_minor: number | null; probability_any_negative: number | null };

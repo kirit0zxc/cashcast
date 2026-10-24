@@ -10,6 +10,7 @@ from app.api.v1 import (
     accounts,
     auth,
     comparisons,
+    forecast_history,
     forecasts,
     health,
     imports,
@@ -51,7 +52,7 @@ def create_app() -> FastAPI:
     install_error_handlers(app)
 
     for module in (health, auth, accounts, imports, obligations, transactions, planned_events,
-                   plan_fact, forecasts, comparisons):
+                   plan_fact, forecasts, forecast_history, comparisons):
         app.include_router(module.router, prefix=API_PREFIX)
     return app
 

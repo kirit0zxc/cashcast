@@ -86,9 +86,18 @@ items[{event,confirmed_amount_minor}], confirmed_matches и proposals. Proposal 
 немедленный GET не должен требовать маскирующий404 retry.
 
 Forecast — сохранённый снимок с model_version/data_version/seed, points и risk.
-Идентичный запрос возвращает прежний run, изменившийся вход — новый. Список истории
-пока не реализован (draft forecast-history-v1, ACK A017 ожидается); известный ID можно
-читать после reload. Не создавать новый расчёт вместо открытия сохранённого.
+Идентичный запрос возвращает прежний run, изменившийся вход — новый.
+`GET /companies/{company}/forecasts?account_id=UUID&limit=20&cursor=...` возвращает
+`{items,next_cursor}`; limit1–100, порядок created_at/id DESC. Items содержат
+id/account_id/as_of/horizon_days/status/model_version/data_version/seed/
+base_forecast_id/created_at/error_code/job_id. Legacy job_id nullable. Курсор
+связан с компанией и счётом; неверный/чужой422invalid_cursor, чужой ресурс404.
+Никаких raw snapshots в истории; GET не создаёт задания. Временное согласование
+forecast-history-v1 — fallback-a-20261024T0114Z-v1, это не ACK B.
+Prototype открывает сохранённые base/scenario после reload, показывает пагинацию
+по10 и ожидает worker только при существующем job. Legacy pending без job остаётся
+информационным состоянием, без автоматического повторного запуска. Для сценария
+доступен переход к его сохранённой базе; вложенный scenario UI не предлагает.
 
 Сценарий: `POST /forecasts/{baseId}/scenarios` с `{changes:[...]}` →такой же asyncflow.
 Четыре вида: add_expense(amount_minor,on_date), delay_event(target_id,shift_days),

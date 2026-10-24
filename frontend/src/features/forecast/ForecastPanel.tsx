@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { CashCastApi, money, probability, type Accepted, type Forecast, type Job } from "../../shared/api";
 import { Explanations } from "./Explanations";
+import { ForecastHistory } from "./ForecastHistory";
 import { ScenarioPanel } from "./ScenarioPanel";
 
 export function ForecastPanel({ api, companyId, accountId, initialDate }: {
@@ -10,45 +11,60 @@ export function ForecastPanel({ api, companyId, accountId, initialDate }: {
 }) {
   const [asOf, setAsOf] = useState(initialDate);
   const [accepted, setAccepted] = useState<Accepted | null>(null);
+  const [saved, setSaved] = useState<{ id: string; job_id: string | null; error_code?: string | null } | null>(null);
+  const runId = saved?.id ?? accepted?.forecast_run_id;
+  const jobId = saved ? saved.job_id : accepted?.job_id;
   const cache = useQueryClient();
   const mutation = useMutation({
     mutationFn: (requestedDate: string) => api.post<Accepted>(`/companies/${companyId}/forecasts`, {
       account_id: accountId, as_of: requestedDate, horizon_days: 30,
     }), onSuccess: async data => {
+      setSaved(null);
       setAccepted(data);
       // Enqueue может выполнить auto-reconcile; job остаётся в этом компоненте.
       await Promise.all([
         cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] }),
         cache.invalidateQueries({ queryKey: ["plan-fact", companyId, accountId] }),
+        cache.invalidateQueries({ queryKey: ["forecast-history", companyId, accountId] }),
       ]);
     },
   });
   const job = useQuery({
-    queryKey: ["job", accepted?.job_id],
-    queryFn: ({ signal }) => api.request<Job>(`/jobs/${accepted!.job_id}`, { signal }),
-    enabled: !!accepted,
+    queryKey: ["job", jobId],
+    queryFn: ({ signal }) => api.request<Job>(`/jobs/${jobId}`, { signal }),
+    enabled: !!jobId,
     refetchInterval: query => ["succeeded", "failed"].includes(query.state.data?.status ?? "") ? false : 1500,
   });
   const forecast = useQuery({
-    queryKey: ["forecast", accepted?.forecast_run_id],
-    queryFn: ({ signal }) => api.request<Forecast>(`/forecasts/${accepted!.forecast_run_id}`, { signal }),
-    enabled: job.data?.status === "succeeded",
+    queryKey: ["forecast", runId],
+    queryFn: ({ signal }) => api.request<Forecast>(`/forecasts/${runId}`, { signal }),
+    enabled: !!runId && (!jobId || job.error !== null || ["succeeded", "failed"].includes(job.data?.status ?? "")),
   });
-  const working = mutation.isPending || (!!accepted && !job.error
+  const working = mutation.isPending || (!!jobId && !job.error
     && !["succeeded", "failed"].includes(job.data?.status ?? ""));
-  function submit(event: FormEvent) { event.preventDefault(); setAccepted(null); mutation.mutate(asOf); }
+  function submit(event: FormEvent) {
+    event.preventDefault(); setSaved(null); setAccepted(null); mutation.mutate(asOf);
+  }
   return <section className="panel"><h2>2. Прогноз на 30 дней</h2>
     <form onSubmit={submit} className="row">
       <label>Дата среза<input type="date" disabled={working} required value={asOf} onChange={e => setAsOf(e.target.value)} /></label>
       <button disabled={!accountId || working}>Рассчитать</button>
     </form>
     <p>Используем сведения, известные на дату среза. Для выписки выберите её последний день.</p>
+    <ForecastHistory api={api} companyId={companyId} accountId={accountId} disabled={mutation.isPending}
+      onOpen={entry => { mutation.reset(); setAccepted(null); setSaved({ id: entry.id, job_id: entry.job_id, error_code: entry.error_code }); }} />
     {working && <p role="status">Задание: {job.data?.status ?? "отправляем"}. Ожидаем worker…</p>}
     {job.data?.status === "failed" && <p role="alert">Расчёт не выполнен: {job.data.error_code}</p>}
     {[mutation.error, job.error, forecast.error].filter(Boolean).map((e, i) => <p role="alert" key={i}>{e!.message}</p>)}
-    {forecast.data && <><ForecastView forecast={forecast.data} />
+    {forecast.data && forecast.data.status !== "succeeded" && <p role="status">
+      Сохранённый расчёт: {forecast.data.status}. Открытие не создаёт новое задание.
+      {saved?.error_code && ` Причина: ${saved.error_code}`}
+    </p>}
+    {forecast.data?.status === "succeeded" && <><ForecastView forecast={forecast.data} />
       <Explanations api={api} forecastId={forecast.data.id} />
-      <ScenarioPanel key={forecast.data.id} api={api} base={forecast.data} /></>}
+      {forecast.data.base_forecast_id ? <button type="button" onClick={() => {
+        setAccepted(null); setSaved({ id: forecast.data!.base_forecast_id!, job_id: null });
+      }}>Открыть исходный прогноз</button> : <ScenarioPanel key={forecast.data.id} api={api} base={forecast.data} />}</>}
   </section>;
 }
 

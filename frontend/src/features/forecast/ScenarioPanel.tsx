@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { CashCastApi, money, probability, rublesToMinor,
   type Accepted, type Explanation, type Forecast, type Job } from "../../shared/api";
@@ -13,6 +13,7 @@ type ScenarioKind = "add_expense" | "delay_event" | "reduce_irregular_inflow" | 
 
 // Цели берём из сохранённого расчёта: сегодняшние планы могут отличаться от его снимка.
 export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast }) {
+  const cache = useQueryClient();
   const [kind, setKind] = useState<ScenarioKind>("add_expense");
   const [amount, setAmount] = useState("1000");
   const [date, setDate] = useState(base.points[0]?.point_date ?? "");
@@ -47,7 +48,10 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
         ...(kind === "increase_recurring" ? { target_id: selectedTarget } : {}) };
     }
     return api.post<Accepted>(`/forecasts/${base.id}/scenarios`, { changes: [change] });
-  }, onSuccess: value => setAccepted(value) });
+  }, onSuccess: async value => {
+    setAccepted(value);
+    await cache.invalidateQueries({ queryKey: ["forecast-history"] });
+  } });
   const job = useQuery({ queryKey: ["job", accepted?.job_id],
     queryFn: ({ signal }) => api.request<Job>(`/jobs/${accepted!.job_id}`, { signal }), enabled: !!accepted,
     refetchInterval: query => ["succeeded", "failed"].includes(query.state.data?.status ?? "") ? false : 1500 });
