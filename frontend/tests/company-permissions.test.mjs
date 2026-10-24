@@ -55,3 +55,13 @@ test("read-only mode keeps category, plans and forecast history readable", async
   assert.ok((await render("/src/features/forecast/ForecastPanel.tsx", "ForecastPanel", base, "viewer"))
     .includes("История расчётов"));
 });
+
+test("proposal details stay readable during refetch while the payment form is closed", async () => {
+  const markup = await render("/src/features/planning/ProposalConfirmation.tsx", "ProposalConfirmation", {
+    ...base, event: { id: "plan", due_date: "2026-10-24", direction: "out" },
+    proposal: { transaction_id: "transaction", matched_amount_minor: 5876 },
+    disabled: true, onConfirm() {}, onEdit() {},
+  }, "owner");
+  assert.ok(markup.includes('<button type="button">Проверить предложение</button>'));
+  assert.ok(!markup.includes("Подтвердить выбранную оплату"));
+});

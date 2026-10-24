@@ -40,7 +40,9 @@ export function ProposalConfirmation({ api, companyId, accountId, event, proposa
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Проверьте сумму"); }
   }
   return <div data-testid={`proposal-${event.id}-${proposal.transaction_id}`}>
-    <button type="button" disabled={disabled} onClick={() => setOpened(value => !value)}>Проверить предложение</button>
+    {/* Чтение реквизитов не меняет оплату. Refetch не должен отключать кнопку между
+        pointerdown и pointerup и терять клик; денежная форма ниже остаётся заблокированной. */}
+    <button type="button" onClick={() => setOpened(value => !value)}>Проверить предложение</button>
     {opened && <>
       {query.isFetching && <p role="status">Загружаем банковскую операцию…</p>}
       {query.error && <p role="alert">{query.error.message}</p>}
