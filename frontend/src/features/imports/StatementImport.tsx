@@ -57,7 +57,8 @@ export function StatementImport({ api, companyId, accountId, onCommit }: {
         <li key={i}>Строка {e.row}, {e.field}: {e.message}</li>)}</ul>}
       <button onClick={() => void confirm()} disabled={busy || preview.error_count > 0 || !!commit}>Подтвердить импорт</button>
     </div>}
-    {commit && <p role="status">Добавлено: {commit.inserted}. Уже существовали: {commit.skipped_existing}.</p>}
+    {commit && <><p role="status">Результат сохранённого импорта. Добавлено: {commit.inserted}. Уже существовали: {commit.skipped_existing}.</p>
+      <p>При повторном подтверждении возвращается та же сводка; операции заново не добавляются.</p></>}
     {busy && <p role="status">Обрабатываем…</p>}{error && <p role="alert">{error}</p>}
   </section>;
 }

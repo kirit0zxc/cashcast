@@ -24,6 +24,8 @@ test("login → account → preview/commit → worker forecast → logout", asyn
   await expect(page.getByText(/Строк: 14\. Ошибок: 0/)).toBeVisible();
   await page.getByRole("button", { name: "Подтвердить импорт", exact: true }).click();
   await expect(page.getByRole("status").filter({ hasText: "Добавлено:" })).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "Результат сохранённого импорта." })).toBeVisible();
+  await expect(page.getByText("При повторном подтверждении возвращается та же сводка; операции заново не добавляются.", { exact: true })).toBeVisible();
   await expect(page.getByLabel("Дата среза", { exact: true })).toHaveValue("2026-08-14");
   await page.getByRole("button", { name: "Рассчитать", exact: true }).click();
   await expect(page.getByRole("img", { name: "Прогноз остатка: p10, медиана, p90", exact: true })).toBeVisible();
