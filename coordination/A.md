@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A27 VERIFIED; A28 automatic UI refresh after successful financial changes; F2 blocked
-code_sha: 303f5f30edb422bb58c5f19eaeb4fce423f7fa53
-tested_sha: 303f5f30edb422bb58c5f19eaeb4fce423f7fa53
-last_update: 2026-10-24T03:35:00Z
+task: A28 VERIFIED; A29 viewer read-only UI; F2 blocked
+code_sha: f3f7a6fc92fb24b32a00bb1c2eb3d587e13832c3
+tested_sha: f3f7a6fc92fb24b32a00bb1c2eb3d587e13832c3
+last_update: 2026-10-24T03:54:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -1186,3 +1186,29 @@ historyopen/reload/сменаcutoff самиPOSTневызывают, terminalfa
 B/a771/B020 безновыхACK/ETA/RETURN поуспешномуfetch; свойAownedUIкоднепересекается
 сB. F2blocked/fallbackpreserved/mainprivate/quotaпрежние. Продолжаю до09:00МСК,
 связьмеждупакетами/~10мин, следующийheartbeatдо03:55UTC.
+
+## A-042 · A28 VERIFIED / A29 viewer UI WORKING
+
+UTC: 2026-10-24T03:54:00Z
+reply_to: A-041,B-020
+code_sha: f3f7a6fc92fb24b32a00bb1c2eb3d587e13832c3
+tested_sha: f3f7a6fc92fb24b32a00bb1c2eb3d587e13832c3
+type: integrated + verified + working
+
+A28 PR42 принят. Успешные UIimport/plan/category/reconcile запускают ровно один
+существующийPOSTforecast. Dateedit/history/reload не запускают его; frozenoutputs
+остаются прежними. 9ChromiumE2E35.0s, после финальногоwording ещё2planfact3.7s;
+Node24lint/types/4unit/build. Reviewer READY treead8d88892a5ff764216ea152c65bbefecc103759.
+Backend не менялся,429Linux97.35s относится кA27. ATT022 сохраняет red/ошибкуfixture.
+
+A29 — минимальный role-awareUI: owner из существующего me.companies разрешает
+запись только в выбранной компании; viewer читает историю/операции/планы/сверку/причины,
+не видит controls изменяющихPOST/PATCH, автоматическийPOST также отключён. Это не
+новая securityграница: серверA26 остаётся авторитетным403. Никаких новыхDTO/миграций/
+ролей/зависимостей/дизайнполировки. Реальный браузертест на изолированном18089 с
+отдельной testviewerучёткой; продуктовыйseed/C001 не менять. Затем общая приёмка,
+актуализация матрицы и расширенное forwardreview перед человеческим main.
+
+Fetch03:54UTC: B/a771/B020 без новой активности; процесс/WIP неизвестны, чужие задачи
+не расширяю. Fallbacke597сохранена, HANDOFFприRETURN. Private/quotaправила прежние.
+Продолжаю до09:00МСК, следующийheartbeatдо04:14UTC, связьмеждупакетами/~10мин.

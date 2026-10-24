@@ -293,3 +293,20 @@ runningjob ждатьhandler. Новаяограниченная1sDBрегрес
 состояние3исчерпанныхпопытокподготовлено только вновойemptyDB, затемPOST/worker/chart
 реальны. Это не названо сетевойаварией; триреальныхraiseConnectionError и lostlease
 отдельнопроверены наtestDB. SameIDs/attempt4of6/frozenSHAсовпали, backupC001нетронут.
+
+## A-ATT-022 · автоматический прогноз и подлинная неоднозначность fixture
+
+UTC:2026-10-24T03:54:00Z; A28f3f7a6fc92fb24b32a00bb1c2eb3d587e13832c3.
+Новый E2E сначала дал bounded7s timeout: после commit POSTforecast не происходил.
+Теперь успешное UIизменение remountверсию с refguard одногоPOST. GETinvalidation,
+history/reload/dateedit сами новый расчёт не запускают. Дата импортperiod_end,
+план/сверка todayUTC, категория сохраняет срез. 9Chrome35.0s, Node24gatespassed;
+финальная правка текста PlanFactPanel дополнительно проверена2Chrome3.7s.
+
+Первый общий E2E дал8/9: старый manualfixture создавал два плана последовательно,
+первый уже получал однозначную оплату при новом автоматическомPOST до появления
+второго. Это ожидаемая существующая safeautoполитика, не поломка ручной сверки.
+Fixture теперь атомарно импортирует оба документа CSV, затем проверяет настоящий
+ambiguousслучай с делением одной оплаты4000+5876/reload/без двойного учёта.
+Assertions не удалены, sleeps/retries не добавлены. Reviewer READY точного tree
+ad8d88892a5ff764216ea152c65bbefecc103759. Backendне менялся,429Linux — A27.
