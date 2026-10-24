@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { SpecLines } from "../../ui/SpecChart";
-import { CashCastApi, money, rublesToMinor } from "../../shared/api";
+import { CashCastApi, money, probability, rublesToMinor } from "../../shared/api";
 import type { CashGapReport, GapAction, GapSummary } from "./cash-gaps";
 
 const evidence: Record<string, string> = {
@@ -60,6 +60,9 @@ export function CashGapPanel({ api, forecastId }: { api: CashCastApi; forecastId
     {report && <>
       <p>Срез {report.as_of}, горизонт до {report.horizon_end}. Остатки на конец дня.</p>
       <GapCard summary={report.base} title="Исходный прогноз" />
+      {report.probability != null && <p data-testid="gap-probability">
+        Модельная вероятность минуса за период: <strong>{probability(report.probability)}</strong>.
+        {" "}Оценка не откалибрована.</p>}
       <p>{report.probability_reason}</p>
       <details><summary>Из чего складывается минимум {report.causes_date}: {money(report.causes_balance_minor)}</summary>
         <p>Состав расчёта, а не доказательство причин. Планы могут не исполниться.</p>

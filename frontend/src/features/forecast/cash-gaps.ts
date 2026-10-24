@@ -14,6 +14,7 @@ export interface CashGapReport {
   flows: { id: string; date: string; amount_minor: number; label: string; delay_allowed: boolean }[];
   causes: { date: string; amount_minor: number; label: string; evidence: string; source_ref: string | null }[];
   causes_date: string; causes_balance_minor: number; probability_reason: string;
+  probability?: number | null; probability_status?: "unavailable" | "estimated_uncalibrated";
   quality_mode: string; improvement_minor: number; financing_cost_minor: number;
   debt_beyond_horizon_minor: number; warnings: string[];
 }

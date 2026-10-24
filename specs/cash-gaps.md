@@ -56,7 +56,10 @@
 
 ## Вероятность и проверка качества
 
-Сохранена политика B6: `probability=null`, `probability_status=unavailable`, причина
+Новые расчёты2.1 показывают модельную вероятность минуса со статусом
+`estimated_uncalibrated`; см. [политику2.1](estimated-probability.md). Preview медианы
+не выдаёт старую вероятность за новую после изменения действий.
+Для старых расчётов2.0 сохранена политика B6: `probability=null`, `probability_status=unavailable`, причина
 явная. В `evaluation/B6-REPORT.md` и `calibration-v2.json` уже есть сравнение raw,
 constant, logit-intercept и monotone-PAVA. Проверка новых разрывов дала лишь четыре
 test-fold у трёх компаний, precision 11.1%, recall 50%; это недостаточная основа для

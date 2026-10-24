@@ -76,8 +76,8 @@ class CashGapOut(GapModel):
     causes: list[GapCause]
     causes_date: date
     causes_balance_minor: int
-    probability: None = None
-    probability_status: Literal["unavailable"] = "unavailable"
+    probability: float | None = Field(default=None, ge=0, le=1)
+    probability_status: Literal["unavailable", "estimated_uncalibrated"] = "unavailable"
     probability_reason: str
     quality_mode: str
     improvement_minor: int

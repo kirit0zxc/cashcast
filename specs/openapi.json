@@ -3672,12 +3672,24 @@
             "title": "Causes Balance Minor"
           },
           "probability": {
-            "type": "null",
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Probability"
           },
           "probability_status": {
             "type": "string",
-            "const": "unavailable",
+            "enum": [
+              "unavailable",
+              "estimated_uncalibrated"
+            ],
             "title": "Probability Status",
             "default": "unavailable"
           },
@@ -6857,6 +6869,21 @@
               }
             ],
             "title": "Probability Any Negative"
+          },
+          "probability_status": {
+            "type": "string",
+            "enum": [
+              "unavailable",
+              "estimated_uncalibrated"
+            ],
+            "title": "Probability Status",
+            "default": "unavailable"
+          },
+          "probability_calibrated": {
+            "type": "boolean",
+            "const": false,
+            "title": "Probability Calibrated",
+            "default": false
           }
         },
         "type": "object",

@@ -110,11 +110,13 @@ assess_quality: префиксная сверка остатков (без кв�
 ## model-registry-v2 и замороженная версия1.0
 
 Контракт A-009 подтверждает get_forecast_service(model_version=None) и
-get_supported_model_versions()->tuple[str,...]. Без args default seasonal-guarded-2.0-w84.
+get_supported_model_versions()->tuple[str,...]. Новый default с24.10 — seasonal-estimated-2.1-w84,
+см. [политику модельной вероятности](estimated-probability.md). Версия2.0 остаётся закреплённой.
 Она активирована отдельным F5 fallback-пакетом после зарегистрированного B6READY
 и проверки совместимости приложения A. Это временное решение0082ec3, не ACK B.
 Старые точные версии доступны для replay; сохранённые jobs/scenarios закрепляют1.0.
-Поддерживаются baseline-repeat-week-0.1, seasonal1.0-w28/w56/w84 и seasonal-guarded-2.0-w84.
+Поддерживаются baseline-repeat-week-0.1, seasonal1.0-w28/w56/w84,
+seasonal-guarded-2.0-w84 и seasonal-estimated-2.1-w84.
 Неизвестная версия (включая пустую строку/нестроковый вход) вызывает
 UnsupportedModelVersionError(ValueError) с code unsupported_model_version.
 A передаёт закреплённую run.model_version worker, несовпадение не считается новымпрогнозом.
