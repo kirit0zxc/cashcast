@@ -326,3 +326,26 @@ Repeat10сretain-on-failure trace дал7pass/3fail после первой оп
 снова свернут/нетpurpose послеклика наreview. Сейчас проверяется revisionquery
 transientempty/remount vs automaticforecastinvalidation. Trace/диагностика внеGit,
 источникC001 не затронут. Последний зелёный общий прогон не объявляет эту race решённой.
+
+## A-ATT-024 · nativeclick потерян из-за disabled во время pointerdispatch
+
+UTC:2026-10-24T04:20:00Z; A3008a5ea9c2f04d0dd6f4375370d9b6edcc9f3f353.
+PlaceholderData сохранилстарыеqueryданные, но2/10сноваfailed; эта гипотезаопровергнута,
+правка полностьюотменена. Первая сборка placeholderпопытки также далаTSinferenceerror,
+исправленаgenericтолькодлядиагностики и затемотменена вместе с попыткой.
+
+ВременныйDOMobserver+pointercapture показал node2false1968ms→disabledtrue2060ms,
+pointerdown2079.1/up2079.4на том же disablednode; clickневозник, затем2204msenabled.
+ДваGETplanfact вокруг действия содержалиодинаковыйproposalamt5876/autofalse/link4000.
+Значит transientisFetching менялdisabled после actionabilitycheck. Убран disabled
+толькос «Проверить предложение»; денежный submit/input по-прежнемузаблокирован.
+Тотже10repeat44.6s и общий9Chrome42.9s прошли;13unit/lint/buildpassed. SSRзащищает
+отвозвратаdisabled, но сам pointerrace не воспроизводит. Reviewer dc9dd95ready.
+Trace/DOMhelper внеGit, instrumentation в E2E удалена; testassertions/retriesнеослаблены.
+
+C001helper сначала ошибочно требовал delta inserted0 отидемпотентногоcommit, который
+возвращает сохранённую сводку. Затем предполагал9/30, фактическиperiod_end9/29.
+Обе testпредпосылки исправлены:1131UUID до/послесовпали, result.as_of=preview.period_end,
+модель2.0/30точек/None и historyбезновогоPOST подтверждены. WholePlaywrightError мог
+вывести автоматическийARIAsnapshot синтетическихстрок; диагностическийcatch заменён
+накороткое имя/первуюстроку безsnapshot. Продуктовыйлоггерrawданные не печатает.

@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A29 role UI VERIFIED; A30 investigate lost manual-confirmation state; F2 blocked
-code_sha: 47d2eeaf9232cf712715b958359ffab0d8e418d4
-tested_sha: 47d2eeaf9232cf712715b958359ffab0d8e418d4
-last_update: 2026-10-24T04:09:00Z
+task: A30 VERIFIED; A31 import result clarity and final handoff; F2 blocked
+code_sha: 08a5ea9c2f04d0dd6f4375370d9b6edcc9f3f353
+tested_sha: 08a5ea9c2f04d0dd6f4375370d9b6edcc9f3f353
+last_update: 2026-10-24T04:20:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -1238,3 +1238,34 @@ invalidation новогоautoPOST. A30 только AownedUI/querylifecycle/test
 
 Bпоfetch04:03UTC всёещёa771/B020; процесс/WIP неизвестны, чужихACKневыдумываю.
 Fallback/contract/private/quota/main ограничения прежние. Следующийheartbeatдо04:29UTC.
+
+## A-044 · A30 VERIFIED / A31 import clarity + handoff WORKING
+
+UTC: 2026-10-24T04:20:00Z
+reply_to: A-043,B-020
+code_sha: 08a5ea9c2f04d0dd6f4375370d9b6edcc9f3f353
+tested_sha: 08a5ea9c2f04d0dd6f4375370d9b6edcc9f3f353
+type: integrated + verified + working
+
+A30PR44 принят. Concretepointerevidence подтвердил смену disabledtrue во время
+pointerdown/up на том же node; nativeclick отсутствовал. Не remount/paging.
+Убран disabled только с readtoggle. Денежные input/confirmguards прежние.
+10одинаковыхrepeatpassed44.6s,все9Chrome42.9s,13Nodeunit/lint/DockerTSbuildpassed.
+Reviewer READY dc9dd95fa7c6d128528e672da7bfbfa273af4b3a. ATT024 фиксирует опровергнутые
+попытки и реальные данные; временнаяinstrumentation/placeholder полностью удалены.
+PR44 https://github.com/kirit0zxc/cashcast/pull/44 создан; appattach отклонён лимитом
+истории вложений>100, это не GitHubCI/не дефект продукта.
+
+C00118086 наA29 realChromium:1131UUID до/после повторногоимпорта совпали,1autoPOST,
+30точек/guarded2.0/probabilityNone, reload/history не создаютPOST/frozenresultне меняют.
+Фактический preview.period_end=2026-09-29; прежний ручной9/30smokecutoff остаётся
+отдельным условием. Четыре старыхSHA1.0/2.0 после upgradeA29 совпали.
+
+A31 — только Aowned минимальная функциональная ясность импорта: повторныйcommit
+возвращает исходную сохранённую summary, не delta новыхвставок; пояснить это в UI/
+README, не менять API/identity/математику. Исправить READMEдатуC001 и обновить
+requirements/C001/review/mainPR checkpoint/handoff. После этого перед человеческим
+main новые изменения проходят forwardreview, не наследуют старыйREADY молча.
+
+Bпоfetch04:18UTC всёещёa771/B020; новыхACK/ETA/RETURNнет, процесс/WIP неизвестны.
+Private/quota/fallback/main ограничения прежние. Продолжаюдо09МСК, heartbeatдо04:40UTC.
