@@ -47,12 +47,15 @@ export function PulsePanel({ api, forecastId }: { api: CashCastApi; forecastId: 
           <div className="cushion-sum">{money(query.data.cash.buffer_minor)}</div>
           <p className="cushion-src">{query.data.cash.buffer_source === "user" ? "задана вами"
             : "рассчитали по вашим расходам — столько стоит держать на счёте"}</p>
-          {(() => {
-            const c = query.data.cash;
-            if (c.status === "unknown") return <p className="cushion-verdict tone-unknown">Хватит ли запаса — оценка недоступна: мало данных.</p>;
-            if (c.first_gap_date) return <p className="cushion-verdict tone-risk">Запаса не хватит с {dayMonth(c.first_gap_date)}.</p>;
-            return <p className="cushion-verdict tone-ok">Запаса хватает на весь период прогноза.</p>;
-          })()}
+          {/* Отсутствие минуса не означает сохранение подушки. Сервер также учитывает
+              стресс-сценарии и вывод владельцем; сохраняем его объяснение и горизонт. */}
+          <p className={`cushion-verdict tone-${query.data.cash.status}`}>
+            {query.data.cash.status === "unknown" && "Хватит ли запаса — оценка недоступна. "}
+            {query.data.cash.message}
+          </p>
+          {query.data.cash.chart.if_owner_withdraws_minor && <small>
+            Оценка также учитывает вариант вывода денег владельцем как обычно.
+          </small>}
         </> : query.isPending ? <p role="status">Считаем…</p> : null}
         <form className="cushion-form" onSubmit={apply}>
           <label>Свой запас, ₽

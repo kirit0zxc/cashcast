@@ -16,8 +16,8 @@ export function GapBanner({ api, forecastId }: { api: CashCastApi; forecastId: s
   const tone = b.status === "gap" ? "risk" : b.status === "no_gap" ? "ok" : "unknown";
   const title = b.status === "no_gap" ? "На этот период денег хватает"
     : b.status === "insufficient_data" ? "Данных мало, чтобы исключить разрыв"
-      : b.opening_already_negative ? `Деньги уже в минусе: не хватает ${money(b.max_deficit_minor)}`
-        : b.days_until_new_gap != null ? `Через ${b.days_until_new_gap} дн. может не хватить ${money(b.max_deficit_minor)}`
+      : b.opening_already_negative ? `На дату среза ${dayMonth(r.as_of)} остаток уже отрицательный`
+        : b.days_until_new_gap != null ? `Через ${b.days_until_new_gap} дн. может начаться нехватка денег`
           : `Может не хватить ${money(b.max_deficit_minor)}`;
   return <section className={`gap-banner tone-${tone}`} aria-label="Кассовый разрыв">
     <div>
@@ -25,7 +25,8 @@ export function GapBanner({ api, forecastId }: { api: CashCastApi; forecastId: s
       <b>{title}</b>
       {b.status === "gap" && <p>
         {b.first_new_gap_date && <>Первый день в минусе — {dayMonth(b.first_new_gap_date)}. </>}
-        Чтобы не уйти в минус, нужен резерв <strong>{money(reserve)}</strong>.
+        Максимальная нехватка за период — <strong>{money(b.max_deficit_minor)}</strong>.
+        {" "}Расчётный резерв для покрытия дефицита — <strong>{money(reserve)}</strong>.
         {r.probability != null && <> Риск по модели — {probability(r.probability)} (оценка).</>}
       </p>}
       {b.status === "no_gap" && <p>По прогнозу остаток не уходит ниже нуля до {dayMonth(r.horizon_end)}.</p>}

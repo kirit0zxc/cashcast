@@ -82,7 +82,7 @@ button.link:hover:not(:disabled) { background: none; color: var(--ink); }
   .dock-foot small { display: none; }
 }
 
-/* Меню не прокручивается: e-mail прячем, пункты плотнее на невысоких экранах. */
+/* На невысоких экранах уплотняем пункты; при нехватке места меню прокручивается. */
 @media (min-width: 861px) {
   .side .user span { display: none; }
   .side .user button { padding: 7px 10px; font-size: 13px; }
@@ -97,6 +97,7 @@ button.link:hover:not(:disabled) { background: none; color: var(--ink); }
 .cushion-src { margin: 0; color: var(--ink-2); font-size: 13px; }
 .cushion-verdict { margin: 6px 0 4px; padding: 8px 10px; font-weight: 700; border-left: 4px solid var(--ink); background: var(--panel); }
 .cushion-verdict.tone-risk { border-color: var(--coral); color: var(--coral); }
+.cushion-verdict.tone-watch { border-color: var(--coral); color: var(--ink); }
 .cushion-verdict.tone-ok { border-color: var(--ok-ink); }
 .cushion-verdict.tone-unknown { border-color: var(--muted); color: var(--ink-2); font-weight: 400; }
 .cushion-form { display: flex; gap: 8px; align-items: end; margin-top: 8px; }
