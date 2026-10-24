@@ -22,11 +22,23 @@ test("login → account → preview/commit → worker forecast → logout", asyn
   await page.getByLabel("CSV-файл").setInputFiles({ name: "e2e.csv", mimeType: "text/csv", buffer: statement() });
   await page.getByRole("button", { name: "Проверить файл", exact: true }).click();
   await expect(page.getByText(/Строк: 14\. Ошибок: 0/)).toBeVisible();
+  // Одинаковый сценарий проверяется и против production web, и против Vite/StrictMode.
+  let automaticPosts = 0;
+  const countAutomatic = (request: { method(): string; url(): string }) => {
+    if (request.method() === "POST" && /\/companies\/[^/]+\/forecasts$/.test(new URL(request.url()).pathname)) {
+      automaticPosts++;
+    }
+  };
+  page.on("request", countAutomatic);
   await page.getByRole("button", { name: "Подтвердить импорт", exact: true }).click();
   await expect(page.getByRole("status").filter({ hasText: "Добавлено:" })).toBeVisible();
   await expect(page.getByRole("status").filter({ hasText: "Результат сохранённого импорта." })).toBeVisible();
   await expect(page.getByText("При повторном подтверждении возвращается та же сводка; операции заново не добавляются.", { exact: true })).toBeVisible();
   await expect(page.getByLabel("Дата среза", { exact: true })).toHaveValue("2026-08-14");
+  await expect(page.getByRole("img", { name: "Прогноз остатка: p10, медиана, p90", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Рассчитать", exact: true })).toBeEnabled();
+  expect(automaticPosts).toBe(1);
+  page.off("request", countAutomatic);
   await page.getByRole("button", { name: "Рассчитать", exact: true }).click();
   await expect(page.getByRole("img", { name: "Прогноз остатка: p10, медиана, p90", exact: true })).toBeVisible();
   await page.getByText("Дневные значения и происхождение расчёта", { exact: true }).click();

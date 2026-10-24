@@ -9,8 +9,18 @@
 
 Один Compose по README поднимает nginx/web, FastAPI, worker и PostgreSQL. Браузер
 обращается к `/api/v1` на том же origin; отдельный публичный адрес БД не нужен.
-Локальный демо-вход указан в README. Vite dev proxy требует отдельно запущенный API;
-готовый Docker-стенд не требует Node/Python на компьютере пользователя.
+Локальный демо-вход указан в README. Для редизайна: Node24, `npm ci`/`npm run dev`
+из frontend. Vite слушает127.0.0.1:5174 и проксирует `/api` на127.0.0.1:8080.
+Для текущего стенда владельца перед запуском задать в PowerShell
+`$env:CC_DEV_API_TARGET='http://127.0.0.1:18086'`.
+На Linux/macOS: `CC_DEV_API_TARGET=http://127.0.0.1:18086 npm run dev`.
+При занятом5174 запуск останавливается, порт не меняется сам. API/worker/БД должны
+уже работать в Compose; dev-сервер не запускает их. Готовый Docker-стенд не требует
+Node/Python на компьютере пользователя. Порты соседнего HoneyForge5173/8000 не трогать.
+Автоматический forecast отправляется после переподписки observer в StrictMode:
+отменённый effect не делает POST. Не заменять это синхронным mutate с одним ref:
+в dev расчёт может завершиться, но observer останется pending. Общий workflow E2E
+проверяет один autoPOST и доступность ручного расчёта и запускается также через Vite.
 
 1. `POST /auth/login` с `{email,password}` ставит HttpOnly `cc_session` и доступную
    JavaScript cookie `cc_csrf` (без HttpOnly), возвращает

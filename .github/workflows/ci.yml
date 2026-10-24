@@ -118,6 +118,25 @@ jobs:
       - name: Real browser E2E against API and worker
         working-directory: frontend
         run: npm run test:e2e
+      - name: Dev frontend keeps automatic forecast usable in StrictMode
+        working-directory: frontend
+        run: |
+          set -euo pipefail
+          CC_DEV_API_TARGET=http://127.0.0.1:18081 node node_modules/vite/bin/vite.js --port 18101 > "$RUNNER_TEMP/cashcast-vite.log" 2>&1 &
+          dev_pid=$!
+          trap 'kill "$dev_pid" 2>/dev/null || true; wait "$dev_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:18101/api/v1/health; then
+              break
+            fi
+            if ! kill -0 "$dev_pid" 2>/dev/null; then
+              cat "$RUNNER_TEMP/cashcast-vite.log"
+              exit 1
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:18101/api/v1/health
+          CC_E2E_BASE_URL=http://127.0.0.1:18101 npm run test:e2e -- workflow.spec.ts
       - name: Stop isolated CI stack
         if: always()
         run: docker compose -p cashcast-ci -f infra/docker-compose.yml down -v

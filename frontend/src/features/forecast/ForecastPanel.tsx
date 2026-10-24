@@ -38,12 +38,16 @@ export function ForecastPanel({ api, companyId, accountId, initialDate, autoRun,
   const automaticSent = useRef(false);
   const { mutate } = mutation;
   useEffect(() => {
-    // Один POST на явное успешное изменение данных. Ref защищает StrictMode;
-    // invalidation, редактирование даты и чтение истории не запускают новый цикл.
-    if (canWrite && autoRun && !automaticSent.current) {
+    if (!canWrite || !autoRun || automaticSent.current) return;
+    // StrictMode сначала снимает подписку mutation observer и повторяет setup.
+    // Отменённый setup не отправляет POST; рабочий запускается после переподписки.
+    let active = true;
+    queueMicrotask(() => {
+      if (!active || automaticSent.current) return;
       automaticSent.current = true;
       mutate(initialDate);
-    }
+    });
+    return () => { active = false; };
   }, [canWrite, autoRun, initialDate, mutate]);
   const job = useQuery({
     queryKey: ["job", jobId],
