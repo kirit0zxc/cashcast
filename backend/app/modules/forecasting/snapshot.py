@@ -11,7 +11,7 @@ import hashlib
 import json
 import uuid
 from dataclasses import dataclass, replace
-from datetime import date
+from datetime import UTC, date, datetime, time
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -19,6 +19,7 @@ from sqlalchemy.orm import Session
 from app.core.errors import AppError
 from app.core.forecast_input import ForecastInputCodec
 from app.core.models import Account, BankTransaction, DailyBalance, PlannedEvent
+from app.core.snapshot_budget import SnapshotRowBudget
 from app.modules.categorization.service import get_categorizer
 from app.modules.contracts import (
     DailyBalanceDTO,
@@ -54,12 +55,16 @@ def build_snapshot(
         raise AppError(404, "not_found", "Счёт не найден")
     if account.currency != "RUB":
         raise AppError(422, "unsupported_currency", "Прогноз MVP поддерживает только RUB")
+    budget = SnapshotRowBudget(session)
+    budget.ensure_account(account_id, as_of)
 
     txns = session.scalars(
         select(BankTransaction)
         .where(BankTransaction.account_id == account_id, BankTransaction.booked_on <= as_of)
         .order_by(BankTransaction.booked_on, BankTransaction.id)
+        .limit(budget.limits.transactions + 1)
     ).all()
+    budget.ensure_count(len(txns), budget.limits.transactions)
     txn_dtos = [
         TxnDTO(
             id=str(t.id),
@@ -85,7 +90,9 @@ def build_snapshot(
         select(DailyBalance)
         .where(DailyBalance.account_id == account_id, DailyBalance.balance_date <= as_of)
         .order_by(DailyBalance.balance_date)
+        .limit(budget.limits.balances + 1)
     ).all()
+    budget.ensure_count(len(balances), budget.limits.balances)
     balance_dtos = [
         DailyBalanceDTO(
             account_id=str(b.account_id),
@@ -109,8 +116,10 @@ def build_snapshot(
     events = session.scalars(
         select(PlannedEvent).where(
             PlannedEvent.account_id == account_id,
-        ).order_by(PlannedEvent.id)
+            PlannedEvent.available_at <= datetime.combine(as_of, time.max, UTC),
+        ).order_by(PlannedEvent.id).limit(budget.limits.events + 1)
     ).all()
+    budget.ensure_count(len(events), budget.limits.events)
     # Paid/cancelled подавляют повтор регулярности, просроченные активные нужны модели.
     if any(e.currency != "RUB" and e.available_at.date() <= as_of for e in events):
         raise AppError(422, "unsupported_currency", "В планах счёта есть неподдерживаемая валюта")

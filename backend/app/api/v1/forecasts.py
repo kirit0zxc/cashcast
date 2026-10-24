@@ -30,6 +30,7 @@ from app.core.deps import get_db
 from app.core.errors import AppError
 from app.core.forecast_input import ForecastInputCodec
 from app.core.models import Account, ForecastPoint, ForecastRun, Job
+from app.core.snapshot_budget import SnapshotRowBudget
 from app.modules.contracts import ScenarioChange
 from app.modules.forecasting.baseline import MODEL_VERSION
 from app.modules.forecasting.service import get_forecast_service
@@ -54,6 +55,12 @@ def create_forecast(
     acc = session.scalar(select(Account).where(Account.id == body.account_id).with_for_update())
     if acc is None or str(acc.company_id) != str(company_id):
         raise AppError(404, "not_found", "Счёт не найден")
+    if body.as_of > datetime.now(UTC).date():
+        raise AppError(422, "future_as_of", "Дата среза не может быть позже сегодняшнего дня UTC")
+    if acc.currency != "RUB":
+        raise AppError(422, "unsupported_currency", "Прогноз MVP поддерживает только RUB")
+    # До plan-fact: слишком большая история остатков тоже не должна запускать matcher.
+    SnapshotRowBudget(session).ensure_account(acc.id, body.as_of)
     seed = body.seed if body.seed is not None else settings.forecast_default_seed
     # Исторический срез только читается: сегодняшние решения не становятся знанием прошлого.
     PlanFactService(session).run(company_id, acc.id, body.as_of,

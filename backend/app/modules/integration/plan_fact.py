@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.core.errors import AppError
 from app.core.models import Account, BankTransaction, PlannedEvent, PlannedEventMatch
+from app.core.snapshot_budget import SnapshotRowBudget
 from app.modules.contracts import Direction, PlannedEventDTO, TxnDTO
 from app.modules.planning.service import get_planned_event_matcher
 
@@ -31,16 +32,20 @@ class PlanFactService:
             raise AppError(404, "not_found", "Счёт не найден")
         if account.currency != "RUB":
             raise AppError(422, "unsupported_currency", "План-факт MVP поддерживает только RUB")
+        budget = SnapshotRowBudget(self.session)
+        budget.ensure_account(account_id, as_of, include_balances=False)
         cutoff = datetime.combine(as_of + timedelta(days=1), time.min, UTC)
         events = self.session.scalars(select(PlannedEvent).where(
             PlannedEvent.account_id == account_id, PlannedEvent.available_at < cutoff,
-        ).order_by(PlannedEvent.id)).all()
+        ).order_by(PlannedEvent.id).limit(budget.limits.events + 1)).all()
+        budget.ensure_count(len(events), budget.limits.events)
         if any(e.updated_at >= cutoff for e in events):
             raise AppError(409, "historical_plan_unavailable",
                            "Планы менялись после среза; история их версий пока не сохраняется")
         txns = self.session.scalars(select(BankTransaction).where(
             BankTransaction.account_id == account_id, BankTransaction.booked_on <= as_of,
-        ).order_by(BankTransaction.id)).all()
+        ).order_by(BankTransaction.id).limit(budget.limits.transactions + 1)).all()
+        budget.ensure_count(len(txns), budget.limits.transactions)
         links = self.session.scalars(select(PlannedEventMatch).join(
             PlannedEvent, PlannedEvent.id == PlannedEventMatch.planned_event_id,
         ).join(BankTransaction, BankTransaction.id == PlannedEventMatch.transaction_id).where(
