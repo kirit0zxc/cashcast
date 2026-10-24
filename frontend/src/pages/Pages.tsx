@@ -15,11 +15,13 @@ import { useCompanyCanWrite } from "../shared/company-permissions";
 import { Empty } from "../ui/Empty";
 import { Tabs, dmy } from "../ui/Blank";
 import { OverviewPage } from "./OverviewPage";
+import { EvaluationPanel } from "../features/evaluation/EvaluationPanel";
 
 // Переключение раздела только меняет видимую страницу: данные и выбранный расчёт
 // живут в AccountProvider, поэтому переход не отправляет POST и не создаёт job.
 export function Pages({ route }: { route: RoutePath }) {
   switch (route) {
+    case "/evaluation": return <Page route={route} lead="Прогноз и факт на контрольном датасете, метрики и журнал расчёта."><EvaluationPanel /></Page>;
     case "/overview": return <OverviewPage />;
     case "/operations": return <Page route={route} lead="Только фактическое движение денег по выбранному счёту."
       action={<ImportButton />}><OperationsPage /></Page>;
@@ -45,7 +47,7 @@ function Page({ route, lead, action, children }: {
   const title = index >= 0 ? ROUTES[index].title : ASSISTANT_ROUTE.title;
   return <>
     <div className="page-title"><div>
-      <span className="label">Раздел {String(index >= 0 ? index + 1 : 9).padStart(2, "0")}</span>
+      <span className="label">Раздел {String(index >= 0 ? index + 1 : ROUTES.length + 1).padStart(2, "0")}</span>
       <h1>{title}</h1>{lead && <p>{lead}</p>}</div>{action}</div>
     {children}
   </>;

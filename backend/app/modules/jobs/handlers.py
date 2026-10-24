@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from app.core.forecast_input import ForecastInputCodec
 from app.core.models import ForecastPoint, ForecastRun
 from app.modules.contracts import ScenarioChange
+from app.modules.evaluation.service import handle_evaluation
 from app.modules.forecasting.service import get_forecast_service
 from app.modules.forecasting.v2.service import GuardedForecastService
 from app.modules.jobs.incremental import ForecastCheckpointRepository
@@ -96,4 +97,4 @@ def mark_forecast_failed(session: Session, payload: dict, error_code: str) -> No
 
 
 # Реестр обработчиков по виду задания. Новые виды добавляются сюда.
-HANDLERS = {"forecast": handle_forecast}
+HANDLERS = {"forecast": handle_forecast, "evaluation": handle_evaluation}

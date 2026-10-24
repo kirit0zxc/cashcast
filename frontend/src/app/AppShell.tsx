@@ -78,7 +78,7 @@ function Sidebar({ route, user, logout, logoutError }: {
     <div className="spacer" />
     <Link className="assist" to={ASSISTANT_ROUTE.path} aria-current={route === ASSISTANT_ROUTE.path ? "page" : undefined}>
       <Aura tone="assistant" cell={4} />
-      <span><span className="label">09 · ИИ-ассистент</span><b>Юми</b><small>Вопросы о деньгах счёта</small></span>
+      <span><span className="label">{String(ROUTES.length + 1).padStart(2, "0")} · ИИ-ассистент</span><b>Юми</b><small>Вопросы о деньгах счёта</small></span>
     </Link>
     <div className="user">
       <span className="mono">{user.email}</span>

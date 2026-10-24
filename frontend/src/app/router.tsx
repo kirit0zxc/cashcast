@@ -11,6 +11,7 @@ export const ROUTES = [
   { path: "/forecast", title: "Прогноз" },
   { path: "/scenarios", title: "Сценарии" },
   { path: "/pulse", title: "Финансовый пульс" },
+  { path: "/evaluation", title: "Проверка качества" },
 ] as const;
 export const ASSISTANT_ROUTE = { path: "/assistant", title: "ИИ-ассистент" } as const;
 export type RoutePath = (typeof ROUTES)[number]["path"] | typeof ASSISTANT_ROUTE.path;
