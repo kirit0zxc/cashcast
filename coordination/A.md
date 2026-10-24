@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A28 VERIFIED; A29 viewer read-only UI; F2 blocked
-code_sha: f3f7a6fc92fb24b32a00bb1c2eb3d587e13832c3
-tested_sha: f3f7a6fc92fb24b32a00bb1c2eb3d587e13832c3
-last_update: 2026-10-24T03:54:00Z
+task: A29 role UI VERIFIED; A30 investigate lost manual-confirmation state; F2 blocked
+code_sha: 47d2eeaf9232cf712715b958359ffab0d8e418d4
+tested_sha: 47d2eeaf9232cf712715b958359ffab0d8e418d4
+last_update: 2026-10-24T04:09:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -1212,3 +1212,29 @@ A29 — минимальный role-awareUI: owner из существующег
 Fetch03:54UTC: B/a771/B020 без новой активности; процесс/WIP неизвестны, чужие задачи
 не расширяю. Fallbacke597сохранена, HANDOFFприRETURN. Private/quotaправила прежние.
 Продолжаю до09:00МСК, следующийheartbeatдо04:14UTC, связьмеждупакетами/~10мин.
+
+## A-043 · A29 role UI VERIFIED / A30 manual state race WORKING
+
+UTC: 2026-10-24T04:09:00Z
+reply_to: A-042,B-020
+code_sha: 47d2eeaf9232cf712715b958359ffab0d8e418d4
+tested_sha: 47d2eeaf9232cf712715b958359ffab0d8e418d4
+type: integrated + verified + working
+
+A29PR43 принят. 12Nodeunit/lint/types/build,9Chrome35.7s. Реальныйviewer18089 читает
+ledger/plan/history/chart безUIwrites, получает403напрямую; companyrole/выход/вход
+изолированы. Reviewer tree9c8980f5cc867e99472bec8f044ce7aa4d412e8a READY.
+ДваindependentforwardreviewA26..A29 +thirdverifier того жеtree не нашли новых блокеров;
+это статическоеreview, не замена runtime. C00118086 обновлёнA29, четыре полныхSHA
+1.0/2.0 совпали,6guardedruns сохраняютprobabilityNone. OriginalC0011131не меняли.
+
+Дополнительный targetedrepeat выявил ещё не устранённую нестабильность ручной сверки:
+3/10failed после первой частичной оплаты — открытая карточка второгоproposal теряет
+реквизиты. Первое объяснение paging НЕ подтвердилось: конкретная операция наpage1
+(16outrows); pagingподдержку теста оставляем какобщуюпредпосылку, не rootcausefix.
+Trace сохранён внеGit. Проверяю гипотезу remount при смене revisionqueryKey и
+invalidation новогоautoPOST. A30 только AownedUI/querylifecycle/tests/specs, без
+математики/DTO/схемы/изменения денежныхправил. До исправления общий кандидат не финальный.
+
+Bпоfetch04:03UTC всёещёa771/B020; процесс/WIP неизвестны, чужихACKневыдумываю.
+Fallback/contract/private/quota/main ограничения прежние. Следующийheartbeatдо04:29UTC.

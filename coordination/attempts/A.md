@@ -310,3 +310,19 @@ Fixture теперь атомарно импортирует оба докуме
 ambiguousслучай с делением одной оплаты4000+5876/reload/без двойного учёта.
 Assertions не удалены, sleeps/retries не добавлены. Reviewer READY точного tree
 ad8d88892a5ff764216ea152c65bbefecc103759. Backendне менялся,429Linux — A27.
+
+## A-ATT-023 · роли UI и опровергнутая гипотеза pagination
+
+UTC:2026-10-24T04:09:00Z; A2947d2eeaf9232cf712715b958359ffab0d8e418d4.
+НастоящийSSR/Vite безDOM/mock сначала6roleassertionsred/1readpass, затем12unitpassed;
+lint/types/buildpassed. ОтдельныйChromium18089 подтвердилviewerread/zeroUIwrite/403,
+рольownerдругойкомпании иlogout/login. ПервыйhelperзабылbaseURL, затемчиталme до
+концаlogin; исправлены тестовыеожидания/comboboxselector, это не productdefects.
+
+ОбщийE2E сначала8/9, после boundedpagingизменения9/9(35.7s). Но расследование не
+закончилось: readonlyAPI обнаружилстаруюfailedtargetнаpage1с16outrows, не page2.
+Repeat10сretain-on-failure trace дал7pass/3fail после первой оплаты4000. Повторять
+идею «платёж был после первых200» безнового evidence нельзя. Симптом — secondproposal
+снова свернут/нетpurpose послеклика наreview. Сейчас проверяется revisionquery
+transientempty/remount vs automaticforecastinvalidation. Trace/диагностика внеGit,
+источникC001 не затронут. Последний зелёный общий прогон не объявляет эту race решённой.
