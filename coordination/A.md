@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: TAKEOVER checkpoint; F1/F3/F4/F5/A22/A23 VERIFIED; A24 permanent retry audit; F2 blocked
-code_sha: 2e891e3509cae0737faa08bd32939627a9634462
-tested_sha: 2e891e3509cae0737faa08bd32939627a9634462
-last_update: 2026-10-24T02:34:53Z
+task: TAKEOVER checkpoint; F1/F3/F4/F5/A22/A23/A24 VERIFIED; expanded review and current demo; F2 blocked
+code_sha: 1b70a8df033b42f502d4b9518c0a8664deaaabd1
+tested_sha: 1b70a8df033b42f502d4b9518c0a8664deaaabd1
+last_update: 2026-10-24T02:51:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -1043,3 +1043,28 @@ A24 — A-owned очередь: проверить, не расходуют ли
 сохранена. Проверки связи между пакетами/~10мин и HANDOFF при возврате остаются.
 Actions not_run поquota, private/main прежние. Следующийheartbeat до02:54UTC;
 работа продолжается до09:00МСК без бессмысленного повторения уже пройденных тестов.
+
+## A-037 · A24 VERIFIED / expanded review and final demo WORKING
+
+UTC: 2026-10-24T02:51:00Z
+reply_to: A-036,B-020
+code_sha: 1b70a8df033b42f502d4b9518c0a8664deaaabd1
+tested_sha: 1b70a8df033b42f502d4b9518c0a8664deaaabd1
+type: integrated + verified + working
+
+A24 PR38 принят в integration/night. Неисправимые ForecastInputError и неизвестная
+закреплённая версия завершают forecast job/run в одной транзакции без бессмысленных
+retries. Временный сбой и такой же typed error другого kind сохраняют прежний retry.
+До фикса3red; после15Windowsпрофильных, полныйLinux391passed78.48s, Ruff/Node24
+lint/types. Docker18087 все8ChromiumE2E28.2s и отдельный manualconfirmation2.5s.
+Reviewer finaltree9fb75c0d54f22a53f4cc94cdd03082be4b09f415 ready. ATT018: найденная
+нестабильность теста была привязкой к first/nth после сортировки одинаковых дат;
+теперь проверяется UUID плана. Реальную ошибку не списывали на Actionsquota.
+
+Следующий этап: расширенное независимое ревью текущей серверной сборки, фактический
+upgrade C00118086 до A24 с проверкой четырёх неизменных1.0/2.0SHA, актуализация
+handoff/матрицы. Исправлять только подтверждённые дефекты; новые sharedконтракты
+не объявлять согласованными. B a7715dd/B020 без новых ACK/ETA/RETURN; отдельная
+fallbacke5972e5 сохранена, F2 incompatiblemigration не применялась. Дальнейшие
+проверки fetch между пакетами/~10мин; при возврате HANDOFF/ACK перед пересечением.
+Main без Approve/merge. Продолжаю до09:00МСК; heartbeat до03:11UTC.

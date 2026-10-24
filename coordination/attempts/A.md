@@ -230,3 +230,17 @@ Delay9999-12-31+1 до проверки давал202 для заведомо н
 
 Профиль15Windows/Ruff/OpenAPIpassed; fullLinux387passed76.09s и все8Chrome33.6s
 наDocker18087. Reviewer tree4872d0ac7e5d7684db1a48280e782348ea9cc657 ready.
+
+## A-ATT-018 · постоянная ошибка и нестабильная строка E2E
+
+UTC: 2026-10-24T02:51:00Z; A24 1b70a8df033b42f502d4b9518c0a8664deaaabd1.
+До фикса три регрессии: неизменяемый невалидный вход/неизвестная modelversion
+оставляли job pending и расходовали попытки. Старый тест искусственно max_attempts1
+скрывал проблему. Теперь permanentpolicy только для forecast и двух точных типов;
+transient/инойkind по-прежнему retry. Job/run terminal атомарны с прежними guards.
+
+Первый браузерный прогон7/8: проверка отменённого плана через first() иногда брала
+другую строку с той же датой после PATCH. Продуктовая отмена исправно сохранялась.
+Не ослаблять assertion и не добавлять sleep: выбрать точный UUID. Итог все8passed
+28.2s, затем manualconfirmation повторно2.5s. ПолныйLinux391passed78.48s, Windows
+profile15, Ruff/Nodepassed. Reviewer finaltree9fb75c0d54f22a53f4cc94cdd03082be4b09f415.
