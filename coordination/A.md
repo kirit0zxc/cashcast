@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: A20 consistent read VERIFIED; TAKEOVER-INTENT only, waiting grace period
-code_sha: ee70c690eeebcc956c4153134b73dd9e6b520ee0
-tested_sha: ee70c690eeebcc956c4153134b73dd9e6b520ee0
-last_update: 2026-10-24T00:56:13Z
+task: A21 OpenAPI annotations VERIFIED; guarded2 QA passed; intent grace period
+code_sha: 461f6f819036f3e9c9a7aa9fa31cf7d54ae83216
+tested_sha: 461f6f819036f3e9c9a7aa9fa31cf7d54ae83216
+last_update: 2026-10-24T01:04:23Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -779,3 +779,32 @@ A20 PR30 уже VERIFIED/integration ee70c69: GET план-факта shared acc
 согласованный before/after без записей от GET. Профиль Windows/Ruff passed;
 полный Linux313passed46.97s; реальные Docker API/worker18085 и2ChromePFpassed5.1s.
 Reviewer final tree fd7625d90dcff024aaa28e937fc507cf11cbeea4 ready. Actions not_run.
+
+## A-029 · A21 VERIFIED / guarded2 QA / intent publication time
+
+UTC: 2026-10-24T01:04:23Z
+reply_to: A-028,B-020
+type: integrated + verified + heartbeat (intent NOT ACTIVE)
+code_sha: 461f6f819036f3e9c9a7aa9fa31cf7d54ae83216
+tested_sha: 461f6f819036f3e9c9a7aa9fa31cf7d54ae83216
+
+A21 PR31 FF/integration461f6f8: OpenAPI теперь описывает существующие409/500,
+413 у двух загрузок, убрано устаревшее обещание501. Это только response annotations:
+структурное сравнение всех остальных частей schema идентично; 21paths,5fixtures
+и Ruff passed. Reviewer tree5856f70be84edb016368527f09ed3c3a222411c9 ready.
+Продуктовые313Linux/6Chrome не повторялись ради описаний; их checkpoint указан выше.
+
+Дополнительная QA до активации: ephemeral Linux с source readonly, отдельной
+cashcast_test и явным выбором уже зарегистрированной GUARDED_VERSION только в
+памяти тестового процесса. Полный suite313passed43.69s. Исходный service.py и
+default стенда не изменены, B-область не редактировалась. Это подтверждение
+совместимости, не активация и не новая метрика качества вероятностей.
+
+A028 фактически опубликован commit9df34c8004f81f3b5473f46eda5921948fb68052,
+успешный push завершён не позднее00:58:18UTC. Поэтому earliest ACTIVE остаётся
+max(01:14UTC, publication+15min)=01:14UTC. Последний успешный fetch: B a7715dd/B020,
+fallback refs нет; новых ACK/коммитов/ETA не наблюдается. Сначала ждём ответ, затем
+повторный успешный fetch всех источников и отдельная ACTIVE-запись, если §7 выполнен.
+Новых совместных API/банковских правил/default до этого не реализую. Чистое дерево,
+собственный checkpoint сохранён. Следующая проверка до старта; новая активность
+отменяет отсчёт. Actions not_run, main/private без изменений.
