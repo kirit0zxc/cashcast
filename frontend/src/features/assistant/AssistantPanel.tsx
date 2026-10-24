@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useAccount } from "../../app/account-context";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
-import { useYumiMood } from "./YumiAvatar";
 import { ChatCardView } from "./ChatCards";
 import { MarkdownMessage } from "./MarkdownMessage";
 
@@ -24,8 +23,6 @@ export function AssistantPanel() {
   const end = useRef<HTMLDivElement>(null);
   useEffect(() => { if (chat.entries.length) end.current?.scrollIntoView({ behavior: "smooth", block: "end" }); },
     [chat.entries.length, chat.busy]);
-  useYumiMood(chat.busy ? "thinking" : chat.error ? "error"
-    : chat.entries.at(-1)?.role === "assistant" ? "success" : "idle");
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (await chat.send(input)) setInput("");

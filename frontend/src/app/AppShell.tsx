@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { CashCastApi, type User } from "../shared/api";
 import { CompanyPermission, useCompanyCanWrite } from "../shared/company-permissions";
-import { YumiAvatar } from "../features/assistant/YumiAvatar";
+import { Aura } from "../ui/Aura";
 import { AccountProvider } from "./account-context";
 import { Empty } from "../ui/Empty";
 import { ASSISTANT_ROUTE, Link, ROUTES, normalizeLocation, useRoute, type RoutePath } from "./router";
@@ -77,8 +77,8 @@ function Sidebar({ route, user, logout, logoutError }: {
     </nav>
     <div className="spacer" />
     <Link className="assist" to={ASSISTANT_ROUTE.path} aria-current={route === ASSISTANT_ROUTE.path ? "page" : undefined}>
-      <YumiAvatar />
-      <b className="assist-name">ИИ-ассистент Юми</b>
+      <Aura tone="assistant" cell={4} />
+      <span><span className="label">{String(ROUTES.length + 1).padStart(2, "0")} · ИИ-ассистент</span><b>Юми</b><small>Вопросы о деньгах счёта</small></span>
     </Link>
     <div className="user">
       <span className="mono">{user.email}</span>
