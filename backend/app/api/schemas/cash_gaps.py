@@ -29,6 +29,9 @@ class GapSummary(GapModel):
     status: Literal["gap", "no_gap", "insufficient_data"]
     opening_already_negative: bool
     first_new_gap_date: date | None
+    days_until_new_gap: int | None = None
+    # Резерв на начало ряда без будущего возврата; не размер одобренного кредита.
+    required_reserve_minor: int = 0
     max_deficit_minor: int
     total_negative_days: int
     episodes: list[GapEpisode]

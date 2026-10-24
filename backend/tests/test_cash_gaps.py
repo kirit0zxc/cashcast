@@ -110,6 +110,26 @@ def test_one_day_and_opening_recovers_immediately():
     assert report["base"]["episodes"][0]["observed_days"] == 1
 
 
+def test_new_gap_lead_time_and_minimum_reserve_are_actionable_not_probability():
+    report = build([50, 0, -80, -40, 20], opening=100)
+    assert report["base"]["days_until_new_gap"] == 3
+    assert report["base"]["required_reserve_minor"] == 80
+    # Именно такой постоянный резерв достаточен, на копейку меньше уже нет.
+    covered = build([130, 80, 0, 40, 100], opening=180)
+    not_covered = build([129, 79, -1, 39, 99], opening=179)
+    assert covered["base"]["status"] == "no_gap"
+    assert not_covered["base"]["status"] == "gap"
+
+
+def test_existing_gap_reserve_is_needed_now_and_lead_time_is_not_fabricated():
+    report = build([0, 10], opening=-100)
+    assert report["base"]["days_until_new_gap"] is None
+    assert report["base"]["required_reserve_minor"] == 100
+    unknown = build([0, 10], opening=0, reliable=False)
+    assert unknown["base"]["status"] == "insufficient_data"
+    assert unknown["base"]["days_until_new_gap"] is None
+
+
 @pytest.mark.parametrize("reliable,status", [(True, "no_gap"), (False, "insufficient_data")])
 def test_zero_is_not_a_gap_and_no_data_not_zero_risk(reliable, status):
     report = build([0, 0], opening=0, reliable=reliable)

@@ -4836,6 +4836,22 @@
             ],
             "title": "First New Gap Date"
           },
+          "days_until_new_gap": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Days Until New Gap"
+          },
+          "required_reserve_minor": {
+            "type": "integer",
+            "title": "Required Reserve Minor",
+            "default": 0
+          },
           "max_deficit_minor": {
             "type": "integer",
             "title": "Max Deficit Minor"

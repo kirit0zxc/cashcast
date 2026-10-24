@@ -2,6 +2,7 @@
 export interface GapSummary {
   status: "gap" | "no_gap" | "insufficient_data";
   opening_already_negative: boolean; first_new_gap_date: string | null;
+  days_until_new_gap?: number | null; required_reserve_minor?: number;
   max_deficit_minor: number; total_negative_days: number;
   episodes: { kind: "existing" | "new"; first_negative_date: string; last_negative_date: string;
     recovery_date: string | null; observed_days: number; duration_is_lower_bound: boolean;

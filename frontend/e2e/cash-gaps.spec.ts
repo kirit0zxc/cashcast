@@ -41,6 +41,10 @@ test("cash gap: real import, worker, episode and financing preview preserve save
     await expect(panel).toContainText("Есть дефицит по медиане");
     const original = await (await page.request.get(`${path}/cash-gaps`)).json() as CashGapReport;
     expect(original.base.first_new_gap_date).toBe(day(5));
+    expect(original.base.days_until_new_gap).toBe(5);
+    expect(original.base.required_reserve_minor).toBe(original.base.max_deficit_minor);
+    await expect(panel).toContainText("От даты среза до нового разрыва: 5 дн.");
+    await expect(panel).toContainText("Резерв на начало прогноза");
     const company = await page.getByRole("combobox", { name: "Компания", exact: true }).inputValue();
     const before = await (await page.request.get(`/api/v1/companies/${company}/planned-events`)).json();
     await panel.getByLabel("Сумма финансирования, ₽", { exact: true }).fill("10000000");
