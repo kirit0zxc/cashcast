@@ -94,6 +94,6 @@ export class CashCastApi {
   login(email: string, password: string) { return this.post<User>("/auth/login", { email, password }); }
   logout() { return this.post<void>("/auth/logout"); }
 }
-export { money, rublesToMinor } from "./money";
+export { money, minorToInput, rublesToMinor } from "./money";
 export const probability = (value: number | null) => value === null ? "недоступна"
   : new Intl.NumberFormat("ru-RU", { style: "percent", maximumFractionDigits: 1 }).format(value);

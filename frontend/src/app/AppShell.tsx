@@ -29,20 +29,22 @@ export function AppShell({ user, logout, logoutError }: {
     ? selectedAccount : accounts.data?.items[0]?.id ?? "";
 
   return <div className="app">
-    <div className="topline">cashcast.</div>
+    <div className="topline">
+      <span className="logo">cashcast.</span>
+      <div className="context">
+        <label>Компания<select value={companyId} onChange={e => { setCompanyId(e.target.value); setSelectedAccount(""); }}>
+          {user.companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+        </select></label>
+        {companyId && <label>Счёт<select value={accountId} disabled={!accounts.data?.items.length}
+          onChange={e => setSelectedAccount(e.target.value)}>
+          {accounts.data?.items.map(a => <option value={a.id} key={a.id}>{a.name} · {a.currency}</option>)}
+        </select></label>}
+        {role && role !== "owner" && <span className="chip">только чтение</span>}
+      </div>
+    </div>
     <div className="shell">
       <Sidebar route={route} user={user} logout={logout} logoutError={logoutError} />
       <main>
-        <div className="head">
-          <label>Компания<select value={companyId} onChange={e => { setCompanyId(e.target.value); setSelectedAccount(""); }}>
-            {user.companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select></label>
-          {companyId && <label>Счёт<select value={accountId} disabled={!accounts.data?.items.length}
-            onChange={e => setSelectedAccount(e.target.value)}>
-            {accounts.data?.items.map(a => <option value={a.id} key={a.id}>{a.name} · {a.currency}</option>)}
-          </select></label>}
-          {role && role !== "owner" && <span className="chip">только чтение</span>}
-        </div>
         {!companyId && <Empty title="Нет доступных компаний" text="Обратитесь к владельцу стенда." />}
         {accounts.isPending && companyId && <p role="status">Получаем счета…</p>}
         {accounts.error && <p role="alert">{accounts.error.message}</p>}
