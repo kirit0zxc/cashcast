@@ -2,7 +2,7 @@
 
 data_version — sha256 от детерминированно сериализованного входа. Один и тот же вход
 даёт один и тот же хеш, поэтому уникальный ключ ForecastRun ловит повторный расчёт.
-Начальный остаток берём из проверенного дневного остатка на дату среза (или ближайшего ранее).
+Начальный остаток: последний EOD плюс известные потоки после него до даты среза.
 """
 
 from __future__ import annotations
@@ -102,7 +102,8 @@ def build_snapshot(
         for b in balances
     ]
 
-    # Начальный остаток: проверенный остаток на дату среза или ближайший до неё.
+    # EOD уже включает операции своего дня. Переносим только более поздние
+    # известные факты; расчётный уровень не записывается как подтверждённый EOD.
     opening = next((b.closing_balance_minor for b in reversed(balances)), None)
     if opening is None:
         opening = 0
@@ -110,6 +111,11 @@ def build_snapshot(
     elif balances[-1].balance_date < as_of:
         warnings.append(f"Последний подтверждённый остаток: {balances[-1].balance_date}; "
                         "на дату среза остаток не подтверждён.")
+        later = [t for t in txn_dtos if balances[-1].balance_date < t.booked_on <= as_of]
+        if later:
+            opening += sum(t.amount_minor if t.direction == Direction.IN else -t.amount_minor for t in later)
+            warnings.append("Остаток на дату среза расчётный: к последнему EOD добавлены известные операции; "
+                            "полнота последующей выписки не подтверждена.")
 
     # Плановые события только те, что известны на дату среза (available_at <= as_of) —
     # для честного прогноза не подмешиваем будущее знание.

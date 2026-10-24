@@ -89,19 +89,38 @@ def patch_event(
 
     previous_remaining = event.remaining_amount_minor
 
+    if event.status in {"paid", "cancelled"} and (
+        (body.amount_minor is not None and body.amount_minor != event.amount_minor)
+        or (body.status is not None and body.status != event.status)
+    ):
+        # Нулевой остаток отмены не доказывает оплату. Без истории переходов
+        # нельзя восстановить долг либо изменить закрытую сумму; exact repeat допустим.
+        raise AppError(409, "closed_plan_event", "Закрытый план нельзя возобновить или изменить его сумму")
+
     if body.due_date is not None:
         event.due_date = body.due_date
     if body.amount_minor is not None:
-        # Пересчитываем остаток пропорционально уже оплаченной части.
+        # Сохраняем уже оплаченную сумму, а не долю исходного обязательства.
         paid = event.amount_minor - event.remaining_amount_minor
         if body.amount_minor < paid:
             raise AppError(422, "amount_below_paid", "Сумма не может быть меньше уже оплаченной части")
         event.amount_minor = body.amount_minor
         event.remaining_amount_minor = max(0, body.amount_minor - paid)
+        if event.status in {"planned", "partially_paid"}:
+            event.status = "paid" if event.remaining_amount_minor == 0 else (
+                "partially_paid" if paid else "planned"
+            )
     if body.status is not None:
         event.status = body.status
         if body.status in {"cancelled", "paid"}:
             event.remaining_amount_minor = 0
+    if event.status in {"planned", "partially_paid"}:
+        expected = "paid" if event.remaining_amount_minor == 0 else (
+            "planned" if event.remaining_amount_minor == event.amount_minor else "partially_paid"
+        )
+        if body.status is not None and body.status != expected:
+            raise AppError(422, "invalid_plan_status", "Статус должен соответствовать оплаченной сумме")
+        event.status = expected
     if event.account_id is not None:
         PlanCapacityPolicy(session).ensure_change(
             event.account_id, added_count=0, remaining_delta=event.remaining_amount_minor - previous_remaining,

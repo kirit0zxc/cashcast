@@ -75,6 +75,8 @@ class PlanFactService:
             status=e.status, kind=e.kind, source=e.source, available_at=e.available_at.date(),
             counterparty_ref=e.counterparty_ref or e.counterparty_name, recurrence_group=e.recurrence_group,
         ) for e in events if e.currency == "RUB"]
+        active_count = sum(p.status in {"planned", "partially_paid"} and p.remaining_amount_minor > 0 for p in plans)
+        budget.ensure_matching(active_count, len(inputs))
         proposals = [p for p in get_planned_event_matcher().match(plans, inputs)
                      if (p.planned_event_id, p.transaction_id) not in pairs]
         if write:

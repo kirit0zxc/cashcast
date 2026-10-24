@@ -12,6 +12,9 @@ from app.modules.forecasting.v2.quality import ResourceLimits
 
 
 class SnapshotRowBudget:
+    # Matcher материализует пары: отдельные лимиты таблиц не ограничивают их произведение.
+    MAX_MATCHING_PAIRS = 100_000
+
     def __init__(self, session: Session):
         self.session = session
         self.limits = ResourceLimits()
@@ -35,3 +38,9 @@ class SnapshotRowBudget:
     def ensure_count(count: int, maximum: int) -> None:
         if count > maximum:
             raise AppError(422, "forecast_resource_limit", "Вход превышает лимит операций, остатков или планов")
+
+    @classmethod
+    def ensure_matching(cls, active_events: int, available_operations: int) -> None:
+        if active_events * available_operations > cls.MAX_MATCHING_PAIRS:
+            # Усечение edges меняет степень неоднозначности и может ошибочно разрешить auto-confirm.
+            raise AppError(422, "plan_fact_resource_limit", "Слишком много пар для безопасной сверки плана и факта")

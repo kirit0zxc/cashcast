@@ -24,7 +24,7 @@ router = APIRouter(tags=["imports"], responses=ERROR_RESPONSES)
 
 @router.post("/companies/{company_id}/imports", response_model=ImportPreviewResponse,
              responses={413: {"model": ErrorResponse, "description": "Файл превышает допустимый размер"}})
-async def create_import(
+def create_import(
     company_id: uuid.UUID,
     account_id: uuid.UUID = Form(...),
     mapping: str = Form(..., description="JSON соответствия колонок (ColumnMappingIn)"),
@@ -34,7 +34,9 @@ async def create_import(
     session: Session = Depends(get_db, scope="function"),
     settings: Settings = Depends(get_settings),
 ) -> ImportPreviewResponse:
-    content = await file.read(settings.max_upload_bytes + 1)
+    # Sync endpoint выполняется в threadpool: SQL/CSV не блокируют ASGI loop,
+    # который должен завершать commit другого запроса и освобождать account lock.
+    content = file.file.read(settings.max_upload_bytes + 1)
     if len(content) > settings.max_upload_bytes:
         raise AppError(413, "file_too_large", "Файл превышает допустимый размер")
 

@@ -21,7 +21,7 @@ router = APIRouter(tags=["obligation-imports"], responses=ERROR_RESPONSES)
 
 @router.post("/companies/{company_id}/obligation-imports", response_model=ObligationPreviewOut,
              responses={413: {"model": ErrorResponse, "description": "Файл превышает допустимый размер"}})
-async def preview_obligations(
+def preview_obligations(
     company_id: uuid.UUID,
     account_id: uuid.UUID = Form(...),
     source_name: str = Form(..., min_length=1, max_length=40),
@@ -33,7 +33,8 @@ async def preview_obligations(
     settings: Settings = Depends(get_settings),
 ) -> ObligationPreviewOut:
     limit = min(settings.max_upload_bytes, 10 * 1024 * 1024)
-    content = await file.read(limit + 1)
+    # Чтение и синхронный SQL остаются в threadpool FastAPI, включая ожидание lock.
+    content = file.file.read(limit + 1)
     if len(content) > limit:
         raise AppError(413, "file_too_large", "Файл превышает допустимый размер")
     result = ObligationImportService(session).preview(
