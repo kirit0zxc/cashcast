@@ -294,3 +294,45 @@ details.panel.dash > form { margin-top: 12px; }
   .kpi { padding-left: 0; border-right: 0; border-bottom: 1px dashed var(--ink); }
   .foot .barcode { display: none; }
 }
+
+/* Телефон: шапка компактная, меню в одну прокручиваемую строку, контент сразу виден. */
+@media (max-width: 700px) {
+  .topline { gap: 8px; padding: 10px 16px 0; }
+  .topline .context { gap: 6px; width: 100%; }
+  .topline label { flex: 1 1 calc(50% - 6px); min-width: 0; padding: 2px 2px 2px 8px; font-size: 9px; }
+  .topline select { min-width: 0; width: 100%; font-size: 13px; padding: 4px 2px; text-overflow: ellipsis; }
+
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .side { padding: 8px 0 10px; margin-bottom: 14px; gap: 8px; min-width: 0; max-width: 100%;
+    flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .side .nav { flex: 1 1 100%; }
+  .side .assist { flex: 1 1 auto; }
+  .side .user { flex: none; }
+  .nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { flex: none; white-space: nowrap; padding: 6px 9px; font-size: 13px; }
+  .assist { margin-top: 0; padding: 6px 8px; grid-template-columns: 28px 1fr; gap: 8px; }
+  .assist canvas { width: 28px; height: 28px; }
+  .assist small, .assist .label { display: none; }
+  .side .user { margin-top: 0; display: flex; justify-content: space-between; gap: 8px; }
+  .side .user span { display: none; }
+  .side .user button { padding: 6px 10px; font-size: 12px; margin-left: auto; }
+
+  .page-title h1, .hero h1 { font-size: 28px; }
+  .statusbox { min-height: 0; padding: 22px 16px 18px; }
+  .statusword { position: relative; left: auto; right: auto; bottom: auto; }
+  .statusword b { font-size: 20px; }
+
+  .tabs { flex-wrap: wrap; overflow: visible; border-bottom: 0; gap: 4px; }
+  .tabs button, .tabs button + button { border: 1px solid var(--ink); font-size: 13px; padding: 7px 10px; white-space: normal; }
+
+  input, select, textarea { max-width: 100%; }
+  input[type="file"] { width: 100%; }
+  .upload, .upload label, .upload details { min-width: 0; max-width: 100%; }
+  .row > label { flex: 1 1 100%; min-width: 0; }
+  .toolbar small { flex-basis: 100%; }
+  .pager { gap: 6px; }
+  .pager button { flex: 1 1 auto; }
+  .proposals { grid-template-columns: 1fr; }
+  table.ops .cat { min-width: 140px; }
+}
