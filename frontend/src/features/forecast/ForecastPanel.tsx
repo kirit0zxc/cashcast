@@ -1,106 +1,48 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { type FormEvent } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { CashCastApi, money, probability, type Accepted, type Forecast, type Job } from "../../shared/api";
+import { money, probability, type Forecast } from "../../shared/api";
 import { Explanations } from "./Explanations";
 import { ForecastHistory } from "./ForecastHistory";
-import { ScenarioPanel } from "./ScenarioPanel";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
-import { PulsePanel } from "../pulse/PulsePanel";
+import { useAccount } from "../../app/account-context";
 
-export function ForecastPanel({ api, companyId, accountId, initialDate, autoRun, onDateChange }: {
-  api: CashCastApi; companyId: string; accountId: string; initialDate: string;
-  autoRun: boolean; onDateChange: (date: string) => void;
-}) {
+// Состояние расчёта живёт в контроллере счёта: вкладка только показывает и управляет им.
+export function ForecastPanel() {
+  const { api, companyId, accountId, forecast: c } = useAccount();
   const canWrite = useCompanyCanWrite();
-  const [asOf, setAsOf] = useState(initialDate);
-  const [accepted, setAccepted] = useState<Accepted | null>(null);
-  const [saved, setSaved] = useState<{ id: string; job_id: string | null; error_code?: string | null } | null>(null);
-  const runId = saved?.id ?? accepted?.forecast_run_id;
-  const jobId = saved ? saved.job_id : accepted?.job_id;
-  const cache = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: (requestedDate: string) => api.post<Accepted>(`/companies/${companyId}/forecasts`, {
-      account_id: accountId, as_of: requestedDate, horizon_days: 30,
-    }), onSuccess: async data => {
-      setSaved(null);
-      setAccepted(data);
-      // Enqueue может выполнить auto-reconcile; job остаётся в этом компоненте.
-      await Promise.all([
-        // Явный recovery может вернуть тот же ID после cached failed.
-        cache.invalidateQueries({ queryKey: ["job", data.job_id] }),
-        cache.invalidateQueries({ queryKey: ["forecast", data.forecast_run_id] }),
-        cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] }),
-        cache.invalidateQueries({ queryKey: ["plan-fact", companyId, accountId] }),
-        cache.invalidateQueries({ queryKey: ["forecast-history", companyId, accountId] }),
-      ]);
-    },
-  });
-  const automaticSent = useRef(false);
-  const { mutate } = mutation;
-  useEffect(() => {
-    if (!canWrite || !autoRun || automaticSent.current) return;
-    // StrictMode сначала снимает подписку mutation observer и повторяет setup.
-    // Отменённый setup не отправляет POST; рабочий запускается после переподписки.
-    let active = true;
-    queueMicrotask(() => {
-      if (!active || automaticSent.current) return;
-      automaticSent.current = true;
-      mutate(initialDate);
-    });
-    return () => { active = false; };
-  }, [canWrite, autoRun, initialDate, mutate]);
-  const job = useQuery({
-    queryKey: ["job", jobId],
-    queryFn: ({ signal }) => api.request<Job>(`/jobs/${jobId}`, { signal }),
-    enabled: !!jobId,
-    refetchInterval: query => ["succeeded", "failed"].includes(query.state.data?.status ?? "") ? false : 1500,
-  });
-  const forecast = useQuery({
-    queryKey: ["forecast", runId],
-    queryFn: ({ signal }) => api.request<Forecast>(`/forecasts/${runId}`, { signal }),
-    enabled: !!runId && (!jobId || job.error !== null || ["succeeded", "failed"].includes(job.data?.status ?? "")),
-  });
-  const working = mutation.isPending || (!!jobId && !job.error
-    && !["succeeded", "failed"].includes(job.data?.status ?? ""));
-  function submit(event: FormEvent) {
-    event.preventDefault(); if (!canWrite) return; automaticSent.current = true;
-    setSaved(null); setAccepted(null); mutation.mutate(asOf);
-  }
-  return <section className="panel"><h2>2. Прогноз на 30 дней</h2>
+  function submit(event: FormEvent) { event.preventDefault(); c.run(); }
+  return <section className="panel"><h2>Прогноз на 30 дней</h2>
     {canWrite && <form onSubmit={submit} className="row">
-      <label>Дата среза<input type="date" disabled={working} required value={asOf} onChange={e => {
-        setAsOf(e.target.value); onDateChange(e.target.value);
-        setSaved(null); setAccepted(null); mutation.reset();
-      }} /></label>
-      <button disabled={!accountId || working}>Рассчитать</button>
+      <label>Дата среза<input type="date" disabled={c.working} required value={c.asOf}
+        onChange={e => c.changeDate(e.target.value)} /></label>
+      <button disabled={!accountId || c.working}>Рассчитать</button>
     </form>}
     <p>Используем сведения, известные на дату среза. Для выписки выберите её последний день.</p>
     {canWrite && <p>После сохранения данных в кабинете прогноз обновляется автоматически. Сохранённые расчёты остаются в истории.</p>}
     <p>На сегодняшнем срезе однозначные оплаты сверяются автоматически; неоднозначные подтверждайте вручную.</p>
-    <ForecastHistory api={api} companyId={companyId} accountId={accountId} disabled={mutation.isPending}
-      onOpen={entry => {
-        mutation.reset(); setAccepted(null); setAsOf(entry.as_of); onDateChange(entry.as_of);
-        setSaved({ id: entry.id, job_id: entry.job_id, error_code: entry.error_code });
-      }} />
-    {working && <p role="status">Задание: {job.data?.status ?? "отправляем"}. Ожидаем worker…</p>}
-    {job.data?.status === "failed" && <p role="alert">Расчёт не выполнен: {job.data.error_code}</p>}
-    {[mutation.error, job.error, forecast.error].filter(Boolean).map((e, i) => <p role="alert" key={i}>{e!.message}</p>)}
-    {forecast.data && forecast.data.status !== "succeeded" && <p role="status">
-      Сохранённый расчёт: {forecast.data.status}. Открытие не создаёт новое задание.
-      {saved?.error_code && ` Причина: ${saved.error_code}`}
-    </p>}
-    {forecast.data?.status === "succeeded" && <><ForecastView forecast={forecast.data} />
-      <Explanations api={api} forecastId={forecast.data.id} />
-      <PulsePanel key={forecast.data.id} api={api} forecastId={forecast.data.id} />
-      {forecast.data.base_forecast_id ? <button type="button" onClick={() => {
-        setAccepted(null); setSaved({ id: forecast.data!.base_forecast_id!, job_id: null });
-      }}>Открыть исходный прогноз</button> : canWrite && <ScenarioPanel key={forecast.data.id} api={api} base={forecast.data} />}</>}
+    <ForecastHistory api={api} companyId={companyId} accountId={accountId} disabled={c.requesting} onOpen={c.open} />
+    <ForecastState />
+    {c.forecast.data?.status === "succeeded" && <><ForecastView forecast={c.forecast.data} />
+      <Explanations api={api} forecastId={c.forecast.data.id} /></>}
   </section>;
 }
 
+// Общая строка состояния расчёта для вкладок, которые показывают выбранный прогноз.
+export function ForecastState() {
+  const { forecast: c } = useAccount();
+  return <>
+    {c.working && <p role="status">Задание: {c.job.data?.status ?? "отправляем"}. Ожидаем worker…</p>}
+    {c.job.data?.status === "failed" && <p role="alert">Расчёт не выполнен: {c.job.data.error_code}</p>}
+    {c.errors.map((e, i) => <p role="alert" key={i}>{e.message}</p>)}
+    {c.forecast.data && c.forecast.data.status !== "succeeded" && <p role="status">
+      Сохранённый расчёт: {c.forecast.data.status}. Открытие не создаёт новое задание.
+      {c.selection.mode === "run" && c.selection.errorCode && ` Причина: ${c.selection.errorCode}`}
+    </p>}
+  </>;
+}
+
 // График хранит копейки; рубли используются только в подписях.
-function ForecastView({ forecast: f }: { forecast: Forecast }) {
+export function ForecastView({ forecast: f }: { forecast: Forecast }) {
   return <>
     <p>Модель: {f.model_version}. Начальный остаток: {money(f.opening_balance_minor)}.</p>
     <p data-testid="calculation-mode">{f.calculation?.mode === "incremental"

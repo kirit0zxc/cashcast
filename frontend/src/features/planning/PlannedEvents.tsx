@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { CashCastApi, money, rublesToMinor, type PlannedEvent } from "../../shared/api";
-import { ObligationImport } from "./ObligationImport";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
 
 // Форма использует существующий API: будущий платёж становится новым входом прогноза.
@@ -43,7 +42,6 @@ export function PlannedEvents({ api, companyId, accountId, onChanged }: {
       <button disabled={create.isPending}>Добавить платёж</button>
     </form>}
     {create.isSuccess && <p role="status">План сохранён. Дата среза переключена на сегодня; прогноз обновляется автоматически.</p>}
-    <ObligationImport api={api} companyId={companyId} accountId={accountId} onChanged={changed} />
     {events.isPending && <p role="status">Получаем планы…</p>}
     {[events.error, create.error, cancel.error].filter(Boolean).map((e, i) => <p role="alert" key={i}>{e!.message}</p>)}
     {events.data && rows.length === 0 && <p>На выбранном счёте пока нет плановых платежей.</p>}

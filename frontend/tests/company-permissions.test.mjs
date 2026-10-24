@@ -8,23 +8,28 @@ import { createServer } from "vite";
 // Проверяем настоящий JSX без DOM, сетевых заглушек и дополнительной test-библиотеки.
 let server;
 let permissions;
+let account;
 before(async () => {
   server = await createServer({ server: { middlewareMode: true }, appType: "custom" });
   permissions = await server.ssrLoadModule("/src/shared/company-permissions.tsx");
+  account = await server.ssrLoadModule("/src/app/account-context.tsx");
 });
 after(async () => { await server?.close(); });
 
 async function render(path, name, props, role) {
   const component = (await server.ssrLoadModule(path))[name];
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  // Страницы счёта берут общий контекст (выбранный расчёт, события изменений) из AccountProvider.
+  const page = createElement(account.AccountProvider,
+    { api: props.api, companyId: props.companyId, accountId: props.accountId }, createElement(component, props));
   try {
     return renderToStaticMarkup(createElement(QueryClientProvider, { client },
-      createElement(permissions.CompanyPermission, { role }, createElement(component, props))));
+      createElement(permissions.CompanyPermission, { role }, page)));
   } finally { client.clear(); }
 }
 
 const base = { api: {}, companyId: "company", accountId: "account", onChanged() {}, onApplied() {},
-  onCommit() {}, revision: 0, initialDate: "2026-10-24", autoRun: false, onDateChange() {} };
+  onCommit() {} };
 const cases = [
   ["imports/StatementImport", "StatementImport", "Проверить файл"],
   ["planning/ObligationImport", "ObligationImport", "Проверить обязательства"],

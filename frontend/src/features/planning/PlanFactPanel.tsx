@@ -4,14 +4,14 @@ import { ProposalConfirmation } from "./ProposalConfirmation";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
 
 // GET показывает предложения; оплатой становятся только записанные сервером связи.
-export function PlanFactPanel({ api, companyId, accountId, revision, onApplied }: {
-  api: CashCastApi; companyId: string; accountId: string; revision: number; onApplied: () => void;
+export function PlanFactPanel({ api, companyId, accountId, onApplied }: {
+  api: CashCastApi; companyId: string; accountId: string; onApplied: () => void;
 }) {
   const canWrite = useCompanyCanWrite();
   const cache = useQueryClient();
   const today = new Date().toISOString().slice(0, 10);
   const path = `/companies/${companyId}/plan-fact?${new URLSearchParams({ account_id: accountId, as_of: today })}`;
-  const query = useQuery({ queryKey: ["plan-fact", companyId, accountId, today, revision],
+  const query = useQuery({ queryKey: ["plan-fact", companyId, accountId, today],
     queryFn: ({ signal }) => api.request<PlanFact>(path, { signal }) });
   const apply = useMutation({ mutationFn: () => api.post<PlanFact>(path), onSuccess: async () => {
     await cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] });
