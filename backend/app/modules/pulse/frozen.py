@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from app.core.errors import AppError
 from app.modules.contracts import Category, ForecastInput
-from app.modules.forecasting.v2.quality import MAX_MONEY_MINOR, validate_input
+from app.modules.forecasting.v2.quality import MAX_MONEY_MINOR, assess_quality, validate_input
 
 from .adapters import operations_from_records
 from .advisor.baseline_curve import BaseCurve, Flow
@@ -58,6 +58,11 @@ class FrozenPulseService:
             or any(t.booked_on <= data.as_of for t in data.txns)
             or any(b.balance_date <= data.as_of for b in data.daily_balances)
             or any(f.kind in {"planned", "recurrence", "scenario_expense"} and f.amount_minor for f in curve.flows),
+            # Вероятность может быть недоступна и при пригодной точечной модели.
+            # Для старых сохранённых результатов без quality проверяем их frozen-вход.
+            cash_reliable=(details["quality"]["eligible_for_simulation"] is True
+                           if "eligible_for_simulation" in details.get("quality", {})
+                           else assess_quality(data).eligible_for_simulation),
             cfg=PulseConfig(warn_days=data.horizon_days),
         ).to_dict()
         report["method_version"] = cls.VERSION

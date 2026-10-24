@@ -3,6 +3,7 @@ import { useAccount } from "../app/account-context";
 import { Link, navigate } from "../app/router";
 import { ForecastState } from "../features/forecast/ForecastPanel";
 import { ProbabilityNotice } from "../features/forecast/ProbabilityNotice";
+import { medianGap } from "../features/forecast/median-gap";
 import type { PulseReport, Status } from "../features/pulse/types";
 import { money, probability, type Forecast, type PlanFact, type PlannedEvent } from "../shared/api";
 import { useCompanyCanWrite } from "../shared/company-permissions";
@@ -58,6 +59,7 @@ function Report({ forecast: f }: { forecast: Forecast }) {
       `/companies/${companyId}/plan-fact?${new URLSearchParams({ account_id: accountId, as_of: date })}`, { signal }),
   });
   const points = f.points;
+  const gap = medianGap(f);
   const last = points.at(-1);
   const min = points.reduce<typeof last>((m, p) => !m || p.balance_p50_minor < m.balance_p50_minor ? p : m, undefined);
   const status: Status = pulse.data?.status ?? "unknown";
@@ -75,8 +77,8 @@ function Report({ forecast: f }: { forecast: Forecast }) {
         {last && <div className="leader"><span>Прогноз до</span><i /><span>{day(last.point_date)}</span></div>}
         <div className="leader"><span>Режим расчёта</span><i /><span>{f.calculation?.mode === "incremental"
           ? "частичное обновление" : f.calculation ? "полный расчёт" : "нет сведений"}</span></div>
-        <div className="leader"><span>Первый день в минусе</span><i /><span>{f.risk.first_negative_date
-          ? day(f.risk.first_negative_date) : f.risk.available ? "не прогнозируется" : "нет оценки"}</span></div>
+        <div className="leader"><span>Первый день в минусе</span><i /><span>{gap.firstNegativeDate
+          ? day(gap.firstNegativeDate) : gap.hasForecast ? "не выявлен по медиане" : "нет точек прогноза"}</span></div>
       </div>
       <div className="statusbox" aria-label="Статус финансового пульса">
         <Aura tone={status} />
@@ -119,18 +121,20 @@ function Report({ forecast: f }: { forecast: Forecast }) {
             <Link to="/forecast">таблица по дням →</Link>
           </div>
         </div>
-        {(f.risk.first_negative_date || status === "risk") && <div className="warn" role="status">
+        {(gap.firstNegativeDate || status === "risk") && <div className="warn" role="status">
           <div className="sign"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
             <path d="M12 3 2 21h20L12 3z" /><path d="M12 10v5M12 18h.01" /></svg>WARNING</div>
           <div className="body">
-            <b>{f.risk.first_negative_date ? `Возможный минус с ${day(f.risk.first_negative_date)}` : STATUS.risk}</b>
-            <p>{pulse.data?.cash.message ?? `Максимальный дефицит по прогнозу: ${money(f.risk.max_deficit_minor)}.`}</p>
+            <b>{gap.firstNegativeDate ? `Возможный минус с ${day(gap.firstNegativeDate)}` : STATUS.risk}</b>
+            <p>{pulse.data?.cash.message ?? `Максимальный дефицит по прогнозу: ${money(gap.maxDeficitMinor)}.`}</p>
             <button type="button" onClick={() => navigate("/pulse")}>Открыть пульс</button>
           </div>
         </div>}
       </div>
       <div className="stack">
-        <div className="panel dash"><span className="label">Ближайшие платежи</span>
+        <div className="panel dash"><span className="label">Текущие плановые платежи</span>
+          <p className="note">Список на сегодня. Прогноз использует только планы, известные на {day(f.as_of)},
+            {" "}в пределах своего горизонта{last ? ` до ${day(last.point_date)}` : ""}.</p>
           {plans.error && <p role="alert">{plans.error.message}</p>}
           {plans.data && !upcoming.length && <p>Плановых платежей нет.</p>}
           <ul className="list">{upcoming.map(e => <li key={e.id}>
