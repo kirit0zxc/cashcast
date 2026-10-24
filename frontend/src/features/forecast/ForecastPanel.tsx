@@ -6,6 +6,7 @@ import { Explanations } from "./Explanations";
 import { ForecastHistory } from "./ForecastHistory";
 import { ScenarioPanel } from "./ScenarioPanel";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
+import { PulsePanel } from "../pulse/PulsePanel";
 
 export function ForecastPanel({ api, companyId, accountId, initialDate, autoRun, onDateChange }: {
   api: CashCastApi; companyId: string; accountId: string; initialDate: string;
@@ -91,6 +92,7 @@ export function ForecastPanel({ api, companyId, accountId, initialDate, autoRun,
     </p>}
     {forecast.data?.status === "succeeded" && <><ForecastView forecast={forecast.data} />
       <Explanations api={api} forecastId={forecast.data.id} />
+      <PulsePanel key={forecast.data.id} api={api} forecastId={forecast.data.id} />
       {forecast.data.base_forecast_id ? <button type="button" onClick={() => {
         setAccepted(null); setSaved({ id: forecast.data!.base_forecast_id!, job_id: null });
       }}>Открыть исходный прогноз</button> : canWrite && <ScenarioPanel key={forecast.data.id} api={api} base={forecast.data} />}</>}
