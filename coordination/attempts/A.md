@@ -124,3 +124,7 @@ SQLpreflight проверяет тежеResourceLimits раньше; boundedORM+
 отдельныйplanfact — только используемыеим операции/планы. Послефикса308fullpytest
 Windows47.89s+Ruffpassed, включаяпятьновыхреальныхDBпроверок. Linux/Docker/E2E/review
 следуют. Это rowguard, не полная production-нагрузочная или memory-безопасность.
+
+Итог A16: Linux 308 passed 47.85s, Ruff/Alembic check passed, OpenAPI без diff;
+пересобранные API/worker и 5 Chromium E2E на 18085 passed 19.1s. Reviewer tree
+92d3821471d912280f9e3ffceecc7ce49733270b ready. Code 9830988 принят через PR26.
