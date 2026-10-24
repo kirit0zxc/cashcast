@@ -3,7 +3,7 @@
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,6 +12,12 @@ class Settings(BaseSettings):
 
     app_env: Literal["dev", "test", "prod"] = "dev"
     log_level: str = "INFO"
+
+    # Ключ доступен только API; repr настроек скрывает его значение.
+    openrouter_api_key: SecretStr = SecretStr("")
+    assistant_model: str = "deepseek/deepseek-v4.1-flash-1017"
+    assistant_daily_turns: int = Field(default=100, ge=1, le=10000)
+    assistant_timeout_seconds: int = Field(default=40, ge=5, le=45)
 
     # Драйвер psycopg 3; формат: postgresql+psycopg://user:pass@host:5432/db
     database_url: str = "postgresql+psycopg://cashcast:cashcast@localhost:5432/cashcast"
