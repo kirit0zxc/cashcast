@@ -10,7 +10,8 @@ let server;
 let permissions;
 let account;
 before(async () => {
-  server = await createServer({ server: { middlewareMode: true }, appType: "custom" });
+  server = await createServer({ server: { middlewareMode: true, hmr: false, ws: false }, appType: "custom",
+    optimizeDeps: { noDiscovery: true, entries: [] } });
   permissions = await server.ssrLoadModule("/src/shared/company-permissions.tsx");
   account = await server.ssrLoadModule("/src/app/account-context.tsx");
 });

@@ -35,7 +35,7 @@ def request(ctx):
             "messages": [{"role": "user", "content": "Создай плановый расход 123 рубля"}]}
 
 
-def mock_tools(monkeypatch, calls):
+def mock_tools(monkeypatch, calls, final_text="Проверьте карточку и подтвердите действие."):
     seen = []
 
     def complete(self, messages, tools, timeout):
@@ -43,7 +43,7 @@ def mock_tools(monkeypatch, calls):
         if len(seen) == 1:
             return {"role": "assistant", "tool_calls": [{"id": f"call_{i}", "type": "function",
                     "function": {"name": name, "arguments": json.dumps(args)}} for i, (name, args) in enumerate(calls)]}
-        return {"role": "assistant", "content": "Проверьте карточку и подтвердите действие."}
+        return {"role": "assistant", "content": final_text}
 
     monkeypatch.setattr(OpenRouterClient, "complete", complete)
     return seen
@@ -78,6 +78,72 @@ def test_cancel_is_terminal(client, session_factory, logged_in, monkeypatch):
     assert client.post(path, json={"decision": "cancel"}).status_code == 200
     reply = client.post(path, json={"decision": "confirm"})
     assert reply.json()["cards"][0]["data"]["status"] == "cancelled"
+    assert count(session_factory, PlannedEvent) == 0
+
+
+def test_proposal_uses_authoritative_text_and_preserves_original_name(client, session_factory, logged_in, monkeypatch):
+    original_name = "ООО Тестовый Вектор"
+    seen = mock_tools(monkeypatch, [("propose_create_plan", {"body": {
+        "direction": "out", "amount_minor": 12345, "due_date": "2026-11-01",
+        "counterparty_name": original_name,
+    }})], final_text="Я уже сохранил платёж и заменил имя на Контрагент-deadbeef.")
+    response = client.post(chat_url(logged_in), json=request(logged_in))
+    assert response.status_code == 200
+    reply = response.json()
+    assert "Я уже сохранил" not in reply["text"] and "deadbeef" not in reply["text"]
+    assert "ожидают вашего подтверждения" in reply["text"]
+    assert "не меняет имена" in reply["text"]
+    action = reply["cards"][0]["data"]
+    assert action["arguments"]["body"]["counterparty_name"] == original_name
+    assert count(session_factory, PlannedEvent) == 0
+    tool_copy = next(m["content"] for m in seen[-1] if m["role"] == "tool")
+    assert original_name not in tool_copy and "Контрагент-" in tool_copy
+    confirmed = client.post(action_url(logged_in, action["action_id"]), json={"decision": "confirm"})
+    assert confirmed.status_code == 200
+    with session_factory() as session:
+        plan = session.scalar(select(PlannedEvent))
+        assert plan.counterparty_name == original_name
+        assert plan.amount_minor == 12345
+
+
+def test_proposal_does_not_hide_later_provider_error(client, logged_in, monkeypatch):
+    calls = 0
+
+    def complete(self, messages, tools, timeout):
+        nonlocal calls
+        calls += 1
+        if calls > 1:
+            raise AppError(503, "assistant_provider_unavailable", "Провайдер недоступен")
+        return {"role": "assistant", "tool_calls": [{"id": "proposal", "type": "function", "function": {
+            "name": "propose_create_plan", "arguments": json.dumps({"body": {
+                "direction": "out", "amount_minor": 12345, "due_date": "2026-11-01"}})}}]}
+
+    monkeypatch.setattr(OpenRouterClient, "complete", complete)
+    reply = client.post(chat_url(logged_in), json=request(logged_in)).json()
+    assert reply["error_code"] == "assistant_provider_unavailable"
+    assert "Провайдер недоступен" in reply["text"]
+    assert reply["cards"][0]["data"]["status"] == "pending"
+
+
+@pytest.mark.parametrize("failed_call,expected", [
+    (("propose_create_plan", {"body": {"direction": "out", "amount_minor": -1}}),
+     "Проверьте формат и обязательные поля"),
+    (("confirm_action", {}), "Запрошенная операция недоступна"),
+    (("propose_update_plan", {"event_id": "00000000-0000-0000-0000-000000000001",
+                              "body": {"amount_minor": 100}}), "Объект выбранного счёта не найден"),
+])
+def test_partial_tool_failure_is_visible_with_prepared_action(
+    client, session_factory, logged_in, monkeypatch, failed_call, expected,
+):
+    mock_tools(monkeypatch, [("propose_create_plan", {"body": {
+        "direction": "out", "amount_minor": 12345, "due_date": "2026-11-01"}}), failed_call],
+        final_text="Все действия выполнены, ошибок нет.")
+    response = client.post(chat_url(logged_in), json=request(logged_in))
+    assert response.status_code == 200
+    reply = response.json()
+    assert len(reply["cards"]) == 1 and reply["cards"][0]["data"]["status"] == "pending"
+    assert "Некоторые запросы не обработаны" in reply["text"] and expected in reply["text"]
+    assert "Все действия выполнены" not in reply["text"]
     assert count(session_factory, PlannedEvent) == 0
 
 
