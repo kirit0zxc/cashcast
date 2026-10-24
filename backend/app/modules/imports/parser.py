@@ -19,6 +19,7 @@ from datetime import date, datetime
 
 from app.core.limits import MAX_MONEY_MINOR
 from app.modules.contracts import Direction
+from app.modules.imports.identity import BankOperationIdentity
 
 # Форматы дат пробуем по порядку. Расширяемо под реальный банк.
 _DATE_FORMATS = ("%Y-%m-%d", "%d.%m.%Y", "%d/%m/%Y", "%Y/%m/%d")
@@ -152,7 +153,7 @@ def parse_statement(content: bytes, mapping: ColumnMapping) -> ParseResult:
     if result.errors:
         return result
 
-    seen: dict[str, int] = {}
+    seen: dict[str, ParsedRow] = {}
     try:
         for idx, raw_row in enumerate(reader, start=1):
             try:
@@ -163,9 +164,14 @@ def parse_statement(content: bytes, mapping: ColumnMapping) -> ParseResult:
                 result.errors.append(RowError(idx, "row", str(exc)))
                 continue
             if parsed.fingerprint in seen:
+                if parsed.external_id and not BankOperationIdentity.matches(seen[parsed.fingerprint], parsed):
+                    result.errors.append(RowError(
+                        idx, "external_id", "Один банковский ID имеет различающееся содержимое",
+                    ))
+                    continue
                 result.duplicate_rows.append(idx)
             else:
-                seen[parsed.fingerprint] = idx
+                seen[parsed.fingerprint] = parsed
             result.rows.append(parsed)
     except csv.Error:
         result.errors.append(RowError(reader.line_num, "file", "Некорректное экранирование CSV"))

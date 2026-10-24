@@ -2,7 +2,8 @@
 
 preview: разобрать файл, вернуть статистику и первые строки, ничего не фиксируя в ledger.
 commit: записать операции и дневные остатки. Повтор того же файла (тот же sha) не создаёт дубли:
-на уровне БД стоит уникальный ключ (account_id, fingerprint) — конфликт игнорируется.
+на уровне БД стоит уникальный ключ (account_id, fingerprint). Внешний ID с тем же
+содержимым пропускается; изменённый источник отклоняет весь файл до записи фактов.
 """
 
 from __future__ import annotations
@@ -17,6 +18,7 @@ from sqlalchemy.orm import Session
 
 from app.core.errors import AppError
 from app.core.models import Account, BankTransaction, DailyBalance, StatementImport
+from app.modules.imports.identity import BankOperationIdentity
 from app.modules.imports.parser import ColumnMapping, ParseResult, parse_statement
 from app.modules.integration.categories import TransactionCategorization
 
@@ -106,6 +108,7 @@ class ImportService:
         if not parsed.ok:
             raise AppError(409, "import_failed", "Импорт содержит ошибки и не может быть подтверждён")
 
+        self._validate_existing_transactions(imp, parsed)
         inserted = self._insert_transactions(imp, parsed)
         self._insert_balances(imp, parsed)
         TransactionCategorization(self._session).refresh(imp.account_id)
@@ -116,6 +119,21 @@ class ImportService:
         imp.committed_at = datetime.now(UTC)
         self._session.flush()
         return {"import_id": str(imp.id), "status": "committed", **stats}
+
+    def _validate_existing_transactions(self, imp: StatementImport, parsed: ParseResult) -> None:
+        # Account lock уже удерживается. Проверяем все источники до новых фактов,
+        # остатков и категоризации; ошибка откатывает весь импорт одним отказом.
+        incoming = {row.fingerprint: row for row in parsed.rows if row.external_id}
+        fingerprints = list(incoming)
+        for offset in range(0, len(fingerprints), 1000):
+            existing = self._session.scalars(select(BankTransaction).where(
+                BankTransaction.account_id == imp.account_id,
+                BankTransaction.fingerprint.in_(fingerprints[offset:offset + 1000]),
+            ))
+            for transaction in existing:
+                if not BankOperationIdentity.matches(transaction, incoming[transaction.fingerprint]):
+                    raise AppError(409, "transaction_id_conflict",
+                                   "Банковский ID уже сохранён с другим содержимым; импорт не выполнен")
 
     def _insert_transactions(self, imp: StatementImport, parsed: ParseResult) -> int:
         inserted = 0
@@ -137,7 +155,7 @@ class ImportService:
                     external_id=row.external_id,
                     fingerprint=row.fingerprint,
                 )
-                # Повтор по (account_id, fingerprint) — пропускаем: законные дубли не плодим и не теряем.
+                # Источники с внешним ID уже проверены; одинаковый факт не дублируем.
                 .on_conflict_do_nothing(constraint="uq_bank_transaction_account_fp")
                 .returning(BankTransaction.id)
             )
