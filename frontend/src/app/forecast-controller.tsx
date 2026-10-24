@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient, type UseQueryResult } from "@tanstack/react-query";
 import { useCallback, useRef, useState } from "react";
-import { CashCastApi, type Accepted, type Forecast, type ForecastHistoryEntry, type Job, type Page } from "../shared/api";
+import { CashCastApi, type Accepted, type Forecast, type ForecastHistoryEntry, type Job } from "../shared/api";
+import { latestBaseForecast } from "./latest-forecast";
 
 const today = () => new Date().toISOString().slice(0, 10);
 const terminal = (status?: string) => status === "succeeded" || status === "failed";
@@ -23,6 +24,8 @@ export interface ForecastController {
   requesting: boolean;
   /** Задание отправлено или выполняется на worker. */
   working: boolean;
+  /** Загружаются история или выбранный результат; disabled query не считается загрузкой. */
+  loading: boolean;
   errors: Error[];
   /** Дата среза изменена вручную: прежний результат больше не показывается. */
   changeDate: (date: string) => void;
@@ -53,11 +56,10 @@ export function useForecastController({ api, companyId, accountId, canWrite }: {
 
   const latest = useQuery({
     queryKey: ["forecast-history", companyId, accountId, "latest-base"],
-    queryFn: ({ signal }) => api.request<Page<ForecastHistoryEntry>>(
-      `/companies/${companyId}/forecasts?account_id=${accountId}&limit=10`, { signal }),
+    queryFn: ({ signal }) => latestBaseForecast(api, companyId, accountId, signal),
     enabled: selection.mode === "latest",
   });
-  const latestEntry = latest.data?.items.find(item => item.status === "succeeded" && !item.base_forecast_id);
+  const latestEntry = latest.data;
 
   const runId = selection.mode === "run" ? selection.id : selection.mode === "latest" ? latestEntry?.id : undefined;
   const jobId = selection.mode === "run" ? selection.jobId : undefined;
@@ -108,6 +110,7 @@ export function useForecastController({ api, companyId, accountId, canWrite }: {
 
   return {
     asOf: effectiveAsOf, selection, runId, jobId, job, forecast, working, errors, stale,
+    loading: (selection.mode === "latest" && latest.isLoading) || forecast.isLoading,
     markStale: () => setStale(true),
     requesting: mutation.isPending,
     changeDate: date => {

@@ -33,7 +33,7 @@ export function OverviewPage() {
       {canWrite && <button type="button" disabled={c.working} onClick={c.run}>Рассчитать</button>}
     </div>
     <ForecastState />
-    {!ready && !c.working && !c.forecast.isPending && <Empty title={f?.base_forecast_id ? "Открыт сценарий" : "Нет сохранённого прогноза"}
+    {!ready && !c.working && !c.loading && <Empty title={f?.base_forecast_id ? "Открыт сценарий" : "Нет сохранённого прогноза"}
       text={f?.base_forecast_id ? "Обзор показывает базовый прогноз. Откройте его в разделе «Прогноз»."
         : "Загрузите выписку или нажмите «Рассчитать» — обзор соберётся из результата."} />}
     {ready && <Report forecast={ready} />}

@@ -17,17 +17,22 @@ export function PlanFactPanel({ api, companyId, accountId, onApplied }: {
   const path = `/companies/${companyId}/plan-fact?${new URLSearchParams({ account_id: accountId, as_of: today })}`;
   const query = useQuery({ queryKey: ["plan-fact", companyId, accountId, today],
     queryFn: ({ signal }) => api.request<PlanFact>(path, { signal }) });
-  const apply = useMutation({ mutationFn: () => api.post<PlanFact>(path), onSuccess: async () => {
-    await cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] });
+  async function applied(result: PlanFact) {
+    // Оплата уже записана. Отображение сверки не должно зависеть от того,
+    // смог ли следующий запрос поставить прогноз в очередь.
+    await cache.cancelQueries({ queryKey: ["plan-fact", companyId, accountId] });
+    cache.setQueryData(["plan-fact", companyId, accountId, today], result);
+    await Promise.all([
+      cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] }),
+      cache.invalidateQueries({ queryKey: ["plan-fact", companyId, accountId] }),
+    ]);
     onApplied();
-  } });
+  }
+  const apply = useMutation({ mutationFn: () => api.post<PlanFact>(path), onSuccess: applied });
   const confirm = useMutation({ mutationFn: (body: {
     planned_event_id: string; transaction_id: string; matched_amount_minor: number;
   }) => api.post<PlanFact>(`/companies/${companyId}/plan-fact/confirm`, { account_id: accountId, ...body }),
-  onSuccess: async () => {
-    await cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] });
-    onApplied();
-  }, onError: async () => {
+  onSuccess: applied, onError: async () => {
     // Устаревший proposal нельзя оставлять единственным источником для повторной кнопки.
     await cache.invalidateQueries({ queryKey: ["plan-fact", companyId, accountId] });
   } });

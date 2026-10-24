@@ -47,6 +47,13 @@ test("ambiguous payment is reviewed and split manually without double allocation
   expect(proposal.auto_confirm).toBe(false);
   await go(page, "Сверка оплат");
   await page.getByRole("tab", { name: /^Предложения/ }).click();
+  // Подтверждение оплаты должно обновить сверку, даже если следующий enqueue недоступен.
+  // Это единственный искусственный отказ: импорт/подтверждения/GET идут в настоящий API.
+  await page.route("**/api/v1/companies/*/forecasts", async route => {
+    if (route.request().method() === "POST") await route.fulfill({ status: 503,
+      json: { error: { code: "test_unavailable", message: "Тестовый отказ очереди" } } });
+    else await route.continue();
+  });
   for (const [index, amount, expectedMinor] of [[0, "40,00", 4000], [1, "58,76", 5876]] as const) {
     const choice = page.getByTestId(`proposal-${events[index]}-${proposal.transaction_id}`);
     await choice.getByRole("button", { name: "Проверить предложение", exact: true }).click();
@@ -70,6 +77,9 @@ test("ambiguous payment is reviewed and split manually without double allocation
       item.planned_event_id === events[index]).matched_amount_minor).toBe(expectedMinor);
     await expect(choice).toHaveCount(0);
   }
+  await page.getByRole("tab", { name: /^Подтверждённые связи/ }).click();
+  await expect(page.getByRole("table", { name: "Подтверждённые связи", exact: true })).toContainText(name);
+  await page.unroute("**/api/v1/companies/*/forecasts");
   await page.reload();
   const after = await (await page.request.get(path)).json();
   const links = after.confirmed_matches.filter((item: { transaction_id: string }) => item.transaction_id === proposal.transaction_id);

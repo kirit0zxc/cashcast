@@ -31,7 +31,7 @@ export function ForecastPanel() {
     <Tabs label="Прогноз" value={tab} onChange={setTab}
       items={[["result", "Результат"], ["daily", "По дням"], ["history", "История расчётов"]]} />
     {tab !== "history" && <ForecastState />}
-    {tab !== "history" && !c.runId && !c.working && !c.forecast.isPending && <Empty title="Расчёт не выбран"
+    {tab !== "history" && !c.runId && !c.working && !c.loading && <Empty title="Расчёт не выбран"
       text={canWrite ? "Нажмите «Рассчитать» или откройте сохранённый расчёт во вкладке «История расчётов»."
         : "Откройте сохранённый расчёт во вкладке «История расчётов»."} />}
     {tab === "result" && f && <ForecastView forecast={f} />}
@@ -49,6 +49,7 @@ export function ForecastState() {
     {c.stale && <p className="errors">Данные изменены подтверждённым действием ассистента — показанный прогноз устарел.
       Пересчитайте его кнопкой «Рассчитать».</p>}
     {c.working && <p role="status">Задание: {c.job.data?.status ?? "отправляем"}. Ожидаем worker…</p>}
+    {c.loading && !c.working && <p role="status">Загружаем сохранённый прогноз…</p>}
     {c.job.data?.status === "failed" && <p role="alert">Расчёт не выполнен: {c.job.data.error_code}</p>}
     {c.errors.map((e, i) => <p role="alert" key={i}>{e.message}</p>)}
     {c.forecast.data && c.forecast.data.status !== "succeeded" && <p role="status">

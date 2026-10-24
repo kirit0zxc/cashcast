@@ -51,7 +51,8 @@ export function PulsePanel({ api, forecastId }: { api: CashCastApi; forecastId: 
         {query.data && <Leaders rows={[
           ["Подушка", `${money(query.data.cash.buffer_minor)} · ${query.data.cash.buffer_source === "user" ? "задана вами" : "модельная оценка"}`],
           ["Срез", dayMonth(query.data.as_of)],
-          ["Первая нехватка", query.data.cash.first_gap_date ? dayMonth(query.data.cash.first_gap_date) : "не ожидается"],
+          ["Первая нехватка", query.data.cash.first_gap_date ? dayMonth(query.data.cash.first_gap_date)
+            : query.data.cash.status === "unknown" ? "оценка недоступна" : "не выявлена по медиане"],
         ]} />}
         <small>Что может случиться и что можно сделать. Данные того же сохранённого прогноза; просмотр не меняет платежи.</small>
       </div>
@@ -116,7 +117,9 @@ function CashTab({ p }: { p: PulseReport }) {
           ["Проценты в расчёте", money(cash.plan.credit_cost_minor)],
           ["Поступления −20%", cash.plan.holds_if_inflows_drop_20pct ? "остаток не уходит в минус" : "возможен минус"],
         ]} />
-      </div> : <div className="empty"><b>Плана не требуется</b>По сохранённому прогнозу подушка сохраняется.</div>}
+      </div> : cash.status === "unknown"
+        ? <div className="empty"><b>План недоступен</b>Недостаточно данных, чтобы подтвердить сохранность подушки.</div>
+        : <div className="empty"><b>План не сформирован</b>Проверьте состояние кассы и ограничения расчёта.</div>}
       {cash.suggestions.map((s, i) => <div key={i} className="panel"><b>{s.title}</b>
         {s.details.map((d, j) => <small key={j}>{d}</small>)}</div>)}
     </section>
