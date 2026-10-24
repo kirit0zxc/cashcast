@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { useAccount } from "../app/account-context";
-import { ASSISTANT_ROUTE, ROUTES, type RoutePath } from "../app/router";
+import { ASSISTANT_ROUTE, ROUTES, navigate, type RoutePath } from "../app/router";
 import { ForecastPanel, ForecastState } from "../features/forecast/ForecastPanel";
 import { ScenarioPanel } from "../features/forecast/ScenarioPanel";
 import { StatementImport } from "../features/imports/StatementImport";
@@ -12,6 +12,7 @@ import { PulsePanel } from "../features/pulse/PulsePanel";
 import { Transactions } from "../features/transactions/Transactions";
 import { useCompanyCanWrite } from "../shared/company-permissions";
 import { Empty } from "../ui/Empty";
+import { Tabs } from "../ui/Blank";
 import { OverviewPage } from "./OverviewPage";
 
 // Переключение раздела только меняет видимую страницу: данные и выбранный расчёт
@@ -19,8 +20,10 @@ import { OverviewPage } from "./OverviewPage";
 export function Pages({ route }: { route: RoutePath }) {
   switch (route) {
     case "/overview": return <OverviewPage />;
-    case "/operations": return <Page route={route}><OperationsPage /></Page>;
-    case "/import": return <Page route={route}><ImportPage /></Page>;
+    case "/operations": return <Page route={route} lead="Только фактическое движение денег по выбранному счёту."
+      action={<ImportButton />}><OperationsPage /></Page>;
+    case "/import": return <Page route={route}
+      lead="Сначала проверьте файл. Данные появятся в кабинете только после подтверждения."><ImportPage /></Page>;
     case "/payments": return <Page route={route}><PaymentsPage /></Page>;
     case "/reconciliation": return <Page route={route}><ReconciliationPage /></Page>;
     case "/forecast": return <Page route={route}><ForecastPanel /></Page>;
@@ -30,14 +33,22 @@ export function Pages({ route }: { route: RoutePath }) {
   }
 }
 
-function Page({ route, children }: { route: RoutePath; children: ReactNode }) {
+function Page({ route, lead, action, children }: {
+  route: RoutePath; lead?: string; action?: ReactNode; children: ReactNode;
+}) {
   const index = ROUTES.findIndex(r => r.path === route);
   const title = index >= 0 ? ROUTES[index].title : ASSISTANT_ROUTE.title;
   return <>
-    <div className="page-title"><span className="label">Раздел {String(index >= 0 ? index + 1 : 9).padStart(2, "0")}</span>
-      <h1>{title}</h1></div>
+    <div className="page-title"><div>
+      <span className="label">Раздел {String(index >= 0 ? index + 1 : 9).padStart(2, "0")}</span>
+      <h1>{title}</h1>{lead && <p>{lead}</p>}</div>{action}</div>
     {children}
   </>;
+}
+
+function ImportButton() {
+  return useCompanyCanWrite()
+    ? <button type="button" className="ghost" onClick={() => navigate("/import")}>Импорт выписки</button> : null;
 }
 
 function OperationsPage() {
@@ -49,15 +60,17 @@ function ImportPage() {
   const { api, companyId, accountId, statementCommitted, plansChanged } = useAccount();
   const canWrite = useCompanyCanWrite();
   const cache = useQueryClient();
+  const [kind, setKind] = useState<"statement" | "obligations">("statement");
   if (!canWrite) return <Empty title="Импорт доступен владельцу компании" text="В режиме чтения можно смотреть операции и сохранённые расчёты." />;
   return <>
-    <StatementImport api={api} companyId={companyId} accountId={accountId} onCommit={statementCommitted} />
-    <section className="panel dash"><h2>Счета и обязательства</h2>
-      <ObligationImport api={api} companyId={companyId} accountId={accountId} onChanged={async () => {
+    <Tabs label="Вид данных" value={kind} onChange={setKind}
+      items={[["statement", "Банковская выписка"], ["obligations", "Счета и обязательства"]]} />
+    {kind === "statement"
+      ? <StatementImport api={api} companyId={companyId} accountId={accountId} onCommit={statementCommitted} />
+      : <ObligationImport api={api} companyId={companyId} accountId={accountId} onChanged={async () => {
         await cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] });
         plansChanged();
-      }} />
-    </section>
+      }} />}
   </>;
 }
 
