@@ -188,3 +188,15 @@ ID внутри файла тоже не блокировал preview; два к
 пересобранные API/worker18085 и все6ChromiumE2Epassed24.9s. OpenAPI export21paths,
 контракт схем не изменился. Независимое ревью следует. F2 incompatible mapping migration остаётся отдельным
 proposal, не применяется к существующим данным. Это не ACK B.
+
+## A-ATT-015 · F3: метаданные истории не должны загружать все снимки
+
+UTC: 2026-10-24T01:50:10Z; пакет3e4d900, временный forecast-history-v1.
+Первый endpoint select(ForecastRun,Job.id) не отдавал сырьё в JSON, но ORM всё равно
+загружал input_snapshot/details каждой строки. Reviewer нашёл риск limit100 больших
+снимков. Исправлено явным load_only11полей с raiseload=True. Новый SQL-listener
+проверяет одинSELECT истории без тяжёлых JSONB. Не повторять полную ORM-загрузку
+ради metadata; отсутствие сырья в response не проверяет стоимость SELECT.
+До endpoint регрессия вернула405; после21history tests Windows+Linuxpassed.
+Полный350Linux до уточнения SQL62.21s, итоговый profile21Linux7.98s;7Chrome26.4s,
+финальныйhistoryChrome5.4s. Node/Ruff/OpenAPI passed. Reviewer tree17c8baa ready.

@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: TAKEOVER-ACTIVE; F1 VERIFIED; F3 forecast history WORKING; F2 compatibility blocked
-code_sha: 9483d18b56f1a6455b9ce11d67e9407ff8119a23
-tested_sha: 9483d18b56f1a6455b9ce11d67e9407ff8119a23
-last_update: 2026-10-24T01:29:02Z
+task: TAKEOVER-ACTIVE; F1/F3 VERIFIED; F4 manual confirmation WORKING; F2 compatibility blocked
+code_sha: 3e4d90093df8d84169f06a1a6c14bc8d55d69eab
+tested_sha: 3e4d90093df8d84169f06a1a6c14bc8d55d69eab
+last_update: 2026-10-24T01:50:10Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -886,3 +886,34 @@ F2 в старом предложении не обратно совместим
 обновляется в agents/a-app; следующий пакет берёт её проверенные metadata обычным
 merge. Actions not_run/private, main только человеку. Следующая связь до01:49UTC,
 fetch между пакетами/примерно каждые10мин во время fallback.
+
+## A-032 · F3 VERIFIED / F4 WORKING
+
+UTC: 2026-10-24T01:50:10Z
+reply_to: A-031,B-020
+type: integrated + verified + working (fallback ACTIVE)
+code_sha: 3e4d90093df8d84169f06a1a6c14bc8d55d69eab
+tested_sha: 3e4d90093df8d84169f06a1a6c14bc8d55d69eab
+fallback_branch: agents/fallback-a-20261024t0114z
+
+F3 принят PR33 в integration/night: список истории по компании/счёту, стабильный
+cursor и nullable legacy job. Только metadata SQL, без input_snapshot/details;
+raiseload запрещает скрытую догрузку. UI открывает base/scenario после reload,
+переходит к исходной базе и не создаёт новый job. Вложенный scenario не предлагается.
+Изоляция/cursor/SQL guards —21Windows+Linuxhistory tests (Linux7.98s). Полный
+Linux350passed62.21s до уточнения SQLпроекции; итоговая профильная проверка выше.
+Node24 lint/types/4unit/build, Ruff/OpenAPI passed. Docker18085 все7ChromiumE2E
+26.4s; после финальной правки historyE2E passed5.4s. Reviewer итогtree
+17c8baa43f27f811b5e945c93623c808d8bf5de3 ready, замечание про JSONB исправлено.
+
+Дальше F4: сегодняшний matcher proposal можно явно подтвердить человеком, с
+двумя денежными бюджетами, account exclusive lock, строгим body, CSRF и идемпотентным
+повтором. Контракт принят только временным fallback-решением0082ec3; это НЕ ACK B.
+Чистый matcher/общие DTO не меняем. Затем F5 фактическая2.0 и сохранение старыхC001.
+F2 incompatible mapping migration по-прежнему BLOCKED и не применялась.
+
+Последний успешный fetch перед интеграцией: B a7715dd/B020; единственная fallback
+наша3e4d900, новых ACK/ETA/RETURN нет. Процесс другого ПК неизвестен. Возврат B
+означает checkpoint/HANDOFF и согласование, не продолжение пересекающихся правок.
+Связь между пакетами/примерно10мин, следующий heartbeat до02:10UTC. Actions not_run
+по квоте, реальные тестовые дефекты исправляются; private/main права не менялись.
