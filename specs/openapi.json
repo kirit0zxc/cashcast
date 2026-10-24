@@ -2727,6 +2727,104 @@
         ],
         "title": "Body_preview_obligations_api_v1_companies__company_id__obligation_imports_post"
       },
+      "CalculationOut": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "full",
+              "incremental"
+            ],
+            "title": "Mode"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "reused_history": {
+            "type": "boolean",
+            "title": "Reused History"
+          },
+          "bootstrap_paths_generated": {
+            "type": "integer",
+            "title": "Bootstrap Paths Generated"
+          },
+          "source_forecast_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Forecast Id"
+          },
+          "categorized_transactions": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categorized Transactions"
+          },
+          "reused_transactions": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reused Transactions"
+          },
+          "recurrence_buckets_recomputed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recurrence Buckets Recomputed"
+          },
+          "daily_aggregates_changed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daily Aggregates Changed"
+          },
+          "trajectory_values_updated": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trajectory Values Updated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mode",
+          "reason",
+          "reused_history",
+          "bootstrap_paths_generated"
+        ],
+        "title": "CalculationOut"
+      },
       "Category": {
         "type": "string",
         "enum": [
@@ -3341,6 +3439,16 @@
             },
             "type": "array",
             "title": "Points"
+          },
+          "calculation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CalculationOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
