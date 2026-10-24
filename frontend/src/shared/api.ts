@@ -5,7 +5,7 @@ export interface Page<T> { items: T[]; next_cursor: string | null }
 export interface Transaction {
   id: string; account_id: string; booked_on: string; amount_minor: number;
   direction: "in" | "out"; currency: string; counterparty_name: string | null;
-  purpose: string | null; category: string | null;
+  purpose: string | null; category: string | null; category_source: string | null;
 }
 export interface Preview {
   import_id: string; status: string; total_rows: number; error_count: number;

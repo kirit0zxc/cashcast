@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { CashCastApi, money, type Page, type Transaction } from "../../shared/api";
+import { CategoryEditor } from "./CategoryEditor";
 
 // Курсор сбрасывается размонтированием при смене компании/счёта или после импорта.
 export function Transactions({ api, companyId, accountId }: {
@@ -20,10 +21,11 @@ export function Transactions({ api, companyId, accountId }: {
     {query.error && <p role="alert">{query.error.message}</p>}
     {query.data && <>
       {!query.data.items.length && <p>Операций пока нет. Импортируйте выписку.</p>}
-      <div className="scroll"><table><thead><tr><th>Дата</th><th>Контрагент / назначение</th>
+      <div className="scroll"><table aria-label="Банковские операции"><thead><tr><th>Дата</th><th>Контрагент / назначение</th>
         <th>Категория</th><th>Приход</th><th>Расход</th></tr></thead><tbody>
         {query.data.items.map(t => <tr key={t.id}><td>{t.booked_on}</td><td>{t.counterparty_name ?? "—"}
-          <small>{t.purpose}</small></td><td>{t.category ?? "Не определена"}</td>
+          <small>{t.purpose}</small></td><td><CategoryEditor api={api} transaction={t}
+            companyId={companyId} accountId={accountId} /></td>
           <td>{t.direction === "in" ? money(t.amount_minor) : "—"}</td>
           <td>{t.direction === "out" ? money(t.amount_minor) : "—"}</td></tr>)}
       </tbody></table></div>
