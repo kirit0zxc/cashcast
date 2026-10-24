@@ -97,7 +97,7 @@ export function ForecastView({ forecast: f }: { forecast: Forecast }) {
         ["Модель", f.model_version],
       ]} />
       <p data-testid="calculation-mode" className="note">{calculationText(f)}</p>
-      {!f.risk.available && <p>Оценка риска недоступна: смотрите ограничения данных.</p>}
+      {!f.risk.available && <p>Вероятность разрыва не подтверждена. Даты и суммы дефицита по медиане — в карточке ниже.</p>}
       {[...f.assumptions, ...f.data_warnings].length > 0 && <ul className="plain">
         {[...f.assumptions, ...f.data_warnings].map((s, i) => <li key={i}>{s}</li>)}</ul>}
     </section>
