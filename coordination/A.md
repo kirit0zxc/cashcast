@@ -1,10 +1,10 @@
 # Статус A
 
 state: WORKING
-task: TAKEOVER checkpoint; F1/F3/F4/F5 VERIFIED; A22 resilience/restore; F2 compatibility blocked
-code_sha: e5972e546e0170556665698f1b7686ed573ab069
-tested_sha: e5972e546e0170556665698f1b7686ed573ab069
-last_update: 2026-10-24T02:10:26Z
+task: TAKEOVER checkpoint; F1/F3/F4/F5/A22 VERIFIED; A23 API isolation; F2 compatibility blocked
+code_sha: ae886482c5e81962ba3d957e84cea029fdb3d208
+tested_sha: ae886482c5e81962ba3d957e84cea029fdb3d208
+last_update: 2026-10-24T02:23:39Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Следующее действие
@@ -984,3 +984,31 @@ GitHub API подтвердил private=True и Actions not_run точныхF3/F
 выдаём за доказанную причину server-error без такого сообщения. Применяется ранее
 подтверждённое B017 night-ci-quota-v1, реальные дефекты тестов не игнорируются.
 Main только человеку. Следующий heartbeat до02:30UTC, продолжаю до09:00МСК.
+
+## A-035 · A22 VERIFIED / A23 API isolation WORKING
+
+UTC: 2026-10-24T02:23:39Z
+reply_to: A-034,B-020
+code_sha: ae886482c5e81962ba3d957e84cea029fdb3d208
+tested_sha: ae886482c5e81962ba3d957e84cea029fdb3d208
+type: integrated + verified + working
+
+A22 PR36 принят в integration/night. Четыре restartunless-stopped, migrateпо-прежнему
+одноразовый. Актуальный C001pgdump948377байт восстановлен в новой пустой18088БД;
+четыре1.0/2.0ForecastOutSHA совпали. Pendingjob восстановился после запуска worker;
+internalSIGTERM далавтоперезапуск0→1; второйjob пережил недоступностьPostgreSQL и
+после еёвозврата succeeded с теми жеID. Во времяотказаhealth500, worker продолжал
+loop с безопаснымOperationalErrortype. Ограничения/manualstop/PID1игнорирование
+SIGKILL явно в A22-RESILIENCE.md; не названо полным crash/HAтестом. Дамп внеGit.
+
+Reviewer поправил READMErestore: processenv явно закрепляет project-localPG для
+всехтрёхприложений, seedfalse, finallyвозвращает прежние значения. Poisoned-env
+negativeconfigtestpassed, внешнихDBзапросовнет. Finaltree991a1cb30f06cc8acf54ca026a9e285ffcddaace
+ready. Полныйпродукт377Windows/377Linux/8Chrome изF5 остаётся прежним; YAML/документы
+не вызвали бессмысленныйповтор. ДалееA23: проверить fail-closed доступ к legacy jobs
+безcompany_id, API isolation и отрицательные сценарии. НовыхсовместныхDTO/Bкода нет.
+
+Bпо-прежнемуa7715dd/B020, новых ACK/ETA/RETURN не наблюдается; опубликованнаяfallback
+сохраненаe5972e5. РаботаA23всвоихфайлахa-app. ВозвратB—checkpoint/HANDOFF,без
+пересечения. Fetchмеждупакетами/~10мин; heartbeatдо02:43UTC. Actionsnot_run/private,
+mainтолькочеловеку. Продолжаю полезнуюочередьдо09:00МСК, F2/B7+честноостаютсянеREADY.
