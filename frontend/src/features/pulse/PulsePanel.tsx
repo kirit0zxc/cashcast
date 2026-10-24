@@ -49,7 +49,7 @@ export function PulsePanel({ api, forecastId }: { api: CashCastApi; forecastId: 
             : "рассчитали по вашим расходам — столько стоит держать на счёте"}</p>
           {(() => {
             const c = query.data.cash;
-            if (c.status === "unknown") return <p className="cushion-verdict tone-unknown">Хватит ли запаса — оценить нельзя: мало данных.</p>;
+            if (c.status === "unknown") return <p className="cushion-verdict tone-unknown">Хватит ли запаса — оценка недоступна: мало данных.</p>;
             if (c.first_gap_date) return <p className="cushion-verdict tone-risk">Запаса не хватит с {dayMonth(c.first_gap_date)}.</p>;
             return <p className="cushion-verdict tone-ok">Запаса хватает на весь период прогноза.</p>;
           })()}
