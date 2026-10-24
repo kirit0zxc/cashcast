@@ -157,3 +157,18 @@ Windows: 4 профильных теста с concurrency passed, Ruff passed. �
 312 passed 45.25s. Пересобранные API/worker 18085, четыре формы сценариев:
 1 Chromium E2E passed 10.4s. Продуктовый reviewer tree 6040062 ready; финальные
 результаты проверяются отдельно. Схемы/миграции/модель/общий DTO не меняются.
+
+## A-ATT-013 · чтение план-факта смешивало версии
+
+UTC: 2026-10-24T00:51:34Z; исходный код 84d1b1c.
+Настоящие GET/POST на cashcast_test: GET удержан после SELECT плана, параллельный
+POST подтвердил оплату. Затем GET вернул confirmed10000 и прежний remaining10000
+при плане10000. Тест до фикса упал по денежному инварианту, без выдуманной ошибки.
+PlanFactService теперь берёт shared account lock при чтении и прежний exclusive
+при записи. GET не пишет allocations; несколько читателей совместимы, все штатные
+писатели используют account FOR UPDATE. Регрессия наблюдает блокировку PostgreSQL
+или окончание writer, не фиксированный sleep; проверяет согласованный before/after.
+Профильные Windows-проверки и Ruff passed. Полный Linux: 313 passed 46.97s;
+пересобранные API/worker 18085 и 2 профильных Chromium E2E passed 5.1s.
+Продуктовый reviewer tree 962ffaf ready; финальные метаданные проходят сверку.
+Не новый API/DTO/модель/миграция.

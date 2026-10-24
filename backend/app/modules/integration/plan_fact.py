@@ -24,9 +24,11 @@ class PlanFactService:
         if write and as_of != today:
             # Без версионной истории нельзя записать сегодняшнее решение как знание прошлого.
             raise AppError(409, "historical_reconcile_read_only", "Исторический план-факт доступен только для чтения")
-        statement = select(Account).where(Account.id == account_id, Account.company_id == company_id)
-        if write:
-            statement = statement.with_for_update()
+        # GET держит shared lock, чтобы импорт/сверка не изменили источник между
+        # чтениями планов и allocations. Несколько читателей друг другу не мешают.
+        statement = select(Account).where(
+            Account.id == account_id, Account.company_id == company_id,
+        ).with_for_update(read=not write)
         account = self.session.scalar(statement)
         if account is None:
             raise AppError(404, "not_found", "Счёт не найден")
