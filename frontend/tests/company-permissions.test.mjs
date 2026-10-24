@@ -34,6 +34,7 @@ const base = { api: {}, companyId: "company", accountId: "account", onChanged() 
 const cases = [
   ["imports/StatementImport", "StatementImport", "Проверить файл"],
   ["planning/ObligationImport", "ObligationImport", "Проверить обязательства"],
+  ["imports/ExternalSources", "ExternalSources", "Проверить налоговый файл"],
   ["planning/PlannedEvents", "PlannedEvents", "Добавить платёж"],
   ["planning/PlanFactPanel", "PlanFactPanel", "Применить однозначные совпадения"],
   ["forecast/ForecastPanel", "ForecastPanel", "Рассчитать"],

@@ -13,6 +13,7 @@ from app.api.v1 import (
     cash_gaps,
     comparisons,
     evaluations,
+    external_sources,
     forecast_history,
     forecasts,
     health,
@@ -58,7 +59,7 @@ def create_app() -> FastAPI:
 
     for module in (health, auth, accounts, imports, obligations, transactions, planned_events,
                    plan_fact, forecasts, forecast_history, comparisons, pulse, assistant,
-                   cash_gaps, model_quality, evaluations):
+                   cash_gaps, model_quality, evaluations, external_sources):
         app.include_router(module.router, prefix=API_PREFIX)
     return app
 
