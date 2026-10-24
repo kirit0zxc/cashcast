@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "../app/account-context";
 import { Link, navigate } from "../app/router";
 import { ForecastState } from "../features/forecast/ForecastPanel";
+import { ProbabilityNotice } from "../features/forecast/ProbabilityNotice";
 import type { PulseReport, Status } from "../features/pulse/types";
 import { money, probability, type Forecast, type PlanFact, type PlannedEvent } from "../shared/api";
 import { useCompanyCanWrite } from "../shared/company-permissions";
@@ -93,24 +94,25 @@ function Report({ forecast: f }: { forecast: Forecast }) {
         note={`на ${day(f.as_of)}`} />
       <Kpi label="Минимум в прогнозе" value={min?.balance_p50_minor ?? null}
         note={min ? `${day(min.point_date)} · самый низкий остаток` : "нет данных"} />
-      <Kpi label="Через 30 дней" value={last?.balance_p50_minor ?? null}
+      <Kpi label="На конец прогноза" value={last?.balance_p50_minor ?? null}
         note={last ? day(last.point_date) : "нет данных"} />
       {f.risk.probability_any_negative === null
         ? <div className="kpi na"><span className="label">Вероятность минуса</span><div className="v">не оценивается</div>
           <div className="s">данных мало для надёжной оценки — это не 0%</div></div>
         : <div className="kpi"><span className="label">Вероятность минуса</span>
-          <div className="v">{probability(f.risk.probability_any_negative)}</div><div className="s">за 30 дней</div></div>}
+          <div className="v">{probability(f.risk.probability_any_negative)}</div><div className="s">за период прогноза · {points.length} дн.</div></div>}
     </section>
+    <ProbabilityNotice forecast={f} />
 
     <section className="grid2">
       <div>
         <div className="panel">
           <span className="dots" aria-hidden="true">● ● ●</span>
           <span className="label">Прогноз остатка · {points.length} дн.</span>
-          <h2>Хватит ли денег на ближайший месяц</h2>
+          <h2>Хватит ли денег на период прогноза</h2>
           <SpecChart points={points} label="Обзор: медиана остатка и диапазон p10–p90" />
           <div className="legend">
-            <span><i style={{ background: "var(--ink)" }} />наиболее вероятный остаток</span>
+            <span><i style={{ background: "var(--ink)" }} />медианный остаток</span>
             <span>{bandAvailable(points)
               ? <><i style={{ background: "radial-gradient(var(--ink) 30%, transparent 35%) 0 0/4px 4px" }} />возможный разброс</>
               : "разброс не оценён — данных мало"}</span>

@@ -3232,6 +3232,97 @@
           }
         }
       }
+    },
+    "/api/v1/models/quality": {
+      "get": {
+        "tags": [
+          "model-quality"
+        ],
+        "summary": "Get Model Quality",
+        "operationId": "get_model_quality_api_v1_models_quality_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelQualityOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не аутентифицирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа или CSRF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт состояния или данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка без раскрытия входных данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Отчёт качества временно недоступен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3581,12 +3672,24 @@
             "title": "Causes Balance Minor"
           },
           "probability": {
-            "type": "null",
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Probability"
           },
           "probability_status": {
             "type": "string",
-            "const": "unavailable",
+            "enum": [
+              "unavailable",
+              "estimated_uncalibrated"
+            ],
             "title": "Probability Status",
             "default": "unavailable"
           },
@@ -5113,6 +5216,7 @@
         ],
         "title": "JobStatusOut"
       },
+      "JsonValue": {},
       "LoginRequest": {
         "properties": {
           "email": {
@@ -5203,6 +5307,96 @@
           "companies"
         ],
         "title": "MeResponse"
+      },
+      "ModelQualityOut": {
+        "properties": {
+          "report_version": {
+            "type": "string",
+            "const": "model-quality-1.0",
+            "title": "Report Version"
+          },
+          "scope": {
+            "type": "string",
+            "const": "offline_external_evaluation",
+            "title": "Scope"
+          },
+          "evaluated_model": {
+            "type": "string",
+            "title": "Evaluated Model"
+          },
+          "production_activated": {
+            "type": "boolean",
+            "const": false,
+            "title": "Production Activated"
+          },
+          "applies_to_current_forecast": {
+            "type": "boolean",
+            "const": false,
+            "title": "Applies To Current Forecast"
+          },
+          "probability_calibrated": {
+            "type": "boolean",
+            "const": false,
+            "title": "Probability Calibrated"
+          },
+          "horizon_days": {
+            "type": "integer",
+            "title": "Horizon Days"
+          },
+          "label_definition": {
+            "type": "string",
+            "title": "Label Definition"
+          },
+          "cohorts": {
+            "items": {
+              "$ref": "#/components/schemas/QualityCohort"
+            },
+            "type": "array",
+            "title": "Cohorts"
+          },
+          "calibration": {
+            "$ref": "#/components/schemas/JsonValue"
+          },
+          "selection_policy": {
+            "$ref": "#/components/schemas/JsonValue"
+          },
+          "release": {
+            "$ref": "#/components/schemas/JsonValue"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/QualityEvidence"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "report_version",
+          "scope",
+          "evaluated_model",
+          "production_activated",
+          "applies_to_current_forecast",
+          "probability_calibrated",
+          "horizon_days",
+          "label_definition",
+          "cohorts",
+          "calibration",
+          "selection_policy",
+          "release",
+          "evidence",
+          "limitations"
+        ],
+        "title": "ModelQualityOut"
       },
       "ObligationCommitOut": {
         "properties": {
@@ -6511,6 +6705,131 @@
         ],
         "title": "PulseSuggestion"
       },
+      "QualityCohort": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "windows": {
+            "type": "integer",
+            "title": "Windows"
+          },
+          "accounts": {
+            "type": "integer",
+            "title": "Accounts"
+          },
+          "positive_windows": {
+            "type": "integer",
+            "title": "Positive Windows"
+          },
+          "positive_accounts": {
+            "type": "integer",
+            "title": "Positive Accounts"
+          },
+          "threshold": {
+            "type": "number",
+            "title": "Threshold"
+          },
+          "confusion_matrix": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Confusion Matrix"
+          },
+          "metrics": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/QualityMetric"
+            },
+            "type": "object",
+            "title": "Metrics"
+          },
+          "uncertainty": {
+            "$ref": "#/components/schemas/JsonValue"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "windows",
+          "accounts",
+          "positive_windows",
+          "positive_accounts",
+          "threshold",
+          "confusion_matrix",
+          "metrics",
+          "uncertainty"
+        ],
+        "title": "QualityCohort"
+      },
+      "QualityEvidence": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "sha256": {
+            "type": "string",
+            "title": "Sha256"
+          },
+          "hash_format": {
+            "type": "string",
+            "const": "utf8_lf",
+            "title": "Hash Format"
+          },
+          "data": {
+            "$ref": "#/components/schemas/JsonValue"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "path",
+          "sha256",
+          "hash_format",
+          "data"
+        ],
+        "title": "QualityEvidence"
+      },
+      "QualityMetric": {
+        "properties": {
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "definition": {
+            "type": "string",
+            "title": "Definition"
+          },
+          "unavailable_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unavailable Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "definition"
+        ],
+        "title": "QualityMetric"
+      },
       "RiskOut": {
         "properties": {
           "available": {
@@ -6550,6 +6869,21 @@
               }
             ],
             "title": "Probability Any Negative"
+          },
+          "probability_status": {
+            "type": "string",
+            "enum": [
+              "unavailable",
+              "estimated_uncalibrated"
+            ],
+            "title": "Probability Status",
+            "default": "unavailable"
+          },
+          "probability_calibrated": {
+            "type": "boolean",
+            "const": false,
+            "title": "Probability Calibrated",
+            "default": false
           }
         },
         "type": "object",

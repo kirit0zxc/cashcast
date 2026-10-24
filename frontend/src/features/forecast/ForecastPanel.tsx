@@ -3,6 +3,7 @@ import { money, probability, type Forecast } from "../../shared/api";
 import { Explanations } from "./Explanations";
 import { CashGapPanel } from "./CashGapPanel";
 import { ForecastHistory } from "./ForecastHistory";
+import { ProbabilityNotice } from "./ProbabilityNotice";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
 import { useAccount } from "../../app/account-context";
 import { Leaders, Tabs, dayMonth, dmy } from "../../ui/Blank";
@@ -25,7 +26,7 @@ export function ForecastPanel() {
           onChange={e => c.changeDate(e.target.value)} /></label>
         <button disabled={!accountId || c.working}>Рассчитать</button>
       </form> : <span className="chip">срез {dmy(c.asOf)}</span>}
-      <small>Прогноз на 30 дней вперёд от выбранной даты. После загрузки данных он обновляется сам.</small>
+      <small>Новый расчёт в этом разделе охватывает 30 дней от выбранной даты. Период сохранённого расчёта указан в результате.</small>
     </section>
     <Tabs label="Прогноз" value={tab} onChange={setTab}
       items={[["result", "Результат"], ["daily", "По дням"], ["history", "История расчётов"]]} />
@@ -74,7 +75,7 @@ export function ForecastView({ forecast: f }: { forecast: Forecast }) {
       <span className="label">Остаток на счёте · {f.points.length} дн. от {dmy(f.as_of)}</span>
       <SpecChart points={f.points} label="Прогноз остатка: p10, медиана, p90" />
       <div className="legend">
-        <span><i style={{ background: "var(--ink)" }} />наиболее вероятный остаток</span>
+        <span><i style={{ background: "var(--ink)" }} />медианный остаток</span>
         <span>{bandAvailable(f.points)
           ? <><i style={{ background: "radial-gradient(var(--ink) 30%, transparent 35%) 0 0/4px 4px" }} />возможный разброс</>
           : "разброс не оценён — данных мало"}</span>
@@ -89,9 +90,10 @@ export function ForecastView({ forecast: f }: { forecast: Forecast }) {
         ["Максимальный дефицит", f.risk.max_deficit_minor === null && !f.risk.first_negative_date
           ? "нет" : money(f.risk.max_deficit_minor)],
         ["Вероятность уйти в минус", f.risk.probability_any_negative === null ? "не оценивается" : probability(f.risk.probability_any_negative)],
-        ["Через 30 дней", last ? money(last.balance_p50_minor) : "нет данных"],
+        [last ? `На ${dmy(last.point_date)}` : "На конец прогноза", last ? money(last.balance_p50_minor) : "нет данных"],
       ]} />
       <p data-testid="calculation-mode" className="note">{calculationText(f)}</p>
+      <ProbabilityNotice forecast={f} />
       {[...f.assumptions, ...f.data_warnings].length > 0 && <details><summary>Допущения и качество данных</summary>
         <ul className="plain">{[...f.assumptions, ...f.data_warnings].map((s, i) => <li key={i}>{s}</li>)}</ul></details>}
     </section>
@@ -100,6 +102,7 @@ export function ForecastView({ forecast: f }: { forecast: Forecast }) {
 
 function DailyTable({ forecast: f }: { forecast: Forecast }) {
   return <section className="panel flat">
+    <ProbabilityNotice forecast={f} />
     <div className="panel-head"><div><h2>Дневные значения и происхождение расчёта</h2>
       <span className="label">Остаток, приход и расход по каждому дню</span></div></div>
     <details className="pad"><summary>Технические подробности расчёта</summary>
@@ -112,9 +115,11 @@ function DailyTable({ forecast: f }: { forecast: Forecast }) {
         Дневных сумм затронуто: {f.calculation.daily_aggregates_changed}.
       </p>}
     </details>
+    <p className="note">p10 и p90 — нижняя и верхняя оценки модели. Остаток может выйти за этот диапазон;
+      это не гарантированные границы. p50 — медианный остаток.</p>
     <div className="scroll"><table className="ops"><thead><tr><th>Дата</th><th className="num">Приход</th>
-      <th className="num">Расход</th><th className="num">Не ниже (p10)</th><th className="num">Остаток</th>
-      <th className="num">Не выше (p90)</th><th className="num">Риск минуса</th></tr></thead><tbody>
+      <th className="num">Расход</th><th className="num">Нижняя оценка (p10)</th><th className="num">Медиана (p50)</th>
+      <th className="num">Верхняя оценка (p90)</th><th className="num">Риск минуса</th></tr></thead><tbody>
       {f.points.map(p => <tr key={p.point_date}><td className="mono">{p.point_date}</td>
         <td className="num">{money(p.inflow_minor)}</td><td className="num">{money(p.outflow_minor)}</td>
         <td className="num">{money(p.balance_p10_minor)}</td>

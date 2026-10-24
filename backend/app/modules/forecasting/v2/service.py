@@ -169,4 +169,9 @@ class GuardedForecastService:
                 ]
             )
         )
-        return ForecastResult(self.model_version, points, risk, assumptions, warnings, details)
+        output = ForecastResult(self.model_version, points, risk, assumptions, warnings, details)
+        return self.finalize_probability(result, output, quality, data)
+
+    def finalize_probability(self, raw, output, quality, data):
+        # Закреплённая версия2.0 сохраняет прежнюю политику и результаты старых заданий.
+        return output

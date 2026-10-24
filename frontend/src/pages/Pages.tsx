@@ -28,7 +28,7 @@ export function Pages({ route }: { route: RoutePath }) {
     case "/payments": return <Page route={route}><PaymentsPage /></Page>;
     case "/reconciliation": return <Page route={route}><ReconciliationPage /></Page>;
     case "/forecast": return <Page route={route}
-      lead="Сколько денег будет на счёте в ближайшие 30 дней и когда может не хватить."><ForecastPanel /></Page>;
+      lead="Сколько денег ожидается на счёте за период прогноза и когда может не хватить."><ForecastPanel /></Page>;
     case "/scenarios": return <Page route={route}
       lead="Что будет с остатком, если изменить одно событие. База и реальные планы не меняются."><ScenariosPage /></Page>;
     case "/pulse": return <Page route={route}

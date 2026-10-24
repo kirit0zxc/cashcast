@@ -48,7 +48,8 @@ export function DataTable({ data }: { data: Record<string, unknown> }) {
   const rows = (Array.isArray(data.items) ? data.items : Array.isArray(data.points) ? data.points : [data])
     .filter((v): v is Record<string, unknown> => !!v && typeof v === "object");
   const keys = [...new Set(rows.flatMap(r => Object.keys(r)))].filter(k =>
-    !["account_id", "company_id", "input_snapshot", "_incremental_state"].includes(k) && !isId(k));
+    !["account_id", "company_id", "input_snapshot", "_incremental_state"].includes(k)
+      && (!isId(k) || ["id", "planned_event_id", "transaction_id"].includes(k)));
   return <>
     {rows.length ? <div className="scroll"><table className="ops"><thead><tr>
       {keys.map(k => <th key={k}>{labels[k] ?? k}</th>)}</tr></thead><tbody>

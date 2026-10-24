@@ -155,6 +155,7 @@ def get_forecast(
             first_negative_date=run.first_negative_date,
             max_deficit_minor=run.max_deficit_minor,
             probability_any_negative=run.probability_any_negative,
+            probability_status="estimated_uncalibrated" if run.probability_any_negative is not None else "unavailable",
         ),
         points=[
             ForecastPointOut(

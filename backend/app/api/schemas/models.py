@@ -174,6 +174,8 @@ class RiskOut(BaseModel):
     first_negative_date: date | None
     max_deficit_minor: int | None
     probability_any_negative: float | None
+    probability_status: Literal["unavailable", "estimated_uncalibrated"] = "unavailable"
+    probability_calibrated: Literal[False] = False
 
 
 class CalculationOut(BaseModel):
