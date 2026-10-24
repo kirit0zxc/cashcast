@@ -36,7 +36,7 @@ export function PlanFactPanel({ api, companyId, accountId, revision, onApplied }
       onClick={() => apply.mutate()}>Применить однозначные совпадения</button>
     {query.isFetching && <p role="status">Получаем план-факт…</p>}
     {apply.isPending && <p role="status">Проверяем и записываем однозначные оплаты…</p>}
-    {apply.isSuccess && <p role="status">Сверка выполнена. Для нового прогноза нажмите «Рассчитать».</p>}
+    {apply.isSuccess && <p role="status">Сверка выполнена. Прогноз обновляется автоматически.</p>}
     {confirm.isPending && <p role="status">Подтверждаем выбранную оплату…</p>}
     {confirm.isSuccess && <p role="status">Оплата подтверждена. Новый прогноз учтёт изменившийся остаток.</p>}
     {[query.error, apply.error, confirm.error].filter(Boolean).map((error, index) => <p role="alert" key={index}>{error!.message}</p>)}

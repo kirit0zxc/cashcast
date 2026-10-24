@@ -20,23 +20,29 @@ test("ambiguous payment is reviewed and split manually without double allocation
   await expect(page.getByText(/Строк: 2\. Ошибок: 0/)).toBeVisible();
   await page.getByRole("button", { name: "Подтвердить импорт", exact: true }).click();
   await expect(page.getByRole("status").filter({ hasText: "Добавлено:" })).toBeVisible();
-  const events: string[] = [];
-  for (let index = 0; index < 2; index++) {
-    await page.getByRole("combobox", { name: "Движение по плану", exact: true }).selectOption("out");
-    await page.getByLabel("Планируемая сумма, ₽", { exact: true }).fill("98,76");
-    await page.getByLabel("Плановая дата", { exact: true }).fill(today);
-    await page.getByLabel("Контрагент по плану", { exact: true }).fill(name);
-    const created = page.waitForResponse(r => r.url().endsWith("/planned-events") && r.request().method() === "POST");
-    await page.getByRole("button", { name: "Добавить платёж", exact: true }).click();
-    events.push((await (await created).json()).id);
-    await expect(page.getByRole("table", { name: "Плановые платежи", exact: true }).getByRole("row")
-      .filter({ hasText: name })).toHaveCount(index + 1);
-  }
+  // Неоднозначность должна существовать целиком до автоматического прогноза.
+  // Два последовательных ручных ввода сначала создавали единственный безопасный match.
+  await page.getByText("Загрузить счета и обязательства из CSV", { exact: true }).click();
+  await page.getByLabel("Источник обязательств", { exact: true }).fill("manual-confirmation-fixture");
+  await page.getByLabel("CSV счетов и обязательств", { exact: true }).setInputFiles({
+    name: "ambiguous-plans.csv", mimeType: "text/csv", buffer: Buffer.from(
+      "id;counterparty_ref;direction;amount;currency;due_date;available_at;kind;provenance\n"
+      + [0, 1].map(index => `${tag}-${index};${name};out;98.76;RUB;${today};${today};invoice;synthetic`).join("\n") + "\n"),
+  });
+  await page.getByRole("button", { name: "Проверить обязательства", exact: true }).click();
+  await expect(page.getByText(/Обязательств проверено: 2\. Корректных: 2\. Ошибок: 0/)).toBeVisible();
+  await page.getByRole("button", { name: "Подтвердить обязательства", exact: true }).click();
+  await expect(page.getByRole("table", { name: "Плановые платежи", exact: true }).getByRole("row")
+    .filter({ hasText: name })).toHaveCount(2);
   const companyId = await page.getByRole("combobox", { name: "Компания", exact: true }).inputValue();
   const accountId = await page.getByRole("combobox", { name: "Счёт", exact: true }).inputValue();
+  const storedPlans = await (await page.request.get(`/api/v1/companies/${companyId}/planned-events`)).json();
+  const events = [0, 1].map(index => storedPlans.find((event: { id: string; source_ref: string | null }) =>
+    event.source_ref?.endsWith(`${tag}-${index}`)).id as string);
   const path = `/api/v1/companies/${companyId}/plan-fact?account_id=${accountId}&as_of=${today}`;
   const before = await (await page.request.get(path)).json();
   const proposal = before.proposals.find((item: { planned_event_id: string }) => item.planned_event_id === events[0]);
+  expect(proposal).toBeDefined();
   expect(proposal.auto_confirm).toBe(false);
   await page.getByText("Предложения и подтверждённые связи", { exact: true }).click();
   for (const [index, amount, expectedMinor] of [[0, "40,00", 4000], [1, "58,76", 5876]] as const) {

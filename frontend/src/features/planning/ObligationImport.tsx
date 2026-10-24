@@ -51,7 +51,7 @@ export function ObligationImport({ api, companyId, accountId, onChanged }: {
       <button disabled={busy || preview.error_count > 0 || !!committed} onClick={() => void commit()}>
         Подтвердить обязательства</button></>}
     {committed && <p role="status">Обязательств добавлено: {committed.inserted}.
-      Уже существовали: {committed.skipped_existing}. Дата среза переключена на сегодня; рассчитайте прогноз.</p>}
+      Уже существовали: {committed.skipped_existing}. Дата среза переключена на сегодня; прогноз обновляется автоматически.</p>}
     {busy && <p role="status">Обрабатываем обязательства…</p>}
     {error && <p role="alert">{error}</p>}
   </details>;

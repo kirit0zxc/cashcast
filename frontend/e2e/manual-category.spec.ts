@@ -33,12 +33,16 @@ test("manual category survives reload/reimport and does not rewrite a saved fore
   await row.getByText("Изменить категорию", { exact: true }).click();
   await row.getByRole("combobox", { name: "Новая категория", exact: true }).selectOption(category);
   const saved = page.waitForResponse(r => r.url().endsWith("/category") && r.request().method() === "PATCH");
+  const refreshed = page.waitForResponse(r => r.url().endsWith("/forecasts") && r.request().method() === "POST");
   await row.getByRole("button", { name: "Сохранить категорию", exact: true }).click();
   const transaction = await (await saved).json();
   expect(transaction.category).toBe(category);
   expect(transaction.category_source).toBe("manual");
   await expect(row).toContainText("Выбрано вами");
-  await expect(row.getByRole("status")).toContainText("следующем расчёте");
+  await expect(row.getByRole("status")).toContainText("автоматически");
+  const next = await (await refreshed).json();
+  expect(next.forecast_run_id).not.toBe(baseId);
+  await expect(page.getByRole("img", { name: "Прогноз остатка: p10, медиана, p90", exact: true })).toBeVisible();
   expect(await (await page.request.get(`/api/v1/forecasts/${baseId}`)).json()).toEqual(original);
   await page.reload();
   await expect(row).toContainText("Выбрано вами");

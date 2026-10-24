@@ -1,13 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { CashCastApi, money, probability, type Accepted, type Forecast, type Job } from "../../shared/api";
 import { Explanations } from "./Explanations";
 import { ForecastHistory } from "./ForecastHistory";
 import { ScenarioPanel } from "./ScenarioPanel";
 
-export function ForecastPanel({ api, companyId, accountId, initialDate }: {
+export function ForecastPanel({ api, companyId, accountId, initialDate, autoRun, onDateChange }: {
   api: CashCastApi; companyId: string; accountId: string; initialDate: string;
+  autoRun: boolean; onDateChange: (date: string) => void;
 }) {
   const [asOf, setAsOf] = useState(initialDate);
   const [accepted, setAccepted] = useState<Accepted | null>(null);
@@ -32,6 +33,16 @@ export function ForecastPanel({ api, companyId, accountId, initialDate }: {
       ]);
     },
   });
+  const automaticSent = useRef(false);
+  const { mutate } = mutation;
+  useEffect(() => {
+    // Один POST на явное успешное изменение данных. Ref защищает StrictMode;
+    // invalidation, редактирование даты и чтение истории не запускают новый цикл.
+    if (autoRun && !automaticSent.current) {
+      automaticSent.current = true;
+      mutate(initialDate);
+    }
+  }, [autoRun, initialDate, mutate]);
   const job = useQuery({
     queryKey: ["job", jobId],
     queryFn: ({ signal }) => api.request<Job>(`/jobs/${jobId}`, { signal }),
@@ -46,16 +57,25 @@ export function ForecastPanel({ api, companyId, accountId, initialDate }: {
   const working = mutation.isPending || (!!jobId && !job.error
     && !["succeeded", "failed"].includes(job.data?.status ?? ""));
   function submit(event: FormEvent) {
-    event.preventDefault(); setSaved(null); setAccepted(null); mutation.mutate(asOf);
+    event.preventDefault(); automaticSent.current = true;
+    setSaved(null); setAccepted(null); mutation.mutate(asOf);
   }
   return <section className="panel"><h2>2. Прогноз на 30 дней</h2>
     <form onSubmit={submit} className="row">
-      <label>Дата среза<input type="date" disabled={working} required value={asOf} onChange={e => setAsOf(e.target.value)} /></label>
+      <label>Дата среза<input type="date" disabled={working} required value={asOf} onChange={e => {
+        setAsOf(e.target.value); onDateChange(e.target.value);
+        setSaved(null); setAccepted(null); mutation.reset();
+      }} /></label>
       <button disabled={!accountId || working}>Рассчитать</button>
     </form>
     <p>Используем сведения, известные на дату среза. Для выписки выберите её последний день.</p>
+    <p>После сохранения данных в кабинете прогноз обновляется автоматически. Сохранённые расчёты остаются в истории.</p>
+    <p>На сегодняшнем срезе однозначные оплаты сверяются автоматически; неоднозначные подтверждайте вручную.</p>
     <ForecastHistory api={api} companyId={companyId} accountId={accountId} disabled={mutation.isPending}
-      onOpen={entry => { mutation.reset(); setAccepted(null); setSaved({ id: entry.id, job_id: entry.job_id, error_code: entry.error_code }); }} />
+      onOpen={entry => {
+        mutation.reset(); setAccepted(null); setAsOf(entry.as_of); onDateChange(entry.as_of);
+        setSaved({ id: entry.id, job_id: entry.job_id, error_code: entry.error_code });
+      }} />
     {working && <p role="status">Задание: {job.data?.status ?? "отправляем"}. Ожидаем worker…</p>}
     {job.data?.status === "failed" && <p role="alert">Расчёт не выполнен: {job.data.error_code}</p>}
     {[mutation.error, job.error, forecast.error].filter(Boolean).map((e, i) => <p role="alert" key={i}>{e!.message}</p>)}

@@ -30,11 +30,17 @@ export function AccountWorkspace({ api, companyId }: { api: CashCastApi; company
 function AccountTools({ api, companyId, accountId }: { api: CashCastApi; companyId: string; accountId: string }) {
   const [lastDate, setLastDate] = useState(new Date().toISOString().slice(0, 10));
   const [version, setVersion] = useState(0);
+  const [ledgerVersion, setLedgerVersion] = useState(0);
   return <>
     <StatementImport api={api} companyId={companyId} accountId={accountId}
-      onCommit={date => { if (date) setLastDate(date); setVersion(v => v + 1); }} />
-    <Transactions key={`transactions:${version}`} api={api} companyId={companyId} accountId={accountId} />
-    <ForecastPanel key={`forecast:${version}`} api={api} companyId={companyId} accountId={accountId} initialDate={lastDate} />
+      onCommit={date => {
+        if (date) setLastDate(date);
+        setLedgerVersion(v => v + 1); setVersion(v => v + 1);
+      }} />
+    <Transactions key={`transactions:${ledgerVersion}`} api={api} companyId={companyId} accountId={accountId}
+      onChanged={() => setVersion(v => v + 1)} />
+    <ForecastPanel key={`forecast:${version}`} api={api} companyId={companyId} accountId={accountId}
+      initialDate={lastDate} autoRun={version > 0} onDateChange={setLastDate} />
     <PlannedEvents api={api} companyId={companyId} accountId={accountId} onChanged={() => {
       setLastDate(new Date().toISOString().slice(0, 10)); setVersion(v => v + 1);
     }} />

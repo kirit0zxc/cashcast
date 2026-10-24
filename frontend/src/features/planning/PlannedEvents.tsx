@@ -40,7 +40,7 @@ export function PlannedEvents({ api, companyId, accountId, onChanged }: {
         onChange={e => { setCounterparty(e.target.value); create.reset(); }} /></label>
       <button disabled={create.isPending}>Добавить платёж</button>
     </form>
-    {create.isSuccess && <p role="status">План сохранён. Дата среза переключена на сегодня; рассчитайте прогноз.</p>}
+    {create.isSuccess && <p role="status">План сохранён. Дата среза переключена на сегодня; прогноз обновляется автоматически.</p>}
     <ObligationImport api={api} companyId={companyId} accountId={accountId} onChanged={changed} />
     {events.isPending && <p role="status">Получаем планы…</p>}
     {[events.error, create.error, cancel.error].filter(Boolean).map((e, i) => <p role="alert" key={i}>{e!.message}</p>)}

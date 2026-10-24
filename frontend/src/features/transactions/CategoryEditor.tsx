@@ -8,13 +8,17 @@ const categories = {
   tax: "Налоги", fees: "Комиссии", loan: "Кредит", transfer: "Собственный перевод", other: "Прочее",
 };
 
-export function CategoryEditor({ api, transaction, companyId, accountId }: {
+export function CategoryEditor({ api, transaction, companyId, accountId, onChanged }: {
   api: CashCastApi; transaction: Transaction; companyId: string; accountId: string;
+  onChanged: () => void;
 }) {
   const cache = useQueryClient();
   const mutation = useMutation({
     mutationFn: (category: string) => api.patch<Transaction>(`/transactions/${transaction.id}/category`, { category }),
-    onSuccess: () => cache.invalidateQueries({ queryKey: ["transactions", companyId, accountId] }),
+    onSuccess: async () => {
+      await cache.invalidateQueries({ queryKey: ["transactions", companyId, accountId] });
+      onChanged();
+    },
   });
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -33,6 +37,6 @@ export function CategoryEditor({ api, transaction, companyId, accountId }: {
       <button disabled={mutation.isPending}>Сохранить категорию</button>
     </form></details>
     {mutation.error && <p role="alert">{mutation.error.message}</p>}
-    {mutation.isSuccess && <p role="status">Категория сохранена. Изменение будет учтено в следующем расчёте.</p>}
+    {mutation.isSuccess && <p role="status">Категория сохранена. Новый прогноз запрашивается автоматически.</p>}
   </>;
 }

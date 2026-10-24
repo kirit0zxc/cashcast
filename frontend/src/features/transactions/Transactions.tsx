@@ -4,8 +4,9 @@ import { CashCastApi, money, type Page, type Transaction } from "../../shared/ap
 import { CategoryEditor } from "./CategoryEditor";
 
 // Курсор сбрасывается размонтированием при смене компании/счёта или после импорта.
-export function Transactions({ api, companyId, accountId }: {
+export function Transactions({ api, companyId, accountId, onChanged }: {
   api: CashCastApi; companyId: string; accountId: string;
+  onChanged: () => void;
 }) {
   const [cursor, setCursor] = useState<string | null>(null);
   const query = useQuery({
@@ -25,7 +26,7 @@ export function Transactions({ api, companyId, accountId }: {
         <th>Категория</th><th>Приход</th><th>Расход</th></tr></thead><tbody>
         {query.data.items.map(t => <tr key={t.id}><td>{t.booked_on}</td><td>{t.counterparty_name ?? "—"}
           <small>{t.purpose}</small></td><td><CategoryEditor api={api} transaction={t}
-            companyId={companyId} accountId={accountId} /></td>
+            companyId={companyId} accountId={accountId} onChanged={onChanged} /></td>
           <td>{t.direction === "in" ? money(t.amount_minor) : "—"}</td>
           <td>{t.direction === "out" ? money(t.amount_minor) : "—"}</td></tr>)}
       </tbody></table></div>
