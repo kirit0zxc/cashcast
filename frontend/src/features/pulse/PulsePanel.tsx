@@ -41,20 +41,29 @@ export function PulsePanel({ api, forecastId }: { api: CashCastApi; forecastId: 
           {query.data && <p>{query.data.headline}</p>}
         </div>
       </div>
-      <div>
-        <span className="label">Безопасный запас</span>
-        <h2>Подушка</h2>
-        <form className="row" onSubmit={apply}>
-          <label>Подушка, ₽ (пусто — оценить автоматически)<input value={input} inputMode="decimal" onChange={e => setInput(e.target.value)} /></label>
+      <div className="cushion">
+        <span className="label">Подушка безопасности</span>
+        {query.data ? <>
+          <div className="cushion-sum">{money(query.data.cash.buffer_minor)}</div>
+          <p className="cushion-src">{query.data.cash.buffer_source === "user" ? "задана вами"
+            : "рассчитали по вашим расходам — столько стоит держать на счёте"}</p>
+          {/* Отсутствие минуса не означает сохранение подушки. Сервер также учитывает
+              стресс-сценарии и вывод владельцем; сохраняем его объяснение и горизонт. */}
+          <p className={`cushion-verdict tone-${query.data.cash.status}`}>
+            {query.data.cash.status === "unknown" && "Хватит ли запаса — оценка недоступна. "}
+            {query.data.cash.message}
+          </p>
+          {query.data.cash.chart.if_owner_withdraws_minor && <small>
+            Оценка также учитывает вариант вывода денег владельцем как обычно.
+          </small>}
+        </> : query.isPending ? <p role="status">Считаем…</p> : null}
+        <form className="cushion-form" onSubmit={apply}>
+          <label>Свой запас, ₽
+            <input value={input} inputMode="decimal" placeholder="например, 300 000"
+              aria-label="Подушка, ₽ (пусто — оценить автоматически)" onChange={e => setInput(e.target.value)} /></label>
           <button disabled={query.isFetching}>Проверить подушку</button>
         </form>
-        {query.data && <Leaders rows={[
-          ["Подушка", `${money(query.data.cash.buffer_minor)} · ${query.data.cash.buffer_source === "user" ? "задана вами" : "модельная оценка"}`],
-          ["Срез", dayMonth(query.data.as_of)],
-          ["Первая нехватка", query.data.cash.first_gap_date ? dayMonth(query.data.cash.first_gap_date)
-            : query.data.cash.status === "unknown" ? "оценка недоступна" : "не выявлена по медиане"],
-        ]} />}
-        <small>Что может случиться и что можно сделать. Данные того же сохранённого прогноза; просмотр не меняет платежи.</small>
+        <small>Оставьте поле пустым — посчитаем сами.</small>
       </div>
     </div>
     {error && <p role="alert">{error}</p>}

@@ -107,7 +107,6 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
     {needsTarget && explanations.data && targets.length === 0 && <p className="errors">
       {kind === "delay_event" ? "В сохранённой базе нет будущего поступления. Добавьте план и пересчитайте базу."
         : "В сохранённой базе нет регулярного списания. Нужна история с подтверждёнными повторами."}</p>}
-    <small>Сценарий использует сохранённую базу. Он не меняет выписку и реальные обязательства.</small>
     {pending && <p role="status">Считаем сценарий по сохранённой базе…</p>}
     {[mutation.error, job.error, comparison.error].filter(Boolean).map((e, i) => <p role="alert" key={i}>{e!.message}</p>)}
     {job.data?.status === "failed" && <p role="alert">Ошибка сценария: {job.data.error_code}</p>}

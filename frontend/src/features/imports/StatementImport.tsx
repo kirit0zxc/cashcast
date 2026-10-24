@@ -44,8 +44,6 @@ export function StatementImport({ api, companyId, accountId, onCommit }: {
   return <section className="panel">
     <Stepper steps={["Выбрать файл", "Проверить данные", "Подтвердить импорт", "Готово"]} current={step} />
     <h2>История денежных операций</h2>
-    <p>Загрузите выписку из банка в формате CSV — по одной выписке на счёт.
-      Сначала мы проверим файл и покажем, что нашли.</p>
     <form onSubmit={upload} className="upload">
       <label>CSV-файл<input type="file" accept=".csv,text/csv" disabled={busy}
         onChange={e => { setFile(e.target.files?.[0] ?? null); setPreview(null); setCommit(null); }} /></label>

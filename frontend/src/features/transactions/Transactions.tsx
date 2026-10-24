@@ -68,7 +68,7 @@ export function Transactions({ api, companyId, accountId, onChanged }: {
         </tr>)}</tbody>
       </table></div>}
       {query.data && <div className="pager">
-        <small>Показано {query.data.items.length} на странице. Сумма страницы не является итогом периода.</small>
+        <small>Показано {query.data.items.length}</small>
         <button type="button" className="ghost" disabled={cursors.length < 2 || query.isFetching}
           onClick={() => setCursors([null])}>В начало</button>
         <button type="button" className="ghost" disabled={cursors.length < 2 || query.isFetching}

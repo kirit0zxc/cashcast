@@ -14,7 +14,8 @@
 .shell { flex: 1; min-height: 0; display: grid; grid-template-columns: 236px minmax(0, 1fr); padding: 0; border-top: 1px solid var(--rule); margin: 0 28px; }
 .shell > main { max-width: none; margin: 0; padding: 20px 4px 28px 0; min-width: 0; min-height: 0; overflow-y: auto; }
 
-.side { min-height: 0; overflow: hidden; padding: 20px 18px 18px 0; display: flex; flex-direction: column; gap: 4px; border-right: 1px solid var(--rule); margin-right: 24px; }
+/* При малой высоте окна меню прокручивается: маскот не должен скрывать выход. */
+.side { min-height: 0; overflow-x: hidden; overflow-y: auto; padding: 20px 18px 18px 0; display: flex; flex-direction: column; gap: 4px; border-right: 1px solid var(--rule); margin-right: 24px; }
 .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
 .brand .mark { width: 26px; height: 26px; border: 2px solid var(--ink); position: relative; flex: none; }
 .brand .mark::after { content: ""; position: absolute; inset: 5px; background: var(--ink); }
@@ -259,14 +260,14 @@ details.panel.dash > form { margin-top: 12px; }
 .login .panel h2 { font-size: 28px; }
 
 /* Невысокий экран: меню ужимается, чтобы помещаться без прокрутки. */
-@media (min-width: 1101px) and (max-height: 760px) {
+@media (min-width: 861px) and (max-height: 760px) {
   .nav a { padding: 6px 10px; }
   .assist { padding: 8px; grid-template-columns: 40px 1fr; }
   .assist canvas { width: 40px; height: 40px; }
   .assist small { display: none; }
   .side .user { margin-top: 8px; }
 }
-@media (max-width: 1100px) {
+@media (max-width: 860px) {
   .app { height: auto; overflow: visible; }
   .shell { grid-template-columns: 1fr; padding: 10px 16px 20px; margin: 0; }
   .shell > main { overflow: visible; padding: 0; }
@@ -278,6 +279,8 @@ details.panel.dash > form { margin-top: 12px; }
   .side .spacer { display: none; }
   .assist { margin-top: 10px; }
   .side .user { grid-template-columns: 1fr auto; align-items: center; }
+}
+@media (max-width: 1100px) {
   .hero, .grid2 { grid-template-columns: 1fr; }
   .hero h1, .page-title h1 { font-size: 34px; }
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -293,4 +296,46 @@ details.panel.dash > form { margin-top: 12px; }
   .kpis { grid-template-columns: 1fr; }
   .kpi { padding-left: 0; border-right: 0; border-bottom: 1px dashed var(--ink); }
   .foot .barcode { display: none; }
+}
+
+/* Телефон: шапка компактная, меню в одну прокручиваемую строку, контент сразу виден. */
+@media (max-width: 700px) {
+  .topline { gap: 8px; padding: 10px 16px 0; }
+  .topline .context { gap: 6px; width: 100%; }
+  .topline label { flex: 1 1 calc(50% - 6px); min-width: 0; padding: 2px 2px 2px 8px; font-size: 9px; }
+  .topline select { min-width: 0; width: 100%; font-size: 13px; padding: 4px 2px; text-overflow: ellipsis; }
+
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .side { padding: 8px 0 10px; margin-bottom: 14px; gap: 8px; min-width: 0; max-width: 100%;
+    flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .side .nav { flex: 1 1 100%; }
+  .side .assist { flex: 1 1 auto; }
+  .side .user { flex: none; }
+  .nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { flex: none; white-space: nowrap; padding: 6px 9px; font-size: 13px; }
+  .assist { margin-top: 0; padding: 6px 8px; grid-template-columns: 28px 1fr; gap: 8px; }
+  .assist canvas { width: 28px; height: 28px; }
+  .assist small, .assist .label { display: none; }
+  .side .user { margin-top: 0; display: flex; justify-content: space-between; gap: 8px; }
+  .side .user span { display: none; }
+  .side .user button { padding: 6px 10px; font-size: 12px; margin-left: auto; }
+
+  .page-title h1, .hero h1 { font-size: 28px; }
+  .statusbox { min-height: 0; padding: 22px 16px 18px; }
+  .statusword { position: relative; left: auto; right: auto; bottom: auto; }
+  .statusword b { font-size: 20px; }
+
+  .tabs { flex-wrap: wrap; overflow: visible; border-bottom: 0; gap: 4px; }
+  .tabs button, .tabs button + button { border: 1px solid var(--ink); font-size: 13px; padding: 7px 10px; white-space: normal; }
+
+  input, select, textarea { max-width: 100%; }
+  input[type="file"] { width: 100%; }
+  .upload, .upload label, .upload details { min-width: 0; max-width: 100%; }
+  .row > label { flex: 1 1 100%; min-width: 0; }
+  .toolbar small { flex-basis: 100%; }
+  .pager { gap: 6px; }
+  .pager button { flex: 1 1 auto; }
+  .proposals { grid-template-columns: 1fr; }
+  table.ops .cat { min-width: 140px; }
 }

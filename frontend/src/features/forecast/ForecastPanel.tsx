@@ -27,7 +27,6 @@ export function ForecastPanel() {
           onChange={e => c.changeDate(e.target.value)} /></label>
         <button disabled={!accountId || c.working}>Рассчитать</button>
       </form> : <span className="chip">срез {dmy(c.asOf)}</span>}
-      <small>Новый расчёт в этом разделе охватывает 30 дней от выбранной даты. Период сохранённого расчёта указан в результате.</small>
     </section>
     <Tabs label="Прогноз" value={tab} onChange={setTab}
       items={[["result", "Результат"], ["daily", "По дням"], ["history", "История расчётов"]]} />

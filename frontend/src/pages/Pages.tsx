@@ -1,7 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { useAccount } from "../app/account-context";
-import { ASSISTANT_ROUTE, ROUTES, navigate, type RoutePath } from "../app/router";
+import { ASSISTANT_ROUTE, QUALITY_ROUTE, ROUTES, navigate, type RoutePath } from "../app/router";
+import { QualityPage } from "./QualityPage";
 import { ForecastPanel, ForecastState } from "../features/forecast/ForecastPanel";
 import { ScenarioPanel } from "../features/forecast/ScenarioPanel";
 import { StatementImport } from "../features/imports/StatementImport";
@@ -23,20 +24,22 @@ export function Pages({ route }: { route: RoutePath }) {
   switch (route) {
     case "/evaluation": return <Page route={route} lead="Прогноз и факт на контрольном датасете, метрики и журнал расчёта."><EvaluationPanel /></Page>;
     case "/overview": return <OverviewPage />;
-    case "/operations": return <Page route={route} lead="Только фактическое движение денег по выбранному счёту."
+    case "/operations": return <Page route={route} lead="Все движения денег по счёту."
       action={<ImportButton />}><OperationsPage /></Page>;
     case "/import": return <Page route={route}
-      lead="Сначала проверьте файл. Данные появятся в кабинете только после подтверждения."><ImportPage /></Page>;
+      lead="Файл сначала проверяется, в кабинет попадает только после подтверждения."><ImportPage /></Page>;
     case "/payments": return <Page route={route}><PaymentsPage /></Page>;
     case "/reconciliation": return <Page route={route}><ReconciliationPage /></Page>;
     case "/forecast": return <Page route={route}
-      lead="Сколько денег ожидается на счёте за период прогноза и когда может не хватить."><ForecastPanel /></Page>;
+      lead="Сколько денег будет на счёте и когда может не хватить."><ForecastPanel /></Page>;
     case "/scenarios": return <Page route={route}
-      lead="Что будет с остатком, если изменить одно событие. База и реальные планы не меняются."><ScenariosPage /></Page>;
+      lead="Что будет с остатком, если что-то пойдёт не по плану. Реальные данные не меняются."><ScenariosPage /></Page>;
     case "/pulse": return <Page route={route}
-      lead="Касса, расходы и клиенты по тому же сохранённому прогнозу. Просмотр ничего не меняет."><PulsePage /></Page>;
-    case "/assistant": return <Page route={route}
-      lead="Спросите о деньгах счёта обычными словами — Юми ответит таблицей или графиком."><AssistantPage /></Page>;
+      lead="Касса, расходы и клиенты — что проверить и что сделать."><PulsePage /></Page>;
+    case "/quality": return <Page route={route}
+      lead="Как мы проверяли, можно ли заранее предсказать кассовый разрыв, и что получилось."><QualityPage /></Page>;
+    // Чат без заголовка страницы: сверху только переписка, снизу панель ввода.
+    case "/assistant": return <AssistantPage />;
   }
 }
 
@@ -44,10 +47,11 @@ function Page({ route, lead, action, children }: {
   route: RoutePath; lead?: string; action?: ReactNode; children: ReactNode;
 }) {
   const index = ROUTES.findIndex(r => r.path === route);
-  const title = index >= 0 ? ROUTES[index].title : ASSISTANT_ROUTE.title;
+  const title = index >= 0 ? ROUTES[index].title : route === QUALITY_ROUTE.path ? QUALITY_ROUTE.title : ASSISTANT_ROUTE.title;
+  const label = route === QUALITY_ROUTE.path ? "Справка" : `Раздел ${String(index >= 0 ? index + 1 : ROUTES.length + 1).padStart(2, "0")}`;
   return <>
     <div className="page-title"><div>
-      <span className="label">Раздел {String(index >= 0 ? index + 1 : ROUTES.length + 1).padStart(2, "0")}</span>
+      <span className="label">{label}</span>
       <h1>{title}</h1>{lead && <p>{lead}</p>}</div>{action}</div>
     {children}
   </>;

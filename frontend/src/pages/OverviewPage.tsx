@@ -3,6 +3,8 @@ import { useAccount } from "../app/account-context";
 import { Link, navigate } from "../app/router";
 import { ForecastState } from "../features/forecast/ForecastPanel";
 import { ProbabilityNotice } from "../features/forecast/ProbabilityNotice";
+import { GapBanner, openCashGaps } from "../features/forecast/GapBanner";
+import { FirstSteps } from "./FirstSteps";
 import { medianGap } from "../features/forecast/median-gap";
 import type { PulseReport, Status } from "../features/pulse/types";
 import { money, probability, type Forecast, type PlanFact, type PlannedEvent } from "../shared/api";
@@ -37,6 +39,7 @@ export function OverviewPage() {
     {!ready && !c.working && !c.loading && <Empty title={f?.base_forecast_id ? "Открыт сценарий" : "Нет сохранённого прогноза"}
       text={f?.base_forecast_id ? "Обзор показывает базовый прогноз. Откройте его в разделе «Прогноз»."
         : "Загрузите выписку или нажмите «Рассчитать» — обзор соберётся из результата."} />}
+    {!ready && !c.working && !c.loading && !f?.base_forecast_id && <FirstSteps />}
     {ready && <Report forecast={ready} />}
   </>;
 }
@@ -69,6 +72,7 @@ function Report({ forecast: f }: { forecast: Forecast }) {
   const proposals = planFact.data?.proposals.length ?? 0;
 
   return <>
+    <GapBanner api={api} forecastId={f.id} />
     <section className="hero">
       <div>
         <span className="label">Ваш счёт сейчас</span>
@@ -99,9 +103,9 @@ function Report({ forecast: f }: { forecast: Forecast }) {
       <Kpi label="На конец прогноза" value={last?.balance_p50_minor ?? null}
         note={last ? day(last.point_date) : "нет данных"} />
       {f.risk.probability_any_negative === null
-        ? <div className="kpi na"><span className="label">Вероятность минуса</span><div className="v">не оценивается</div>
-          <div className="s">данных мало для надёжной оценки — это не 0%</div></div>
-        : <div className="kpi"><span className="label">Вероятность минуса</span>
+        ? <div className="kpi na"><span className="label">Риск уйти в минус</span><div className="v">не оценивается</div>
+          <div className="s">это не 0% — причина ниже</div></div>
+        : <div className="kpi"><span className="label">Риск уйти в минус <span className="tag">оценка</span></span>
           <div className="v">{probability(f.risk.probability_any_negative)}</div><div className="s">за период прогноза · {points.length} дн.</div></div>}
     </section>
     <ProbabilityNotice forecast={f} />
@@ -127,14 +131,16 @@ function Report({ forecast: f }: { forecast: Forecast }) {
           <div className="body">
             <b>{gap.firstNegativeDate ? `Возможный минус с ${day(gap.firstNegativeDate)}` : STATUS.risk}</b>
             <p>{pulse.data?.cash.message ?? `Максимальный дефицит по прогнозу: ${money(gap.maxDeficitMinor)}.`}</p>
-            <button type="button" onClick={() => navigate("/pulse")}>Открыть пульс</button>
+            <div className="row">
+              {gap.firstNegativeDate && <button type="button" onClick={() => openCashGaps()}>Что можно сделать</button>}
+              <button type="button" className={gap.firstNegativeDate ? "ghost" : ""} onClick={() => navigate("/pulse")}>Открыть пульс</button>
+            </div>
           </div>
         </div>}
       </div>
       <div className="stack">
         <div className="panel dash"><span className="label">Текущие плановые платежи</span>
-          <p className="note">Список на сегодня. Прогноз использует только планы, известные на {day(f.as_of)},
-            {" "}в пределах своего горизонта{last ? ` до ${day(last.point_date)}` : ""}.</p>
+          <p className="note">Список на сегодня. В прогнозе — планы, известные на {day(f.as_of)}.</p>
           {plans.error && <p role="alert">{plans.error.message}</p>}
           {plans.data && !upcoming.length && <p>Плановых платежей нет.</p>}
           <ul className="list">{upcoming.map(e => <li key={e.id}>
