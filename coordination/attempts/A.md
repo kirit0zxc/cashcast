@@ -379,3 +379,25 @@ default5173совпадаютсработающимиHoneyForgeDockerports. Не
 CashCastнастаромбэке. ПланA34envtarget/отдельныйпорт+strictPort иреальныйworkflow
 черезVite→187. ПроверкаGetNetTCPсфильтромвернула0строк/exit1; свободностьпортов
 необъявляетсяпоэтому безусловной, strictPortдолженотказатьприконфликте.
+
+## A-ATT-027 · dev StrictMode observer и проверка CI shell
+
+UTC:2026-10-24T05:12:00Z; A34ec71b73396a5a02d01dad9bbc19687912ed3ae3d.
+Новые2configunitсначалаупаливsandboxнаesbuildaccessdenied; этонебылredдефекта.
+Повторсразрешённымвыполнениемдалнастоящие2red:undefinedhost/старыйproxy8000.
+Послеfix15unitWindows/Linuxpassed. Viteскрытоподнят18101→187: health200, loginOK,
+ноworkflow60stimeout. Snapshot:chart/job=succeeded,приэтомworkingstatus/disabled.
+ЧтениеMutationObserver5.59.20: onUnsubscribeудаляетobserver; syncmutateпервого
+StrictModeeffectуходитвpending, refнепускаетвторойsetup,подписканевосстанавливается.
+RefзащищалPOST,нонедоставкусостояния. Не маскироватьудалениемStrictMode/timeout.
+FixqueueMicrotask+activecleanup: отменённыйsetupничегонепишет; послеresubscribeодин
+POST. Workflowдобавляет1POST/enabled; dev1+5repeat/production9passed.
+
+CIvalidationhelperпервымзапускомупалнаотсутствующемPyYAML; зависимыйDockerbind
+длянесуществующегоhelperсоздалпустуюдиректорию. Точныйабсолютныйпутьпроверен,
+пустаядиректорияудаленаНЕrecursive. БлокизвлечёнstdlibбеззаявленияYAMLparse.
+Windowswrite_textсоздалCRLF→bash-nошибкаdoCR. ВременныйhelperявноLF, затемbash-n0;
+GitиндексworkflowнормализованLF. Этоsyntaxcheck,неActions/неLinuxChromium.
+AutomationreadчерезPythonсdefaultencodingупал;utf-8явно→updatePAUSEDуспешен.
+Датасет/dump/helper/browsercookiesнепубликуются. ТестовыйViteостановлентолькопосле
+проверкиCIMcommandline/project/portPID. C001толькочтение,13SHA/1131UUIDсохранены.

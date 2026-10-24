@@ -1,7 +1,7 @@
-# Проверка по исходному кейсу · checkpoint 24.10.2026 07:20 МСК
+# Проверка по исходному кейсу · checkpoint 24.10.2026 08:12 МСК
 
 Проверенная серверная база A27: 303f5f30edb422bb58c5f19eaeb4fce423f7fa53.
-Общий проверенный UI A30: 08a5ea9c2f04d0dd6f4375370d9b6edcc9f3f353.
+Общий проверенный UI A34: ec71b73396a5a02d01dad9bbc19687912ed3ae3d.
 Точный tested_sha и границы приёмки — в A.md. C001 и синтетический браузерный
 сценарий проверялись отдельно; их результаты не смешиваются с метриками модели.
 Сверено с15страницами «Сервис финансового прогнозирования для малого бизнеса».
@@ -35,7 +35,7 @@ SHA256 исходногоPDF:b66554190d0972c5159d16d9610930fb59e7d77b36cd7d22774
 2. F1/F3/F4/F5 выполнены по временному fallbackрешению0082ec3 (НЕ ACK B); F2 incompatible migration BLOCKED. При возврате B — checkpoint/HANDOFF, без пересекающихся писателей.
 3. B7/B8matcher/B9/B10 ещё не READY; принимать только проверенные пакеты, сохранять честные quality gates.
 4. Утренний specs/frontend-handoff.md подготовлен: OpenAPI, session/CSRF, реальный asyncflow, probabilityNone, история, ручная сверка, per-company роли и автоматическийPOST. Утром сохранить интеграцию при визуальном редизайне.
-5. FreshCompose18089 проверен на пустойБД/A27, C00118086 обновлёнA29 без смены4старыхSHA; минимальный UIA30 проверен18087. Финальный latestcheckpoint/развёртывание и forwardreview уточняются в A.md; draftPR19integration→main остаётся человеку.
+5. FreshCompose18089 проверен на пустойБД/A27; C00118086webобновлёнA34. Послеобновленияread-onlyChromiumhistory/chart/reload/logoutбезPOST, все1131UUID/13полныхSHA/2плана совпали сA32checkpoint. A34:Windows/Linux15unit,lint/types/Dockerbuild,9productionChromium40.5s,devViteworkflow3.6s+5repeat16.9s; CIdevпрофильдобавлен,bash-npassed,ноActions/LinuxChromiumнепроверены. Дваreviewer+третийREADYtreea37dce3. LatestSHA вA.md; draftPR19integration→main человеку. Владелецпопросилпередачуза30минутпосле08:07МСК,автоматизацияPAUSED.
 
 Актуализация04:36UTC: C00118086 webA31 проверен реальным браузером и4старымиSHA;
 два независимых forwardreview и третий verifier READY точногоA31tree259bbfe0.

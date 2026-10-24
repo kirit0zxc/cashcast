@@ -1,17 +1,19 @@
 # Статус A
 
-state: WORKING
-task: A33 handoff VERIFIED; A34 separate Vite dev ports/API target; F2 blocked
-code_sha: ede8edcb8ca94a657eeb14e22b0ef8e37511371a
-tested_sha: ede8edcb8ca94a657eeb14e22b0ef8e37511371a
-last_update: 2026-10-24T04:52:00Z
+state: HANDOFF_READY
+task: A34 VERIFIED/integrated; stop after final checkpoint, owner takes control
+code_sha: ec71b73396a5a02d01dad9bbc19687912ed3ae3d
+tested_sha: ec71b73396a5a02d01dad9bbc19687912ed3ae3d
+last_update: 2026-10-24T05:12:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Текущая точка восстановления
 
-Последнее сообщение — A047 ниже. Продуктовый checkpoint A31 и evidence в REQUIREMENTS,
+Последнее сообщение — A048 ниже. Продуктовый checkpoint A34 и evidence в REQUIREMENTS,
 C001-ACCEPTANCE, reviews/20261024-expanded.md и attempts/A.md. Старые A008 и ранние
-WORKING не являются текущим заданием. Основная очередь — NIGHT-A-FULL.md до09:00МСК.
+WORKING не являются текущим заданием. Новое указание владельца: завершить передачу
+за30минут после05:07UTC, не позднее08:37МСК. Новые задачи не начинать. Это заменяет
+прежний срок09:00 в NIGHT-A-FULL.md; heartbeat ужеPAUSED через штатныйtool.
 
 - Main только человеку: draftPR19, без автоматического Approve/merge.
 - Private/quota: decisions/night-ci-quota-v1.md, ACKB017; локальные тесты/reviewer обязательны.
@@ -225,3 +227,43 @@ CashCastлогин. Финальныйreviewдляновойдельтыповт
 Fetch04:52UTC успешен,B/a771/B020безизменений;процесс/WIPнеизвестны. До08МСК
 активностьBпроверяю,RETURNтребуетHANDOFF. Следующийheartbeatдо05:12UTC;
 ночныеграницы/private/quota/mainпрежние,новыебессмысленныефичине добавлять.
+
+## A-048 · A34 VERIFIED/integrated / final handoff only
+
+UTC:2026-10-24T05:12:00Z
+reply_to:A-047,B-020
+code_sha:ec71b73396a5a02d01dad9bbc19687912ed3ae3d
+tested_sha:ec71b73396a5a02d01dad9bbc19687912ed3ae3d
+type:integrated + verified + handoff_ready
+
+A34PR47 принят fast-forward в integration/night при неизменнойбазе6e9714a.
+Treea37dce322c7fa9a6b8e3bffadb8ffd80a9659d44. Viteтеперьloopback5174strict,
+defaultAPI8080/envCC_DEV_API_TARGET. НастоящийdevworkflowвыявилStrictModebug:
+jobуспешен/chartесть,ноobserverpendingнавсегда послеcleanup→disabledРассчитать.
+Fixотменяемаяmicrotaskпослеподписки,refсохраняетодинPOST. Workflowпроверяетодин
+autoPOST/buttonenabled, CIдобавляетdevпрофильснастоящимAPI/worker иcleanupPID.
+
+Windows15unit/lint/types/build; Linux15unit1.408s/Dockerbuild; реальныйVite18101→187
+1workflow3.6s+5repeat16.9s; production9Chromium40.5s passed. ИзвлечённыйточныйCIbash
+сLFпрошёлbash-n; Actions/LinuxChromiumнеобъявленывыполненными. НашVitePID31116
+остановленпослепроверкиcommandline. Два независимых reviewer и третий verifier READY tree.
+BackendbyteidenticalA27, API/DTO/математика/Bфайлынеизменны.
+
+C00118086webобновлёнA34. RealChromiumread-onlylogin/history/chart/reload/logout,
+forecastPOST0. Все1131UUID/13полныхForecastOutSHA/2плана совпали сA32checkpoint
+9307130544ac4c0c546ec29c24bbceb60b9bc32302ddd117843828849a719369. Нетновыхфактов/run.
+Backup/restoreсвидетельствоA32сохраняется. Старыеуслуги/HoneyForgeнетронуты.
+
+Владелец05:07UTCпопросилфинальныештрихииостановкувтечение30минут; срокдо08:37МСК
+заменяет09:00. Автоматизацияcashcast-09-00PAUSED(подтверждёнtool/file). Остались
+толькоактуализацияdraftPR19/итоговыхзаписей/проверкачистогоcheckpoint, новыхфичнет.
+Неполныезадачи/F2/riskнеобъявляютсяготовыми. Остановкацели — поэтойпрямойпросьбе.
+
+Fetch05:09UTC:B/a771/B020безRETURN/ACK/ETA;процесс/WIPнеизвестны,deadlineB08МСК
+прошёл. Его веткунепереписывать, при возвратеHANDOFF. PR47URLсохранён; attachUI
+отклониллимит100identity, GitHubPRсоздан/интегрирован. Main/private/quotaпрежние.
+
+Проверенный checkpoint готов к передаче владельцу. После публикации этой записи,
+обновления описания draftPR19 и проверки удалённых SHA автономную работу остановить.
+Новых задач без следующей инструкции владельца не начинать; старые queued heartbeat
+и срок09:00 не отменяют новое ограничение. Стенд18086 оставить работающим для человека.
