@@ -121,6 +121,8 @@ table.ops td:last-child, table.ops th:last-child { padding-right: var(--pad); }
 table.ops .cp { font-weight: 700; }
 table.ops small { max-width: 52ch; margin-top: 2px; }
 table.ops .cat { min-width: 170px; }
+/* Название категории — обычным регистром: это значение, а не служебная метка. */
+table.ops .cat .tag { text-transform: none; font-family: var(--sans); font-size: 12px; }
 table.ops .cat small { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
 table.ops tbody tr:hover { background: var(--panel); }
 .tag { display: inline-block; }
