@@ -234,3 +234,22 @@ run; отдаётся только принадлежащий этой комп�
 результаты и payload задания в список не включаются. Открывать результат через
 существующий GET /forecasts/{id}; чтение списка/результата ничего не enqueue.
 Основание: F3 временного fallback-решения, без миграции и переписывания истории.
+
+## Ручной выбор оплаты в план-факте
+
+POST /companies/{company_id}/plan-fact/confirm, session/member/CSRF.
+Body: account_id/planned_event_id/transaction_id UUID и matched_amount_minor,
+строгий integer1..9e15копеек; extra/as_of запрещены. Только текущий деньUTC,
+возвращается существующий PlanFactOut. Под exclusive account lock проверяются
+company/account/RUB/направление/доступность и текущий proposal существующего matcher.
+Сумма не превышает proposal, остаток плана, исходную сумму минус все confirmed
+связи плана и свободный остаток операции после всех confirmed allocations.
+
+Новая связь confirmed/methodmanual и remaining/status плана фиксируются атомарно
+до HTTP200. Повтор того же confirmed pair с той же суммой возвращает200 без записи
+и не меняет method/время/причину прежней связи. Другая сумма или legacy candidate/
+rejected pair409allocation_conflict: прежнее решение не перезаписывается молча.
+Отсутствующий/устаревший proposal409proposal_stale; чужие объект/счёт/компания404.
+Сохранённые прогнозы и pure matcher не меняются. Частичное подтверждение одной пары
+нельзя дополнять другой суммой тем же ключом: следующий факт должен иметь отдельную
+операцию. Основание — F4 временного fallback-решения, не ACK партнёра.

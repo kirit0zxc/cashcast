@@ -19,6 +19,16 @@ export interface PlannedEvent {
   source_ref: string | null; counterparty_name: string | null; counterparty_ref: string | null;
   provenance: string | null; tax_regime: string | null;
 }
+export interface MatchProposal {
+  planned_event_id: string; transaction_id: string; matched_amount_minor: number;
+  confidence: number; reason: string; auto_confirm: boolean;
+}
+export interface PlanFact {
+  account_id: string; as_of: string;
+  items: { event: PlannedEvent; confirmed_amount_minor: number }[];
+  confirmed_matches: { planned_event_id: string; transaction_id: string; matched_amount_minor: number }[];
+  proposals: MatchProposal[];
+}
 export interface ObligationPreview {
   import_id: string; status: string; total_rows: number; valid_count: number; error_count: number;
   sample_errors: { row: number; field: string; code: string }[]; reused: boolean;

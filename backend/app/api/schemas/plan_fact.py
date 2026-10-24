@@ -1,10 +1,21 @@
 """HTTP plan-fact-api-v1: подтверждённые суммы отдельно от альтернативных предложений."""
 
 from datetime import date
+from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.schemas.models import PlannedEventOut
+from app.core.limits import MAX_MONEY_MINOR
+
+
+class PlanFactConfirmRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    account_id: UUID
+    planned_event_id: UUID
+    transaction_id: UUID
+    matched_amount_minor: int = Field(strict=True, gt=0, le=MAX_MONEY_MINOR)
 
 
 class PlanFactItem(BaseModel):

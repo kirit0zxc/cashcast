@@ -8,10 +8,17 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.api.schemas.common import ERROR_RESPONSES
-from app.api.schemas.plan_fact import ConfirmedMatchOut, MatchProposalOut, PlanFactItem, PlanFactOut
+from app.api.schemas.plan_fact import (
+    ConfirmedMatchOut,
+    MatchProposalOut,
+    PlanFactConfirmRequest,
+    PlanFactItem,
+    PlanFactOut,
+)
 from app.api.v1.planned_events import _to_out
 from app.core.auth import require_company_access
 from app.core.deps import get_db
+from app.modules.integration.manual_confirmation import ManualPlanFactConfirmation
 from app.modules.integration.plan_fact import PlanFactService
 
 router = APIRouter(tags=["plan-fact"], responses=ERROR_RESPONSES)
@@ -42,3 +49,13 @@ def reconcile(company_id: uuid.UUID, account_id: uuid.UUID, as_of: date,
               _company: str = Depends(require_company_access),
               session: Session = Depends(get_db, scope="function")) -> PlanFactOut:
     return _response(account_id, as_of, PlanFactService(session).run(company_id, account_id, as_of, write=True))
+
+
+@router.post("/companies/{company_id}/plan-fact/confirm", response_model=PlanFactOut)
+def confirm_proposal(company_id: uuid.UUID, body: PlanFactConfirmRequest,
+                     _company: str = Depends(require_company_access),
+                     session: Session = Depends(get_db, scope="function")) -> PlanFactOut:
+    data = ManualPlanFactConfirmation(session).confirm(
+        company_id, body.account_id, body.planned_event_id, body.transaction_id, body.matched_amount_minor,
+    )
+    return _response(body.account_id, data["as_of"], data)
