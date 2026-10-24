@@ -104,10 +104,10 @@ def get_job(
     session: Session = Depends(get_db, scope="function"),
 ) -> JobStatusOut:
     job = session.get(Job, job_id)
-    if job is None:
+    if job is None or job.company_id is None:
+        # Legacy/служебное задание без tenant не становится общедоступным по UUID.
         raise AppError(404, "not_found", "Задание не найдено")
-    if job.company_id is not None:
-        _require_member(session, user.id, str(job.company_id))
+    _require_member(session, user.id, str(job.company_id))
     run_id = (job.payload or {}).get("forecast_run_id")
     return JobStatusOut(
         id=str(job.id),
@@ -215,6 +215,7 @@ def create_scenario(
                      scenario=[ScenarioChange(**c.model_dump()) for c in body.changes])
     # Ошибки формы/цели возвращаются сразу, не превращаются в ретраи фонового задания.
     events = {e.id: e for e in frozen.planned_events}
+    shifted_dates = {e.id: e.due_date for e in frozen.planned_events}
     groups = {g.group_id for g in frozen.recurrences}
     for change in frozen.scenario:
         valid = True
@@ -226,6 +227,12 @@ def create_scenario(
             valid = bool(event and event.status in {"planned", "partially_paid"}
                          and event.remaining_amount_minor > 0 and change.shift_days is not None
                          and change.shift_days >= 0)
+            if valid:
+                # Валидная по типу дата ещё может выйти за календарь при переносе.
+                try:
+                    shifted_dates[change.target_id] += timedelta(days=change.shift_days)
+                except OverflowError:
+                    valid = False
         elif change.kind == "reduce_irregular_inflow":
             valid = change.factor is not None and 0 <= change.factor <= 1
         elif change.kind == "increase_recurring":

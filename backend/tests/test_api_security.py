@@ -58,3 +58,17 @@ def test_invalid_mapping_and_missing_csrf_are_expected_errors(client, context):
     assert response.status_code == 403
     assert response.json()["error"]["code"] == "csrf_failed"
     assert client.get(f"/api/v1/forecasts/{uuid.uuid4()}").status_code == 404
+
+
+@pytest.mark.parametrize("kind", ["forecast", "internal-probe"])
+def test_job_without_company_is_not_public_to_any_logged_in_user(client, session_factory, context, kind):
+    # Отсутствие tenant нельзя трактовать как освобождение от проверки прав.
+    with session_factory.begin() as session:
+        job = Job(company_id=None, kind=kind, payload={"forecast_run_id": str(uuid.uuid4())},
+                  status="failed", last_error="PRIVATE-ERROR-CODE")
+        session.add(job)
+        session.flush()
+        job_id = str(job.id)
+    response = client.get(f"/api/v1/jobs/{job_id}")
+    assert response.status_code == 404, response.text
+    assert "PRIVATE-ERROR-CODE" not in response.text and "forecast_run_id" not in response.text
