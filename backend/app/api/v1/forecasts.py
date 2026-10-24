@@ -233,9 +233,14 @@ def create_scenario(
                      and (change.target_id is None or change.target_id in groups))
         if not valid:
             raise AppError(422, "invalid_scenario", "Проверьте поля сценария и наличие цели в базовом снимке")
-    scenario_hash = hashlib.sha256(
+    legacy_scenario_hash = hashlib.sha256(
         json.dumps(scenario, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
+    # Seed можно переопределить: одинаковые изменения от двух баз всё равно
+    # должны сохранять свою lineage для корректного парного сравнения.
+    scenario_hash = hashlib.sha256(json.dumps(
+        {"base_forecast_id": str(base.id), **scenario}, sort_keys=True, separators=(",", ":"),
+    ).encode()).hexdigest()
     _validate_before_enqueue(frozen)
 
     # Как и базовый прогноз, сериализуем поиск/создание по счёту. Иначе две
@@ -252,6 +257,7 @@ def create_scenario(
         created_by=uuid.UUID(user.id),
         scenario=scenario,
         scenario_hash=scenario_hash,
+        legacy_scenario_hash=legacy_scenario_hash,
         base_forecast_id=base.id,
         input_snapshot={**ForecastInputCodec.encode(frozen), "warnings": base.input_snapshot.get("warnings", [])},
         model_version=base.model_version,
@@ -290,20 +296,26 @@ def _get_or_create_run(
     base_forecast_id=None,
     input_snapshot=None,
     model_version=None,
+    legacy_scenario_hash=None,
 ) -> ForecastRun:
     model_version = model_version or getattr(get_forecast_service(), "model_version", MODEL_VERSION)
     # Повтор того же входа (вкл. сценарий) не плодит прогоны — возвращаем существующий.
-    existing = session.scalar(
-        select(ForecastRun).where(
-            ForecastRun.account_id == account_id,
-            ForecastRun.as_of == as_of,
-            ForecastRun.horizon_days == horizon_days,
-            ForecastRun.data_version == data_version,
-            ForecastRun.model_version == model_version,
-            ForecastRun.seed == seed,
-            ForecastRun.scenario_hash == scenario_hash,
-        )
+    input_query = select(ForecastRun).where(
+        ForecastRun.account_id == account_id,
+        ForecastRun.as_of == as_of,
+        ForecastRun.horizon_days == horizon_days,
+        ForecastRun.data_version == data_version,
+        ForecastRun.model_version == model_version,
+        ForecastRun.seed == seed,
     )
+    existing = session.scalar(input_query.where(ForecastRun.scenario_hash == scenario_hash))
+    if existing is None and legacy_scenario_hash is not None:
+        # Повтор после обновления возвращает прежний run только своей базы.
+        # Уже сохранённые хеши, входы и результаты не переписываем.
+        existing = session.scalar(input_query.where(
+            ForecastRun.scenario_hash == legacy_scenario_hash,
+            ForecastRun.base_forecast_id == base_forecast_id,
+        ))
     if existing is not None:
         return existing
     run = ForecastRun(
