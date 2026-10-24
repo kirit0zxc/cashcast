@@ -1,0 +1,46 @@
+{
+  "dataset": "berka",
+  "scanned_rows": 1056320,
+  "full_scan": true,
+  "accepted_rows": 1056320,
+  "excluded_rows": 0,
+  "exclusion_reasons": {},
+  "flags": {},
+  "columns": [
+    "trans_id",
+    "account_id",
+    "date",
+    "type",
+    "operation",
+    "amount",
+    "balance",
+    "k_symbol",
+    "bank",
+    "account"
+  ],
+  "blank_counts": {
+    "k_symbol": 535314,
+    "bank": 782812,
+    "account": 760931,
+    "operation": 183114
+  },
+  "literal_missing_token_counts": {},
+  "minimum_date": "1993-01-01",
+  "maximum_date": "1998-12-31",
+  "source_money_totals": {
+    "in": 322747242450,
+    "out": 303032113580
+  },
+  "exported_money_totals": {
+    "in": 322747242450,
+    "out": 303032113580
+  },
+  "conservation_exact": true,
+  "accounts": 4500,
+  "daily_rows": 814768,
+  "negative_balance_rows": 2999,
+  "currency": "CZK",
+  "currency_basis": "Berka Czech financial transaction dataset; supplied CSV lacks currency field",
+  "balance": "per-transaction source balance retained; no asserted EOD without within-day order",
+  "category": "Original operation/symbol labels pseudonymized, never filled when blank"
+}

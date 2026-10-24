@@ -1,0 +1,35 @@
+{
+  "source_commit": "60147f01e4627c0f065170cc02ab451219b3020f",
+  "fixture": "backend/tests/analytics/test_cutoff_gap.py::demo",
+  "checks_passed": 5,
+  "scope": "direct pure forecast calculations, no pytest or Pulse/API/DB runtime",
+  "short": {
+    "as_of": "2026-08-01",
+    "history_days": 6,
+    "opening_minor": 26040000,
+    "minimum_p50_minor": 24790000,
+    "end_p50_minor": 28950000,
+    "probability": null
+  },
+  "known_expense": {
+    "amount_minor": 40000000,
+    "first_negative": "2026-08-03",
+    "max_deficit_minor": 15210000
+  },
+  "later_plan_ignored": true,
+  "middle_history": {
+    "policy_version": "quality-v2.0",
+    "mode": "empirical",
+    "history_days": 37,
+    "training_start": "2026-07-27",
+    "last_balance_age_days": 0,
+    "reconciliation_breaks": 0,
+    "unobserved_calendar_days": 0,
+    "eligible_for_simulation": true,
+    "eligible_for_probability": false,
+    "warnings": [
+      "Менее56дней пригодной истории: калиброванная вероятность недоступна."
+    ]
+  },
+  "long_probability": 0.0
+}

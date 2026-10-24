@@ -1,0 +1,31 @@
+{
+  "output": "C:\\Users\\Karp\\Desktop\\Hak-pos\\cashcast\\output\\pdf\\CashCast-project-and-pitch-complete-schematics.pdf",
+  "pages": 35,
+  "architecture_nodes": 7,
+  "architecture_edges": 6,
+  "architecture_edge_labels": 3,
+  "sequence_participants": 4,
+  "sequence_messages": 11,
+  "database_tables": 16,
+  "foreign_keys": 33,
+  "routes": 9,
+  "schema_pages": {
+    "A01": 24,
+    "A02": 25,
+    "A03": 26,
+    "A03.1": 27,
+    "A03.2": 28,
+    "A04": 29,
+    "A05": 30,
+    "A06": 31,
+    "A07": 32,
+    "A08": 33,
+    "A09": 34,
+    "A10": 35
+  },
+  "removed_drawing_operations": {
+    "A01": 463,
+    "A02": 502
+  },
+  "sha256": "b59b18d1767965a3035cc95a42f559c3c94c0282f84ae84d1739fad2447e6b56"
+}

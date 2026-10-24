@@ -1,0 +1,33 @@
+{
+  "dataset": "nn5",
+  "scanned_rows": 111,
+  "full_scan": true,
+  "accepted_rows": 111,
+  "excluded_rows": 0,
+  "exclusion_reasons": {},
+  "flags": {},
+  "columns": [],
+  "blank_counts": {},
+  "literal_missing_token_counts": {},
+  "minimum_date": "1996-03-18",
+  "maximum_date": "1998-05-17",
+  "source_money_totals": {},
+  "exported_money_totals": {},
+  "conservation_exact": true,
+  "observational_unit": "ATM daily withdrawal series, no account balance",
+  "series_lengths": {
+    "791": 111
+  },
+  "starts": {
+    "1996-03-18": 111
+  },
+  "cells": 87801,
+  "missing_cells": 1677,
+  "true_zero_cells": 419,
+  "negative_observed_cells": 0,
+  "nominal_unit": "source withdrawal units; currency/scale not stated in TSF; not converted to cents",
+  "observed_sum": "1588603.1744242498226072",
+  "exported_observed_sum": "1588603.1744242498226072",
+  "no_imputation": true,
+  "arrays": "Rows retain source series order; columns t0..t790; NaN and explicit 0/1 mask; dates in nn5_daily.csv"
+}

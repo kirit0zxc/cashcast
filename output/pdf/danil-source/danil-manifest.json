@@ -1,0 +1,13 @@
+{
+  "output": "C:\\Users\\Karp\\Desktop\\Hak-pos\\cashcast\\output\\pdf\\CashCast-Danil-forecasting-extract.pdf",
+  "pages": 10,
+  "source_diagrams": [
+    25,
+    30,
+    33
+  ],
+  "diagram_content": "all source text retained; no scaling or cropping",
+  "source_main": "cbe3f87dd1d7d914942f85291f5986e7af21effb",
+  "technical_base": "e8f93fc5c9db4dc8f7d3535a0d8b9dde47505615",
+  "sha256": "7c2b97718b007a97815698c83d86d1e1283c7e71039023d1a5aedbf5c6ed95de"
+}

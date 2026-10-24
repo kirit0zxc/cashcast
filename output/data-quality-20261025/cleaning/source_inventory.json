@@ -1,0 +1,1358 @@
+[
+  {
+    "source_alias": "berka-trans.zip",
+    "size_bytes": 17671851,
+    "sha256": "90cdc0c547469981b9fe31708f8f64d1b9deb8c2c32e615a2c7421dd0e7eddfa",
+    "members": [
+      {
+        "name": "trans.asc",
+        "size": 69406578,
+        "compressed": 17671735,
+        "crc32": "fcdebab8"
+      }
+    ]
+  },
+  {
+    "source_alias": "BPIChallenge2019CSV.zip",
+    "size_bytes": 36720297,
+    "sha256": "372b5a15c30f4a21b370db25b1912cc60ad1104d4198cfd34f8aecb2f4c2425a",
+    "members": [
+      {
+        "name": "BPI_Challenge_2019.csv",
+        "size": 527457189,
+        "compressed": 36720119,
+        "crc32": "ff1ca2e0"
+      }
+    ]
+  },
+  {
+    "source_alias": "cashcast-code.zip",
+    "size_bytes": 83233,
+    "sha256": "ee28eb967dc4e30a76a4f3e53c6b7a2cd8a63593212e07d77250c93cc8343207",
+    "members": [
+      {
+        "name": "backend/app/__init__.py",
+        "size": 0,
+        "compressed": 2,
+        "crc32": "00000000"
+      },
+      {
+        "name": "backend/app/core/__init__.py",
+        "size": 0,
+        "compressed": 2,
+        "crc32": "00000000"
+      },
+      {
+        "name": "backend/app/core/forecast_input.py",
+        "size": 2459,
+        "compressed": 943,
+        "crc32": "223b3e49"
+      },
+      {
+        "name": "backend/app/modules/__init__.py",
+        "size": 0,
+        "compressed": 2,
+        "crc32": "00000000"
+      },
+      {
+        "name": "backend/app/modules/categorization/__init__.py",
+        "size": 0,
+        "compressed": 2,
+        "crc32": "00000000"
+      },
+      {
+        "name": "backend/app/modules/categorization/service.py",
+        "size": 3349,
+        "compressed": 1321,
+        "crc32": "f6e7e04f"
+      },
+      {
+        "name": "backend/app/modules/contracts.py",
+        "size": 7867,
+        "compressed": 2744,
+        "crc32": "06cea3f0"
+      },
+      {
+        "name": "backend/app/modules/evaluation/__init__.py",
+        "size": 110,
+        "compressed": 88,
+        "crc32": "9ac2bbe6"
+      },
+      {
+        "name": "backend/app/modules/evaluation/metrics.py",
+        "size": 4042,
+        "compressed": 1425,
+        "crc32": "a6b107cd"
+      },
+      {
+        "name": "backend/app/modules/forecasting/__init__.py",
+        "size": 0,
+        "compressed": 2,
+        "crc32": "00000000"
+      },
+      {
+        "name": "backend/app/modules/forecasting/baseline.py",
+        "size": 5224,
+        "compressed": 2003,
+        "crc32": "4833076e"
+      },
+      {
+        "name": "backend/app/modules/forecasting/legacy_v1/__init__.py",
+        "size": 397,
+        "compressed": 265,
+        "crc32": "1510b4e9"
+      },
+      {
+        "name": "backend/app/modules/forecasting/legacy_v1/baseline.py",
+        "size": 5190,
+        "compressed": 2000,
+        "crc32": "d5b17430"
+      },
+      {
+        "name": "backend/app/modules/forecasting/legacy_v1/categorization.py",
+        "size": 3349,
+        "compressed": 1321,
+        "crc32": "f6e7e04f"
+      },
+      {
+        "name": "backend/app/modules/forecasting/legacy_v1/factories.py",
+        "size": 288,
+        "compressed": 206,
+        "crc32": "a4a5fcaa"
+      },
+      {
+        "name": "backend/app/modules/forecasting/legacy_v1/recurrence.py",
+        "size": 4781,
+        "compressed": 1708,
+        "crc32": "d648f5cd"
+      },
+      {
+        "name": "backend/app/modules/forecasting/legacy_v1/scenarios.py",
+        "size": 3464,
+        "compressed": 1338,
+        "crc32": "b6a5bf01"
+      },
+      {
+        "name": "backend/app/modules/forecasting/legacy_v1/seasonal.py",
+        "size": 16972,
+        "compressed": 5357,
+        "crc32": "5306c5e6"
+      },
+      {
+        "name": "backend/app/modules/forecasting/scenarios.py",
+        "size": 3464,
+        "compressed": 1338,
+        "crc32": "b6a5bf01"
+      },
+      {
+        "name": "backend/app/modules/forecasting/seasonal.py",
+        "size": 17240,
+        "compressed": 5443,
+        "crc32": "c8635f3c"
+      },
+      {
+        "name": "backend/app/modules/forecasting/service.py",
+        "size": 3274,
+        "compressed": 1167,
+        "crc32": "b242c331"
+      },
+      {
+        "name": "backend/app/modules/forecasting/v2/__init__.py",
+        "size": 126,
+        "compressed": 107,
+        "crc32": "870dab1a"
+      },
+      {
+        "name": "backend/app/modules/forecasting/v2/estimated.py",
+        "size": 2699,
+        "compressed": 1135,
+        "crc32": "08d3cea9"
+      },
+      {
+        "name": "backend/app/modules/forecasting/v2/incremental_engine.py",
+        "size": 7374,
+        "compressed": 2613,
+        "crc32": "83d2acf3"
+      },
+      {
+        "name": "backend/app/modules/forecasting/v2/incremental_history.py",
+        "size": 8579,
+        "compressed": 2899,
+        "crc32": "14a71c2a"
+      },
+      {
+        "name": "backend/app/modules/forecasting/v2/incremental_paths.py",
+        "size": 3143,
+        "compressed": 1159,
+        "crc32": "7fe00da5"
+      },
+      {
+        "name": "backend/app/modules/forecasting/v2/incremental_state.py",
+        "size": 5101,
+        "compressed": 1776,
+        "crc32": "cb64ed1b"
+      },
+      {
+        "name": "backend/app/modules/forecasting/v2/legacy_limits.py",
+        "size": 2370,
+        "compressed": 1048,
+        "crc32": "f9a65bd0"
+      },
+      {
+        "name": "backend/app/modules/forecasting/v2/quality.py",
+        "size": 15815,
+        "compressed": 4422,
+        "crc32": "9799a182"
+      },
+      {
+        "name": "backend/app/modules/forecasting/v2/service.py",
+        "size": 9030,
+        "compressed": 2919,
+        "crc32": "126166d7"
+      },
+      {
+        "name": "backend/app/modules/planning/__init__.py",
+        "size": 0,
+        "compressed": 2,
+        "crc32": "00000000"
+      },
+      {
+        "name": "backend/app/modules/planning/matching.py",
+        "size": 3373,
+        "compressed": 1332,
+        "crc32": "aaa08ba4"
+      },
+      {
+        "name": "backend/app/modules/planning/recurrence.py",
+        "size": 4767,
+        "compressed": 1696,
+        "crc32": "07b7f99c"
+      },
+      {
+        "name": "backend/app/modules/planning/service.py",
+        "size": 531,
+        "compressed": 261,
+        "crc32": "98ffd0c0"
+      },
+      {
+        "name": "evaluation/backtest.py",
+        "size": 17053,
+        "compressed": 5091,
+        "crc32": "97fd24a0"
+      },
+      {
+        "name": "evaluation/model_compare/__init__.py",
+        "size": 388,
+        "compressed": 274,
+        "crc32": "84f9a123"
+      },
+      {
+        "name": "evaluation/model_compare/features.py",
+        "size": 4889,
+        "compressed": 1848,
+        "crc32": "3795a47a"
+      },
+      {
+        "name": "evaluation/model_compare/models.py",
+        "size": 7317,
+        "compressed": 2779,
+        "crc32": "558c8541"
+      },
+      {
+        "name": "evaluation/model_compare/organizers.py",
+        "size": 8694,
+        "compressed": 3381,
+        "crc32": "5920c4cc"
+      },
+      {
+        "name": "evaluation/model_compare/plots.py",
+        "size": 7996,
+        "compressed": 3046,
+        "crc32": "633ca9e4"
+      },
+      {
+        "name": "evaluation/model_compare/run.py",
+        "size": 13097,
+        "compressed": 4780,
+        "crc32": "ee48aa83"
+      },
+      {
+        "name": "evaluation/model_compare/scoring.py",
+        "size": 6771,
+        "compressed": 2647,
+        "crc32": "eafe1819"
+      },
+      {
+        "name": "evaluation/MODEL-COMPARE-PLAN.md",
+        "size": 5140,
+        "compressed": 2385,
+        "crc32": "7f7e245d"
+      }
+    ]
+  },
+  {
+    "source_alias": "cashflow_dataset_participants.zip",
+    "size_bytes": 12462880,
+    "sha256": "e753802b7f7a2eecb7b5a558f9923b529e711c40fe431774750904b62ec79987",
+    "members": [
+      {
+        "name": "README.md",
+        "size": 6288,
+        "compressed": 2495,
+        "crc32": "e92a6aad"
+      },
+      {
+        "name": "companies.csv",
+        "size": 19827,
+        "compressed": 3644,
+        "crc32": "b5929825"
+      },
+      {
+        "name": "all_operations.csv",
+        "size": 64060673,
+        "compressed": 6156236,
+        "crc32": "eea02d1b"
+      },
+      {
+        "name": "statements/",
+        "size": 0,
+        "compressed": 0,
+        "crc32": "00000000"
+      },
+      {
+        "name": "statements/C125.csv",
+        "size": 610858,
+        "compressed": 58434,
+        "crc32": "597ec69d"
+      },
+      {
+        "name": "statements/C106.csv",
+        "size": 460489,
+        "compressed": 43401,
+        "crc32": "7165fbbb"
+      },
+      {
+        "name": "statements/C040.csv",
+        "size": 152894,
+        "compressed": 15827,
+        "crc32": "7c814b7a"
+      },
+      {
+        "name": "statements/C094.csv",
+        "size": 629929,
+        "compressed": 56541,
+        "crc32": "e8a5e4d6"
+      },
+      {
+        "name": "statements/C131.csv",
+        "size": 135467,
+        "compressed": 13798,
+        "crc32": "e442d31f"
+      },
+      {
+        "name": "statements/C081.csv",
+        "size": 53529,
+        "compressed": 6305,
+        "crc32": "a8e094f0"
+      },
+      {
+        "name": "statements/C122.csv",
+        "size": 84376,
+        "compressed": 10182,
+        "crc32": "ce6bdb90"
+      },
+      {
+        "name": "statements/C074.csv",
+        "size": 699539,
+        "compressed": 64324,
+        "crc32": "c0bd91ea"
+      },
+      {
+        "name": "statements/C001.csv",
+        "size": 287639,
+        "compressed": 29134,
+        "crc32": "f04be89d"
+      },
+      {
+        "name": "statements/C021.csv",
+        "size": 680913,
+        "compressed": 72584,
+        "crc32": "ee1198bd"
+      },
+      {
+        "name": "statements/C037.csv",
+        "size": 270995,
+        "compressed": 25218,
+        "crc32": "8b98d42b"
+      },
+      {
+        "name": "statements/C053.csv",
+        "size": 717704,
+        "compressed": 62423,
+        "crc32": "d27cd759"
+      },
+      {
+        "name": "statements/C015.csv",
+        "size": 730398,
+        "compressed": 66284,
+        "crc32": "8683068c"
+      },
+      {
+        "name": "statements/C110.csv",
+        "size": 46202,
+        "compressed": 5428,
+        "crc32": "d8a5acd9"
+      },
+      {
+        "name": "statements/C127.csv",
+        "size": 582800,
+        "compressed": 51454,
+        "crc32": "97ca6eb3"
+      },
+      {
+        "name": "statements/C123.csv",
+        "size": 382314,
+        "compressed": 40080,
+        "crc32": "6c563394"
+      },
+      {
+        "name": "statements/C014.csv",
+        "size": 598437,
+        "compressed": 75528,
+        "crc32": "c24c7d3c"
+      },
+      {
+        "name": "statements/C018.csv",
+        "size": 612140,
+        "compressed": 53681,
+        "crc32": "469f9e58"
+      },
+      {
+        "name": "statements/C142.csv",
+        "size": 127074,
+        "compressed": 13737,
+        "crc32": "289f2890"
+      },
+      {
+        "name": "statements/C034.csv",
+        "size": 674164,
+        "compressed": 61400,
+        "crc32": "450b1747"
+      },
+      {
+        "name": "statements/C002.csv",
+        "size": 287949,
+        "compressed": 29505,
+        "crc32": "59cf565c"
+      },
+      {
+        "name": "statements/C068.csv",
+        "size": 21668,
+        "compressed": 3997,
+        "crc32": "8ce1d2c5"
+      },
+      {
+        "name": "statements/C148.csv",
+        "size": 339642,
+        "compressed": 33990,
+        "crc32": "05cea29e"
+      },
+      {
+        "name": "statements/C013.csv",
+        "size": 130658,
+        "compressed": 15216,
+        "crc32": "306e55a4"
+      },
+      {
+        "name": "statements/C124.csv",
+        "size": 130738,
+        "compressed": 14403,
+        "crc32": "7fca2d26"
+      },
+      {
+        "name": "statements/C056.csv",
+        "size": 155137,
+        "compressed": 15107,
+        "crc32": "59d99711"
+      },
+      {
+        "name": "statements/C140.csv",
+        "size": 655112,
+        "compressed": 59682,
+        "crc32": "da6c2ce0"
+      },
+      {
+        "name": "statements/C111.csv",
+        "size": 136466,
+        "compressed": 15533,
+        "crc32": "e2508f15"
+      },
+      {
+        "name": "statements/C031.csv",
+        "size": 938259,
+        "compressed": 95342,
+        "crc32": "39292e75"
+      },
+      {
+        "name": "statements/C141.csv",
+        "size": 538946,
+        "compressed": 65959,
+        "crc32": "cab12f75"
+      },
+      {
+        "name": "statements/C063.csv",
+        "size": 638397,
+        "compressed": 58270,
+        "crc32": "8fe7821c"
+      },
+      {
+        "name": "statements/C128.csv",
+        "size": 151636,
+        "compressed": 15634,
+        "crc32": "851c8705"
+      },
+      {
+        "name": "statements/C133.csv",
+        "size": 132954,
+        "compressed": 14200,
+        "crc32": "6d70446c"
+      },
+      {
+        "name": "statements/C109.csv",
+        "size": 314625,
+        "compressed": 36961,
+        "crc32": "de35dad4"
+      },
+      {
+        "name": "statements/C121.csv",
+        "size": 310035,
+        "compressed": 28679,
+        "crc32": "6ddd0631"
+      },
+      {
+        "name": "statements/C145.csv",
+        "size": 132105,
+        "compressed": 14737,
+        "crc32": "6920a2f1"
+      },
+      {
+        "name": "statements/C027.csv",
+        "size": 98359,
+        "compressed": 11989,
+        "crc32": "433f9828"
+      },
+      {
+        "name": "statements/C096.csv",
+        "size": 162779,
+        "compressed": 16691,
+        "crc32": "639c1dc6"
+      },
+      {
+        "name": "statements/C099.csv",
+        "size": 328525,
+        "compressed": 36077,
+        "crc32": "590e14d5"
+      },
+      {
+        "name": "statements/C038.csv",
+        "size": 617975,
+        "compressed": 51991,
+        "crc32": "1ece5c0e"
+      },
+      {
+        "name": "statements/C115.csv",
+        "size": 123895,
+        "compressed": 13339,
+        "crc32": "a7389907"
+      },
+      {
+        "name": "statements/C084.csv",
+        "size": 1001181,
+        "compressed": 103935,
+        "crc32": "c5e525bd"
+      },
+      {
+        "name": "statements/C059.csv",
+        "size": 112550,
+        "compressed": 11201,
+        "crc32": "80882c99"
+      },
+      {
+        "name": "statements/C042.csv",
+        "size": 169947,
+        "compressed": 17174,
+        "crc32": "ff17bfda"
+      },
+      {
+        "name": "statements/C108.csv",
+        "size": 345355,
+        "compressed": 34014,
+        "crc32": "a9bb46c5"
+      },
+      {
+        "name": "statements/C064.csv",
+        "size": 613661,
+        "compressed": 54624,
+        "crc32": "228ed180"
+      },
+      {
+        "name": "statements/C020.csv",
+        "size": 743335,
+        "compressed": 69554,
+        "crc32": "9277cc01"
+      },
+      {
+        "name": "statements/C075.csv",
+        "size": 170458,
+        "compressed": 17477,
+        "crc32": "740440f6"
+      },
+      {
+        "name": "statements/C130.csv",
+        "size": 711268,
+        "compressed": 62756,
+        "crc32": "76a6c078"
+      },
+      {
+        "name": "statements/C118.csv",
+        "size": 674279,
+        "compressed": 63814,
+        "crc32": "c14ac08a"
+      },
+      {
+        "name": "statements/C079.csv",
+        "size": 702499,
+        "compressed": 63047,
+        "crc32": "92facdd4"
+      },
+      {
+        "name": "statements/C070.csv",
+        "size": 665844,
+        "compressed": 60903,
+        "crc32": "7f7dda6a"
+      },
+      {
+        "name": "statements/C052.csv",
+        "size": 114063,
+        "compressed": 11956,
+        "crc32": "fedfbf3b"
+      },
+      {
+        "name": "statements/C095.csv",
+        "size": 638743,
+        "compressed": 60340,
+        "crc32": "ac229fc9"
+      },
+      {
+        "name": "statements/C045.csv",
+        "size": 617564,
+        "compressed": 75817,
+        "crc32": "6a6a6d07"
+      },
+      {
+        "name": "statements/C023.csv",
+        "size": 683709,
+        "compressed": 61995,
+        "crc32": "e060fca4"
+      },
+      {
+        "name": "statements/C103.csv",
+        "size": 121466,
+        "compressed": 13156,
+        "crc32": "e5ea43d0"
+      },
+      {
+        "name": "statements/C061.csv",
+        "size": 477853,
+        "compressed": 41268,
+        "crc32": "b46957db"
+      },
+      {
+        "name": "statements/C046.csv",
+        "size": 38759,
+        "compressed": 5371,
+        "crc32": "4402e519"
+      },
+      {
+        "name": "statements/C010.csv",
+        "size": 711620,
+        "compressed": 68993,
+        "crc32": "82396506"
+      },
+      {
+        "name": "statements/C146.csv",
+        "size": 615851,
+        "compressed": 53232,
+        "crc32": "996ff121"
+      },
+      {
+        "name": "statements/C080.csv",
+        "size": 137073,
+        "compressed": 13429,
+        "crc32": "30b319a7"
+      },
+      {
+        "name": "statements/C097.csv",
+        "size": 104072,
+        "compressed": 11984,
+        "crc32": "fa270e41"
+      },
+      {
+        "name": "statements/C089.csv",
+        "size": 136131,
+        "compressed": 15356,
+        "crc32": "4b772460"
+      },
+      {
+        "name": "statements/C100.csv",
+        "size": 691368,
+        "compressed": 64199,
+        "crc32": "bff91a3e"
+      },
+      {
+        "name": "statements/C077.csv",
+        "size": 131659,
+        "compressed": 15841,
+        "crc32": "bbceeb9c"
+      },
+      {
+        "name": "statements/C126.csv",
+        "size": 969758,
+        "compressed": 99924,
+        "crc32": "5d63e340"
+      },
+      {
+        "name": "statements/C112.csv",
+        "size": 167989,
+        "compressed": 17098,
+        "crc32": "cba80356"
+      },
+      {
+        "name": "statements/C082.csv",
+        "size": 153209,
+        "compressed": 17136,
+        "crc32": "686580fa"
+      },
+      {
+        "name": "statements/C066.csv",
+        "size": 83627,
+        "compressed": 10382,
+        "crc32": "c4ccc475"
+      },
+      {
+        "name": "statements/C025.csv",
+        "size": 439577,
+        "compressed": 38798,
+        "crc32": "ef510ffc"
+      },
+      {
+        "name": "statements/C098.csv",
+        "size": 93160,
+        "compressed": 9595,
+        "crc32": "8c906f11"
+      },
+      {
+        "name": "statements/C090.csv",
+        "size": 723682,
+        "compressed": 65592,
+        "crc32": "f8b46dc4"
+      },
+      {
+        "name": "statements/C060.csv",
+        "size": 641265,
+        "compressed": 58783,
+        "crc32": "e09fc6df"
+      },
+      {
+        "name": "statements/C088.csv",
+        "size": 26332,
+        "compressed": 4082,
+        "crc32": "370bf648"
+      },
+      {
+        "name": "statements/C008.csv",
+        "size": 662533,
+        "compressed": 61056,
+        "crc32": "29557ca2"
+      },
+      {
+        "name": "statements/C113.csv",
+        "size": 687784,
+        "compressed": 66350,
+        "crc32": "da2a211d"
+      },
+      {
+        "name": "statements/C012.csv",
+        "size": 823500,
+        "compressed": 76636,
+        "crc32": "3230cbbc"
+      },
+      {
+        "name": "statements/C026.csv",
+        "size": 730707,
+        "compressed": 78056,
+        "crc32": "9dd81f78"
+      },
+      {
+        "name": "statements/C073.csv",
+        "size": 731685,
+        "compressed": 65874,
+        "crc32": "b9a14873"
+      },
+      {
+        "name": "statements/C116.csv",
+        "size": 676399,
+        "compressed": 60224,
+        "crc32": "1fb2060c"
+      },
+      {
+        "name": "statements/C101.csv",
+        "size": 154150,
+        "compressed": 16662,
+        "crc32": "befd04d9"
+      },
+      {
+        "name": "statements/C144.csv",
+        "size": 719731,
+        "compressed": 67375,
+        "crc32": "ddf3aa99"
+      },
+      {
+        "name": "statements/C135.csv",
+        "size": 272806,
+        "compressed": 25532,
+        "crc32": "edc2e4b0"
+      },
+      {
+        "name": "statements/C104.csv",
+        "size": 686337,
+        "compressed": 63831,
+        "crc32": "5eb57e14"
+      },
+      {
+        "name": "statements/C028.csv",
+        "size": 710658,
+        "compressed": 67063,
+        "crc32": "70f1fefa"
+      },
+      {
+        "name": "statements/C138.csv",
+        "size": 102813,
+        "compressed": 12290,
+        "crc32": "71f47b3a"
+      },
+      {
+        "name": "statements/C147.csv",
+        "size": 705192,
+        "compressed": 64340,
+        "crc32": "e165dc54"
+      },
+      {
+        "name": "statements/C032.csv",
+        "size": 118976,
+        "compressed": 13700,
+        "crc32": "5e4147d4"
+      },
+      {
+        "name": "statements/C143.csv",
+        "size": 309667,
+        "compressed": 28798,
+        "crc32": "6f530916"
+      },
+      {
+        "name": "statements/C009.csv",
+        "size": 944884,
+        "compressed": 96834,
+        "crc32": "506d2f40"
+      },
+      {
+        "name": "statements/C078.csv",
+        "size": 231102,
+        "compressed": 23482,
+        "crc32": "94f9f549"
+      },
+      {
+        "name": "statements/C017.csv",
+        "size": 693294,
+        "compressed": 65835,
+        "crc32": "ef52598c"
+      },
+      {
+        "name": "statements/C043.csv",
+        "size": 122551,
+        "compressed": 14931,
+        "crc32": "4d922584"
+      },
+      {
+        "name": "statements/C117.csv",
+        "size": 129257,
+        "compressed": 14664,
+        "crc32": "832a20d1"
+      },
+      {
+        "name": "statements/C119.csv",
+        "size": 658766,
+        "compressed": 61711,
+        "crc32": "2380f508"
+      },
+      {
+        "name": "statements/C083.csv",
+        "size": 719489,
+        "compressed": 76893,
+        "crc32": "e134ec32"
+      },
+      {
+        "name": "statements/C039.csv",
+        "size": 46382,
+        "compressed": 6032,
+        "crc32": "4e117e18"
+      },
+      {
+        "name": "statements/C065.csv",
+        "size": 733839,
+        "compressed": 68683,
+        "crc32": "305ae23f"
+      },
+      {
+        "name": "statements/C057.csv",
+        "size": 676619,
+        "compressed": 62861,
+        "crc32": "73085d35"
+      },
+      {
+        "name": "statements/C047.csv",
+        "size": 154259,
+        "compressed": 15358,
+        "crc32": "e2580b7a"
+      },
+      {
+        "name": "statements/C041.csv",
+        "size": 706565,
+        "compressed": 67794,
+        "crc32": "726f9f2f"
+      },
+      {
+        "name": "statements/C071.csv",
+        "size": 157000,
+        "compressed": 16048,
+        "crc32": "7ef38c50"
+      },
+      {
+        "name": "statements/C134.csv",
+        "size": 137653,
+        "compressed": 15606,
+        "crc32": "130e9114"
+      },
+      {
+        "name": "statements/C150.csv",
+        "size": 680476,
+        "compressed": 64267,
+        "crc32": "9163397f"
+      },
+      {
+        "name": "statements/C050.csv",
+        "size": 734897,
+        "compressed": 69379,
+        "crc32": "382dfb00"
+      },
+      {
+        "name": "statements/C120.csv",
+        "size": 680222,
+        "compressed": 62286,
+        "crc32": "520e4292"
+      },
+      {
+        "name": "statements/C137.csv",
+        "size": 954319,
+        "compressed": 97739,
+        "crc32": "3f1ce1f5"
+      },
+      {
+        "name": "statements/C048.csv",
+        "size": 316793,
+        "compressed": 32501,
+        "crc32": "4c282c2f"
+      },
+      {
+        "name": "statements/C022.csv",
+        "size": 111133,
+        "compressed": 12432,
+        "crc32": "831a851d"
+      },
+      {
+        "name": "statements/C139.csv",
+        "size": 129947,
+        "compressed": 15100,
+        "crc32": "582326d2"
+      },
+      {
+        "name": "statements/C024.csv",
+        "size": 989354,
+        "compressed": 97770,
+        "crc32": "c0213c5c"
+      },
+      {
+        "name": "statements/C091.csv",
+        "size": 355116,
+        "compressed": 32614,
+        "crc32": "21f3565b"
+      },
+      {
+        "name": "statements/C035.csv",
+        "size": 852895,
+        "compressed": 86387,
+        "crc32": "5428f476"
+      },
+      {
+        "name": "statements/C136.csv",
+        "size": 151959,
+        "compressed": 14692,
+        "crc32": "34788701"
+      },
+      {
+        "name": "statements/C105.csv",
+        "size": 146232,
+        "compressed": 14078,
+        "crc32": "617842b0"
+      },
+      {
+        "name": "statements/C036.csv",
+        "size": 506489,
+        "compressed": 65296,
+        "crc32": "308eb847"
+      },
+      {
+        "name": "statements/C085.csv",
+        "size": 612588,
+        "compressed": 64960,
+        "crc32": "356f7440"
+      },
+      {
+        "name": "statements/C062.csv",
+        "size": 222008,
+        "compressed": 21569,
+        "crc32": "98e0d23f"
+      },
+      {
+        "name": "statements/C102.csv",
+        "size": 727913,
+        "compressed": 66103,
+        "crc32": "d2cae91f"
+      },
+      {
+        "name": "statements/C087.csv",
+        "size": 168985,
+        "compressed": 17569,
+        "crc32": "939b7dcf"
+      },
+      {
+        "name": "statements/C129.csv",
+        "size": 624240,
+        "compressed": 55359,
+        "crc32": "826a03fb"
+      },
+      {
+        "name": "statements/C016.csv",
+        "size": 228543,
+        "compressed": 22055,
+        "crc32": "7bfcfc1a"
+      },
+      {
+        "name": "statements/C086.csv",
+        "size": 627881,
+        "compressed": 57556,
+        "crc32": "6681786f"
+      },
+      {
+        "name": "statements/C114.csv",
+        "size": 131905,
+        "compressed": 14728,
+        "crc32": "901ba0b9"
+      },
+      {
+        "name": "statements/C049.csv",
+        "size": 18247,
+        "compressed": 3325,
+        "crc32": "540ab921"
+      },
+      {
+        "name": "statements/C072.csv",
+        "size": 697712,
+        "compressed": 74696,
+        "crc32": "ffe58625"
+      },
+      {
+        "name": "statements/C003.csv",
+        "size": 134481,
+        "compressed": 15897,
+        "crc32": "79e7ddd1"
+      },
+      {
+        "name": "statements/C107.csv",
+        "size": 678511,
+        "compressed": 64577,
+        "crc32": "186ee38a"
+      },
+      {
+        "name": "statements/C076.csv",
+        "size": 481110,
+        "compressed": 45792,
+        "crc32": "9a9b3aa4"
+      },
+      {
+        "name": "statements/C067.csv",
+        "size": 678896,
+        "compressed": 63441,
+        "crc32": "6853a865"
+      },
+      {
+        "name": "statements/C132.csv",
+        "size": 862744,
+        "compressed": 87838,
+        "crc32": "416b0383"
+      },
+      {
+        "name": "statements/C069.csv",
+        "size": 194053,
+        "compressed": 16704,
+        "crc32": "fa4ff065"
+      },
+      {
+        "name": "statements/C093.csv",
+        "size": 106244,
+        "compressed": 11872,
+        "crc32": "dd2e3561"
+      },
+      {
+        "name": "statements/C005.csv",
+        "size": 136189,
+        "compressed": 14691,
+        "crc32": "11d4172b"
+      },
+      {
+        "name": "statements/C007.csv",
+        "size": 68109,
+        "compressed": 8708,
+        "crc32": "596c3350"
+      },
+      {
+        "name": "statements/C019.csv",
+        "size": 632062,
+        "compressed": 56016,
+        "crc32": "d653e2ab"
+      },
+      {
+        "name": "statements/C033.csv",
+        "size": 240903,
+        "compressed": 24184,
+        "crc32": "e60779d9"
+      },
+      {
+        "name": "statements/C044.csv",
+        "size": 634811,
+        "compressed": 56801,
+        "crc32": "8dcd67bb"
+      },
+      {
+        "name": "statements/C055.csv",
+        "size": 935007,
+        "compressed": 93603,
+        "crc32": "4c77a944"
+      },
+      {
+        "name": "statements/C051.csv",
+        "size": 682869,
+        "compressed": 63574,
+        "crc32": "c96bb656"
+      },
+      {
+        "name": "statements/C030.csv",
+        "size": 968506,
+        "compressed": 97991,
+        "crc32": "f43f840b"
+      },
+      {
+        "name": "statements/C092.csv",
+        "size": 137416,
+        "compressed": 14416,
+        "crc32": "bc494001"
+      },
+      {
+        "name": "statements/C029.csv",
+        "size": 106696,
+        "compressed": 13075,
+        "crc32": "fd174f9d"
+      },
+      {
+        "name": "statements/C149.csv",
+        "size": 226806,
+        "compressed": 24188,
+        "crc32": "c7fc6d9e"
+      },
+      {
+        "name": "statements/C058.csv",
+        "size": 131375,
+        "compressed": 13027,
+        "crc32": "3c4426ff"
+      },
+      {
+        "name": "statements/C054.csv",
+        "size": 683470,
+        "compressed": 65090,
+        "crc32": "3adfa8e3"
+      },
+      {
+        "name": "statements/C011.csv",
+        "size": 402764,
+        "compressed": 42817,
+        "crc32": "cba7dc4f"
+      },
+      {
+        "name": "statements/C006.csv",
+        "size": 296588,
+        "compressed": 36793,
+        "crc32": "7b135139"
+      },
+      {
+        "name": "statements/C004.csv",
+        "size": 472310,
+        "compressed": 41003,
+        "crc32": "f2b9bad9"
+      }
+    ]
+  },
+  {
+    "source_alias": "nn5_daily_dataset_with_missing_values.zip",
+    "size_bytes": 287708,
+    "sha256": "7022d158f6e49e323f3bd76f48fb18ba78b6d013972a97980af01c56f6f4c74b",
+    "members": [
+      {
+        "name": "nn5_daily_dataset_with_missing_values.tsf",
+        "size": 1454427,
+        "compressed": 287492,
+        "crc32": "7eaad56c"
+      }
+    ]
+  },
+  {
+    "source_alias": "open-bank-transactions.csv",
+    "size_bytes": 466479,
+    "sha256": "8e9fba7059145342afa7f765165068e699fd75fe1468a9b299e59e58aa2b3c72"
+  },
+  {
+    "source_alias": "uk-payment-practices.zip",
+    "size_bytes": 20402188,
+    "sha256": "949ac20d24306c6a8496a66b633fadf481b2521fc504faece7ad354f3fa59f42",
+    "members": [
+      {
+        "name": "payment-practices.csv",
+        "size": 103480441,
+        "compressed": 20402048,
+        "crc32": "405ff74d"
+      }
+    ],
+    "csv_sha256": "ebee77499b43f73b15df4dd34778efcd58b398170646a6ee053e4c8378764ecd"
+  },
+  {
+    "source_alias": "Сравнение моделей CashCast.zip",
+    "size_bytes": 1434901,
+    "sha256": "a2bca387c62636f061246f3aec165124a6040e812682d923aa2566efd35157c0",
+    "members": [
+      {
+        "name": "index.html",
+        "size": 17999,
+        "compressed": 17999,
+        "crc32": "8abfaef7"
+      },
+      {
+        "name": "charts/calibration.png",
+        "size": 121001,
+        "compressed": 121001,
+        "crc32": "822eedac"
+      },
+      {
+        "name": "charts/confusion_daily_median.png",
+        "size": 92135,
+        "compressed": 92135,
+        "crc32": "80a7e48a"
+      },
+      {
+        "name": "charts/confusion_new_gap.png",
+        "size": 118547,
+        "compressed": 118547,
+        "crc32": "bacd7ccf"
+      },
+      {
+        "name": "charts/confusion_risk.png",
+        "size": 122309,
+        "compressed": 122309,
+        "crc32": "0dafb6b9"
+      },
+      {
+        "name": "charts/confusion_risk_05.png",
+        "size": 119446,
+        "compressed": 119446,
+        "crc32": "66c9bba4"
+      },
+      {
+        "name": "charts/forecast_examples.png",
+        "size": 277574,
+        "compressed": 277574,
+        "crc32": "970ac4b2"
+      },
+      {
+        "name": "charts/mae_by_cutoff.png",
+        "size": 46504,
+        "compressed": 46504,
+        "crc32": "b318cdc5"
+      },
+      {
+        "name": "charts/mae_by_horizon.png",
+        "size": 108901,
+        "compressed": 108901,
+        "crc32": "7b6c2041"
+      },
+      {
+        "name": "charts/roc_pr.png",
+        "size": 96450,
+        "compressed": 96450,
+        "crc32": "242a4ed7"
+      },
+      {
+        "name": "colab-screens/1-colab-setup-hashes.jpg",
+        "size": 72470,
+        "compressed": 72470,
+        "crc32": "a8bf47a4"
+      },
+      {
+        "name": "colab-screens/2-colab-windows-517-122.png",
+        "size": 58032,
+        "compressed": 58032,
+        "crc32": "9f73ef96"
+      },
+      {
+        "name": "colab-screens/3-colab-b4-reproduced.jpg",
+        "size": 58055,
+        "compressed": 58055,
+        "crc32": "704415e3"
+      },
+      {
+        "name": "colab-screens/4-colab-forecast-charts.jpg",
+        "size": 64528,
+        "compressed": 64528,
+        "crc32": "56d5ddc3"
+      },
+      {
+        "name": "colab-screens/5-colab-confusion-matrices.jpg",
+        "size": 58902,
+        "compressed": 58902,
+        "crc32": "e2168bf0"
+      }
+    ]
+  },
+  {
+    "source_alias": "index.html",
+    "size_bytes": 17453,
+    "sha256": "69999a63dd67f0f7d05402efa9a06a20ac67b7fe742722cc52fc88d7068bb86a"
+  }
+]

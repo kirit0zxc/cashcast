@@ -1,0 +1,53 @@
+{
+  "dataset": "participants",
+  "scanned_rows": 222420,
+  "full_scan": true,
+  "accepted_rows": 222420,
+  "excluded_rows": 0,
+  "exclusion_reasons": {},
+  "flags": {},
+  "columns": [
+    "company_id",
+    "operation_id",
+    "operation_date",
+    "amount",
+    "direction",
+    "counterparty_inn",
+    "counterparty_name",
+    "payment_purpose",
+    "balance_eod"
+  ],
+  "blank_counts": {
+    "counterparty_inn": 11166,
+    "payment_purpose": 583
+  },
+  "literal_missing_token_counts": {},
+  "minimum_date": "2024-10-01",
+  "maximum_date": "2026-09-30",
+  "source_money_totals": {
+    "out": 2082354140731,
+    "in": 2102815774429
+  },
+  "exported_money_totals": {
+    "out": 2082354140731,
+    "in": 2102815774429
+  },
+  "conservation_exact": true,
+  "synthetic": true,
+  "currency": "RUB",
+  "currency_basis": "Russian case amounts interpreted as rubles; source has no currency column",
+  "entities": 150,
+  "daily_rows": 95361,
+  "alternative_representation_rows": 222420,
+  "alternative_representation_equal_multiset": true,
+  "alternative_representation_removed_from_combined_count": 222420,
+  "balance_transitions": {
+    "checked": 54812,
+    "reconciled": 54713,
+    "unreconciled": 99
+  },
+  "transition_residual_sum_minor": -966041329,
+  "companies_with_observed_negative_balance": 16,
+  "missing_labels": "No reference category or obligation labels in source; not imputed",
+  "modeling_contract": "Only features available_at <= as_of; reconciliation is known on current endpoint, never back-propagated into gaps. Blank balance != zero. No-row daily flows describe recorded transactions, completeness unknown."
+}

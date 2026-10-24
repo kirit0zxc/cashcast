@@ -1,0 +1,58 @@
+{
+  "version": "cashcast-conservative-cleaning-v1",
+  "python": "3.12.10",
+  "selected_datasets": [
+    "participants",
+    "nn5"
+  ],
+  "raw_originals_sha256_unchanged_after_run": true,
+  "uk_download_copy_byte_identical": false,
+  "outputs": [
+    {
+      "name": "nn5_daily.csv",
+      "size_bytes": 5756432,
+      "sha256": "919f22d3a181be97ebec5d71b6f58f8d187a477669359b35ee4eda264196d208"
+    },
+    {
+      "name": "nn5_observed_mask.csv",
+      "size_bytes": 182229,
+      "sha256": "1260a0ca8efe945a1ecc96ff53fbf937e53059ffed1ad1e9d0d31bfa9f24d2a7"
+    },
+    {
+      "name": "nn5_quarantine.csv",
+      "size_bytes": 25,
+      "sha256": "f32c293a46e4cdf1eae233690d7500edf3ab44452f6e27a6bce53bfc1e757383"
+    },
+    {
+      "name": "nn5_values.csv",
+      "size_bytes": 1460770,
+      "sha256": "968d058bcb7449a5109984d6c671422f89a8ea62a56589a06c62e8015c1f6744"
+    },
+    {
+      "name": "participants_companies_quarantine.csv",
+      "size_bytes": 25,
+      "sha256": "f32c293a46e4cdf1eae233690d7500edf3ab44452f6e27a6bce53bfc1e757383"
+    },
+    {
+      "name": "participants_daily.csv",
+      "size_bytes": 10050059,
+      "sha256": "3e89f3611741aff49bab31ca5e5d07f531a9bf906a50f4ae1b7f655f3c1482ec"
+    },
+    {
+      "name": "participants_quarantine.csv",
+      "size_bytes": 25,
+      "sha256": "f32c293a46e4cdf1eae233690d7500edf3ab44452f6e27a6bce53bfc1e757383"
+    },
+    {
+      "name": "participants_transactions.csv",
+      "size_bytes": 21483893,
+      "sha256": "3de36956ca1661c66c7abb2c45985cab01aa01900f6a622ee6870fa7cddf10fd"
+    }
+  ],
+  "limitations": [
+    "Pseudonyms are deterministic; dates/amounts remain sensitive. Derived CSVs stay gitignored.",
+    "No learned imputation, rescaling, outlier deletion, fabricated transactions, or cross-dataset/currency joins.",
+    "RUB/CZK assumptions marked; open-bank/UK currency unspecified.",
+    "Balance reconciliation only diagnoses observed intervals and is not a license to backfill missing transactions."
+  ]
+}

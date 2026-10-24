@@ -1,0 +1,299 @@
+[
+  {
+    "source": "account",
+    "column": "company_id",
+    "target": "company",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F01"
+  },
+  {
+    "source": "assistant_action",
+    "column": "account_id",
+    "target": "account",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F02"
+  },
+  {
+    "source": "assistant_action",
+    "column": "company_id",
+    "target": "company",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F03"
+  },
+  {
+    "source": "assistant_action",
+    "column": "user_id",
+    "target": "app_user",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F04"
+  },
+  {
+    "source": "assistant_turn",
+    "column": "account_id",
+    "target": "account",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F05"
+  },
+  {
+    "source": "assistant_turn",
+    "column": "company_id",
+    "target": "company",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F06"
+  },
+  {
+    "source": "assistant_turn",
+    "column": "user_id",
+    "target": "app_user",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F07"
+  },
+  {
+    "source": "bank_transaction",
+    "column": "account_id",
+    "target": "account",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F08"
+  },
+  {
+    "source": "bank_transaction",
+    "column": "company_id",
+    "target": "company",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F09"
+  },
+  {
+    "source": "bank_transaction",
+    "column": "import_id",
+    "target": "statement_import",
+    "target_column": "id",
+    "nullable": true,
+    "ondelete": "SET NULL",
+    "id": "F10"
+  },
+  {
+    "source": "company_member",
+    "column": "company_id",
+    "target": "company",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F11"
+  },
+  {
+    "source": "company_member",
+    "column": "user_id",
+    "target": "app_user",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F12"
+  },
+  {
+    "source": "daily_balance",
+    "column": "account_id",
+    "target": "account",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F13"
+  },
+  {
+    "source": "daily_balance",
+    "column": "company_id",
+    "target": "company",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F14"
+  },
+  {
+    "source": "daily_balance",
+    "column": "import_id",
+    "target": "statement_import",
+    "target_column": "id",
+    "nullable": true,
+    "ondelete": "SET NULL",
+    "id": "F15"
+  },
+  {
+    "source": "forecast_point",
+    "column": "forecast_run_id",
+    "target": "forecast_run",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F16"
+  },
+  {
+    "source": "forecast_run",
+    "column": "account_id",
+    "target": "account",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F17"
+  },
+  {
+    "source": "forecast_run",
+    "column": "base_forecast_id",
+    "target": "forecast_run",
+    "target_column": "id",
+    "nullable": true,
+    "ondelete": "CASCADE",
+    "id": "F18"
+  },
+  {
+    "source": "forecast_run",
+    "column": "company_id",
+    "target": "company",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F19"
+  },
+  {
+    "source": "forecast_run",
+    "column": "created_by",
+    "target": "app_user",
+    "target_column": "id",
+    "nullable": true,
+    "ondelete": "SET NULL",
+    "id": "F20"
+  },
+  {
+    "source": "job",
+    "column": "company_id",
+    "target": "company",
+    "target_column": "id",
+    "nullable": true,
+    "ondelete": "CASCADE",
+    "id": "F21"
+  },
+  {
+    "source": "obligation_import",
+    "column": "account_id",
+    "target": "account",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F22"
+  },
+  {
+    "source": "obligation_import",
+    "column": "company_id",
+    "target": "company",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F23"
+  },
+  {
+    "source": "obligation_import",
+    "column": "uploaded_by",
+    "target": "app_user",
+    "target_column": "id",
+    "nullable": true,
+    "ondelete": "SET NULL",
+    "id": "F24"
+  },
+  {
+    "source": "planned_event",
+    "column": "account_id",
+    "target": "account",
+    "target_column": "id",
+    "nullable": true,
+    "ondelete": "SET NULL",
+    "id": "F25"
+  },
+  {
+    "source": "planned_event",
+    "column": "company_id",
+    "target": "company",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F26"
+  },
+  {
+    "source": "planned_event",
+    "column": "created_by",
+    "target": "app_user",
+    "target_column": "id",
+    "nullable": true,
+    "ondelete": "SET NULL",
+    "id": "F27"
+  },
+  {
+    "source": "planned_event_match",
+    "column": "planned_event_id",
+    "target": "planned_event",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F28"
+  },
+  {
+    "source": "planned_event_match",
+    "column": "transaction_id",
+    "target": "bank_transaction",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F29"
+  },
+  {
+    "source": "statement_import",
+    "column": "account_id",
+    "target": "account",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F30"
+  },
+  {
+    "source": "statement_import",
+    "column": "company_id",
+    "target": "company",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F31"
+  },
+  {
+    "source": "statement_import",
+    "column": "uploaded_by",
+    "target": "app_user",
+    "target_column": "id",
+    "nullable": true,
+    "ondelete": "SET NULL",
+    "id": "F32"
+  },
+  {
+    "source": "user_session",
+    "column": "user_id",
+    "target": "app_user",
+    "target_column": "id",
+    "nullable": false,
+    "ondelete": "CASCADE",
+    "id": "F33"
+  }
+]

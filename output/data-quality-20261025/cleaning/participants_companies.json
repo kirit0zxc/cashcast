@@ -1,0 +1,28 @@
+{
+  "dataset": "participants_companies",
+  "scanned_rows": 150,
+  "full_scan": true,
+  "accepted_rows": 150,
+  "excluded_rows": 0,
+  "exclusion_reasons": {},
+  "flags": {},
+  "columns": [
+    "company_id",
+    "company_name",
+    "company_inn",
+    "legal_form",
+    "industry",
+    "first_operation_date",
+    "last_operation_date",
+    "operations_count"
+  ],
+  "blank_counts": {},
+  "literal_missing_token_counts": {},
+  "minimum_date": null,
+  "maximum_date": null,
+  "source_money_totals": {},
+  "exported_money_totals": {},
+  "conservation_exact": true,
+  "used_as_model_features": false,
+  "reason": "last date and total counts expose future; direct identifiers excluded"
+}
