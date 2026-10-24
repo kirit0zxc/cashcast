@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { Login } from "./features/auth/Login";
 import { AccountWorkspace } from "./features/accounts/AccountWorkspace";
 import { ApiError, CashCastApi, type User } from "./shared/api";
+import { CompanyPermission } from "./shared/company-permissions";
 import "./app.css";
 
 // Смена пользователя полностью очищает кэш данных предыдущей сессии.
@@ -42,6 +43,7 @@ export function App() {
 function Workspace({ user }: { user: User }) {
   const [companyId, setCompanyId] = useState(user.companies[0]?.id ?? "");
   const api = useMemo(() => new CashCastApi(user.csrf_token), [user.csrf_token]);
+  const role = user.companies.find(company => company.id === companyId)?.role;
   return <>
     <section className="panel row">
       <label>Компания<select value={companyId} onChange={e => setCompanyId(e.target.value)}>
@@ -49,6 +51,9 @@ function Workspace({ user }: { user: User }) {
       </select></label>
     </section>
     {!companyId && <p>Нет доступных компаний. Обратитесь к владельцу стенда.</p>}
-    {companyId && <AccountWorkspace key={companyId} api={api} companyId={companyId} />}
+    {companyId && <CompanyPermission key={companyId} role={role}>
+      {role !== "owner" && <p role="status">Только чтение: можно просматривать данные и сохранённые расчёты.</p>}
+      <AccountWorkspace api={api} companyId={companyId} />
+    </CompanyPermission>}
   </>;
 }

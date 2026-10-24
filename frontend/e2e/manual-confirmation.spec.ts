@@ -48,7 +48,17 @@ test("ambiguous payment is reviewed and split manually without double allocation
   for (const [index, amount, expectedMinor] of [[0, "40,00", 4000], [1, "58,76", 5876]] as const) {
     const choice = page.getByTestId(`proposal-${events[index]}-${proposal.transaction_id}`);
     await choice.getByRole("button", { name: "Проверить предложение", exact: true }).click();
-    await expect(choice.getByText("Назначение: Синтетическая ручная оплата.", { exact: true })).toBeVisible();
+    const purpose = choice.getByText("Назначение: Синтетическая ручная оплата.", { exact: true });
+    const next = choice.getByRole("button", { name: "Следующая страница поиска операции", exact: true });
+    // На повторно используемом стенде целевая операция может быть после первых200.
+    // Проверяем настоящий поиск по страницам, а не предполагаем положение UUID.
+    await expect(purpose.or(next)).toBeVisible();
+    for (let pageNumber = 0; !await purpose.isVisible() && pageNumber < 100; pageNumber++) {
+      await next.click();
+      await expect(choice.getByText("Загружаем банковскую операцию…", { exact: true })).toHaveCount(0);
+      await expect(purpose.or(next)).toBeVisible();
+    }
+    await expect(purpose).toBeVisible();
     await choice.getByLabel("Подтверждаемая сумма, ₽", { exact: true }).fill(amount);
     const confirmed = page.waitForResponse(r => r.url().endsWith("/plan-fact/confirm") && r.request().method() === "POST");
     await choice.getByRole("button", { name: "Подтвердить выбранную оплату", exact: true }).click();

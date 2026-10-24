@@ -1,10 +1,12 @@
 import { useState, type FormEvent } from "react";
 import { CashCastApi, type ObligationPreview } from "../../shared/api";
+import { useCompanyCanWrite } from "../../shared/company-permissions";
 
 // Отдельный preview сохраняет известное происхождение; commit запрещён при любой ошибке.
 export function ObligationImport({ api, companyId, accountId, onChanged }: {
   api: CashCastApi; companyId: string; accountId: string; onChanged: () => Promise<void>;
 }) {
+  const canWrite = useCompanyCanWrite();
   const [file, setFile] = useState<File | null>(null);
   const [sourceName, setSourceName] = useState("invoices");
   const [preview, setPreview] = useState<ObligationPreview | null>(null);
@@ -13,7 +15,7 @@ export function ObligationImport({ api, companyId, accountId, onChanged }: {
   const [error, setError] = useState("");
   function resetPreview() { setPreview(null); setCommitted(null); setError(""); }
   async function upload(event: FormEvent) {
-    event.preventDefault(); if (!file) return;
+    event.preventDefault(); if (!canWrite || !file) return;
     setBusy(true); resetPreview();
     try {
       const form = new FormData();
@@ -25,7 +27,7 @@ export function ObligationImport({ api, companyId, accountId, onChanged }: {
     finally { setBusy(false); }
   }
   async function commit() {
-    if (!preview) return;
+    if (!canWrite || !preview) return;
     setBusy(true); setError("");
     try {
       setCommitted(await api.post(`/obligation-imports/${preview.import_id}/commit`));
@@ -33,6 +35,7 @@ export function ObligationImport({ api, companyId, accountId, onChanged }: {
     } catch (error) { setError(error instanceof Error ? error.message : "Ошибка импорта обязательств"); }
     finally { setBusy(false); }
   }
+  if (!canWrite) return null;
   return <details><summary>Загрузить счета и обязательства из CSV</summary>
     <p>UTF-8, разделитель «;»: id, counterparty_ref, direction, amount, currency, due_date,
       available_at, kind, provenance; tax_regime необязателен. Даты — YYYY-MM-DD, суммы — рубли.</p>

@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CashCastApi, money, type PlanFact } from "../../shared/api";
 import { ProposalConfirmation } from "./ProposalConfirmation";
+import { useCompanyCanWrite } from "../../shared/company-permissions";
 
 // GET показывает предложения; оплатой становятся только записанные сервером связи.
 export function PlanFactPanel({ api, companyId, accountId, revision, onApplied }: {
   api: CashCastApi; companyId: string; accountId: string; revision: number; onApplied: () => void;
 }) {
+  const canWrite = useCompanyCanWrite();
   const cache = useQueryClient();
   const today = new Date().toISOString().slice(0, 10);
   const path = `/companies/${companyId}/plan-fact?${new URLSearchParams({ account_id: accountId, as_of: today })}`;
@@ -32,8 +34,8 @@ export function PlanFactPanel({ api, companyId, accountId, revision, onApplied }
     paid: "Оплачен", cancelled: "Отменён" };
   return <section className="panel"><h2>Сверка плана и факта</h2>
     <p>На {today} UTC. Предложения ещё не являются оплатой; альтернативные связи не суммируются.</p>
-    <button disabled={query.isFetching || apply.isPending || confirm.isPending || !proposals.some(p => p.auto_confirm)}
-      onClick={() => apply.mutate()}>Применить однозначные совпадения</button>
+    {canWrite && <button disabled={query.isFetching || apply.isPending || confirm.isPending || !proposals.some(p => p.auto_confirm)}
+      onClick={() => apply.mutate()}>Применить однозначные совпадения</button>}
     {query.isFetching && <p role="status">Получаем план-факт…</p>}
     {apply.isPending && <p role="status">Проверяем и записываем однозначные оплаты…</p>}
     {apply.isSuccess && <p role="status">Сверка выполнена. Прогноз обновляется автоматически.</p>}
@@ -55,7 +57,7 @@ export function PlanFactPanel({ api, companyId, accountId, revision, onApplied }
         {names.get(proposal.planned_event_id)} → операция {proposal.transaction_id}: {money(proposal.matched_amount_minor)}.
         {proposal.auto_confirm ? " Однозначное совпадение." : " Требуется ручная проверка."}
         <small>{proposal.reason}</small>
-        {query.data?.items.find(item => item.event.id === proposal.planned_event_id) && <ProposalConfirmation
+        {canWrite && query.data?.items.find(item => item.event.id === proposal.planned_event_id) && <ProposalConfirmation
           key={`${proposal.planned_event_id}:${proposal.transaction_id}:${proposal.matched_amount_minor}`}
           api={api} companyId={companyId} accountId={accountId} proposal={proposal}
           event={query.data.items.find(item => item.event.id === proposal.planned_event_id)!.event}

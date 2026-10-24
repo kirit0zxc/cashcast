@@ -1,14 +1,16 @@
 import { useState, type FormEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CashCastApi, type Commit, type Preview } from "../../shared/api";
+import { useCompanyCanWrite } from "../../shared/company-permissions";
 
 // Сервер возвращает согласованный mapping; пользователь может поправить его до загрузки.
 export function StatementImport({ api, companyId, accountId, onCommit }: {
   api: CashCastApi; companyId: string; accountId: string; onCommit: (lastDate: string | null) => void;
 }) {
+  const canWrite = useCompanyCanWrite();
   const [file, setFile] = useState<File | null>(null);
   const [customMapping, setMapping] = useState<string | null>(null);
-  const presets = useQuery({ queryKey: ["import-presets"], queryFn: ({ signal }) =>
+  const presets = useQuery({ queryKey: ["import-presets"], enabled: canWrite, queryFn: ({ signal }) =>
     api.request<{ items: { id: string; mapping: Record<string, unknown> }[] }>("/import-presets", { signal }) });
   const preset = presets.data?.items.find(p => p.id === "participants-v1");
   const mapping = customMapping ?? JSON.stringify(preset?.mapping ?? {}, null, 2);
@@ -17,7 +19,7 @@ export function StatementImport({ api, companyId, accountId, onCommit }: {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   async function upload(event: FormEvent) {
-    event.preventDefault(); if (!file) return;
+    event.preventDefault(); if (!canWrite || !file) return;
     setBusy(true); setError(""); setPreview(null); setCommit(null);
     try {
       const form = new FormData();
@@ -28,13 +30,14 @@ export function StatementImport({ api, companyId, accountId, onCommit }: {
     finally { setBusy(false); }
   }
   async function confirm() {
-    if (!preview) return; setBusy(true); setError("");
+    if (!canWrite || !preview) return; setBusy(true); setError("");
     try {
       setCommit(await api.post<Commit>(`/imports/${preview.import_id}/commit`));
       onCommit(preview.period_end);
     } catch (error) { setError(error instanceof Error ? error.message : "Ошибка импорта"); }
     finally { setBusy(false); }
   }
+  if (!canWrite) return null;
   return <section className="panel"><h2>1. Импорт выписки</h2>
     <p>Выберите одну выписку statements/Cxxx.csv. Сводный файл нескольких компаний сюда не загружайте.</p>
     <form onSubmit={upload}>

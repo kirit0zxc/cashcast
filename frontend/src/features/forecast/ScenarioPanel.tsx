@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
+import { useCompanyCanWrite } from "../../shared/company-permissions";
 import { CashCastApi, money, probability, rublesToMinor,
   type Accepted, type Explanation, type Forecast, type Job } from "../../shared/api";
 
@@ -13,6 +14,7 @@ type ScenarioKind = "add_expense" | "delay_event" | "reduce_irregular_inflow" | 
 
 // Цели берём из сохранённого расчёта: сегодняшние планы могут отличаться от его снимка.
 export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast }) {
+  const canWrite = useCompanyCanWrite();
   const cache = useQueryClient();
   const [kind, setKind] = useState<ScenarioKind>("add_expense");
   const [amount, setAmount] = useState("1000");
@@ -64,8 +66,9 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
     enabled: job.data?.status === "succeeded" });
   const pending = mutation.isPending || (!!accepted && !job.error && !["succeeded", "failed"].includes(job.data?.status ?? ""));
   function resetResult() { setAccepted(null); mutation.reset(); }
-  function submit(event: FormEvent) { event.preventDefault(); setAccepted(null); mutation.mutate(); }
+  function submit(event: FormEvent) { event.preventDefault(); if (!canWrite) return; setAccepted(null); mutation.mutate(); }
   const last = comparison.data?.points.at(-1);
+  if (!canWrite) return null;
   return <section><h3>3. Проверка сценария</h3>
     <form className="row" onSubmit={submit}>
       <label>Вид сценария<select disabled={pending} value={kind} onChange={e => {

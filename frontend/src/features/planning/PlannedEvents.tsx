@@ -2,11 +2,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { CashCastApi, money, rublesToMinor, type PlannedEvent } from "../../shared/api";
 import { ObligationImport } from "./ObligationImport";
+import { useCompanyCanWrite } from "../../shared/company-permissions";
 
 // Форма использует существующий API: будущий платёж становится новым входом прогноза.
 export function PlannedEvents({ api, companyId, accountId, onChanged }: {
   api: CashCastApi; companyId: string; accountId: string; onChanged: () => void;
 }) {
+  const canWrite = useCompanyCanWrite();
   const client = useQueryClient();
   const key = ["planned-events", companyId, accountId];
   const [amount, setAmount] = useState("");
@@ -23,12 +25,12 @@ export function PlannedEvents({ api, companyId, accountId, onChanged }: {
   const cancel = useMutation({ mutationFn: (id: string) => api.patch<PlannedEvent>(`/planned-events/${id}`, {
     status: "cancelled",
   }), onSuccess: changed });
-  function submit(event: FormEvent) { event.preventDefault(); create.mutate(); }
+  function submit(event: FormEvent) { event.preventDefault(); if (canWrite) create.mutate(); }
   const rows = events.data?.filter(e => e.account_id === accountId) ?? [];
   const statuses: Record<string, string> = { planned: "Ожидается", partially_paid: "Частично оплачен",
     paid: "Оплачен", cancelled: "Отменён" };
   return <section className="panel"><h2>Будущие платежи и обязательства</h2>
-    <form className="row" onSubmit={submit}>
+    {canWrite && <form className="row" onSubmit={submit}>
       <label>Движение по плану<select disabled={create.isPending} value={direction}
         onChange={e => setDirection(e.target.value as "in" | "out")}>
         <option value="out">Расход</option><option value="in">Поступление</option></select></label>
@@ -39,7 +41,7 @@ export function PlannedEvents({ api, companyId, accountId, onChanged }: {
       <label>Контрагент по плану<input maxLength={500} disabled={create.isPending} value={counterparty}
         onChange={e => { setCounterparty(e.target.value); create.reset(); }} /></label>
       <button disabled={create.isPending}>Добавить платёж</button>
-    </form>
+    </form>}
     {create.isSuccess && <p role="status">План сохранён. Дата среза переключена на сегодня; прогноз обновляется автоматически.</p>}
     <ObligationImport api={api} companyId={companyId} accountId={accountId} onChanged={changed} />
     {events.isPending && <p role="status">Получаем планы…</p>}
@@ -55,8 +57,8 @@ export function PlannedEvents({ api, companyId, accountId, onChanged }: {
         {e.provenance && <small>{e.provenance}</small>}{e.source_ref && <small>{e.source_ref}</small>}
         {e.tax_regime && <small>Налоговый режим из документа: {e.tax_regime}</small>}</td>
       <td>{statuses[e.status] ?? e.status}</td>
-      <td><button disabled={cancel.isPending || ["cancelled", "paid"].includes(e.status)}
-        onClick={() => cancel.mutate(e.id)}>Отменить</button></td>
+      <td>{canWrite && <button disabled={cancel.isPending || ["cancelled", "paid"].includes(e.status)}
+        onClick={() => cancel.mutate(e.id)}>Отменить</button>}</td>
     </tr>)}</tbody></table></div>}
   </section>;
 }
