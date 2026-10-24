@@ -365,3 +365,17 @@ pg_restore/migrations0. Строгийwholecheckpoint1131UUID/13runs/2плана
 добавленияотдельногопробногоrun. Затем pendingбезworker→реальныйworker/sameIDs,
 13старыхSHAповторнопроверены. Не сравниватьпослеprobeчисловсехrunsс13: ожидается+1.
 Историческая18088копияостановленасvolume, не перезаписана новымdump.
+
+## A-ATT-026 · проверка Linux unit и devsetup до редизайна
+
+UTC:2026-10-24T04:52:00Z; productA31ede8edcb8ca94a657eeb14e22b0ef8e37511371a.
+НовыеSSRunit раньше былипровереныWindows. Dockerbuildtargetbuild сLinuxnode24.18.1
+далнастоящие13unitpassed2.75s,ниодногоskip. Это не проверка LinuxChromium.
+Статическое чтение APIguards/error middleware/worker невыявилоновыхподтверждённых
+дефектов; ононевыдаётсязановыйruntime/fulltest. Runtimeпроверкирадиdocsнеповторяли.
+
+Припроверкеутреннегозапуска обнаруженконкретныйконфликт: vite.config proxy8000/
+default5173совпадаютсработающимиHoneyForgeDockerports. Нельзя«проверитьлогин»
+CashCastнастаромбэке. ПланA34envtarget/отдельныйпорт+strictPort иреальныйworkflow
+черезVite→187. ПроверкаGetNetTCPсфильтромвернула0строк/exit1; свободностьпортов
+необъявляетсяпоэтому безусловной, strictPortдолженотказатьприконфликте.

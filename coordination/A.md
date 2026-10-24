@@ -1,15 +1,15 @@
 # Статус A
 
 state: WORKING
-task: A32 VERIFIED; morning handoff and final audit; F2 blocked
+task: A33 handoff VERIFIED; A34 separate Vite dev ports/API target; F2 blocked
 code_sha: ede8edcb8ca94a657eeb14e22b0ef8e37511371a
 tested_sha: ede8edcb8ca94a657eeb14e22b0ef8e37511371a
-last_update: 2026-10-24T04:36:00Z
+last_update: 2026-10-24T04:52:00Z
 contract_version: archive-v1 + app-api-v1 + wiring-v1.1
 
 ## Текущая точка восстановления
 
-Последнее сообщение — A046 ниже. Продуктовый checkpoint A31 и evidence в REQUIREMENTS,
+Последнее сообщение — A047 ниже. Продуктовый checkpoint A31 и evidence в REQUIREMENTS,
 C001-ACCEPTANCE, reviews/20261024-expanded.md и attempts/A.md. Старые A008 и ранние
 WORKING не являются текущим заданием. Основная очередь — NIGHT-A-FULL.md до09:00МСК.
 
@@ -197,3 +197,31 @@ seedfalse/projectlocalURL.1131UUID/13полныхForecastOutSHA/2плана со
 ПриRETURN — HANDOFF,непереписыватьBветку. До08МСК BможетпубликоватьREADYмалыеSHA;
 не начинатьпересекающуюсяработу безсогласования. Main/private/quota прежние.
 Следующийheartbeatдо04:56UTC, связьмеждупакетами/~10мин, stopnewtasks09МСК.
+
+## A-047 · A33 handoff READY / A34 dev proxy WORKING
+
+UTC: 2026-10-24T04:52:00Z
+reply_to: A-046,B-020
+code_sha: ede8edcb8ca94a657eeb14e22b0ef8e37511371a
+tested_sha: ede8edcb8ca94a657eeb14e22b0ef8e37511371a
+doc_sha: a0344983acdf304b14c1135457682fca68b7f70e
+type: ready + working
+
+A33MORNING.md готов: пользовательские шаги, текущие порты/вход, инварианты для
+редизайна, реальныегейты/ограничения/RETURN-HANDOFF. MetadatareviewREADYtreea4ef1ce3.
+Дополнительно LinuxDocker/Node24.18.1 наактуальномfrontendA31:13unitpassed2.75s,
+SSRдействительнопровереннаLinux; это не LinuxChromium. DraftPR19обновлён;
+privateTrue/mainbddde8/Actionsnot_run провереныAPI. A32metadataPR46интегрирован6e9714a.
+
+Новый подтверждённый devsetupgap: vite.config.ts default/api→localhost8000,default
+порт5173; наПКвладельца этипорты заняты HoneyForge. Режимдляутреннегоредизайна
+нельзяоставитьнаэтихdefaults. A34только AownedViteconfig/docs/тест: loopback5174
+strictPort,defaultAPI→127.0.0.1:8080(обычныйREADMECompose), envCC_DEV_API_TARGET
+длятекущего186/187. БезизмененияprodAPI/DTO/миграции/математики. Проверитьconfig
+регрессиейи реальныйViteworkflowнаотдельном18101→187 (синтетическийстенд), после
+прогонаостановитьтолькосвойdevprocess. HoneyForgeне трогать,не отправлятьегобэку
+CashCastлогин. Финальныйreviewдляновойдельтыповторить,старыйнепереноситьмолча.
+
+Fetch04:52UTC успешен,B/a771/B020безизменений;процесс/WIPнеизвестны. До08МСК
+активностьBпроверяю,RETURNтребуетHANDOFF. Следующийheartbeatдо05:12UTC;
+ночныеграницы/private/quota/mainпрежние,новыебессмысленныефичине добавлять.
