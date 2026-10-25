@@ -1,0 +1,25 @@
+{
+  "params": {
+    "loss_function": "MAE",
+    "iterations": 400,
+    "depth": 4,
+    "learning_rate": 0.04,
+    "l2_leaf_reg": 8,
+    "random_seed": 20261025,
+    "thread_count": 4,
+    "verbose": false,
+    "allow_writing_files": false
+  },
+  "sources_sha256": {
+    "dataset": "e753802b7f7a2eecb7b5a558f9923b529e711c40fe431774750904b62ec79987",
+    "code": "91f9d5872a9421a9c4cb4d0245434a7884b5729db3165e5681fe234f9ab656af",
+    "protocol": "30ee07e79d9cb52ef5a7f2b07d9a25aa8349038e1b89dd467bcf6555e3e223ae",
+    "training_cache": "b8b00e6b51b54b3755824369cf11d3ce9959e2309eef385349171011659eb1b2"
+  },
+  "windows": 2136,
+  "training_rows": 6408,
+  "companies": 101,
+  "max_target_confirmation": "2025-12-25",
+  "heldout_excluded": true,
+  "zero_shot_only": true
+}

@@ -114,7 +114,8 @@ def run(root, output):
     risk_choice_path = risk_root / 'selection-frozen.json'
     risk_choice = json.loads(risk_choice_path.read_text('utf-8'))['selected']
     sources = {str(p.relative_to(root)): digest(p) for p in (choice_path, risk_choice_path)}
-    models = ('current', 'benchmark75_25', 'candidate18_balance', 'selected24')
+    baselines = ('current', 'benchmark75_25', 'candidate18_balance')
+    models = (*baselines, 'selected24', *CumulativePolicy.NAMES[1:])
     summaries, details, audits, all_rows, all_risk = {}, {}, {}, [], []
     for phase in CumulativeEvaluation.PHASES:
         path, baseline_path = experiment / f'inferred-{phase}.pickle', cache / f'inferred-{phase}.pickle'
@@ -159,9 +160,11 @@ def run(root, output):
             details[phase][group_key] = {key: {model: {str(h): cash_metrics(group, model, h) for h in (7,14,30)}
                                                     for model in models} for key, group in sorted(groups.items())}
         summaries[phase]['selected_deltas'] = {base: {str(h): deltas(cash_metrics(rows, 'selected24', h), cash_metrics(rows, base, h))
-                                                        for h in (7,14,30)} for base in models[:-1]}
+                                                        for h in (7,14,30)} for base in baselines}
+        summaries[phase]['diagnostic_deltas'] = {name: {base: {str(h): deltas(cash_metrics(rows, name, h), cash_metrics(rows, base, h))
+                                                        for h in (7,14,30)} for base in baselines} for name in CumulativePolicy.NAMES[1:]}
         summaries[phase]['cluster_intervals'] = {base: {str(h): cluster_intervals(rows, 'selected24', base, h)
-                                                        for h in (7,14,30)} for base in models[:-1]}
+                                                        for h in (7,14,30)} for base in baselines}
         audits[phase] = {'windows': len(rows), 'fallback_windows': sum(r['fallback'] for r in rows),
                          'baseline_and_targets_unchanged': True, 'saved_fallback_matches_evaluated': True,
                          'supported_cumulative_money_identities': True}

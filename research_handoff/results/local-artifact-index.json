@@ -1,0 +1,866 @@
+{
+  "data/raw/cumulative-flows-v24/evaluation/inferred-bridge.pickle": {
+    "bytes": 3824716,
+    "sha256": "5d9d69d9873c62582e8c469d3b14eb671836e7ecebc6a0df915a7685e8745d41"
+  },
+  "data/raw/cumulative-flows-v24/evaluation/inferred-late_development.pickle": {
+    "bytes": 2666854,
+    "sha256": "64578cd0e03a4e4414e967498979fc18c471f56b73565ec74f5e74d6628903ca"
+  },
+  "data/raw/cumulative-flows-v24/evaluation/inferred-late_other.pickle": {
+    "bytes": 746361,
+    "sha256": "734a01e20a3b9ff765bc229b1663490aec57114e6d6335edf6ac916c2c6d643a"
+  },
+  "data/raw/cumulative-flows-v24/evaluation/inferred-other_early.pickle": {
+    "bytes": 2053174,
+    "sha256": "90d186df2a5d90320449e7a6ed6ddde54cf28ae7c1cc0a8d6c7730b5a8f077b4"
+  },
+  "data/raw/cumulative-flows-v24/evaluation/inferred-validation.pickle": {
+    "bytes": 3573005,
+    "sha256": "1cfb67ac526a4393eff898f9b5427abf1e05c69c1e7aa7ad4b52f2137ed5343c"
+  },
+  "data/raw/cumulative-flows-v24/evaluation/results.json": {
+    "bytes": 602472,
+    "sha256": "b79ef31305b15e9cd2f03087afba6fabd508778223638b1495554280fe4ca093"
+  },
+  "data/raw/cumulative-flows-v24/evaluation/selection-frozen.json": {
+    "bytes": 280023,
+    "sha256": "c96167035600b9b720da834c1bdc88ae6258fc603902bebe077d58f1d4d5b2d6"
+  },
+  "data/raw/cumulative-flows-v24/evaluation/sources.json": {
+    "bytes": 1950,
+    "sha256": "392096d328a8b339a10fdf7dd03dd0a1d0abc4f612cd61e2484efd8d2c5a06b0"
+  },
+  "data/raw/company-crossfit-v25/2026-01-31-exclude0.txt": {
+    "bytes": 415497,
+    "sha256": "894cdb3840e9f8ca6955449d76b7cbb28fa8d9751a52139cc14d2dd08f5ea277"
+  },
+  "data/raw/company-crossfit-v25/2026-01-31-exclude1.txt": {
+    "bytes": 378613,
+    "sha256": "90e1a2dc1a5fd8847b77288ea068ab458d09b44cc9889c17805418dce0fb248a"
+  },
+  "data/raw/company-crossfit-v25/2026-01-31-exclude2.txt": {
+    "bytes": 372043,
+    "sha256": "3973ed12bc0d69c3fb23821cf9e89a392aa3cdb5ddb75ed2dc97a8ecc5a6c350"
+  },
+  "data/raw/company-crossfit-v25/2026-01-31-exclude3.txt": {
+    "bytes": 432132,
+    "sha256": "7d6861e8cccad3694bc29e6103dc22f22a8d628c5e2914d8904be0460739489f"
+  },
+  "data/raw/company-crossfit-v25/2026-01-31-exclude4.txt": {
+    "bytes": 352944,
+    "sha256": "dd18750e0119ff39ca3795bec5e12fc6245217f6ff09039e86d725be7c8342c1"
+  },
+  "data/raw/company-crossfit-v25/2026-02-28-exclude0.txt": {
+    "bytes": 439806,
+    "sha256": "32769835dc93ae506c86e41d024131d41d66a6fa38d2979b6b06e24e6b33310a"
+  },
+  "data/raw/company-crossfit-v25/2026-02-28-exclude1.txt": {
+    "bytes": 424560,
+    "sha256": "d8292cf5ef7f52d22eb2d066cb938f84460cdf9b0cec28f580cb42fea3366b00"
+  },
+  "data/raw/company-crossfit-v25/2026-02-28-exclude2.txt": {
+    "bytes": 408352,
+    "sha256": "96fdf8395c12d330f46a6939661cbfd99b85d73b0758cd099d0a0b8f3187bd07"
+  },
+  "data/raw/company-crossfit-v25/2026-02-28-exclude3.txt": {
+    "bytes": 446783,
+    "sha256": "058555328606124e1cccde091db7d39e5e2a29b680b5aca1402513830330c87c"
+  },
+  "data/raw/company-crossfit-v25/2026-02-28-exclude4.txt": {
+    "bytes": 377063,
+    "sha256": "f82c4d980da77d2ce84c2bd5b64cac9eff7f061b889b400a3143367ffef205e6"
+  },
+  "data/raw/company-crossfit-v25/2026-03-31-exclude0.txt": {
+    "bytes": 451616,
+    "sha256": "53cecc0baaee0029d844013ccba17132efe7890a342330dc5983f206c6f1644e"
+  },
+  "data/raw/company-crossfit-v25/2026-03-31-exclude1.txt": {
+    "bytes": 434622,
+    "sha256": "be661f2f803a9fd1f75159a0121291c8f7755eddf68027ede8d327d6e849d121"
+  },
+  "data/raw/company-crossfit-v25/2026-03-31-exclude2.txt": {
+    "bytes": 423672,
+    "sha256": "edb23fe17e3ebe6c7489d18858f9b843c4ed39e92ec72beab683c55ef6e0df2d"
+  },
+  "data/raw/company-crossfit-v25/2026-03-31-exclude3.txt": {
+    "bytes": 458541,
+    "sha256": "6b275d689a322bc6d276beba899b8e46499e959024e771c085edb4b3903a0a27"
+  },
+  "data/raw/company-crossfit-v25/2026-03-31-exclude4.txt": {
+    "bytes": 374673,
+    "sha256": "78d6fe20fbb98b1ac2399598704391abf027a3e74d9982e9c2903844550d286b"
+  },
+  "data/raw/company-crossfit-v25/2026-04-30-exclude0.txt": {
+    "bytes": 460557,
+    "sha256": "fcdda7a9ec3fcfff31c413e8df5a7eb10600e770bfcccb5f3fe925c97341c1a6"
+  },
+  "data/raw/company-crossfit-v25/2026-04-30-exclude1.txt": {
+    "bytes": 439813,
+    "sha256": "2ac7273feae5e78fedcefa2317615b613f467bc1927f7d98b7dd3659aaaa31b4"
+  },
+  "data/raw/company-crossfit-v25/2026-04-30-exclude2.txt": {
+    "bytes": 426356,
+    "sha256": "5499ba3a565aeac2a3761d15497df9a99ad47c6d24ed59113cd6e710cc53d43d"
+  },
+  "data/raw/company-crossfit-v25/2026-04-30-exclude3.txt": {
+    "bytes": 471959,
+    "sha256": "d03c2e664ca99e68d019c0475fb0b1acc6b0c980f0d34478c325106fa009b0e7"
+  },
+  "data/raw/company-crossfit-v25/2026-04-30-exclude4.txt": {
+    "bytes": 380382,
+    "sha256": "bf549830d1d3d5b809880ebc8a59726d38586af5a6419b21f9f3fb61e0e60f48"
+  },
+  "data/raw/company-crossfit-v25/2026-05-31-exclude0.txt": {
+    "bytes": 466711,
+    "sha256": "e02aae9dce4c11a0e66b97e9a6e60902787a0a168ba646c3cb8cddc471552240"
+  },
+  "data/raw/company-crossfit-v25/2026-05-31-exclude1.txt": {
+    "bytes": 455481,
+    "sha256": "1ebcb275b6bbd8680135528fd08cc5cb7200e7883e3619b3d01a52ef62cc49a6"
+  },
+  "data/raw/company-crossfit-v25/2026-05-31-exclude2.txt": {
+    "bytes": 433569,
+    "sha256": "449efc37ea8547dd15c7df0a32ff22986b46d240347eb2eb77c94e6ef6ff1c62"
+  },
+  "data/raw/company-crossfit-v25/2026-05-31-exclude3.txt": {
+    "bytes": 475223,
+    "sha256": "df6c81a2c98cf3ce2ca486fb55850d1d6cb7d78f7c1b0364ea438f118e3b71a6"
+  },
+  "data/raw/company-crossfit-v25/2026-05-31-exclude4.txt": {
+    "bytes": 390689,
+    "sha256": "157e9601a81b0835b0ed376702fda7cd4ae90c01f18decb927a9930e0c59745a"
+  },
+  "data/raw/company-crossfit-v25/2026-06-30-exclude0.txt": {
+    "bytes": 481288,
+    "sha256": "ba6313405c03a8841aa3d0c7434beef26a8ac26735785610e200d1373dae74ba"
+  },
+  "data/raw/company-crossfit-v25/2026-06-30-exclude1.txt": {
+    "bytes": 467886,
+    "sha256": "39dabd885c864efdb1e7c4e518c81257b02a0a6daece68e691812848675f27eb"
+  },
+  "data/raw/company-crossfit-v25/2026-06-30-exclude2.txt": {
+    "bytes": 439163,
+    "sha256": "f95688139d7355f9c57ccf9f1d918bd2bcad645e5e701ead3f79f5177a35fd2e"
+  },
+  "data/raw/company-crossfit-v25/2026-06-30-exclude3.txt": {
+    "bytes": 486299,
+    "sha256": "8a9cf91176bf49510b087b44d112e3a17e71fbf2d4cc631da81ce783d0a491f9"
+  },
+  "data/raw/company-crossfit-v25/2026-06-30-exclude4.txt": {
+    "bytes": 396575,
+    "sha256": "a4e87e952779d71fc35fe04a738654e79c35b2c4a54617f9fbefc3a44d5e86eb"
+  },
+  "data/raw/company-crossfit-v25/2026-07-31-exclude0.txt": {
+    "bytes": 492016,
+    "sha256": "72b45324f5443f1cddab81c890b57765edcab8235f0842776f23a0cdf87a689b"
+  },
+  "data/raw/company-crossfit-v25/2026-07-31-exclude1.txt": {
+    "bytes": 472819,
+    "sha256": "47f26edd918f948e11f12efa2b0a2a0e691e0c476bb79235480f374c514ddbab"
+  },
+  "data/raw/company-crossfit-v25/2026-07-31-exclude2.txt": {
+    "bytes": 455847,
+    "sha256": "2c7b133b488d1ff5585bc67117fdc296181a8624f0a7b44ae171eb5b8d2db478"
+  },
+  "data/raw/company-crossfit-v25/2026-07-31-exclude3.txt": {
+    "bytes": 494046,
+    "sha256": "70c80e4419c994497216e938a5afa95fae0cb7ebb8ffd26ed8c0e8aefd9775f1"
+  },
+  "data/raw/company-crossfit-v25/2026-07-31-exclude4.txt": {
+    "bytes": 410426,
+    "sha256": "15f7610d514fc022b26b1d4632a7578ac421f411a549c4a645c7dd80b19583e2"
+  },
+  "data/raw/company-crossfit-v25/2026-08-31-exclude0.txt": {
+    "bytes": 517403,
+    "sha256": "44228a8077c08651ba3b02837fcbd3f30dce977e5cd2200622efbf3de83e0aed"
+  },
+  "data/raw/company-crossfit-v25/2026-08-31-exclude1.txt": {
+    "bytes": 502987,
+    "sha256": "b23ba01cc58ded2f871adefdc0943a9535151b397148702fe943377625540fd2"
+  },
+  "data/raw/company-crossfit-v25/2026-08-31-exclude2.txt": {
+    "bytes": 494622,
+    "sha256": "a4b5e04a34872b9cab9fab55c0107fba24065ab4ed31f13f5d5e9f7f1fbf21fc"
+  },
+  "data/raw/company-crossfit-v25/2026-08-31-exclude3.txt": {
+    "bytes": 510542,
+    "sha256": "900f2bd228e3c6c08baa1a0c7f2cafbf8d27319856882386a53e4f88c0d68668"
+  },
+  "data/raw/company-crossfit-v25/2026-08-31-exclude4.txt": {
+    "bytes": 454664,
+    "sha256": "c21352b5b3d574a60395bb071d27f13b58be3ca3b88e305fb7533469119b79d2"
+  },
+  "data/raw/company-crossfit-v25/completed.json": {
+    "bytes": 200,
+    "sha256": "9265d2222e6fb35693b77fdab9cdf5660321b9ea7a90f9f073acd1d121ddbc59"
+  },
+  "data/raw/company-crossfit-v25/predictions.json": {
+    "bytes": 233542,
+    "sha256": "9d9f010a16f0a8e274c787266d81a94f2ed522f46d99814ba60550b660a1e4a7"
+  },
+  "data/raw/company-crossfit-v25/results.json": {
+    "bytes": 192630,
+    "sha256": "05b318bb37780cbdf0038238bd75d675304935af2de910aa48ed4e52a7b042b5"
+  },
+  "data/raw/company-crossfit-v25/selection-frozen.json": {
+    "bytes": 2984,
+    "sha256": "23444d4f37ceb69ee09adaa77e403334a73d446ab86c6a0fb8a3efe38c9ab042"
+  },
+  "data/raw/company-crossfit-v25/started.json": {
+    "bytes": 925,
+    "sha256": "c8f0604d8d194e06ae4257b841c0bf06dcbf71bdf90a65016543ee70bcda7b35"
+  },
+  "data/raw/company-crossfit-v25/training-audit.json": {
+    "bytes": 20044,
+    "sha256": "599736e54ba68d0677ebc2e2625e2adb063f9bbe1bc586e8d825a2c477222140"
+  },
+  "data/raw/chronos-residual-v26/by-company-and-period.json": {
+    "bytes": 6587703,
+    "sha256": "2e04d6e6e61921212643769c06ea28172bd9da1e9212a13603bd6ec367f17e0a"
+  },
+  "data/raw/chronos-residual-v26/completed.json": {
+    "bytes": 92,
+    "sha256": "1e4a9e92e27c6965b5a90143d085cc573891b45f574d262dde078a8cf4e47878"
+  },
+  "data/raw/chronos-residual-v26/inferred-bridge.pickle": {
+    "bytes": 3611675,
+    "sha256": "be0631b080f72dbebb0b39012b9c13671a49e5a9d19e460e05524b0e0404c13d"
+  },
+  "data/raw/chronos-residual-v26/inferred-late_development.pickle": {
+    "bytes": 2518385,
+    "sha256": "b13b5006f543caee4cab52ed0185ca81431ef67696c968adc5dacaf7f70ce62e"
+  },
+  "data/raw/chronos-residual-v26/inferred-late_other.pickle": {
+    "bytes": 704749,
+    "sha256": "3083f6687574d3a79b6d7c422c1c984b798d208a0cf3ae3ea118199fc8fda75e"
+  },
+  "data/raw/chronos-residual-v26/inferred-other_early.pickle": {
+    "bytes": 1938837,
+    "sha256": "2b4df57268384270502a06c2931be532f2bbf5f4b9fb3803c7c05fceda5cd703"
+  },
+  "data/raw/chronos-residual-v26/inferred-validation.pickle": {
+    "bytes": 3374071,
+    "sha256": "f7a45157b2b37be5e508c25dc27b5eb7957a320e6594e7cc53016edd647baf09"
+  },
+  "data/raw/chronos-residual-v26/residual.cbm": {
+    "bytes": 143496,
+    "sha256": "10c9727c56114018b062f3989295b68d6d8108facebe51fe4e4e955602d880fd"
+  },
+  "data/raw/chronos-residual-v26/results.json": {
+    "bytes": 125054,
+    "sha256": "689122627d9638ecd71b4961b64e34779ac160cc1e6b3e90630fc2e80bfaa698"
+  },
+  "data/raw/chronos-residual-v26/selection-frozen.json": {
+    "bytes": 27266,
+    "sha256": "e0843a073a93be03131c72942aebfce008837a7ebd55453cd35e28c276e3dd44"
+  },
+  "data/raw/chronos-residual-v26/started.json": {
+    "bytes": 792,
+    "sha256": "c50d699efc14a69b118b9c3828d6f7dfff035539537160fb170db26dca6af4fa"
+  },
+  "data/raw/weighted-reconciliation-v27/by-company-and-period.json": {
+    "bytes": 3927782,
+    "sha256": "e1d32487cf54046ad64591ffd83d2fd4905b38515daae66c451d7b0983126c4f"
+  },
+  "data/raw/weighted-reconciliation-v27/completed.json": {
+    "bytes": 92,
+    "sha256": "332b249338d8f60b65a2768502515eb6dcf691f036f56ed8c517d63644b7becf"
+  },
+  "data/raw/weighted-reconciliation-v27/inferred-bridge.pickle": {
+    "bytes": 3380390,
+    "sha256": "52561acb81ec3e0a7487470dcac6f261c753041ae16b6bd009799086ce704ee1"
+  },
+  "data/raw/weighted-reconciliation-v27/inferred-late_development.pickle": {
+    "bytes": 2357222,
+    "sha256": "83f32aa42db92b6ad19873911141ba3fa8990892f7da61c0854b97ca2ea8737f"
+  },
+  "data/raw/weighted-reconciliation-v27/inferred-late_other.pickle": {
+    "bytes": 659677,
+    "sha256": "94ccc184f70ce39a0f30512f1a0b876faa222d59967f09c6d242ed19b8f196dc"
+  },
+  "data/raw/weighted-reconciliation-v27/inferred-other_early.pickle": {
+    "bytes": 1814759,
+    "sha256": "f90b5a8db8ee107736a52152a1963e0548d1347d4d829d6e2cc9f84fb6240e47"
+  },
+  "data/raw/weighted-reconciliation-v27/inferred-validation.pickle": {
+    "bytes": 3158091,
+    "sha256": "3dbade6d7084865eddb75f2c0cab76f17bebd7dcc28fc31329c7e518c99aaa28"
+  },
+  "data/raw/weighted-reconciliation-v27/results.json": {
+    "bytes": 125566,
+    "sha256": "95faf98505caf32e96f70467831a2f5c5e32b0b3385a5341b4f8d12e9a769ad1"
+  },
+  "data/raw/weighted-reconciliation-v27/selection-frozen.json": {
+    "bytes": 6382,
+    "sha256": "8c5545916570b0961c45ad9e74e47a51130331bf59d1252d491173e2ce1fb49d"
+  },
+  "data/raw/weighted-reconciliation-v27/started.json": {
+    "bytes": 179,
+    "sha256": "5e98167a37f643d37434fead592427bfccc24f01c2f9dc16ba6092e4fe506583"
+  },
+  "data/raw/crossfit-robustness-v28/completed.json": {
+    "bytes": 92,
+    "sha256": "f4ae950c50718c778bf58cc27937fcf1242deec4fb1a10958e268d9b91e21beb"
+  },
+  "data/raw/crossfit-robustness-v28/configuration-frozen.json": {
+    "bytes": 332,
+    "sha256": "9c9fa9cd8de9bb2d66d116e794da8344ea060f3a3143e05f7359074d216d24c9"
+  },
+  "data/raw/crossfit-robustness-v28/results.json": {
+    "bytes": 58980,
+    "sha256": "6f521a73d5d165619288c1541fa1c10db3a6b7324b04c5ebab2f377846d190e7"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-01-31-exclude0.txt": {
+    "bytes": 411957,
+    "sha256": "6d48e2eb52dc3cc82a5c1be5446a036f5820f785a0f0aa24b4d362db420abc84"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-01-31-exclude1.txt": {
+    "bytes": 382152,
+    "sha256": "05d0c61489f3c08108b0158e77a4a150cc09a0fa3ca96a67373719a96f65535a"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-01-31-exclude2.txt": {
+    "bytes": 372964,
+    "sha256": "a139fdc7325fec505d26b542dc4943d70348ba06f2ebbf86fb5e441057e0e600"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-01-31-exclude3.txt": {
+    "bytes": 428203,
+    "sha256": "ca34a239d4094d09aad2b6ee9a8d39c36a9b87336f12f67f787693455b88b740"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-01-31-exclude4.txt": {
+    "bytes": 345267,
+    "sha256": "e431ae724d9c5578201a3c35d9fa9e695a4901638f36e26712086ffc7390dc5e"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-02-28-exclude0.txt": {
+    "bytes": 445803,
+    "sha256": "f1ded29f7e60edf5c3ed31c3632a77aa352f80a308ec2e7b65666b7a93d17dce"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-02-28-exclude1.txt": {
+    "bytes": 422122,
+    "sha256": "71355baecc144ba7082fa633141cb523234db91b7f9e70e8588faa2960149af2"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-02-28-exclude2.txt": {
+    "bytes": 409673,
+    "sha256": "db835a63b3a5fa5034a69faba22e74e4acfe60e111ca7bf42a97546b877052a8"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-02-28-exclude3.txt": {
+    "bytes": 446561,
+    "sha256": "9c432dc9fa92fbea3190924e43bd7e10be14b53c78d011394f6a7f1bdbd09dde"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-02-28-exclude4.txt": {
+    "bytes": 367306,
+    "sha256": "328b16850a566d06faed327b2d11c9019ef4061169c9935850bf14f7484d598e"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-03-31-exclude0.txt": {
+    "bytes": 454178,
+    "sha256": "a359e02ec1cd84d1be8fa07aae4f254793355cd6abc409f410cadd941667f45c"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-03-31-exclude1.txt": {
+    "bytes": 431039,
+    "sha256": "03cc5e561742eb0162ce82ab496bf857cb86243726498af85d0ed2e1bb329508"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-03-31-exclude2.txt": {
+    "bytes": 422832,
+    "sha256": "f7cf5d1836a6f04b064289e9418782d0189885a080dfd591e144ce6dad7e7989"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-03-31-exclude3.txt": {
+    "bytes": 458644,
+    "sha256": "4e6ff958e440c47a7f1126eb14ff831680dc7f8b329d459185810782c19dc9ed"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-03-31-exclude4.txt": {
+    "bytes": 376335,
+    "sha256": "74930536693afb4a7f4ded77ea939142b9940b8cd589f16c2bdd0b68d531b824"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-04-30-exclude0.txt": {
+    "bytes": 457135,
+    "sha256": "43b4f523c04e4c0b119f986f4f7608685443eb2944bc978fba710dadc5401c33"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-04-30-exclude1.txt": {
+    "bytes": 441143,
+    "sha256": "a12d51b98d0f82fcd7a75c70c25ea2dbd41f2bcd7c800a391a2b4623028ebe7b"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-04-30-exclude2.txt": {
+    "bytes": 430471,
+    "sha256": "5acb9e4f8bb1de7f5d49d44b62c2e50e9c50924afc0c1f6940280a4fd635b43a"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-04-30-exclude3.txt": {
+    "bytes": 469872,
+    "sha256": "69b41da92d5c1abfb58b52aa77726b3a0ab565d4db667914d637278c1389e6e7"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-04-30-exclude4.txt": {
+    "bytes": 382832,
+    "sha256": "743cb4ef47f3d256e20441f1615a0ba83a28175ee4216fa378135ec0b08a6694"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-05-31-exclude0.txt": {
+    "bytes": 471349,
+    "sha256": "c1654f73d5b2822c89242303a22b9c6b83427ff05ccbd4608cf379869051d2a6"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-05-31-exclude1.txt": {
+    "bytes": 453666,
+    "sha256": "e6eb9bf4e2bd17f7ab3d6faf398413083efb5de0ef6e42bb860d197c00880f8b"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-05-31-exclude2.txt": {
+    "bytes": 437633,
+    "sha256": "ea01596ae77f902fcef7dec74e19abacf975f47d3f22307798c6c68e87855dbf"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-05-31-exclude3.txt": {
+    "bytes": 474364,
+    "sha256": "195ed20f9dd59f26636c4a77c27a333fed113019dd63cfc6c669218c93ab9ba8"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-05-31-exclude4.txt": {
+    "bytes": 391156,
+    "sha256": "787c7bfaf6be9d68fde1a391aee14d893dae9b218e234705c5e6317c54380f5f"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-06-30-exclude0.txt": {
+    "bytes": 479244,
+    "sha256": "dfaaba955f559f3f00e8a3cd3d5210d83f5ccfa03140bcaa598ab915d0bb497a"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-06-30-exclude1.txt": {
+    "bytes": 467264,
+    "sha256": "e7626ff365f2f940e54e90aa77054c1ee4b084a636df7203b90832336df729da"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-06-30-exclude2.txt": {
+    "bytes": 445925,
+    "sha256": "0110403953d2dec5613fe7452a6b470b6cbc949a3899137874e9c6180fa2cc77"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-06-30-exclude3.txt": {
+    "bytes": 486941,
+    "sha256": "73ed2a8b7961fb337f250faddc70f44cb82b7f8a23161a4a78a943615e5c9032"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-06-30-exclude4.txt": {
+    "bytes": 397136,
+    "sha256": "ca57ac9c0192d56afa1f85a2ef15e79508b01b33a132466e013033b4787e43e3"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-07-31-exclude0.txt": {
+    "bytes": 487452,
+    "sha256": "799939cacdd761c3cf506490d27046c8d447dfbfd63fcb633b3d93e47aa153e5"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-07-31-exclude1.txt": {
+    "bytes": 477523,
+    "sha256": "803d3deefaae376a809dcc287c05eeafd4cb498345791f872fd9a78a6286aea5"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-07-31-exclude2.txt": {
+    "bytes": 452801,
+    "sha256": "a21cfcd58de7a45947977da471e68ac220fca20830dbea579751976a0c5418c8"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-07-31-exclude3.txt": {
+    "bytes": 492356,
+    "sha256": "18eaafaa0cd2e84457f53a4026feadf22eff68914ea28a04bdd1035a00df950e"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-07-31-exclude4.txt": {
+    "bytes": 407670,
+    "sha256": "555d5980dec83348b90c61454eea93b10fa14aa5490e4788dcf984a829a50bcf"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-08-31-exclude0.txt": {
+    "bytes": 514866,
+    "sha256": "8d941bb8531ac1bdfb217e1a8e0a6005fa6beef37409b3f251aa03cf2b6f609f"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-08-31-exclude1.txt": {
+    "bytes": 502073,
+    "sha256": "268b621d2a939670a3729d877c70d93bd9b9709b3e7eda90e3f57792db9e4dcb"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-08-31-exclude2.txt": {
+    "bytes": 496998,
+    "sha256": "7243daabb8379bd7b3575aabcef8928583c2870836bd67cafd40d43d890b2890"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-08-31-exclude3.txt": {
+    "bytes": 515093,
+    "sha256": "6b9cd90adc5f125ce9abb1cb0f0f5a1f5047a85f0f7a134a81ab849b5376c91f"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/2026-08-31-exclude4.txt": {
+    "bytes": 455938,
+    "sha256": "85e0e2f60a8d5047a1c4bb9d09c7a6437807968ec8a235e15a7ccde1a1807b02"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/completed.json": {
+    "bytes": 92,
+    "sha256": "8f5558576968938f01c5a017d9ff89b50590c01cd1c508cadebb6cfd36c69e68"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/configuration-frozen.json": {
+    "bytes": 731,
+    "sha256": "7f3aa689d525a37b202d2ef90915ea71023bc17059a9886ba60643ab75635e1f"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/predictions.json": {
+    "bytes": 233574,
+    "sha256": "dd3779bb21872d8cf87f6404f5fdab3b82eb2c2cd32ea5da34e454cc188c083e"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/results.json": {
+    "bytes": 16788,
+    "sha256": "a6461fff8d03e9d7248684653153bb1fa4d394ffd4ccdf87e5d51d2d9e207e24"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/started.json": {
+    "bytes": 925,
+    "sha256": "5fa5867e193867f120c37a6b8bdd29446dba4d9d5b207967b4b348333cece35d"
+  },
+  "data/raw/crossfit-robustness-v28/seed43/training-audit.json": {
+    "bytes": 20044,
+    "sha256": "8d02af54df7ed21279a41490b358f22cdd4f1836403b9d9595e09d9c773eddc7"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-01-31-exclude0.txt": {
+    "bytes": 372086,
+    "sha256": "2ec2689f0c7c6a1cdbf9b5b1bcad5c6f5644a2e8d0550a60f63a32ff036ee0e7"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-01-31-exclude1.txt": {
+    "bytes": 336154,
+    "sha256": "27fd307aa51a5abf6fff320b3bb7eec3c4fff25f7ac2a69ccae82fb59d805582"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-01-31-exclude2.txt": {
+    "bytes": 334911,
+    "sha256": "185fc8fe0c65869e44f2fa83ec077caae903f08e95a0f13d1b3600e6e81bd0a7"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-01-31-exclude3.txt": {
+    "bytes": 386287,
+    "sha256": "20883ee19d7a957fac8300663b200caa84cfb8f5967478da7532ee44653cda03"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-01-31-exclude4.txt": {
+    "bytes": 314750,
+    "sha256": "c2368343b6925efa46a9189756127f36f4b5462462a286402aa860c1a3b4412f"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-02-28-exclude0.txt": {
+    "bytes": 391299,
+    "sha256": "152c3442ba4e9e789b67f7784e3e7a09da3d60cb6f8ce78f453926d26a2bdbd0"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-02-28-exclude1.txt": {
+    "bytes": 376432,
+    "sha256": "fb412798ec811d7f23109694b008b828fed6ba5c3c2257ee23113db9d96a838f"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-02-28-exclude2.txt": {
+    "bytes": 366281,
+    "sha256": "f937ffcfc156055685b7d8e880ef6fbde61da89774eb648492811dbf26751bfd"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-02-28-exclude3.txt": {
+    "bytes": 398782,
+    "sha256": "0b8a3fce7111c1b6b4fd6b9990eba94e6b6ae823445be6c49bbc15e667828d92"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-02-28-exclude4.txt": {
+    "bytes": 336054,
+    "sha256": "2a3dd605f4dbab8e8e4fc280ae94b75ce70d68c7271758ba2d35472f959720a2"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-03-31-exclude0.txt": {
+    "bytes": 401348,
+    "sha256": "5dca534f87c3b841605d13435bcdf07fb55282eaf5b72d5c1c76faac36150754"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-03-31-exclude1.txt": {
+    "bytes": 385444,
+    "sha256": "366705330e364fa3872264b269a9c58af01aef919622c393fa1d9412fa3968e0"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-03-31-exclude2.txt": {
+    "bytes": 379105,
+    "sha256": "247c6f4cefac4aaf5f307f709b996b6ab1ec37e40eab88c624f2175319cc0d0b"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-03-31-exclude3.txt": {
+    "bytes": 408903,
+    "sha256": "cbac79dd07c0cf2914b1f3d96796f55847cba53d2b710d20f8263be80f7eb3ad"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-03-31-exclude4.txt": {
+    "bytes": 332701,
+    "sha256": "cdba8eab29275c564f0ba150a43fb27080e559667ac0864cc2f661c2c35247f0"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-04-30-exclude0.txt": {
+    "bytes": 412270,
+    "sha256": "da5d52a6ffa2e43823d2c1fa4f564d0f215ff59ecfa5fcb4f939f7080f3955be"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-04-30-exclude1.txt": {
+    "bytes": 392451,
+    "sha256": "7f24e68c79ec8be7dd8e5a6902c8ae6e449abd6f390cb9936c91dd4bcfda55b5"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-04-30-exclude2.txt": {
+    "bytes": 380479,
+    "sha256": "63c391d136eec33cc23b87494dc181da1994d9d157b23cdaf847378db6da73a2"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-04-30-exclude3.txt": {
+    "bytes": 420792,
+    "sha256": "dc388617f9db26751aa950ccf7a12fc6bd63ee8682ed8ae7ffcaac9daa417df0"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-04-30-exclude4.txt": {
+    "bytes": 340401,
+    "sha256": "475e3f0709cdfb2188bdc16d17ad62fc5a92a223f8711911ad4681e9db4f3696"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-05-31-exclude0.txt": {
+    "bytes": 416227,
+    "sha256": "bfd193a76951261f165c14286b58f0b5707917f97bdb39b919ce52b4c5f2e7fa"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-05-31-exclude1.txt": {
+    "bytes": 404731,
+    "sha256": "4f0080d3995228c8c2baf710a695a359901d5d8ae10edd49e1bb354fece5089c"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-05-31-exclude2.txt": {
+    "bytes": 385897,
+    "sha256": "573b4f158bdf1154e17baf4e2bf9ec0d72057b0191eaef59f252849110c80496"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-05-31-exclude3.txt": {
+    "bytes": 425183,
+    "sha256": "43d1964c4ddbde788d99dd8c808d98b7f09c0fb60fe3bf5b1b08180327aac5ad"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-05-31-exclude4.txt": {
+    "bytes": 345448,
+    "sha256": "600978c0ebb9dee0b6f14beb9506ae55c6504d7e14e4f22e38c6f7fe6fc3eee5"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-06-30-exclude0.txt": {
+    "bytes": 430837,
+    "sha256": "d32f3191a7feb8016677527aae8921f670ef55a25dc79b0a1377b0e0a3b2c0f7"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-06-30-exclude1.txt": {
+    "bytes": 417829,
+    "sha256": "049e44fea54498c3e18e4c65c29a04b457b40bd6a9173360642297bac31e08cd"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-06-30-exclude2.txt": {
+    "bytes": 391239,
+    "sha256": "562ed56725e9ce3ed9bb6caeea8239895a7f8aadca6c3b74f3f9ca5890a079ea"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-06-30-exclude3.txt": {
+    "bytes": 434088,
+    "sha256": "5065cb1608bdfda12105a233d08232bf078f3f9d082f4cab47c25510dbf934b2"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-06-30-exclude4.txt": {
+    "bytes": 353134,
+    "sha256": "a3f14834a0e864ccafeda726d621152eb4bab1146f042dae94af40581ed7552a"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-07-31-exclude0.txt": {
+    "bytes": 439940,
+    "sha256": "598ae34a4ba20e80f25dfa0e4782c9ce608351f226f12e8342db587d5c1f7283"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-07-31-exclude1.txt": {
+    "bytes": 422722,
+    "sha256": "b5908ad0b2a93192e1989a6609da5f4c890636553552325aaeeab3d2c958f6ec"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-07-31-exclude2.txt": {
+    "bytes": 408144,
+    "sha256": "8803e0f65f4e937702b2d73534d76646f6e01ff204ed8947de52fc6661268116"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-07-31-exclude3.txt": {
+    "bytes": 441622,
+    "sha256": "6c40affebd9e36b6e10ea2fdb8edf5fdb659028fd288cab5334d3e88591db0ed"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-07-31-exclude4.txt": {
+    "bytes": 363647,
+    "sha256": "5d3ae093b06ae7b3255ed6a4daf0bd66f36d3266669ee97ef0b754decb30d8c8"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-08-31-exclude0.txt": {
+    "bytes": 464456,
+    "sha256": "3a7c5dcd70f8afca1e59f61b69948529d512bcf12ece0ee96e7ed00cbcf6bbc7"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-08-31-exclude1.txt": {
+    "bytes": 450562,
+    "sha256": "0c48b88a57ac68f875e8b7a6d8ee50426e9d4b4fab0e2c9424bc0a49485c008f"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-08-31-exclude2.txt": {
+    "bytes": 443408,
+    "sha256": "bd1efc2e77e3bbb13cebcf2d1b8ceeaf313f5fea01712147c242890011891d85"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-08-31-exclude3.txt": {
+    "bytes": 457735,
+    "sha256": "a74e772c7004201158c119e4b4839fa26e2d35cfa62e8a6beb6c61c72e126863"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/2026-08-31-exclude4.txt": {
+    "bytes": 405469,
+    "sha256": "6d04db01aa680efdb70e412d86a88cb7b8133e8eb578e59562b562df927ee8f5"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/completed.json": {
+    "bytes": 92,
+    "sha256": "3d9856787503775a955d81cea1012798e0f7613de84638f8a6d1b6045b7d9b09"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/configuration-frozen.json": {
+    "bytes": 731,
+    "sha256": "0adaaa62918226f73bbe8997c61cbc8996543694c65d4bb383d9c6388cd7b5ab"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/predictions.json": {
+    "bytes": 233485,
+    "sha256": "b24cc8fa34177d71caa9e2fcddd02fe7757aafc44116b8877990783e5fa97c75"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/results.json": {
+    "bytes": 16802,
+    "sha256": "d37911118225042f98c2d181fb1f4abed3d8201bd695cb0c806116f9c977d192"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/started.json": {
+    "bytes": 925,
+    "sha256": "745c3397a9e9e85e9efb3491c7253191baca30a0454c8a7dc8e52ca75149ac93"
+  },
+  "data/raw/crossfit-robustness-v28/trees270/training-audit.json": {
+    "bytes": 20044,
+    "sha256": "f7b3688a239888a927826df1067bce55e519552db8b48685cc0ac23a2396828c"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-01-31-exclude0.txt": {
+    "bytes": 462523,
+    "sha256": "3a6879f09bbce73d5fa2d524a7f673d3cd62961f1a83b0012674218c6221d69c"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-01-31-exclude1.txt": {
+    "bytes": 420369,
+    "sha256": "b4d98fb8645754f8fe9e6efe0c53eb1a36eea727e2425399e8bf5f906788f09c"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-01-31-exclude2.txt": {
+    "bytes": 413558,
+    "sha256": "b33bb47e13b5a3bb959fe2cbb3f4a0b91a3f682e5faa80ff19c167567fde395a"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-01-31-exclude3.txt": {
+    "bytes": 481037,
+    "sha256": "c0cd8cbf3b4c83fb198167e960f20a90661b32cbd8f314581dee508475219847"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-01-31-exclude4.txt": {
+    "bytes": 393506,
+    "sha256": "1bb1010133011cc3e92beb23beb65ec3ff10cf8a1fcc93d20b6e7625936e2bec"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-02-28-exclude0.txt": {
+    "bytes": 489704,
+    "sha256": "90d40219171bb1152cc416c27d6f70d1fd52e25ddabd0b5411332880c627a5bc"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-02-28-exclude1.txt": {
+    "bytes": 474225,
+    "sha256": "b2e398cdafd2a976471f35ed0ef0dbbea7a0b0f1a9f09b941831ac751b707bf0"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-02-28-exclude2.txt": {
+    "bytes": 454410,
+    "sha256": "39415ac51216eb7b0b27b0589fb5bf4e938fd86ed8a1ebabae12646883c99467"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-02-28-exclude3.txt": {
+    "bytes": 496245,
+    "sha256": "63ca0445ac48bcac0b46f920c2ebb764ff5a844c36105ce71de6f7ba4ec72703"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-02-28-exclude4.txt": {
+    "bytes": 421357,
+    "sha256": "23a5d58470030ec4b7ee4fe0a080e6122477b7d1682e0ed651056f3c1ccc0a08"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-03-31-exclude0.txt": {
+    "bytes": 502229,
+    "sha256": "c7306db48d3fdfb033336a577846238a0cc62c787b92271a8f85fb337550fd34"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-03-31-exclude1.txt": {
+    "bytes": 482503,
+    "sha256": "c5eb3fc503d90470f6ff49ad7df068718639f4557d2048e57202e1e98ee41c03"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-03-31-exclude2.txt": {
+    "bytes": 468665,
+    "sha256": "9816121f919f6377d88789438bdd322aa7b471ceca33f2c6478ed19255f00e53"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-03-31-exclude3.txt": {
+    "bytes": 508292,
+    "sha256": "bddb95e8296406be51c81fce1a61d530cbde3ce549c418b6359f021590c9bb09"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-03-31-exclude4.txt": {
+    "bytes": 416653,
+    "sha256": "7a04787257e0fcc2e79635b08478bea5ae4cd31240486eb3440be500c15d3d71"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-04-30-exclude0.txt": {
+    "bytes": 508796,
+    "sha256": "60bd0da309bd7ca0183d2aff2549b14c8b701af0ffaf41ec39a9d89dd84ffb1b"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-04-30-exclude1.txt": {
+    "bytes": 489047,
+    "sha256": "71ee14beb8f1b3ff821b349c30b3e1c6a4c8069f5709f3928442699f321b7c84"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-04-30-exclude2.txt": {
+    "bytes": 471618,
+    "sha256": "94125955e3f08cc837636956bf2850aedaabe3de1e8e7492b800f067de7895f6"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-04-30-exclude3.txt": {
+    "bytes": 522005,
+    "sha256": "f1fb85d781d2f3599701c7887c82f8e1536eb876cf87d38c6202e5b4c969c31b"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-04-30-exclude4.txt": {
+    "bytes": 424520,
+    "sha256": "41743e351bd63a3cb9b582ae928aefa5658f7f7d39688a5d1d84cec5f6ee2b89"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-05-31-exclude0.txt": {
+    "bytes": 517081,
+    "sha256": "8b6deebc42d2d3109a0515518b577bb37e231832ade98c3398ff7635191c4193"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-05-31-exclude1.txt": {
+    "bytes": 505506,
+    "sha256": "f52062c00f7d4eb446eb355729613881c3037a5c073799fcc750db2f419144c5"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-05-31-exclude2.txt": {
+    "bytes": 479684,
+    "sha256": "23e4c68cff269df62992e911cff09de424d927e99e1a0d7b4e8da43f2d3cbecd"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-05-31-exclude3.txt": {
+    "bytes": 524793,
+    "sha256": "86b66c764e50dc906535ee1c08eb4dd77bdd1fc320bca6455b6051b05c0a0e17"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-05-31-exclude4.txt": {
+    "bytes": 435224,
+    "sha256": "5b1b7c0536f25b0ae19f6b6699856dcb97436f0f30275e2ad787e9a800f82ba5"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-06-30-exclude0.txt": {
+    "bytes": 530237,
+    "sha256": "ceda44427d20dfcaf75b916906933d784e45fb5ef2541c8c3d951338de515763"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-06-30-exclude1.txt": {
+    "bytes": 519213,
+    "sha256": "ae18753c28689af21f5f1d8b2bcc82141ea95c89dbc9c792a80c90a05a453255"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-06-30-exclude2.txt": {
+    "bytes": 488814,
+    "sha256": "c056810f9610e36013fbe1a4ba9514c5e68172da1bf9eedd9a55091dccd25b3f"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-06-30-exclude3.txt": {
+    "bytes": 538608,
+    "sha256": "76b8eeaafd22b2e8ab49a9170db2a52d326314018785b93a532ee480e51a84c6"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-06-30-exclude4.txt": {
+    "bytes": 443031,
+    "sha256": "e572ee59010e081c90a15e28fe3aa2a428527d5d6ae54d515f580b3966a552ab"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-07-31-exclude0.txt": {
+    "bytes": 543306,
+    "sha256": "50659a4be25dcafa21a3e8d6f161d1388e04b40447658c83f04c69c7f293a459"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-07-31-exclude1.txt": {
+    "bytes": 523938,
+    "sha256": "957c24b2e7c09d755b923e34d1f85aed5eb1f9e0d3eb35a13b7aa94aa14543c7"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-07-31-exclude2.txt": {
+    "bytes": 504387,
+    "sha256": "26383261a5dda660bfdcbf05d19f7d05bc9e23ee7aae9cd637c39c162d5436fd"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-07-31-exclude3.txt": {
+    "bytes": 546333,
+    "sha256": "d451e04b723dca301d84ad1ad334281b64b89d64b55099cd03340eafbb6cddca"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-07-31-exclude4.txt": {
+    "bytes": 455874,
+    "sha256": "4e49b9a5b9b08ac93e3855aa97a7396d684d63e74e2d76b8955f27ce016fd242"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-08-31-exclude0.txt": {
+    "bytes": 569937,
+    "sha256": "44e94b9678384524a0aac009936c21d29b917f7ac48e8b86ff5ff4e852fe57b2"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-08-31-exclude1.txt": {
+    "bytes": 555659,
+    "sha256": "e8e694518999272d29d62140e1c93a21c2fdf1a9fd445c03fe97620ba1eb4388"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-08-31-exclude2.txt": {
+    "bytes": 545147,
+    "sha256": "f6ca2dab16f8b3220a3a63a379c8d9dc7db0f68ecbcee9243a30ab55472bbfcd"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-08-31-exclude3.txt": {
+    "bytes": 563592,
+    "sha256": "114cdaa7bc54717253d5ef504dbf1879c2d16439d2c44903ed6affed0f005b8c"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/2026-08-31-exclude4.txt": {
+    "bytes": 503764,
+    "sha256": "ddae644defc088406d03387ea3a0649a15e4007f18249ec34a7adb34c9ea4e9e"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/completed.json": {
+    "bytes": 92,
+    "sha256": "92144270dcf69ecbac62e7908d8d5cd87d035f345b240b5e09f15b09dd1e1d34"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/configuration-frozen.json": {
+    "bytes": 731,
+    "sha256": "912b1de3b0ce18025374bdb16de3213098b2ea6dd64f162581b39b4f88814844"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/predictions.json": {
+    "bytes": 233638,
+    "sha256": "3dfb26c8c8886df0eac762da2dc94984302b3f20bb83d0d9a9c65896f7848d0e"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/results.json": {
+    "bytes": 16807,
+    "sha256": "4030a3c3f85ef7074f4fc52917835a15f719bd57e505dc743f1b1882acf52bd0"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/started.json": {
+    "bytes": 925,
+    "sha256": "21a577fd434afa85d17316df82ac8f69601fb2411b482d658bd6d621601c7c4b"
+  },
+  "data/raw/crossfit-robustness-v28/trees330/training-audit.json": {
+    "bytes": 20044,
+    "sha256": "51ee2f930a1ac839176861f9ecfc5735611fe8b5225308e751749ca2361618b3"
+  }
+}
