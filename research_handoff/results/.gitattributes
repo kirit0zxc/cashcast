@@ -1,1 +1,2 @@
-* -text
+# Сохранять исходные байты для SHA; CRLF в исходных Windows-отчётах намеренный.
+* -text whitespace=cr-at-eol
