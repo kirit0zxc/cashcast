@@ -47,12 +47,31 @@ $chr=(Resolve-Path .venv/chronos/Scripts/python.exe).Path
 manifest восстановите точные файлы из исходного SHA-проверенного ZIP; не пересчитывайте
 manifest под повреждённый пакет. №25 не упаковывает pyc. Не требуется сеть для inference.
 
-Распакуйте18/21/25 с сохранением их верхних каталогов в data/raw/handoff-packages.
-Полный research restore требует все5архивов приватного release
-model-research-handoff-20261025 и проверяет их по assets.json:
+Выберите один маршрут восстановления. Для **runtime-only** используйте новый
+пустой каталог: оригинальные18/21 не имеют общего верхнего каталога, поэтому
+обязательно распаковываются каждый в свой подкаталог. ZIP25 уже содержит префикс.
+
+```powershell
+$delivery='C:/path/to/extracted/cashcast-b-handoff-20261025'
+Expand-Archive "$delivery/cashcast-local-candidate-v18.zip" data/raw/handoff-packages/cashcast-local-candidate-v18
+Expand-Archive "$delivery/cashcast-risk-addon-v21.zip" data/raw/handoff-packages/cashcast-risk-addon-v21
+Expand-Archive "$delivery/cashcast-risk-addon-v25.zip" data/raw/handoff-packages
+```
+
+Для **полного research restore** вместо этих команд используйте чистую копию
+без data/raw/handoff-packages: restore.py сам создаёт18/21 и не перезаписывает
+существующие каталоги. Нужны все5архивов приватного release
+model-research-handoff-20261025; restore.py проверяет их по assets.json.
+После restore распакуйте только дополнение25:
 
 ```powershell
 & $tab research_handoff/restore.py --downloads C:/path/to/all-five-release-assets
+Expand-Archive C:/path/to/cashcast-risk-addon-v25.zip data/raw/handoff-packages
+```
+
+После любого из двух маршрутов:
+
+```powershell
 $base=(Resolve-Path data/raw/handoff-packages/cashcast-local-candidate-v18).Path
 $addon21=(Resolve-Path data/raw/handoff-packages/cashcast-risk-addon-v21).Path
 $addon25=(Resolve-Path data/raw/handoff-packages/cashcast-risk-addon-v25).Path
