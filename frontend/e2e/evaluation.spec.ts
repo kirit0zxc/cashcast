@@ -44,7 +44,7 @@ test("контрольный набор: реальная очередь, мет
   const { id } = await accepted.json();
   const panel = page.getByTestId("evaluation-report");
   await expect(panel).toBeVisible({ timeout: 45000 });
-  await expect(panel).toContainText("seasonal-estimated-2.1-w84");
+  await expect(panel).toContainText("seasonal-damped-2.2-w84");
   await expect(panel).toContainText("Пошаговый журнал вычислений");
   await expect(panel).toContainText("ROC-AUC");
   await expect(panel.getByRole("img", { name: "График прогноза и фактического остатка" })).toHaveCount(3);

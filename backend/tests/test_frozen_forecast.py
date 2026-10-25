@@ -6,8 +6,10 @@ from datetime import date
 import pytest
 from sqlalchemy import select
 
+from app.api.v1 import forecasts
 from app.core.forecast_input import ForecastInputCodec
 from app.core.models import BankTransaction, DailyBalance, ForecastRun
+from app.modules.forecasting.service import get_forecast_service
 from tests.test_integration import (
     _run_worker_until_idle,
     _statement_csv,
@@ -19,6 +21,40 @@ from tests.test_integration import (
 def frozen_context(client, session_factory):
     # Повторно используем подготовку контекста; fixture не вызывается как pytest-объект.
     return logged_in.__wrapped__(client, session_factory)
+
+
+def test_default_switch_keeps_queued_2_1_and_its_scenario(client, session_factory, frozen_context, monkeypatch):
+    company, account = frozen_context["company_id"], frozen_context["account_id"]
+    preview = client.post(f"/api/v1/companies/{company}/imports", data={
+        "account_id": account,
+        "mapping": json.dumps({"date": "date", "amount": "amount", "balance": "balance", "external_id": "op_id"}),
+    }, files={"file": ("default.csv", _statement_csv(date(2026, 3, 1)), "text/csv")}).json()
+    assert client.post(f"/api/v1/imports/{preview['import_id']}/commit").status_code == 200
+    request = {"account_id": account, "as_of": "2026-03-01", "horizon_days": 30}
+    endpoint = f"/api/v1/companies/{company}/forecasts"
+    # Задание2.1 поставлено до смены default; обработчик запустится уже после неё.
+    monkeypatch.setattr(forecasts, "get_forecast_service",
+                        lambda: get_forecast_service("seasonal-estimated-2.1-w84"))
+    old = client.post(endpoint, json=request).json()
+    monkeypatch.setattr(forecasts, "get_forecast_service", get_forecast_service)
+    new = client.post(endpoint, json=request).json()
+    assert new["forecast_run_id"] != old["forecast_run_id"]
+    assert client.post(endpoint, json=request).json()["forecast_run_id"] == new["forecast_run_id"]
+    _run_worker_until_idle(session_factory)
+    for accepted, version in ((old, "seasonal-estimated-2.1-w84"), (new, "seasonal-damped-2.2-w84")):
+        result = client.get(f"/api/v1/forecasts/{accepted['forecast_run_id']}").json()
+        assert result["status"] == "succeeded"
+        assert result["model_version"] == version
+        assert len(result["points"]) == 30
+    # Сценарий старого расчёта остаётся на математике его базы.
+    scenario = client.post(f"/api/v1/forecasts/{old['forecast_run_id']}/scenarios", json={
+        "changes": [{"kind": "add_expense", "amount_minor": 100000, "on_date": "2026-03-05"}],
+    })
+    assert scenario.status_code == 202, scenario.text
+    _run_worker_until_idle(session_factory)
+    result = client.get(f"/api/v1/forecasts/{scenario.json()['forecast_run_id']}").json()
+    assert result["status"] == "succeeded"
+    assert result["model_version"] == "seasonal-estimated-2.1-w84"
 
 
 def test_enqueue_freezes_inputs_and_scenario_keeps_original_base(client, session_factory, frozen_context):

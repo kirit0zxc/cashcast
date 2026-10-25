@@ -56,7 +56,7 @@ def test_evaluation_roundtrip_frozen_inputs_export_and_repeat(client, session_fa
     assert client.get(report_path + "/report").status_code == 409
     with session_factory() as session:
         job = session.get(Job, UUID(accepted.json()["id"]))
-        assert job.payload["model_version"] == DEFAULT_MODEL_VERSION
+        assert job.payload["model_version"] == DEFAULT_MODEL_VERSION == "seasonal-damped-2.2-w84"
         # После enqueue меняем будущие факты: worker обязан использовать frozen-набор.
         balance = session.scalar(
             select(DailyBalance).where(

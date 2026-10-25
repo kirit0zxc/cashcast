@@ -17,7 +17,7 @@ from app.modules.forecasting.v2.quality import validate_input
 from app.modules.forecasting.v2.service import MODEL_VERSION as GUARDED_VERSION
 from app.modules.forecasting.v2.service import GuardedForecastService
 
-DEFAULT_MODEL_VERSION = ESTIMATED_VERSION
+DEFAULT_MODEL_VERSION = DAMPED_VERSION
 _SUPPORTED = (
     BASELINE_VERSION,
     "seasonal-block-bootstrap-1.0-w28",
@@ -25,7 +25,6 @@ _SUPPORTED = (
     "seasonal-block-bootstrap-1.0-w84",
     GUARDED_VERSION,
     ESTIMATED_VERSION,
-    # Кандидат ресёрча MAE: только по явному выбору, по умолчанию остаётся2.1.
     DAMPED_VERSION,
 )
 
