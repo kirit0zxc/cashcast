@@ -8,6 +8,8 @@ from app.modules.contracts import Direction, ForecastInput, ForecastResult, Fore
 from app.modules.forecasting.legacy_v1.baseline import MODEL_VERSION as BASELINE_VERSION
 from app.modules.forecasting.legacy_v1.baseline import BaselineForecastService
 from app.modules.forecasting.legacy_v1.seasonal import SeasonalForecastService
+from app.modules.forecasting.v2.damped import MODEL_VERSION as DAMPED_VERSION
+from app.modules.forecasting.v2.damped import DampedForecastService
 from app.modules.forecasting.v2.estimated import MODEL_VERSION as ESTIMATED_VERSION
 from app.modules.forecasting.v2.estimated import EstimatedForecastService
 from app.modules.forecasting.v2.legacy_limits import check_legacy_cost, check_output_budget
@@ -23,6 +25,8 @@ _SUPPORTED = (
     "seasonal-block-bootstrap-1.0-w84",
     GUARDED_VERSION,
     ESTIMATED_VERSION,
+    # Кандидат ресёрча MAE: только по явному выбору, по умолчанию остаётся2.1.
+    DAMPED_VERSION,
 )
 
 
@@ -74,4 +78,6 @@ def get_forecast_service(model_version: str | None = None) -> ForecastService:
         raise UnsupportedModelVersionError()
     if version == ESTIMATED_VERSION:
         return EstimatedForecastService()
+    if version == DAMPED_VERSION:
+        return DampedForecastService()
     return GuardedForecastService() if version == GUARDED_VERSION else _PinnedLegacyService(version)
