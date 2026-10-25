@@ -17,6 +17,10 @@ RISK_POLICY_VERSION = "risk-policy-2.0-withheld-new-gap"
 
 
 class GuardedForecastService:
+    # Точки расширения для следующих версий; у2.0 и2.1 это прежние frozen-движки.
+    engine_type = IncrementalSeasonalService
+    scenario_type = SeasonalForecastService
+
     @property
     def model_version(self) -> str:
         return MODEL_VERSION
@@ -42,9 +46,9 @@ class GuardedForecastService:
         if prepared is None:
             check_legacy_cost(clean)
         # Для дельты ресурсный guard выполняется по новым группам до календаря/исключений.
-        engine = IncrementalSeasonalService()
+        engine = self.engine_type()
         try:
-            result = (SeasonalForecastService().run(clean) if data.scenario
+            result = (self.scenario_type().run(clean) if data.scenario
                       else engine.run(clean, prepared))
         except (ValueError, OverflowError) as error:
             code = "invalid_scenario" if data.scenario else "invalid_forecast_input"
