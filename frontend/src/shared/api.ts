@@ -62,7 +62,9 @@ export interface Forecast {
   opening_balance_minor: number | null; assumptions: string[]; data_warnings: string[];
   risk: { available: boolean; first_negative_date: string | null;
     max_deficit_minor: number | null; probability_any_negative: number | null;
-    probability_status?: "unavailable" | "estimated_uncalibrated"; probability_calibrated?: false };
+    probability_status?: "unavailable" | "estimated_uncalibrated"; probability_calibrated?: false;
+    ml_flag?: { available: boolean; flag: boolean | null; reason: string; model_version: string;
+      horizon_days: 30; history_only: true } | null };
   points: Point[];
 }
 export class ApiError extends Error {

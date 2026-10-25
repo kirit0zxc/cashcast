@@ -12,6 +12,7 @@ class Settings(BaseSettings):
 
     app_env: Literal["dev", "test", "prod"] = "dev"
     log_level: str = "INFO"
+    risk_ml_url: str | None = None  # Только внутренний адрес контейнера бинарного детектора.
 
     # Ключ доступен только API; repr настроек скрывает его значение.
     openrouter_api_key: SecretStr = SecretStr("")

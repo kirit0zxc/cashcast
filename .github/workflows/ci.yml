@@ -86,13 +86,15 @@ jobs:
   compose:
     name: Clean Docker startup
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       WEB_PORT: '18081'
     steps:
       - uses: actions/checkout@v4
       - name: Start from an empty database
-        run: docker compose -p cashcast-ci -f infra/docker-compose.yml up -d --build
+        run: docker compose -p cashcast-ci -f infra/docker-compose.yml -f infra/compose.risk-ml.yml up -d --build
+      - name: Verify SR04 package and real model HTTP
+        run: docker compose -p cashcast-ci -f infra/docker-compose.yml -f infra/compose.risk-ml.yml exec -T risk-ml python /app/smoke.py
       - name: Check API through web gateway
         run: |
           for attempt in $(seq 1 30); do
@@ -104,7 +106,7 @@ jobs:
           exit 1
       - name: Diagnostics
         if: failure()
-        run: docker compose -p cashcast-ci -f infra/docker-compose.yml logs --tail 60
+        run: docker compose -p cashcast-ci -f infra/docker-compose.yml -f infra/compose.risk-ml.yml logs --tail 60
       - uses: actions/setup-node@v4
         with:
           node-version: "24.18.1"
@@ -139,4 +141,4 @@ jobs:
           CC_E2E_BASE_URL=http://127.0.0.1:18101 npm run test:e2e -- workflow.spec.ts
       - name: Stop isolated CI stack
         if: always()
-        run: docker compose -p cashcast-ci -f infra/docker-compose.yml down -v
+        run: docker compose -p cashcast-ci -f infra/docker-compose.yml -f infra/compose.risk-ml.yml down -v

@@ -3,9 +3,14 @@ import { useAccount } from "../../app/account-context";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
 import type { Forecast } from "../../shared/api";
 import { outOfHundred, probabilityGap } from "./probability-copy";
+import { MLRiskFlag } from "./MLRiskFlag";
+
+export function ProbabilityNotice({ forecast }: { forecast: Forecast }) {
+  return <><SimulationNotice forecast={forecast} /><MLRiskFlag forecast={forecast} /></>;
+}
 
 // Число описывает симуляцию модели; калибровку нельзя подразумевать по наличию процента.
-export function ProbabilityNotice({ forecast }: { forecast: Forecast }) {
+function SimulationNotice({ forecast }: { forecast: Forecast }) {
   const { forecast: c } = useAccount();
   const canWrite = useCompanyCanWrite();
   const value = forecast.risk.probability_any_negative;

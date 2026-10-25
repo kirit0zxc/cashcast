@@ -169,6 +169,15 @@ class ForecastPointOut(BaseModel):
     probability_negative: float | None
 
 
+class MLFlagOut(BaseModel):
+    available: bool
+    flag: bool | None
+    reason: str
+    model_version: str
+    horizon_days: Literal[30] = 30
+    history_only: Literal[True] = True
+
+
 class RiskOut(BaseModel):
     available: bool
     first_negative_date: date | None
@@ -176,6 +185,7 @@ class RiskOut(BaseModel):
     probability_any_negative: float | None
     probability_status: Literal["unavailable", "estimated_uncalibrated"] = "unavailable"
     probability_calibrated: Literal[False] = False
+    ml_flag: MLFlagOut | None = None
 
 
 class CalculationOut(BaseModel):

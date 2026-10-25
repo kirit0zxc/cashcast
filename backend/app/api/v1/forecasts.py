@@ -34,6 +34,7 @@ from app.core.models import Account, ForecastPoint, ForecastRun, Job
 from app.core.snapshot_budget import SnapshotRowBudget
 from app.modules.contracts import ScenarioChange
 from app.modules.forecasting.baseline import MODEL_VERSION
+from app.modules.forecasting.ml_flag import MLFlag
 from app.modules.forecasting.service import get_forecast_service
 from app.modules.forecasting.snapshot import build_snapshot
 from app.modules.forecasting.v2.quality import ForecastInputError, validate_input
@@ -156,6 +157,9 @@ def get_forecast(
             max_deficit_minor=run.max_deficit_minor,
             probability_any_negative=run.probability_any_negative,
             probability_status="estimated_uncalibrated" if run.probability_any_negative is not None else "unavailable",
+            ml_flag=MLFlag.assess(run.input_snapshot, get_settings().risk_ml_url,
+                                  scenario=bool(run.base_forecast_id or run.scenario_hash),
+                                  ready=run.status == "succeeded"),
         ),
         points=[
             ForecastPointOut(
