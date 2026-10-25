@@ -4,6 +4,7 @@ import { CashCastApi, money, type Forecast, type Job } from "../../shared/api";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
 import { ForecastView } from "../forecast/ForecastPanel";
 import { PulseView } from "../pulse/PulsePanel";
+import { CATEGORIES } from "../transactions/CategoryEditor";
 import type { PulseReport } from "../pulse/types";
 import type { ChatCard, ChatReply } from "./types";
 import { SpecLines } from "../../ui/SpecChart";
@@ -21,10 +22,12 @@ const labels: Record<string, string> = {
   period_start: "Начало периода", period_end: "Конец периода", valid_count: "Корректных строк",
   balance_p50_minor: "Остаток", base_balance_p50_minor: "База", scenario_balance_p50_minor: "Сценарий",
   delta_balance_minor: "Изменение", confirmed_amount_minor: "Оплачено", label: "Причина",
+  source_ref: "Ссылка на документ",
 };
 const values: Record<string, string> = { in: "Приход", out: "Расход", pending: "Ожидает подтверждения",
   confirmed: "Выполнено", cancelled: "Отменено", planned: "Запланировано", paid: "Оплачено",
-  partially_paid: "Частично оплачено", statement: "Выписка", obligations: "Обязательства" };
+  partially_paid: "Частично оплачено", statement: "Выписка", obligations: "Обязательства",
+  manual: "Ручной ввод", csv: "CSV" };
 
 const KINDS: Record<string, string> = { table: "таблица", forecast: "прогноз", comparison: "сценарий", pulse: "пульс",
   action: "предложение действия", job: "расчёт", import: "импорт" };
@@ -33,6 +36,7 @@ function cell(key: string, value: unknown): string {
   if (value == null) return "—";
   if (key.endsWith("_minor") && typeof value === "number") return money(value);
   if (typeof value === "object") return JSON.stringify(value);
+  if (key === "category") return CATEGORIES[String(value) as keyof typeof CATEGORIES] ?? String(value);
   return values[String(value)] ?? String(value);
 }
 
@@ -64,10 +68,16 @@ const JOB_STATUS: Record<string, string> = { pending: "Прогноз в оче�
   succeeded: "Прогноз готов.", failed: "Расчёт не удался." };
 // Идентификаторы нужны серверу, а не человеку: прячем их в «Технические параметры».
 const isId = (key: string) => key === "id" || key.endsWith("_id") || key === "action_id";
-function visible(data: Record<string, unknown> = {}) {
-  return Object.fromEntries(Object.entries(data).filter(([k]) => !isId(k)));
+// Вложенные параметры (body, changes) чистим так же; пустые поля человеку не нужны.
+const isObject = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
+function visible(data: Record<string, unknown> = {}): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(data)
+    .filter(([k, v]) => !isId(k) && k !== "source_ref" && v != null && v !== "")
+    .map(([k, v]) => [k, isObject(v) ? visible(v) : v]));
 }
-function hidden(data: Record<string, unknown> = {}) { return Object.keys(data).some(isId); }
+function hidden(data: Record<string, unknown> = {}): boolean {
+  return Object.entries(data).some(([k, v]) => isId(k) || k === "source_ref" || (isObject(v) && hidden(v)));
+}
 
 function ArgumentsView({ data }: { data: Record<string, unknown> }) {
   return <dl>{Object.entries(data).map(([key, value]) => <div key={key}>
