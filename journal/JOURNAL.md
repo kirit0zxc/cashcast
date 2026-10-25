@@ -130,9 +130,10 @@
 |25company_crossfit|preliminary,runtime_verified|TP10/FP67/FN1,на4FPменьше21,CIпересекает0;858scores/5CLI/edges;[итог](25-RESULTS-B.md)|
 |26chronos_residual|evaluated,rejected|раннийвыборсохранил18;[итог](26-RESULTS-B.md)|
 |27weighted_reconciliation|evaluated,rejected|раннийgain5.54%,поздниеошибкисуммвыросли;[итог](27-RESULTS-B.md)|
-|28crossfit_robustness|running|3заранее заданныхповтора,безвыборановогопобедителя;[протокол](28_crossfit_robustness.md)|
+|28crossfit_robustness|completed|TP10/FN1,FP69/67/68;3фиксированныхповтора,безвыборапобедителя;[итог](28-RESULTS-B.md)|
 
 Базовый18подтверждён21полнымCLI+edges. Висходном21обнаружен дефектпереносимости:
-manifestхеширует2pyc,импортменяетих;повторпроверкиидётсPYTHONDONTWRITEBYTECODE=1.
+manifestхеширует2pyc,импортменяетих;повторпроверкипрошёлсPYTHONDONTWRITEBYTECODE=1:
+858scores,5CLI,будущие/чужиеоперацииинеподдержанныйгоризонт.
 Веса/исходники21неизменны,исходныйZIPсохранён. Новый25pycнеупаковывает.
 Никакихизмененийmain/site/productionиливыдуманныхвероятностей.

@@ -31,6 +31,7 @@ def evidence():
         'runtime18': ('b-runtime18', ('verification.json', 'edge-verification.json')),
         'runtime21': ('b-runtime21-bytecode-off', ('verification.json',)),
         'runtime25': ('b-runtime25', ('verification.json',)),
+        'runtime25-unpacked': ('b-runtime25-unpacked', ('verification.json',)),
     }
     destination = ROOT/'research_handoff/results'
     index = {}
