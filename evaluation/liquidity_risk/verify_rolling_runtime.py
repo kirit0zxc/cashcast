@@ -1,4 +1,5 @@
 """Реальные снимки: проверка дополнительного риска и полного переносимого CLI."""
+import argparse
 from dataclasses import replace
 from datetime import timedelta
 import hashlib
@@ -17,13 +18,13 @@ from app.modules.contracts import TxnDTO,Direction
 
 
 class RiskVerifier:
-    def __init__(self):
-        self.addon=Path('../../outputs/cashcast-risk-addon-v21').resolve()
-        self.base=Path('../../outputs/cashcast-local-candidate-v18').resolve()
-        self.tabular=Path('../cashcast-eval-env/Scripts/python.exe').resolve()
-        self.chronos=Path('../cashcast-chronos-env/Scripts/python.exe').resolve()
-        self.out=Path('data/raw/rolling-peer-risk-v21/runtime');self.out.mkdir(exist_ok=True)
-        self.data=Dataset(Path('../../outputs/cashcast-datasets-2026-10-24/01-organizers/cashflow_dataset_participants.zip'))
+    def __init__(self,source,addon,base,tabular,chronos,output):
+        self.addon=addon.resolve()
+        self.base=base.resolve()
+        self.tabular=tabular.resolve()
+        self.chronos=chronos.resolve()
+        self.out=output;self.out.mkdir(parents=True,exist_ok=True)
+        self.data=Dataset(source)
         self.report={'passed':False,'classifier_cases':0,'full_cli':[],'future_foreign_check':False,'db_used':False}
 
     def save(self):
@@ -85,4 +86,13 @@ class RiskVerifier:
         self.report['passed']=True;self.save();print('Runtime21 verification complete',flush=True)
 
 
-if __name__=='__main__':RiskVerifier().run()
+if __name__=='__main__':
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--zip',type=Path,required=True)
+    parser.add_argument('--addon',type=Path,required=True)
+    parser.add_argument('--base',type=Path,required=True)
+    parser.add_argument('--tabular-python',type=Path,required=True)
+    parser.add_argument('--chronos-python',type=Path,required=True)
+    parser.add_argument('--output',type=Path,default=Path('data/raw/b-runtime21'))
+    args=parser.parse_args()
+    RiskVerifier(args.zip,args.addon,args.base,args.tabular_python,args.chronos_python,args.output).run()

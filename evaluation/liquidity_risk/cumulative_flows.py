@@ -52,6 +52,14 @@ class CumulativeFineTune(FineTune):
 class CumulativePolicy(FlowPolicy):
     NAMES=('current','cum_zero','cum_ft100','cum_ft300','cum_mixzero','cum_mix100','cum_mix300')
 
+    @staticmethod
+    def mix(row,name):
+        # Сохранённый fallback должен совпадать с фактически оценённым current.
+        if row['fallback']:
+            return row['models']['current'].copy()
+        flows=np.rint(.5*row['models']['current'][:,:2]+.5*row['models'][name][:,:2]).astype(np.int64)
+        return np.column_stack([flows,row['opening']+np.cumsum(flows[:,0]-flows[:,1])])
+
 
 class CumulativeEvaluation(FlowEvaluation):
     POLICY=CumulativePolicy
@@ -88,8 +96,7 @@ class CumulativeEvaluation(FlowEvaluation):
         for phase,rows in result.items():
             for r in rows:
                 for suffix,name in [('zero','cum_zero'),('100','cum_ft100'),('300','cum_ft300')]:
-                    flows=np.rint(.5*r['models']['current'][:,:2]+.5*r['models'][name][:,:2]).astype(np.int64)
-                    r['models'][f'cum_mix{suffix}']=np.column_stack([flows,r['opening']+np.cumsum(flows[:,0]-flows[:,1])])
+                    r['models'][f'cum_mix{suffix}']=self.POLICY.mix(r,name)
             with (self.output/f'inferred-{phase}.pickle').open('wb') as f:pickle.dump(rows,f)
         return result
 
