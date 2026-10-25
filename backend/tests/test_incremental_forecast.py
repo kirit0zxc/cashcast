@@ -10,7 +10,7 @@ from sqlalchemy import select
 
 from app.core.forecast_input import ForecastInputCodec
 from app.core.models import BankTransaction, ForecastRun
-from app.modules.forecasting.v2.service import GuardedForecastService
+from app.modules.forecasting.service import get_forecast_service
 from app.modules.jobs.incremental import ForecastCheckpointRepository
 from tests.factories import make_account, make_company
 from tests.test_integration import _run_worker_until_idle, _statement_csv, logged_in
@@ -69,8 +69,9 @@ def test_api_plan_update_reuses_committed_state_and_import_change_requires_full(
     assert changed["points"][-1]["balance_p50_minor"] == base["points"][-1]["balance_p50_minor"] - 1234567
     assert output(base_id) == base
     with session_factory() as session:
-        frozen = session.get(ForecastRun, changed_id).input_snapshot
-        full = GuardedForecastService().run(ForecastInputCodec.decode(frozen))
+        run = session.get(ForecastRun, changed_id)
+        # Полный расчёт той же закреплённой версии, без сохранённого checkpoint.
+        full = get_forecast_service(run.model_version).run(ForecastInputCodec.decode(run.input_snapshot))
         expected = json.loads(json.dumps([asdict(p) for p in full.points], default=str))
         assert changed["points"] == expected
         txn = session.scalars(select(BankTransaction)).first()
@@ -152,8 +153,7 @@ def test_csv_new_day_updates_previous_forecast_and_duplicate_import_is_not_a_new
     assert updated["opening_balance_minor"] == opening + 6700
     with session_factory() as session:
         run = session.get(ForecastRun, updated["id"])
-        from tests.analytics.test_incremental_ledger import reference
-        expected = reference(ForecastInputCodec.decode(run.input_snapshot))
+        expected = get_forecast_service(run.model_version).run(ForecastInputCodec.decode(run.input_snapshot))
         assert updated["points"] == json.loads(json.dumps([asdict(p) for p in expected.points], default=str))
     assert client.get(f"/api/v1/forecasts/{old['id']}").json() == old
     upload(delta)

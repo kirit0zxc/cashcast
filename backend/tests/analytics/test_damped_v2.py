@@ -47,9 +47,11 @@ def coefficients(monkeypatch, table, unreliable):
     monkeypatch.setattr(damped, "UNRELIABLE_DRIFT", unreliable)
 
 
-def test_registry_keeps_2_1_default_and_shipped_coefficients_are_shrinkage():
-    assert DEFAULT_MODEL_VERSION == ESTIMATED_VERSION
+def test_registry_defaults_to_2_2_and_preserves_explicit_2_1():
+    assert DEFAULT_MODEL_VERSION == MODEL_VERSION
+    assert isinstance(get_forecast_service(), DampedForecastService)
     assert isinstance(get_forecast_service(MODEL_VERSION), DampedForecastService)
+    assert type(get_forecast_service(ESTIMATED_VERSION)) is EstimatedForecastService
     assert list(damped.DAMPING) == [(1, 7), (8, 14), (15, 21), (22, 30)]
     assert all(0 <= value <= 1 for pair in damped.DAMPING.values() for value in pair)
     assert 0 <= damped.UNRELIABLE_DRIFT <= 1

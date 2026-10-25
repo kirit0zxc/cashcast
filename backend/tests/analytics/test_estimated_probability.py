@@ -16,7 +16,7 @@ from tests.analytics.test_engine_v2 import history
 @pytest.mark.parametrize("horizon", [1, 7, 30, 90, 180])
 def test_daily_and_any_probability_equal_saved_trajectory_counts(horizon):
     data = replace(history(), horizon_days=horizon)
-    result = get_forecast_service().run(data)
+    result = get_forecast_service(MODEL_VERSION).run(data)
     assert result.model_version == MODEL_VERSION
     assert result.risk.available
     paths = result.details[STATE_KEY]["prepared"]["residual_paths"]

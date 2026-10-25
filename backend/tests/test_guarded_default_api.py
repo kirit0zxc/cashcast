@@ -37,7 +37,7 @@ def test_guarded_default_withholds_probability_and_keeps_preupgrade_job_and_scen
     new_result = client.get(f"/api/v1/forecasts/{new_id}").json()
     assert old_result["status"] == new_result["status"] == "succeeded"
     assert old_result["model_version"] == "seasonal-block-bootstrap-1.0-w84"
-    assert new_result["model_version"] == "seasonal-estimated-2.1-w84"
+    assert new_result["model_version"] == "seasonal-damped-2.2-w84"
     assert new_result["risk"]["available"] is False
     assert new_result["risk"]["probability_any_negative"] is None
     assert all(point["probability_negative"] is None for point in new_result["points"])

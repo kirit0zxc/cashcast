@@ -3,6 +3,8 @@
 from dataclasses import replace
 from datetime import date, timedelta
 
+import pytest
+
 from app.modules.categorization.service import get_categorizer
 from app.modules.contracts import DailyBalanceDTO, Direction, ForecastInput, PlannedEventDTO, TxnDTO
 from app.modules.forecasting.service import get_forecast_service
@@ -34,20 +36,24 @@ def demo(as_of=date(2026, 8, 1)):
     )
 
 
-def calculate(data):
-    result = get_forecast_service().run(data)
+def calculate(data, version=None):
+    result = get_forecast_service(version).run(data)
     pulse = FrozenPulseService.build(data, result.points, result.details, company_id="demo", buffer_minor=0)
     return result, pulse
 
 
-def test_august_cutoff_reproduces_screenshot_without_false_calm():
+@pytest.mark.parametrize("version, minimum, final", [
+    ("seasonal-estimated-2.1-w84", 24_790_000, 28_950_000),
+    (None, 26_040_000, 26_040_000),
+])
+def test_august_cutoff_preserves_quality_guard_for_both_models(version, minimum, final):
     data = demo()
-    result, pulse = calculate(data)
+    result, pulse = calculate(data, version)
     assert len(data.txns) == 6
     assert data.opening_balance_minor == 26_040_000
     assert result.details["quality"]["history_days"] == 6
-    assert min(p.balance_p50_minor for p in result.points) == 24_790_000
-    assert result.points[-1].balance_p50_minor == 28_950_000
+    assert min(p.balance_p50_minor for p in result.points) == minimum
+    assert result.points[-1].balance_p50_minor == final
     assert result.risk.first_negative_date is None
     assert result.risk.probability_any_negative is None
     assert pulse["cash"]["status"] == "unknown"
