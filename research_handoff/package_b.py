@@ -65,7 +65,7 @@ def evidence():
     print(f'Copied {len(index)} reports, indexed {len(files)} local artifacts')
 
 
-def bundle(commit, output):
+def bundle(commit, output, addons=(25,)):
     commit = subprocess.check_output(['git', 'rev-parse', commit+'^{commit}'], cwd=ROOT, text=True).strip()
     output.mkdir(parents=True, exist_ok=False)
     assets = json.loads((ROOT/'research_handoff/assets.json').read_text('utf-8'))
@@ -73,24 +73,30 @@ def bundle(commit, output):
         source = ROOT/'data/raw/handoff-downloads'/name
         assert sha(source) == assets[name]['sha256'], name
         shutil.copyfile(source, output/name)
-    addon = ROOT/'data/raw/b-packages/cashcast-risk-addon-v25'
-    manifest = json.loads((addon/'manifest.json').read_text('utf-8'))
-    with zipfile.ZipFile(output/'cashcast-risk-addon-v25.zip', 'x', zipfile.ZIP_DEFLATED) as archive:
-        for name in sorted([*manifest['files_sha256'], 'manifest.json']):
-            path = addon/name
-            if name != 'manifest.json':
-                assert sha(path) == manifest['files_sha256'][name], name
-            archive.write(path, 'cashcast-risk-addon-v25/'+name)
+    sources={25:'company-crossfit-v25',29:'diverse-risk-v29',31:'long-history-risk-v31'}
+    for number in addons:
+        addon = ROOT/f'data/raw/b-packages/cashcast-risk-addon-v{number}'
+        manifest = json.loads((addon/'manifest.json').read_text('utf-8'))
+        with zipfile.ZipFile(output/f'cashcast-risk-addon-v{number}.zip', 'x', zipfile.ZIP_DEFLATED) as archive:
+            for name in sorted([*manifest['files_sha256'], 'manifest.json']):
+                path = addon/name
+                if name != 'manifest.json':
+                    assert sha(path) == manifest['files_sha256'][name], name
+                archive.write(path, f'cashcast-risk-addon-v{number}/'+name)
+        shutil.copyfile(ROOT/'data/raw'/sources[number]/'predictions.json',output/f'predictions{number}.json')
     subprocess.run(['git', 'archive', '--format=zip', '--output='+str(output/'source.zip'), commit], cwd=ROOT, check=True)
-    # Только сохранённые риск-прогнозы25, без банковских операций/признаков.
-    shutil.copyfile(ROOT/'data/raw/company-crossfit-v25/predictions.json', output/'predictions25.json')
-    for name in ('B-REPRODUCE.md', 'B-MORNING-REPORT.md'):
-        shutil.copyfile(ROOT/'research_handoff'/name, output/name)
+    # Только сохранённые риск-прогнозы, без банковских операций/признаков.
+    documents=('B-REPRODUCE.md','B-MORNING-REPORT.md') if tuple(addons)==(25,) else ('B-CONTINUED-REPRODUCE.md','B-CONTINUED-REPORT.md')
+    for name in documents:
+        # Документ должен принадлежать тому же commit, что и source.zip.
+        data=subprocess.check_output(['git','show',commit+':research_handoff/'+name],cwd=ROOT)
+        (output/name).write_bytes(data)
     files = {p.name: {'sha256': sha(p), 'bytes': p.stat().st_size} for p in sorted(output.iterdir()) if p.is_file()}
     write(output/'bundle-manifest.json', {'source_commit': commit,
         'source_tree': subprocess.check_output(['git', 'rev-parse', commit+'^{tree}'], cwd=ROOT, text=True).strip(),
         'files': files, 'production_activated': False, 'independent_control': False,
-        'recommended_retained': ['18', '21'], 'candidate25': 'preliminary_only'})
+        'recommended_retained': ['18', '21'], 'research_addons':list(addons),
+        'research_addons_status':'preliminary_only'})
     for path in output.glob('*.zip'):
         with zipfile.ZipFile(path) as archive:
             assert archive.testzip() is None, path.name
@@ -108,10 +114,11 @@ if __name__ == '__main__':
     parser.add_argument('action', choices=('evidence', 'bundle'))
     parser.add_argument('--commit')
     parser.add_argument('--output', type=Path)
+    parser.add_argument('--addons',type=int,nargs='+',choices=(25,29,31),default=[25])
     args = parser.parse_args()
     if args.action == 'evidence':
         evidence()
     else:
         if not args.commit or not args.output:
             parser.error('bundle требует --commit и --output')
-        bundle(args.commit, args.output.resolve())
+        bundle(args.commit, args.output.resolve(),tuple(args.addons))

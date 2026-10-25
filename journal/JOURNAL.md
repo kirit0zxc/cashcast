@@ -137,3 +137,26 @@ manifestхеширует2pyc,импортменяетих;повторпрове
 858scores,5CLI,будущие/чужиеоперацииинеподдержанныйгоризонт.
 Веса/исходники21неизменны,исходныйZIPсохранён. Новый25pycнеупаковывает.
 Никакихизмененийmain/site/productionиливыдуманныхвероятностей.
+
+## Продолжение B после промежуточного пакета cd13293
+
+Пользователь явно потребовал продолжать исследования, а не завершать после первого
+улучшения; 25 октября дополнительно разрешил субагентов поиска и тестов с effort ultra.
+Рабочая память — B-CONTINUED-20261025.md; новый отчёт —
+research_handoff/B-CONTINUED-REPORT.md. Результаты адаптивные, не независимый контроль.
+
+| Опыт | Статус | Результат |
+|---|---|---|
+|29 diverse risk|preliminary, runtime verified|10TP/58FP/1FN;40CatBoost +40LightGBM25|
+|30 block flows|rejected|ранний objective0.942800, два поздних нарушения guards|
+|31 long history risk|preliminary, runtime verified|10TP/53FP/1FN;40LightGBM,86признаков|
+|32 robustness29|completed|120CatBoost;TP10/FN1,FP58/57/60;без перевыбора|
+|33 robustness31|completed|120LightGBM;все10TP/53FP/1FN;без перевыбора|
+|34 rolling reserve quantiles|rejected|120LightGBM;новые политики не прошли ранний критерий|
+|35 block mean/median|rejected|ранний objective0.931071, пять поздних нарушений guards|
+|36 rolling block flows|running|80CatBoost;ранняя смесь0.25 зафиксирована до позднего этапа|
+|37 standalone long CatBoost|running|40CatBoost;самостоятельный сигнал, выбор только ранний|
+
+№29/31:по858проверокscores,5CLI,будущие/чужиеоперации,unsupported — passed.
+Чистая распаковка новых дополнений проверяется отдельно. Недостаток29pre-lateSHA
+открыто описан в отчёте: файлselectionдоlate,егоSHAтолькоcompleted;историюнепереписываем.

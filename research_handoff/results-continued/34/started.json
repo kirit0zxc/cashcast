@@ -1,0 +1,32 @@
+{
+  "params": {
+    "n_estimators": 300,
+    "learning_rate": 0.03,
+    "num_leaves": 15,
+    "min_child_samples": 50,
+    "reg_lambda": 5.0,
+    "random_state": 42,
+    "deterministic": true,
+    "force_row_wise": true,
+    "verbose": -1,
+    "subsample": 0.8,
+    "subsample_freq": 1,
+    "colsample_bytree": 0.8,
+    "n_jobs": 4
+  },
+  "quantiles": [
+    0.9,
+    0.95,
+    0.99
+  ],
+  "dataset_sha256": "e753802b7f7a2eecb7b5a558f9923b529e711c40fe431774750904b62ec79987",
+  "prepared31_sha256": "b386948d16719effcb28cc188e151e9a60459b9924b4d8776f86e47d0cd85629",
+  "predictions31_sha256": "8529ef437c190dae264b5eb9a2da20fd1dbfab9246ad5910732f1836c3879349",
+  "predictions29_sha256": "58eb1168028a78409dd0cb6755329928563cfa077b26cd4da06423974f7463e6",
+  "protocol_sha256": "fb4745ba967808044b75bd216f5309771ca471f3c628d8b26e8ea2d783a161c3",
+  "code_sha256": "02d15603d9837340e2953580457eff3907379651a37e7cabc53e1f1e6bae80e7",
+  "train_windows": 8071,
+  "control_windows": 858,
+  "target_identity_verified": true,
+  "prepared_sha256": "8dd929b379f9f8e68da7ff0d9476a6d295ebf8a2de7d3404207ccdeaa20cacdf"
+}

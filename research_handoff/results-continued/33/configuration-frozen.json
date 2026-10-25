@@ -1,0 +1,22 @@
+{
+  "variants": [
+    [
+      "trees270",
+      270,
+      42
+    ],
+    [
+      "trees330",
+      330,
+      42
+    ],
+    [
+      "seed43",
+      300,
+      43
+    ]
+  ],
+  "threshold": 0.1,
+  "model_selection_performed": false,
+  "protocol_sha256": "91ec81e4b469a6694ce5c91da9f3a6d99478efcaa160f466b7e7597d05c7e6ed"
+}

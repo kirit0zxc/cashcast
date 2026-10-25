@@ -1,0 +1,24 @@
+{
+  "params": {
+    "n_estimators": 330,
+    "learning_rate": 0.03,
+    "num_leaves": 15,
+    "min_child_samples": 50,
+    "reg_lambda": 5.0,
+    "random_state": 42,
+    "deterministic": true,
+    "force_row_wise": true,
+    "verbose": -1,
+    "subsample": 0.8,
+    "subsample_freq": 1,
+    "colsample_bytree": 0.8,
+    "n_jobs": 4
+  },
+  "threshold": 0.1,
+  "mode": "extended",
+  "diagnostic_only": true,
+  "model_selection_performed": false,
+  "prepared31_sha256": "b386948d16719effcb28cc188e151e9a60459b9924b4d8776f86e47d0cd85629",
+  "protocol_sha256": "91ec81e4b469a6694ce5c91da9f3a6d99478efcaa160f466b7e7597d05c7e6ed",
+  "code_sha256": "1f80c3b45cf77def41fd2439f952052713b5d6909327f358222f87f5f1df17a6"
+}

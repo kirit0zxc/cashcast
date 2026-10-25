@@ -1,0 +1,2 @@
+# Сохранять исходные байты отчётов для SHA.
+* -text whitespace=cr-at-eol

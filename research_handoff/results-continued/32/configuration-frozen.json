@@ -1,0 +1,25 @@
+{
+  "variants": [
+    [
+      "trees540",
+      540,
+      20261025
+    ],
+    [
+      "trees660",
+      660,
+      20261025
+    ],
+    [
+      "seed20261026",
+      600,
+      20261026
+    ]
+  ],
+  "choice": {
+    "mode": "mean50",
+    "threshold": 0.05
+  },
+  "diagnostic_only": true,
+  "protocol_sha256": "da9e36634100b1cb23401bbe39c9a676bca9ab83edb1e1a93e7375a855da616d"
+}

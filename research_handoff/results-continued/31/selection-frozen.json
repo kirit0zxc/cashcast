@@ -1,0 +1,221 @@
+{
+  "selected": {
+    "mode": "extended",
+    "threshold": 0.1,
+    "eligible": true,
+    "metrics": {
+      "n": 486,
+      "positives": 5,
+      "tp": 5,
+      "fp": 28,
+      "fn": 0,
+      "tn": 453,
+      "accuracy": 0.9423868312757202,
+      "precision": 0.15151515151515152,
+      "recall": 1.0,
+      "f1": 0.2631578947368421,
+      "f2": 0.4716981132075472
+    }
+  },
+  "trials": [
+    {
+      "mode": "keep25",
+      "threshold": null,
+      "eligible": true,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 5,
+        "fp": 37,
+        "fn": 0,
+        "tn": 444,
+        "accuracy": 0.9238683127572016,
+        "precision": 0.11904761904761904,
+        "recall": 1.0,
+        "f1": 0.2127659574468085,
+        "f2": 0.4032258064516129
+      }
+    },
+    {
+      "mode": "extended",
+      "threshold": 0.025,
+      "eligible": true,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 5,
+        "fp": 32,
+        "fn": 0,
+        "tn": 449,
+        "accuracy": 0.934156378600823,
+        "precision": 0.13513513513513514,
+        "recall": 1.0,
+        "f1": 0.23809523809523808,
+        "f2": 0.43859649122807015
+      }
+    },
+    {
+      "mode": "extended",
+      "threshold": 0.05,
+      "eligible": true,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 5,
+        "fp": 29,
+        "fn": 0,
+        "tn": 452,
+        "accuracy": 0.9403292181069959,
+        "precision": 0.14705882352941177,
+        "recall": 1.0,
+        "f1": 0.2564102564102564,
+        "f2": 0.46296296296296297
+      }
+    },
+    {
+      "mode": "extended",
+      "threshold": 0.1,
+      "eligible": true,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 5,
+        "fp": 28,
+        "fn": 0,
+        "tn": 453,
+        "accuracy": 0.9423868312757202,
+        "precision": 0.15151515151515152,
+        "recall": 1.0,
+        "f1": 0.2631578947368421,
+        "f2": 0.4716981132075472
+      }
+    },
+    {
+      "mode": "extended",
+      "threshold": 0.25,
+      "eligible": false,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 4,
+        "fp": 28,
+        "fn": 1,
+        "tn": 453,
+        "accuracy": 0.9403292181069959,
+        "precision": 0.125,
+        "recall": 0.8,
+        "f1": 0.21621621621621623,
+        "f2": 0.38461538461538464
+      }
+    },
+    {
+      "mode": "extended",
+      "threshold": 0.5,
+      "eligible": false,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 4,
+        "fp": 28,
+        "fn": 1,
+        "tn": 453,
+        "accuracy": 0.9403292181069959,
+        "precision": 0.125,
+        "recall": 0.8,
+        "f1": 0.21621621621621623,
+        "f2": 0.38461538461538464
+      }
+    },
+    {
+      "mode": "mean50",
+      "threshold": 0.025,
+      "eligible": true,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 5,
+        "fp": 34,
+        "fn": 0,
+        "tn": 447,
+        "accuracy": 0.9300411522633745,
+        "precision": 0.1282051282051282,
+        "recall": 1.0,
+        "f1": 0.22727272727272727,
+        "f2": 0.423728813559322
+      }
+    },
+    {
+      "mode": "mean50",
+      "threshold": 0.05,
+      "eligible": true,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 5,
+        "fp": 31,
+        "fn": 0,
+        "tn": 450,
+        "accuracy": 0.9362139917695473,
+        "precision": 0.1388888888888889,
+        "recall": 1.0,
+        "f1": 0.24390243902439024,
+        "f2": 0.44642857142857145
+      }
+    },
+    {
+      "mode": "mean50",
+      "threshold": 0.1,
+      "eligible": false,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 4,
+        "fp": 28,
+        "fn": 1,
+        "tn": 453,
+        "accuracy": 0.9403292181069959,
+        "precision": 0.125,
+        "recall": 0.8,
+        "f1": 0.21621621621621623,
+        "f2": 0.38461538461538464
+      }
+    },
+    {
+      "mode": "mean50",
+      "threshold": 0.25,
+      "eligible": false,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 4,
+        "fp": 28,
+        "fn": 1,
+        "tn": 453,
+        "accuracy": 0.9403292181069959,
+        "precision": 0.125,
+        "recall": 0.8,
+        "f1": 0.21621621621621623,
+        "f2": 0.38461538461538464
+      }
+    },
+    {
+      "mode": "mean50",
+      "threshold": 0.5,
+      "eligible": false,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 4,
+        "fp": 28,
+        "fn": 1,
+        "tn": 453,
+        "accuracy": 0.9403292181069959,
+        "precision": 0.125,
+        "recall": 0.8,
+        "f1": 0.21621621621621623,
+        "f2": 0.38461538461538464
+      }
+    }
+  ],
+  "selection": "development January-June only"
+}

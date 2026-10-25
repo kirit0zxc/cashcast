@@ -1,0 +1,149 @@
+{
+  "selected": {
+    "mode": "keep31",
+    "quantile": null,
+    "eligible": true,
+    "metrics": {
+      "n": 486,
+      "positives": 5,
+      "tp": 5,
+      "fp": 28,
+      "fn": 0,
+      "tn": 453,
+      "accuracy": 0.9423868312757202,
+      "precision": 0.15151515151515152,
+      "recall": 1.0,
+      "f1": 0.2631578947368421,
+      "f2": 0.4716981132075472
+    }
+  },
+  "trials": [
+    {
+      "mode": "keep31",
+      "quantile": null,
+      "eligible": true,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 5,
+        "fp": 28,
+        "fn": 0,
+        "tn": 453,
+        "accuracy": 0.9423868312757202,
+        "precision": 0.15151515151515152,
+        "recall": 1.0,
+        "f1": 0.2631578947368421,
+        "f2": 0.4716981132075472
+      }
+    },
+    {
+      "mode": "or18",
+      "quantile": 0.9,
+      "eligible": false,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 4,
+        "fp": 68,
+        "fn": 1,
+        "tn": 413,
+        "accuracy": 0.8580246913580247,
+        "precision": 0.05555555555555555,
+        "recall": 0.8,
+        "f1": 0.1038961038961039,
+        "f2": 0.21739130434782608
+      }
+    },
+    {
+      "mode": "or18",
+      "quantile": 0.95,
+      "eligible": false,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 5,
+        "fp": 113,
+        "fn": 0,
+        "tn": 368,
+        "accuracy": 0.7674897119341564,
+        "precision": 0.0423728813559322,
+        "recall": 1.0,
+        "f1": 0.08130081300813008,
+        "f2": 0.18115942028985507
+      }
+    },
+    {
+      "mode": "or18",
+      "quantile": 0.99,
+      "eligible": false,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 5,
+        "fp": 169,
+        "fn": 0,
+        "tn": 312,
+        "accuracy": 0.6522633744855967,
+        "precision": 0.028735632183908046,
+        "recall": 1.0,
+        "f1": 0.055865921787709494,
+        "f2": 0.12886597938144329
+      }
+    },
+    {
+      "mode": "alone",
+      "quantile": 0.9,
+      "eligible": false,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 3,
+        "fp": 60,
+        "fn": 2,
+        "tn": 421,
+        "accuracy": 0.8724279835390947,
+        "precision": 0.047619047619047616,
+        "recall": 0.6,
+        "f1": 0.08823529411764706,
+        "f2": 0.18072289156626506
+      }
+    },
+    {
+      "mode": "alone",
+      "quantile": 0.95,
+      "eligible": false,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 4,
+        "fp": 111,
+        "fn": 1,
+        "tn": 370,
+        "accuracy": 0.7695473251028807,
+        "precision": 0.034782608695652174,
+        "recall": 0.8,
+        "f1": 0.06666666666666667,
+        "f2": 0.14814814814814814
+      }
+    },
+    {
+      "mode": "alone",
+      "quantile": 0.99,
+      "eligible": false,
+      "metrics": {
+        "n": 486,
+        "positives": 5,
+        "tp": 5,
+        "fp": 169,
+        "fn": 0,
+        "tn": 312,
+        "accuracy": 0.6522633744855967,
+        "precision": 0.028735632183908046,
+        "recall": 1.0,
+        "f1": 0.055865921787709494,
+        "f2": 0.12886597938144329
+      }
+    }
+  ],
+  "selection": "development January-June only"
+}

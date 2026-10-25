@@ -1,0 +1,37 @@
+{
+  "params": {
+    "iterations": 660,
+    "depth": 4,
+    "learning_rate": 0.03,
+    "l2_leaf_reg": 8,
+    "loss_function": "Logloss",
+    "boosting_type": "Ordered",
+    "random_seed": 20261025,
+    "thread_count": 4,
+    "allow_writing_files": false,
+    "verbose": false
+  },
+  "choice": {
+    "mode": "mean50",
+    "threshold": 0.05,
+    "eligible": true,
+    "metrics": {
+      "n": 486,
+      "positives": 5,
+      "tp": 5,
+      "fp": 32,
+      "fn": 0,
+      "tn": 449,
+      "accuracy": 0.934156378600823,
+      "precision": 0.13513513513513514,
+      "recall": 1.0,
+      "f1": 0.23809523809523808,
+      "f2": 0.43859649122807015
+    }
+  },
+  "diagnostic_only": true,
+  "model_selection_performed": false,
+  "protocol_sha256": "da9e36634100b1cb23401bbe39c9a676bca9ab83edb1e1a93e7375a855da616d",
+  "code_sha256": "bb004f554e577ccf3231de8f036bb424a235b63f0645eacbcda66b96f51e23f8",
+  "reference29_selection_sha256": "e6c9bca912b349862c31c17f744aa20640510db1fc7118e81543b5076ac7d948"
+}

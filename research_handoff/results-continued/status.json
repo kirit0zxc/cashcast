@@ -1,0 +1,17 @@
+{
+  "completed_experiments": [
+    "29",
+    "30",
+    "31",
+    "32",
+    "33",
+    "34",
+    "35"
+  ],
+  "incomplete_experiments": [
+    "36",
+    "37"
+  ],
+  "independent_control": false,
+  "production_activated": false
+}

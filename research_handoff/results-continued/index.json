@@ -1,0 +1,386 @@
+{
+  "29/results.json": {
+    "source": "data/raw/diverse-risk-v29/results.json",
+    "source_sha256": "8580eb9994196dd20f9c1108121a0cadb2dd9c2632b7c16352e80eccefcc3adc",
+    "published_sha256": "8580eb9994196dd20f9c1108121a0cadb2dd9c2632b7c16352e80eccefcc3adc",
+    "source_bytes": 250572
+  },
+  "29/selection-frozen.json": {
+    "source": "data/raw/diverse-risk-v29/selection-frozen.json",
+    "source_sha256": "e6c9bca912b349862c31c17f744aa20640510db1fc7118e81543b5076ac7d948",
+    "published_sha256": "e6c9bca912b349862c31c17f744aa20640510db1fc7118e81543b5076ac7d948",
+    "source_bytes": 5005
+  },
+  "29/started.json": {
+    "source": "data/raw/diverse-risk-v29/started.json",
+    "source_sha256": "a6322c84e5ffd9addd4c346fb591cc4786b1eeb3630db54f46c8938c5d56b041",
+    "published_sha256": "a6322c84e5ffd9addd4c346fb591cc4786b1eeb3630db54f46c8938c5d56b041",
+    "source_bytes": 1096
+  },
+  "29/completed.json": {
+    "source": "data/raw/diverse-risk-v29/completed.json",
+    "source_sha256": "7311624424de6af7b771809b3ce908e4a2a5498f0056edd3030017fb3c79fc37",
+    "published_sha256": "7311624424de6af7b771809b3ce908e4a2a5498f0056edd3030017fb3c79fc37",
+    "source_bytes": 200
+  },
+  "29/training-audit.json": {
+    "source": "data/raw/diverse-risk-v29/training-audit.json",
+    "source_sha256": "06316e7339857241db1bd9c747655d93cebcca8ce63fa44dd657199d98d86a9e",
+    "published_sha256": "06316e7339857241db1bd9c747655d93cebcca8ce63fa44dd657199d98d86a9e",
+    "source_bytes": 20044
+  },
+  "30/results.json": {
+    "source": "data/raw/block-flows-v30/results.json",
+    "source_sha256": "769732f4a1e05e609e798c0dac244915c0cacb77c581e30b85a2525cca91e901",
+    "published_sha256": "769732f4a1e05e609e798c0dac244915c0cacb77c581e30b85a2525cca91e901",
+    "source_bytes": 162934
+  },
+  "30/selection-frozen.json": {
+    "source": "data/raw/block-flows-v30/selection-frozen.json",
+    "source_sha256": "442af37715178d90f4223b39d6365258abf1a617ee6ad9b2ec7e1181e5d9853b",
+    "published_sha256": "442af37715178d90f4223b39d6365258abf1a617ee6ad9b2ec7e1181e5d9853b",
+    "source_bytes": 9025
+  },
+  "30/selection-lock.json": {
+    "source": "data/raw/block-flows-v30/selection-lock.json",
+    "source_sha256": "48699b484dcfb7abd9a83b35c86246e66008a3283bdc4fe4d649829e82496d0c",
+    "published_sha256": "48699b484dcfb7abd9a83b35c86246e66008a3283bdc4fe4d649829e82496d0c",
+    "source_bytes": 94
+  },
+  "30/started.json": {
+    "source": "data/raw/block-flows-v30/started.json",
+    "source_sha256": "8eaca9fe8cf8e1545a7e332f275ca044a4d29c2fcfe58387e8bf53d79c149f87",
+    "published_sha256": "8eaca9fe8cf8e1545a7e332f275ca044a4d29c2fcfe58387e8bf53d79c149f87",
+    "source_bytes": 856
+  },
+  "30/completed.json": {
+    "source": "data/raw/block-flows-v30/completed.json",
+    "source_sha256": "4159718135e345e236d616fda8157b77ab73ff6b970e93600a43c22314632a11",
+    "published_sha256": "4159718135e345e236d616fda8157b77ab73ff6b970e93600a43c22314632a11",
+    "source_bytes": 92
+  },
+  "30/by-company-and-period.json.gz": {
+    "source": "data/raw/block-flows-v30/by-company-and-period.json",
+    "source_sha256": "a371f7485391d8e7912222b2d578d1eabadc43d321398a31aad459d05cf1b83f",
+    "published_sha256": "fa3db23490c1ead301e388b3a7d5b9be51de4c51ae6ed4f2057f91ce35d91ccd",
+    "source_bytes": 5699209
+  },
+  "31/results.json": {
+    "source": "data/raw/long-history-risk-v31/results.json",
+    "source_sha256": "125cfe4fdc0625779eaf23ea54d06b688dcd69f85f363facc0c9b19fe112dc50",
+    "published_sha256": "125cfe4fdc0625779eaf23ea54d06b688dcd69f85f363facc0c9b19fe112dc50",
+    "source_bytes": 250345
+  },
+  "31/selection-frozen.json": {
+    "source": "data/raw/long-history-risk-v31/selection-frozen.json",
+    "source_sha256": "61380d24231e1d641c60b84e825ac7f0cd25d1c157529618451ea166c7e882e7",
+    "published_sha256": "61380d24231e1d641c60b84e825ac7f0cd25d1c157529618451ea166c7e882e7",
+    "source_bytes": 4996
+  },
+  "31/selection-lock.json": {
+    "source": "data/raw/long-history-risk-v31/selection-lock.json",
+    "source_sha256": "5aa7554d29e63da44c9ae27008e24109eb201a49c0c6907523bc97873b829c5e",
+    "published_sha256": "5aa7554d29e63da44c9ae27008e24109eb201a49c0c6907523bc97873b829c5e",
+    "source_bytes": 94
+  },
+  "31/started.json": {
+    "source": "data/raw/long-history-risk-v31/started.json",
+    "source_sha256": "5a3430d566cc7d75e3f9f6c0fda500faec297e7ec40af547076e772c3219b77f",
+    "published_sha256": "5a3430d566cc7d75e3f9f6c0fda500faec297e7ec40af547076e772c3219b77f",
+    "source_bytes": 1457
+  },
+  "31/completed.json": {
+    "source": "data/raw/long-history-risk-v31/completed.json",
+    "source_sha256": "0b1fd43649614bfbfbf7941a5079613c70851780374b7f6cc6b2ea1c6ae65d46",
+    "published_sha256": "0b1fd43649614bfbfbf7941a5079613c70851780374b7f6cc6b2ea1c6ae65d46",
+    "source_bytes": 200
+  },
+  "31/training-audit.json": {
+    "source": "data/raw/long-history-risk-v31/training-audit.json",
+    "source_sha256": "5ac56ba571d684774e33f6b9ee2fae924f9800d12ee0104cf8bf0ddc5de38756",
+    "published_sha256": "5ac56ba571d684774e33f6b9ee2fae924f9800d12ee0104cf8bf0ddc5de38756",
+    "source_bytes": 20044
+  },
+  "32/results.json": {
+    "source": "data/raw/diverse-robustness-v32/results.json",
+    "source_sha256": "35df3d77a190e07c7e92d33cbaef7a808ff7b2e979ceeb4e1a31f2786743e5e6",
+    "published_sha256": "35df3d77a190e07c7e92d33cbaef7a808ff7b2e979ceeb4e1a31f2786743e5e6",
+    "source_bytes": 66760
+  },
+  "32/configuration-frozen.json": {
+    "source": "data/raw/diverse-robustness-v32/configuration-frozen.json",
+    "source_sha256": "f4d4189b2d640168bf125da916b58d44f7d2a54d81eeefd4756d2b8bd91f5151",
+    "published_sha256": "f4d4189b2d640168bf125da916b58d44f7d2a54d81eeefd4756d2b8bd91f5151",
+    "source_bytes": 400
+  },
+  "32/completed.json": {
+    "source": "data/raw/diverse-robustness-v32/completed.json",
+    "source_sha256": "817d13f346ffbebb86f65ee01d3141be0c3ab619ae408a5f250d59c61749c15e",
+    "published_sha256": "817d13f346ffbebb86f65ee01d3141be0c3ab619ae408a5f250d59c61749c15e",
+    "source_bytes": 92
+  },
+  "32/seed20261026/results.json": {
+    "source": "data/raw/diverse-robustness-v32/seed20261026/results.json",
+    "source_sha256": "5a8511c6f5f30b08dce9d51eeb18c903bb5607913773bf76cb3743ad8c0298ac",
+    "published_sha256": "5a8511c6f5f30b08dce9d51eeb18c903bb5607913773bf76cb3743ad8c0298ac",
+    "source_bytes": 19125
+  },
+  "32/seed20261026/configuration-frozen.json": {
+    "source": "data/raw/diverse-robustness-v32/seed20261026/configuration-frozen.json",
+    "source_sha256": "77901dfda9d0fb6a23c6c0c4aada2737049aa9cbdbc3d2d644bf786e35e2cbf4",
+    "published_sha256": "77901dfda9d0fb6a23c6c0c4aada2737049aa9cbdbc3d2d644bf786e35e2cbf4",
+    "source_bytes": 1030
+  },
+  "32/seed20261026/started.json": {
+    "source": "data/raw/diverse-robustness-v32/seed20261026/started.json",
+    "source_sha256": "355275c4dc20d546dab2a8372843fb463d6b480490f6ac2a78a7c32e49518163",
+    "published_sha256": "355275c4dc20d546dab2a8372843fb463d6b480490f6ac2a78a7c32e49518163",
+    "source_bytes": 1096
+  },
+  "32/seed20261026/completed.json": {
+    "source": "data/raw/diverse-robustness-v32/seed20261026/completed.json",
+    "source_sha256": "3c133f5440a9971286500945ce58e51aa7563ad4ab9328e06d6369368b507814",
+    "published_sha256": "3c133f5440a9971286500945ce58e51aa7563ad4ab9328e06d6369368b507814",
+    "source_bytes": 92
+  },
+  "32/seed20261026/training-audit.json": {
+    "source": "data/raw/diverse-robustness-v32/seed20261026/training-audit.json",
+    "source_sha256": "bbb00e9e013749d0aa37938b6fd2cd7e32f353f49a92820cc70eac5f03a5e950",
+    "published_sha256": "bbb00e9e013749d0aa37938b6fd2cd7e32f353f49a92820cc70eac5f03a5e950",
+    "source_bytes": 20044
+  },
+  "32/trees540/results.json": {
+    "source": "data/raw/diverse-robustness-v32/trees540/results.json",
+    "source_sha256": "cb06313b0948d1dc165b24a2beed7fdffe855de812435d7f5dcc07071f700421",
+    "published_sha256": "cb06313b0948d1dc165b24a2beed7fdffe855de812435d7f5dcc07071f700421",
+    "source_bytes": 19129
+  },
+  "32/trees540/configuration-frozen.json": {
+    "source": "data/raw/diverse-robustness-v32/trees540/configuration-frozen.json",
+    "source_sha256": "6788465fcc11340c38db5741b229c464ba9e28b6119f387dd03e9bb5c210e634",
+    "published_sha256": "6788465fcc11340c38db5741b229c464ba9e28b6119f387dd03e9bb5c210e634",
+    "source_bytes": 1030
+  },
+  "32/trees540/started.json": {
+    "source": "data/raw/diverse-robustness-v32/trees540/started.json",
+    "source_sha256": "661228cb6d808808aa7434baa31b0314dcb4e8188005f8a0ce60422f869b9915",
+    "published_sha256": "661228cb6d808808aa7434baa31b0314dcb4e8188005f8a0ce60422f869b9915",
+    "source_bytes": 1096
+  },
+  "32/trees540/completed.json": {
+    "source": "data/raw/diverse-robustness-v32/trees540/completed.json",
+    "source_sha256": "f22b65cb3587f912f2caec8e09c78dadb798c2d9bde0f5e77bb10160392fe2ba",
+    "published_sha256": "f22b65cb3587f912f2caec8e09c78dadb798c2d9bde0f5e77bb10160392fe2ba",
+    "source_bytes": 92
+  },
+  "32/trees540/training-audit.json": {
+    "source": "data/raw/diverse-robustness-v32/trees540/training-audit.json",
+    "source_sha256": "d7287ef70fd345618152ff98115097df59c9b72001ade9f35d26cbadfa91c427",
+    "published_sha256": "d7287ef70fd345618152ff98115097df59c9b72001ade9f35d26cbadfa91c427",
+    "source_bytes": 20044
+  },
+  "32/trees660/results.json": {
+    "source": "data/raw/diverse-robustness-v32/trees660/results.json",
+    "source_sha256": "31ee3481b36f9d6f8aa7c1ba742ed2a828cb3709bb5cdd43ece675d1fa521065",
+    "published_sha256": "31ee3481b36f9d6f8aa7c1ba742ed2a828cb3709bb5cdd43ece675d1fa521065",
+    "source_bytes": 19093
+  },
+  "32/trees660/configuration-frozen.json": {
+    "source": "data/raw/diverse-robustness-v32/trees660/configuration-frozen.json",
+    "source_sha256": "60c5d152e529bf49248feb823804ad0ae6c52bc1e7183498f68a10b08ca01b4c",
+    "published_sha256": "60c5d152e529bf49248feb823804ad0ae6c52bc1e7183498f68a10b08ca01b4c",
+    "source_bytes": 1030
+  },
+  "32/trees660/started.json": {
+    "source": "data/raw/diverse-robustness-v32/trees660/started.json",
+    "source_sha256": "026f3fb86ddcdeaa52d1c7fa2302bc50519a9483a33c7f2921f3433513d5d4ce",
+    "published_sha256": "026f3fb86ddcdeaa52d1c7fa2302bc50519a9483a33c7f2921f3433513d5d4ce",
+    "source_bytes": 1096
+  },
+  "32/trees660/completed.json": {
+    "source": "data/raw/diverse-robustness-v32/trees660/completed.json",
+    "source_sha256": "2ac2ff27f7152e92b289a7bf3e07514143152c31672d39cb452d9085147ceaae",
+    "published_sha256": "2ac2ff27f7152e92b289a7bf3e07514143152c31672d39cb452d9085147ceaae",
+    "source_bytes": 92
+  },
+  "32/trees660/training-audit.json": {
+    "source": "data/raw/diverse-robustness-v32/trees660/training-audit.json",
+    "source_sha256": "c9937690553571c8e8b8a8513f7cb381257e3d36657ee8004f1d41ed1883c19c",
+    "published_sha256": "c9937690553571c8e8b8a8513f7cb381257e3d36657ee8004f1d41ed1883c19c",
+    "source_bytes": 20044
+  },
+  "33/results.json": {
+    "source": "data/raw/long-robustness-v33/results.json",
+    "source_sha256": "cce1d999e0e0c2430db13f11d18418695a9a9dbf828a22ffdd8293d01f3d307b",
+    "published_sha256": "cce1d999e0e0c2430db13f11d18418695a9a9dbf828a22ffdd8293d01f3d307b",
+    "source_bytes": 62732
+  },
+  "33/configuration-frozen.json": {
+    "source": "data/raw/long-robustness-v33/configuration-frozen.json",
+    "source_sha256": "2c20573fd7e61d7e1ac90d9865bcebc8cb7229262f12cfc47493c583a786e0b7",
+    "published_sha256": "2c20573fd7e61d7e1ac90d9865bcebc8cb7229262f12cfc47493c583a786e0b7",
+    "source_bytes": 341
+  },
+  "33/completed.json": {
+    "source": "data/raw/long-robustness-v33/completed.json",
+    "source_sha256": "3d3f7b2feb7518495dfb79ff3f23f5efc84ab7762e09cc4196110a4c8eacc23c",
+    "published_sha256": "3d3f7b2feb7518495dfb79ff3f23f5efc84ab7762e09cc4196110a4c8eacc23c",
+    "source_bytes": 92
+  },
+  "33/seed43/results.json": {
+    "source": "data/raw/long-robustness-v33/seed43/results.json",
+    "source_sha256": "224970e024d66dc809e74987ca2af1c0da80dbd5e36fe8467c1e78a59daed3c8",
+    "published_sha256": "224970e024d66dc809e74987ca2af1c0da80dbd5e36fe8467c1e78a59daed3c8",
+    "source_bytes": 17913
+  },
+  "33/seed43/configuration-frozen.json": {
+    "source": "data/raw/long-robustness-v33/seed43/configuration-frozen.json",
+    "source_sha256": "f3dbf65bcdc280d10fe427ffe5904ad64f6ac710823b6e6e9976776f174eabc4",
+    "published_sha256": "f3dbf65bcdc280d10fe427ffe5904ad64f6ac710823b6e6e9976776f174eabc4",
+    "source_bytes": 732
+  },
+  "33/seed43/completed.json": {
+    "source": "data/raw/long-robustness-v33/seed43/completed.json",
+    "source_sha256": "4210b2ce3e07aff299c93b60adff84cf0e2f07caafba90f688955e06d1b9c5bb",
+    "published_sha256": "4210b2ce3e07aff299c93b60adff84cf0e2f07caafba90f688955e06d1b9c5bb",
+    "source_bytes": 92
+  },
+  "33/seed43/training-audit.json": {
+    "source": "data/raw/long-robustness-v33/seed43/training-audit.json",
+    "source_sha256": "3961b195e160b825d3a7c865df4bb830059a7ebb1693995009947b70733767f2",
+    "published_sha256": "3961b195e160b825d3a7c865df4bb830059a7ebb1693995009947b70733767f2",
+    "source_bytes": 20044
+  },
+  "33/trees270/results.json": {
+    "source": "data/raw/long-robustness-v33/trees270/results.json",
+    "source_sha256": "a051ec4d3154397a7628fdfc3e5d818b416e51676aea11a2dead3f55a03153fb",
+    "published_sha256": "a051ec4d3154397a7628fdfc3e5d818b416e51676aea11a2dead3f55a03153fb",
+    "source_bytes": 17927
+  },
+  "33/trees270/configuration-frozen.json": {
+    "source": "data/raw/long-robustness-v33/trees270/configuration-frozen.json",
+    "source_sha256": "0e735943c5dfddfd24f61789e57dfef7aab7b9fe58e0dbef0ed5799d1c82e458",
+    "published_sha256": "0e735943c5dfddfd24f61789e57dfef7aab7b9fe58e0dbef0ed5799d1c82e458",
+    "source_bytes": 732
+  },
+  "33/trees270/completed.json": {
+    "source": "data/raw/long-robustness-v33/trees270/completed.json",
+    "source_sha256": "caa6abe092fd76622eb4b5bdf068c907f80affcf44b582494fd84cc0ac0e8469",
+    "published_sha256": "caa6abe092fd76622eb4b5bdf068c907f80affcf44b582494fd84cc0ac0e8469",
+    "source_bytes": 92
+  },
+  "33/trees270/training-audit.json": {
+    "source": "data/raw/long-robustness-v33/trees270/training-audit.json",
+    "source_sha256": "dd31f3831da5479f5c95858fa4a13db0b1a079a2da3bbc041e73eb9eed296ca7",
+    "published_sha256": "dd31f3831da5479f5c95858fa4a13db0b1a079a2da3bbc041e73eb9eed296ca7",
+    "source_bytes": 20044
+  },
+  "33/trees330/results.json": {
+    "source": "data/raw/long-robustness-v33/trees330/results.json",
+    "source_sha256": "691f380e7337e3e97e28112c9681e24db342a668ef3512e234c2906c94065578",
+    "published_sha256": "691f380e7337e3e97e28112c9681e24db342a668ef3512e234c2906c94065578",
+    "source_bytes": 17931
+  },
+  "33/trees330/configuration-frozen.json": {
+    "source": "data/raw/long-robustness-v33/trees330/configuration-frozen.json",
+    "source_sha256": "767f871e8dc3b110ef57dde80a530be1fb777bb1006e4f43199b235dac16de3d",
+    "published_sha256": "767f871e8dc3b110ef57dde80a530be1fb777bb1006e4f43199b235dac16de3d",
+    "source_bytes": 732
+  },
+  "33/trees330/completed.json": {
+    "source": "data/raw/long-robustness-v33/trees330/completed.json",
+    "source_sha256": "2d95b992d258187fa6f32308cdae53c8a649ef96e9b21ab164f731352abfc517",
+    "published_sha256": "2d95b992d258187fa6f32308cdae53c8a649ef96e9b21ab164f731352abfc517",
+    "source_bytes": 92
+  },
+  "33/trees330/training-audit.json": {
+    "source": "data/raw/long-robustness-v33/trees330/training-audit.json",
+    "source_sha256": "3fdd31f741f532a886cddb59bf62d168cfbbcae7a21226c8f12cedb95a661710",
+    "published_sha256": "3fdd31f741f532a886cddb59bf62d168cfbbcae7a21226c8f12cedb95a661710",
+    "source_bytes": 20044
+  },
+  "34/results.json": {
+    "source": "data/raw/rolling-reserve-quantiles-v34/results.json",
+    "source_sha256": "9c0945b851dc4de3b79ac931fe48d0a6029fa5130e0b58da0f6cf85ee09f2720",
+    "published_sha256": "9c0945b851dc4de3b79ac931fe48d0a6029fa5130e0b58da0f6cf85ee09f2720",
+    "source_bytes": 309078
+  },
+  "34/selection-frozen.json": {
+    "source": "data/raw/rolling-reserve-quantiles-v34/selection-frozen.json",
+    "source_sha256": "3f6a231eca75573e654ca93c836ebd6579d50ca30cb34ab80af60666e17532aa",
+    "published_sha256": "3f6a231eca75573e654ca93c836ebd6579d50ca30cb34ab80af60666e17532aa",
+    "source_bytes": 3383
+  },
+  "34/selection-lock.json": {
+    "source": "data/raw/rolling-reserve-quantiles-v34/selection-lock.json",
+    "source_sha256": "d9d299aadd203d183592914316de326bb45dff35e63a8e9773b6e938020f11e8",
+    "published_sha256": "d9d299aadd203d183592914316de326bb45dff35e63a8e9773b6e938020f11e8",
+    "source_bytes": 94
+  },
+  "34/started.json": {
+    "source": "data/raw/rolling-reserve-quantiles-v34/started.json",
+    "source_sha256": "ef6a2f45a25199bc33898f9539ababdf8b921bc38262d2f1e5e9e614c49dc369",
+    "published_sha256": "ef6a2f45a25199bc33898f9539ababdf8b921bc38262d2f1e5e9e614c49dc369",
+    "source_bytes": 1135
+  },
+  "34/completed.json": {
+    "source": "data/raw/rolling-reserve-quantiles-v34/completed.json",
+    "source_sha256": "22734cf1af8d196f9a3383002d53c9ac83eef3a107f47c15db6a5a6d69fb513a",
+    "published_sha256": "22734cf1af8d196f9a3383002d53c9ac83eef3a107f47c15db6a5a6d69fb513a",
+    "source_bytes": 183
+  },
+  "34/training-audit.json": {
+    "source": "data/raw/rolling-reserve-quantiles-v34/training-audit.json",
+    "source_sha256": "7d6284caf78089f2920ea81b892cbf26a669c15e40bd18d450c50faac289b5eb",
+    "published_sha256": "7d6284caf78089f2920ea81b892cbf26a669c15e40bd18d450c50faac289b5eb",
+    "source_bytes": 57926
+  },
+  "35/results.json": {
+    "source": "data/raw/block-mean-median-v35/results.json",
+    "source_sha256": "e34e60b932fc493ff925336a417357739cb68191197dfdf5fa59197efb761a51",
+    "published_sha256": "e34e60b932fc493ff925336a417357739cb68191197dfdf5fa59197efb761a51",
+    "source_bytes": 203553
+  },
+  "35/selection-frozen.json": {
+    "source": "data/raw/block-mean-median-v35/selection-frozen.json",
+    "source_sha256": "3bbe64228cc6c99f2f104c3566ad1fe2a2d984b375ededbf9a50575c30c09635",
+    "published_sha256": "3bbe64228cc6c99f2f104c3566ad1fe2a2d984b375ededbf9a50575c30c09635",
+    "source_bytes": 9022
+  },
+  "35/selection-lock.json": {
+    "source": "data/raw/block-mean-median-v35/selection-lock.json",
+    "source_sha256": "e0d333a37a67bb5f577caadaf68b88999d3e454451fa78dcbd13d9f12ea7d9c9",
+    "published_sha256": "e0d333a37a67bb5f577caadaf68b88999d3e454451fa78dcbd13d9f12ea7d9c9",
+    "source_bytes": 94
+  },
+  "35/started.json": {
+    "source": "data/raw/block-mean-median-v35/started.json",
+    "source_sha256": "1bc4e465fdbec281db120fbee81b9cae88131b1c3bf1ac643d27f6b3d1fbcadb",
+    "published_sha256": "1bc4e465fdbec281db120fbee81b9cae88131b1c3bf1ac643d27f6b3d1fbcadb",
+    "source_bytes": 978
+  },
+  "35/completed.json": {
+    "source": "data/raw/block-mean-median-v35/completed.json",
+    "source_sha256": "302dc57ae5ec790a267e16c1f95fd119dd2118791b0c7cf2e91a381c2b659c8f",
+    "published_sha256": "302dc57ae5ec790a267e16c1f95fd119dd2118791b0c7cf2e91a381c2b659c8f",
+    "source_bytes": 92
+  },
+  "35/by-company-and-period.json.gz": {
+    "source": "data/raw/block-mean-median-v35/by-company-and-period.json",
+    "source_sha256": "2eb628841470285aed966f6fd68844ebd3a3c88311404ceb58445cf22e3ede8d",
+    "published_sha256": "684d8144564933c3fec0bea68230ad38cd2637024c8c636f27ea21ee244cd9d1",
+    "source_bytes": 6586236
+  },
+  "runtime29/verification.json": {
+    "source": "data/raw/b-runtime29/verification.json",
+    "source_sha256": "59b9e1c9083ecf2db712713256c355a053965f9e41a04b54f98988664d51f234",
+    "published_sha256": "59b9e1c9083ecf2db712713256c355a053965f9e41a04b54f98988664d51f234",
+    "source_bytes": 1004
+  },
+  "runtime31/verification.json": {
+    "source": "data/raw/b-runtime31/verification.json",
+    "source_sha256": "4ef18f816df010c1c44e3fb54417c0a90d3b50e5c8b7f90bb68d2b5c19f44e83",
+    "published_sha256": "4ef18f816df010c1c44e3fb54417c0a90d3b50e5c8b7f90bb68d2b5c19f44e83",
+    "source_bytes": 1004
+  }
+}
