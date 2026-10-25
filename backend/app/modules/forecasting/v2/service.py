@@ -7,6 +7,8 @@ from dataclasses import replace
 
 from app.modules.contracts import Direction, ForecastInput, ForecastResult, RiskSummary
 from app.modules.forecasting.legacy_v1.seasonal import SeasonalForecastService
+from app.modules.forecasting.v2.incremental_engine import IncrementalSeasonalService
+from app.modules.forecasting.v2.incremental_state import STATE_KEY, IncrementalState
 from app.modules.forecasting.v2.legacy_limits import check_legacy_cost, check_output_budget
 from app.modules.forecasting.v2.quality import ForecastInputError, assess_quality, validate_input
 
@@ -19,7 +21,7 @@ class GuardedForecastService:
     def model_version(self) -> str:
         return MODEL_VERSION
 
-    def run(self, data: ForecastInput) -> ForecastResult:
+    def run(self, data: ForecastInput, *, state: dict | None = None) -> ForecastResult:
         data = validate_input(data)
         quality = assess_quality(data)
         clean = replace(
@@ -36,9 +38,14 @@ class GuardedForecastService:
             ],
             planned_events=[replace(event, direction=Direction(event.direction)) for event in data.planned_events],
         )
-        check_legacy_cost(clean)
+        prepared = IncrementalState.unpack(data, state)
+        if prepared is None:
+            check_legacy_cost(clean)
+        # Для дельты ресурсный guard выполняется по новым группам до календаря/исключений.
+        engine = IncrementalSeasonalService()
         try:
-            result = SeasonalForecastService().run(clean)
+            result = (SeasonalForecastService().run(clean) if data.scenario
+                      else engine.run(clean, prepared))
         except (ValueError, OverflowError) as error:
             code = "invalid_scenario" if data.scenario else "invalid_forecast_input"
             raise ForecastInputError(code, "Неподдерживаемые параметры или календарная граница расчёта") from error
@@ -136,6 +143,19 @@ class GuardedForecastService:
                 "scope": "Вероятность не выдаётся после аудита уже отрицательных остатков; None не означает0.",
             },
         }
+        details["calculation"] = {
+            "mode": "incremental" if prepared is not None else "full",
+            "reason": ("planned_events_changed" if state["fingerprint"] == IncrementalState.fingerprint(data)
+                       else "observed_data_changed") if prepared is not None else
+                      ("scenario_requires_full" if data.scenario else "no_compatible_checkpoint"),
+            "reused_history": prepared is not None,
+            "bootstrap_paths_generated": result.details["paths"] if data.scenario else
+                                         engine.metrics["bootstrap_paths_generated"],
+        }
+        if not data.scenario:
+            details["calculation"].update(engine.metrics)
+        if not data.scenario:
+            details[STATE_KEY] = IncrementalState.pack(data, engine.prepared)
         assumptions = [value for value in result.assumptions if "вероятности модельные" not in value]
         assumptions.append(
             "Эмпирические p10/p90 не являются подтверждённым доверительным интервалом нового кассового разрыва."
@@ -149,4 +169,9 @@ class GuardedForecastService:
                 ]
             )
         )
-        return ForecastResult(self.model_version, points, risk, assumptions, warnings, details)
+        output = ForecastResult(self.model_version, points, risk, assumptions, warnings, details)
+        return self.finalize_probability(result, output, quality, data)
+
+    def finalize_probability(self, raw, output, quality, data):
+        # Закреплённая версия2.0 сохраняет прежнюю политику и результаты старых заданий.
+        return output

@@ -21,25 +21,28 @@ export function ForecastHistory({ api, companyId, accountId, disabled, onOpen }:
     refetchInterval: query => query.state.data?.items.some(item => item.job_id
       && ["pending", "running"].includes(item.status)) ? 3000 : false,
   });
-  return <details><summary>История расчётов</summary>
-    <p>Открытие сохранённого результата не запускает новый расчёт. Сначала новые записи.</p>
+  return <section className="panel flat">
+    <div className="panel-head"><div><h2>Сохранённые расчёты</h2>
+      <span className="label">Открытие не запускает новый расчёт · сначала новые</span></div></div>
     {history.isPending && <p role="status">Загружаем историю…</p>}
     {history.error && <p role="alert">{history.error.message}</p>}
     {history.data && <>
-      {!history.data.items.length && <p>Сохранённых расчётов пока нет.</p>}
-      <div className="scroll"><table aria-label="История расчётов"><thead><tr>
-        <th>Создан</th><th>Дата среза</th><th>Вид</th><th>Модель</th><th>Состояние</th><th>Действие</th>
+      {!history.data.items.length && <div className="empty"><b>Сохранённых расчётов пока нет</b>Рассчитайте прогноз — он появится здесь.</div>}
+      {history.data.items.length > 0 && <div className="scroll"><table className="ops" aria-label="История расчётов"><thead><tr>
+        <th>Создан</th><th>Дата среза</th><th>Вид</th><th>Состояние</th><th>Действие</th>
       </tr></thead><tbody>{history.data.items.map(item => <tr key={item.id} data-testid={`history-row-${item.id}`}>
-        <td>{new Date(item.created_at).toLocaleString("ru-RU")}</td><td>{item.as_of}</td>
-        <td>{item.base_forecast_id ? "Сценарий" : "Прогноз"}</td><td>{item.model_version}</td>
-        <td>{statuses[item.status] ?? item.status}{item.error_code && `: ${item.error_code}`}</td>
-        <td><button type="button" disabled={disabled} onClick={() => onOpen(item)}>Открыть</button></td>
-      </tr>)}</tbody></table></div>
-      <div className="row">
-        <button type="button" disabled={!cursor || history.isFetching} onClick={() => setCursor(null)}>В начало истории</button>
+        <td className="mono nowrap">{new Date(item.created_at).toLocaleString("ru-RU")}</td>
+        <td className="mono">{item.as_of}</td>
+        <td>{item.base_forecast_id ? <span className="tag">Сценарий</span> : "Прогноз"}</td>
+        <td><span className={`tag${item.status === "succeeded" ? "" : item.status === "failed" ? " status-failed" : " status-partially_paid"}`}>
+          {statuses[item.status] ?? item.status}</span>{item.error_code && <small>{item.error_code}</small>}</td>
+        <td><button type="button" className="ghost" disabled={disabled} onClick={() => onOpen(item)}>Открыть</button></td>
+      </tr>)}</tbody></table></div>}
+      <div className="pager"><small>По 10 расчётов на странице.</small>
+        <button type="button" className="ghost" disabled={!cursor || history.isFetching} onClick={() => setCursor(null)}>В начало истории</button>
         <button type="button" disabled={!history.data.next_cursor || history.isFetching}
           onClick={() => setCursor(history.data!.next_cursor)}>Следующие 10 расчётов</button>
       </div>
     </>}
-  </details>;
+  </section>;
 }

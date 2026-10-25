@@ -1,0 +1,174 @@
+{
+  "version": "peers-0.1",
+  "note": "Медианы за последний год выписки по датасету участников (синтетика). Только агрегаты.",
+  "overall": {
+    "card_rate": {
+      "median": 0.01955,
+      "companies": 76
+    },
+    "sbp_rate": {
+      "median": 0.00534,
+      "companies": 76
+    },
+    "account_fee_monthly_minor": {
+      "median": 149000,
+      "companies": 123
+    }
+  },
+  "industries": {
+    "IT-услуги и разработка": {
+      "account_fee_monthly_minor": {
+        "median": 74000,
+        "companies": 12
+      }
+    },
+    "Автосервис": {
+      "card_rate": {
+        "median": 0.0198,
+        "companies": 10
+      },
+      "sbp_rate": {
+        "median": 0.00556,
+        "companies": 10
+      },
+      "account_fee_monthly_minor": {
+        "median": 124000,
+        "companies": 8
+      }
+    },
+    "Гостиница / база отдыха": {
+      "card_rate": {
+        "median": 0.01701,
+        "companies": 7
+      },
+      "sbp_rate": {
+        "median": 0.00507,
+        "companies": 7
+      },
+      "account_fee_monthly_minor": {
+        "median": 174000,
+        "companies": 6
+      }
+    },
+    "Грузоперевозки": {
+      "account_fee_monthly_minor": {
+        "median": 99000,
+        "companies": 8
+      }
+    },
+    "Медицинская клиника / стоматология": {
+      "card_rate": {
+        "median": 0.01769,
+        "companies": 7
+      },
+      "sbp_rate": {
+        "median": 0.00635,
+        "companies": 7
+      },
+      "account_fee_monthly_minor": {
+        "median": 99000,
+        "companies": 6
+      }
+    },
+    "Образовательный центр для детей": {
+      "card_rate": {
+        "median": 0.01841,
+        "companies": 8
+      },
+      "sbp_rate": {
+        "median": 0.00509,
+        "companies": 8
+      },
+      "account_fee_monthly_minor": {
+        "median": 149000,
+        "companies": 8
+      }
+    },
+    "Общепит (кофейня, кафе)": {
+      "card_rate": {
+        "median": 0.02083,
+        "companies": 14
+      },
+      "sbp_rate": {
+        "median": 0.00488,
+        "companies": 14
+      },
+      "account_fee_monthly_minor": {
+        "median": 149000,
+        "companies": 13
+      }
+    },
+    "Оптовая торговля": {
+      "account_fee_monthly_minor": {
+        "median": 199000,
+        "companies": 7
+      }
+    },
+    "Продажи на маркетплейсах": {
+      "account_fee_monthly_minor": {
+        "median": 174000,
+        "companies": 10
+      }
+    },
+    "Производство мебели на заказ": {
+      "account_fee_monthly_minor": {
+        "median": 174000,
+        "companies": 8
+      }
+    },
+    "Розница: одежда и обувь": {
+      "card_rate": {
+        "median": 0.01989,
+        "companies": 8
+      },
+      "sbp_rate": {
+        "median": 0.00623,
+        "companies": 8
+      },
+      "account_fee_monthly_minor": {
+        "median": 149000,
+        "companies": 7
+      }
+    },
+    "Розница: продуктовый магазин": {
+      "card_rate": {
+        "median": 0.02034,
+        "companies": 12
+      },
+      "sbp_rate": {
+        "median": 0.0052,
+        "companies": 12
+      },
+      "account_fee_monthly_minor": {
+        "median": 199000,
+        "companies": 9
+      }
+    },
+    "Салон красоты": {
+      "card_rate": {
+        "median": 0.02046,
+        "companies": 10
+      },
+      "sbp_rate": {
+        "median": 0.00506,
+        "companies": 10
+      },
+      "account_fee_monthly_minor": {
+        "median": 99000,
+        "companies": 7
+      }
+    },
+    "Сельское хозяйство (растениеводство)": {
+      "account_fee_monthly_minor": {
+        "median": 49000,
+        "companies": 6
+      }
+    },
+    "Строительство и ремонт": {
+      "account_fee_monthly_minor": {
+        "median": 224000,
+        "companies": 8
+      }
+    }
+  }
+}

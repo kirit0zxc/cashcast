@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
+import { SpecLines } from "../../ui/SpecChart";
 import { CashCastApi, money, probability, rublesToMinor,
   type Accepted, type Explanation, type Forecast, type Job } from "../../shared/api";
 
@@ -11,6 +12,9 @@ interface Comparison {
 }
 
 type ScenarioKind = "add_expense" | "delay_event" | "reduce_irregular_inflow" | "increase_recurring";
+
+const KIND_TITLES: Record<ScenarioKind, string> = { add_expense: "Дополнительный расход", delay_event: "Задержка поступления",
+  reduce_irregular_inflow: "Снижение нерегулярной выручки", increase_recurring: "Рост регулярного списания" };
 
 // Цели берём из сохранённого расчёта: сегодняшние планы могут отличаться от его снимка.
 export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast }) {
@@ -69,8 +73,9 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
   function submit(event: FormEvent) { event.preventDefault(); if (!canWrite) return; setAccepted(null); mutation.mutate(); }
   const last = comparison.data?.points.at(-1);
   if (!canWrite) return null;
-  return <section><h3>3. Проверка сценария</h3>
-    <form className="row" onSubmit={submit}>
+  return <>
+    <section className="panel dash"><span className="label">Изменение · {KIND_TITLES[kind]}</span>
+      <form className="row" onSubmit={submit}>
       <label>Вид сценария<select disabled={pending} value={kind} onChange={e => {
         setKind(e.target.value as ScenarioKind); setTarget(""); resetResult();
       }}><option value="add_expense">Дополнительный расход</option>
@@ -87,7 +92,7 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
         onChange={e => { setTarget(e.target.value); resetResult(); }}>
         {targets.length === 0 && <option value="">Нет подходящих платежей</option>}
         {targets.map(item => <option key={item.source_ref} value={item.source_ref!}>
-          {item.detail.date}: {money(item.amount_minor)} · {item.source_ref!.slice(0, 8)}
+          {item.detail.date}: {money(item.amount_minor)} · {item.label} · {item.source_ref}
         </option>)}
       </select></label>}
       {kind === "delay_event" && <label>Задержка, дней<input disabled={pending} type="number" required min={1} max={3650}
@@ -99,23 +104,42 @@ export function ScenarioPanel({ api, base }: { api: CashCastApi; base: Forecast 
     </form>
     {needsTarget && explanations.isPending && <p role="status">Получаем цели из базового расчёта…</p>}
     {needsTarget && explanations.error && <p role="alert">{explanations.error.message}</p>}
-    {needsTarget && explanations.data && targets.length === 0 && <p>
+    {needsTarget && explanations.data && targets.length === 0 && <p className="errors">
       {kind === "delay_event" ? "В сохранённой базе нет будущего поступления. Добавьте план и пересчитайте базу."
         : "В сохранённой базе нет регулярного списания. Нужна история с подтверждёнными повторами."}</p>}
-    <p>Сценарий использует сохранённую базу. Он не меняет выписку и реальные обязательства.</p>
     {pending && <p role="status">Считаем сценарий по сохранённой базе…</p>}
     {[mutation.error, job.error, comparison.error].filter(Boolean).map((e, i) => <p role="alert" key={i}>{e!.message}</p>)}
     {job.data?.status === "failed" && <p role="alert">Ошибка сценария: {job.data.error_code}</p>}
-    {comparison.data && last && <div data-testid="scenario-comparison">
-      <p>Изменение остатка в конце горизонта: <strong>{money(last.delta_balance_minor)}</strong>.</p>
-      <p>База: {money(last.base_balance_p50_minor)}. Сценарий: {money(last.scenario_balance_p50_minor)}.</p>
-      <p>Модельная вероятность минуса: {probability(comparison.data.risk.base.probability_any_negative)} → {probability(comparison.data.risk.scenario.probability_any_negative)}.</p>
-      <details><summary>Дневное сравнение</summary><div className="scroll"><table><thead><tr>
-        <th>Дата</th><th>База</th><th>Сценарий</th><th>Изменение</th></tr></thead><tbody>
-        {comparison.data.points.map(p => <tr key={p.point_date}><td>{p.point_date}</td>
-          <td>{money(p.base_balance_p50_minor)}</td><td>{money(p.scenario_balance_p50_minor)}</td>
-          <td>{money(p.delta_balance_minor)}</td></tr>)}
-      </tbody></table></div></details>
-    </div>}
-  </section>;
+    </section>
+    {comparison.data && last && <section data-testid="scenario-comparison">
+      <div className="kpis">
+        <div className="kpi"><span className="label">Разница на {last.point_date}</span>
+          <div className={`v${last.delta_balance_minor < 0 ? " neg" : ""}`}>{money(last.delta_balance_minor)}</div>
+          <div className="s">«что если» минус «как есть»</div></div>
+        <div className="kpi"><span className="label">База</span><div className="v">{money(last.base_balance_p50_minor)}</div>
+          <div className="s">{last.point_date}</div></div>
+        <div className="kpi"><span className="label">Сценарий</span><div className="v">{money(last.scenario_balance_p50_minor)}</div>
+          <div className="s">{last.point_date}</div></div>
+        <div className={`kpi${comparison.data.risk.scenario.probability_any_negative === null ? " na" : ""}`}>
+          <span className="label">Вероятность минуса</span>
+          <div className="v">{probability(comparison.data.risk.base.probability_any_negative)} → {probability(comparison.data.risk.scenario.probability_any_negative)}</div>
+          <div className="s">модельная, не откалибрована; база → сценарий</div></div>
+      </div>
+      <div className="panel" style={{ marginTop: 24 }}>
+        <span className="label">Медиана остатка · база и сценарий</span>
+        <SpecLines label="Сравнение: база и сценарий" dates={comparison.data.points.map(p => p.point_date)} series={[
+          { name: "сценарий", values: comparison.data.points.map(p => p.scenario_balance_p50_minor), style: "ink" },
+          { name: "база", values: comparison.data.points.map(p => p.base_balance_p50_minor), style: "dash" },
+        ]} />
+        <div className="legend"><span><i style={{ background: "var(--ink)" }} />сценарий</span>
+          <span><i style={{ background: "repeating-linear-gradient(90deg, var(--ink) 0 5px, transparent 5px 8px)" }} />база</span></div>
+        <details><summary>Дневное сравнение</summary><div className="scroll"><table className="ops"><thead><tr>
+          <th>Дата</th><th className="num">База</th><th className="num">Сценарий</th><th className="num">Изменение</th></tr></thead><tbody>
+          {comparison.data.points.map(p => <tr key={p.point_date}><td className="mono">{p.point_date}</td>
+            <td className="num">{money(p.base_balance_p50_minor)}</td><td className="num">{money(p.scenario_balance_p50_minor)}</td>
+            <td className={`num${p.delta_balance_minor < 0 ? " neg" : ""}`}>{money(p.delta_balance_minor)}</td></tr>)}
+        </tbody></table></div></details>
+      </div>
+    </section>}
+  </>;
 }

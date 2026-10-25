@@ -142,6 +142,7 @@ def build_snapshot(
             available_at=e.available_at.date(),
             counterparty_ref=e.counterparty_ref or e.counterparty_name,
             recurrence_group=e.recurrence_group,
+            category=e.category,
         )
         for e in events
         if e.available_at.date() <= as_of

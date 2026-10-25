@@ -3,7 +3,7 @@ import tseslint from "typescript-eslint";
 
 // Плоский конфиг ESLint 9. Базовые рекомендованные правила JS + TypeScript.
 export default tseslint.config(
-  { ignores: ["dist"] },
+  { ignores: ["dist", "src/vendor"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

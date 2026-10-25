@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { money, rublesToMinor } from "../src/shared/money.ts";
+import { minorToInput, money, rublesToMinor } from "../src/shared/money.ts";
+
+test("нулевая стоимость разрешена явно, обычный нулевой платёж и неверный ввод отвергаются", () => {
+  for (const value of ["0", "0.00", "0,0"]) assert.equal(rublesToMinor(value, true), 0);
+  assert.equal(rublesToMinor("0,01", true), 1);
+  assert.throws(() => rublesToMinor("0"));
+  for (const value of ["", "-0", "-1", "0.001", "Infinity", "90000000000000.01"]) {
+    assert.throws(() => rublesToMinor(value, true));
+  }
+});
 
 // Node24 читает этот чистый TS-модуль без нового test framework и транспилятора.
 test("допустимые большие суммы сохраняют каждую копейку и знак", () => {
@@ -30,4 +39,10 @@ test("ввод рублевой границы точен, лишние знак
   for (const value of ["90000000000000.01", "1.234", "1e9", "0", "-1", "Infinity"]) {
     assert.throws(() => rublesToMinor(value));
   }
+});
+
+test("сумма плана возвращается в поле ввода без потери копеек", () => {
+  assert.equal(minorToInput(123456), "1234,56");
+  assert.equal(minorToInput(5), "0,05");
+  assert.equal(rublesToMinor(minorToInput(900000000000001)), 900000000000001);
 });

@@ -1,0 +1,111 @@
+{
+  "protocol": "evaluation/REAL-DATA-PLAN.md",
+  "model": "research-berka-new-gap-catboost-v1",
+  "source_sha256": "75ab2f39df9d79d79c5c900de90ddd28248b689f214598ac9fa2ff0f574a70d2",
+  "audit": {
+    "accounts": 4500,
+    "invalid_days": 64911,
+    "excluded_windows": 107388
+  },
+  "train_folds": 21778,
+  "train_positives": 51,
+  "train_accounts": 2334,
+  "train_prior": 0.0023418128386445036,
+  "threshold": 0.05,
+  "validation_threshold_gate_passed": true,
+  "results": {
+    "validation": {
+      "folds": 12894,
+      "positives": 24,
+      "tp": 10,
+      "fp": 70,
+      "fn": 14,
+      "tn": 12800,
+      "precision": 0.125,
+      "recall": 0.4166666666666667,
+      "fpr": 0.005439005439005439,
+      "f2": 0.2840909090909091,
+      "roc_auc": 0.9092398342398342,
+      "average_precision": 0.08121848474335076,
+      "brier": 0.0019375933843974265,
+      "constant_brier": 0.0018580971619598134,
+      "accounts": 2947,
+      "actually_seen_in_fit_accounts": 2053,
+      "positive_accounts": 18
+    },
+    "test_development_accounts": {
+      "folds": 14572,
+      "positives": 51,
+      "tp": 16,
+      "fp": 78,
+      "fn": 35,
+      "tn": 14443,
+      "precision": 0.1702127659574468,
+      "recall": 0.3137254901960784,
+      "fpr": 0.005371530886302597,
+      "f2": 0.2684563758389262,
+      "roc_auc": 0.9510202262848532,
+      "average_precision": 0.16166701385193716,
+      "brier": 0.0032466658013261037,
+      "constant_brier": 0.003488954790806476,
+      "accounts": 3194,
+      "actually_seen_in_fit_accounts": 2048,
+      "positive_accounts": 42
+    },
+    "test_unseen_accounts": {
+      "folds": 3173,
+      "positives": 11,
+      "tp": 6,
+      "fp": 14,
+      "fn": 5,
+      "tn": 3148,
+      "precision": 0.3,
+      "recall": 0.5454545454545454,
+      "fpr": 0.004427577482605946,
+      "f2": 0.46875,
+      "roc_auc": 0.9565867402679546,
+      "average_precision": 0.3569993012083023,
+      "brier": 0.002977093117595365,
+      "constant_brier": 0.003455997833841401,
+      "accounts": 730,
+      "actually_seen_in_fit_accounts": 0,
+      "positive_accounts": 8
+    }
+  },
+  "production_activated": false,
+  "probability_calibrated": false,
+  "limitations": [
+    "retail_1990s_not_sme",
+    "dependent_windows_within_account",
+    "unreconciled_windows_excluded",
+    "negative_eod_is_proxy_not_unpaid_bill"
+  ],
+  "reproducibility": {
+    "python": "3.12.14",
+    "packages": {
+      "catboost": "1.2.8",
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "scipy": "1.18.1"
+    },
+    "source_sha256": {
+      "__init__.py": "16d82b6fb65debd7e27872f2b9be8dd46ec43c59a8f1367244405e927aeb98c8",
+      "berka.py": "463266fcd0bb4ac79ec276d142afd1e932b81dd8bd3eeb4d9b693cb69f847fb8",
+      "datasets.py": "90beff3ef27a8d1c8cf48a2f2cd028464b9f2fecdb1cfb3ffb3d21859f809d64",
+      "models.py": "face25b020f2fdc38d7fedb8ffeb76583f3cc0645125be464573c23330ac87f3",
+      "provenance.py": "939852599f7c6437acf5263fb78663ddbc25b161ad3888403b61af8427cfaf8b",
+      "risk.py": "6b19e6357cdad4abdd04d7bfaa3098967a47450ed47e7aa244fe2ee2e4c0d71e",
+      "run.py": "ba04a5eff5f30eae2dafb5cdebf849118b2257f2e53836c54c3ae64203a7a98f"
+    },
+    "weights_sha256": {
+      "risk.cbm": "fb3a072ee655297ba2781f0f44ec6db9b84729e26c6c462e16e5b8e16229a08b"
+    },
+    "parameters": {
+      "iterations": 300,
+      "depth": 4,
+      "learning_rate": 0.04,
+      "random_seed": 20261024,
+      "thread_count": 2
+    }
+  }
+}

@@ -149,11 +149,13 @@ def get_forecast(
         base_forecast_id=str(run.base_forecast_id) if run.base_forecast_id else None,
         assumptions=run.assumptions,
         data_warnings=run.data_warnings,
+        calculation=(run.details or {}).get("calculation"),
         risk=RiskOut(
             available=run.risk_available,
             first_negative_date=run.first_negative_date,
             max_deficit_minor=run.max_deficit_minor,
             probability_any_negative=run.probability_any_negative,
+            probability_status="estimated_uncalibrated" if run.probability_any_negative is not None else "unavailable",
         ),
         points=[
             ForecastPointOut(

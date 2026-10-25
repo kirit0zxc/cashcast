@@ -1,0 +1,7 @@
+# Эти исходники уже входят в проверенный manifest31/29 или журнал воспроизведения.
+# Сохраняем исходные байты CRLF и одну конечную пустую строку features31.
+long_history_features.py -text whitespace=cr-at-eol,-blank-at-eof
+long_runtime.py -text whitespace=cr-at-eol
+package_long.py -text whitespace=cr-at-eol
+verify_diverse_runtime.py -text whitespace=cr-at-eol
+verify_long_runtime.py -text whitespace=cr-at-eol

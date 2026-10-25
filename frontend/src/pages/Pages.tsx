@@ -1,0 +1,142 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { useState, type ReactNode } from "react";
+import { useAccount } from "../app/account-context";
+import { ASSISTANT_ROUTE, QUALITY_ROUTE, ROUTES, navigate, type RoutePath } from "../app/router";
+import { QualityPage } from "./QualityPage";
+import { ForecastPanel, ForecastState } from "../features/forecast/ForecastPanel";
+import { ScenarioPanel } from "../features/forecast/ScenarioPanel";
+import { StatementImport } from "../features/imports/StatementImport";
+import { ExternalSources } from "../features/imports/ExternalSources";
+import { ObligationImport } from "../features/planning/ObligationImport";
+import { PlanFactPanel } from "../features/planning/PlanFactPanel";
+import { PlannedEvents } from "../features/planning/PlannedEvents";
+import { PulsePanel } from "../features/pulse/PulsePanel";
+import { Transactions } from "../features/transactions/Transactions";
+import { AssistantPanel } from "../features/assistant/AssistantPanel";
+import { useCompanyCanWrite } from "../shared/company-permissions";
+import { Empty } from "../ui/Empty";
+import { Tabs, dmy } from "../ui/Blank";
+import { OverviewPage } from "./OverviewPage";
+import { EvaluationPanel } from "../features/evaluation/EvaluationPanel";
+
+// Переключение раздела только меняет видимую страницу: данные и выбранный расчёт
+// живут в AccountProvider, поэтому переход не отправляет POST и не создаёт job.
+export function Pages({ route }: { route: RoutePath }) {
+  switch (route) {
+    case "/evaluation": return <Page route={route} lead="Прогноз и факт на контрольном датасете, метрики и журнал расчёта."><EvaluationPanel /></Page>;
+    case "/overview": return <OverviewPage />;
+    case "/operations": return <Page route={route} lead="Все движения денег по счёту."
+      action={<ImportButton />}><OperationsPage /></Page>;
+    case "/import": return <Page route={route}
+      lead="Файл сначала проверяется, в кабинет попадает только после подтверждения."><ImportPage /></Page>;
+    case "/payments": return <Page route={route}><PaymentsPage /></Page>;
+    case "/reconciliation": return <Page route={route}><ReconciliationPage /></Page>;
+    case "/forecast": return <Page route={route}
+      lead="Сколько денег будет на счёте и когда может не хватить."><ForecastPanel /></Page>;
+    case "/scenarios": return <Page route={route}
+      lead="Что будет с остатком, если что-то пойдёт не по плану. Реальные данные не меняются."><ScenariosPage /></Page>;
+    case "/pulse": return <Page route={route}
+      lead="Касса, расходы и клиенты — что проверить и что сделать."><PulsePage /></Page>;
+    case "/quality": return <Page route={route}
+      lead="Как мы проверяли, можно ли заранее предсказать кассовый разрыв, и что получилось."><QualityPage /></Page>;
+    // Чат без заголовка страницы: сверху только переписка, снизу панель ввода.
+    case "/assistant": return <AssistantPage />;
+  }
+}
+
+function Page({ route, lead, action, children }: {
+  route: RoutePath; lead?: string; action?: ReactNode; children: ReactNode;
+}) {
+  const index = ROUTES.findIndex(r => r.path === route);
+  const title = index >= 0 ? ROUTES[index].title : route === QUALITY_ROUTE.path ? QUALITY_ROUTE.title : ASSISTANT_ROUTE.title;
+  const label = route === QUALITY_ROUTE.path ? "Справка" : `Раздел ${String(index >= 0 ? index + 1 : ROUTES.length + 1).padStart(2, "0")}`;
+  return <>
+    <div className="page-title"><div>
+      <span className="label">{label}</span>
+      <h1>{title}</h1>{lead && <p>{lead}</p>}</div>{action}</div>
+    {children}
+  </>;
+}
+
+function ImportButton() {
+  return useCompanyCanWrite()
+    ? <button type="button" className="ghost" onClick={() => navigate("/import")}>Импорт выписки</button> : null;
+}
+
+function OperationsPage() {
+  const { api, companyId, accountId, categoryChanged } = useAccount();
+  return <Transactions api={api} companyId={companyId} accountId={accountId} onChanged={categoryChanged} />;
+}
+
+function ImportPage() {
+  const { api, companyId, accountId, statementCommitted, plansChanged } = useAccount();
+  const canWrite = useCompanyCanWrite();
+  const cache = useQueryClient();
+  const [kind, setKind] = useState<"statement" | "obligations" | "external">("statement");
+  async function externalChanged() {
+    await cache.invalidateQueries({ queryKey: ["planned-events", companyId, accountId] });
+    plansChanged();
+  }
+  if (!canWrite) return <Empty title="Импорт доступен владельцу компании" text="В режиме чтения можно смотреть операции и сохранённые расчёты." />;
+  return <>
+    <Tabs label="Вид данных" value={kind} onChange={setKind}
+      items={[["statement", "Банковская выписка"], ["obligations", "Счета и обязательства"],
+        ["external", "Банк, 1С и налоги"]]} />
+    {kind === "statement"
+      ? <StatementImport api={api} companyId={companyId} accountId={accountId} onCommit={statementCommitted} />
+      : kind === "external" ? <ExternalSources api={api} companyId={companyId} accountId={accountId}
+        onChanged={externalChanged} />
+        : <ObligationImport api={api} companyId={companyId} accountId={accountId} onChanged={externalChanged} />}
+  </>;
+}
+
+function PaymentsPage() {
+  const { api, companyId, accountId, plansChanged } = useAccount();
+  return <PlannedEvents api={api} companyId={companyId} accountId={accountId} onChanged={plansChanged} />;
+}
+
+function ReconciliationPage() {
+  const { api, companyId, accountId, plansChanged } = useAccount();
+  return <PlanFactPanel api={api} companyId={companyId} accountId={accountId} onApplied={plansChanged} />;
+}
+
+// Сценарий строится от выбранной сохранённой базы; сценарий не подменяет базу.
+function ScenariosPage() {
+  const { api, forecast: c } = useAccount();
+  const canWrite = useCompanyCanWrite();
+  const f = c.forecast.data;
+  return <>
+    <ForecastState />
+    {!c.runId && !c.working && <Empty title="Нет выбранного расчёта"
+      text="Рассчитайте прогноз или откройте сохранённый в разделе «Прогноз»." />}
+    {f?.status === "succeeded" && <>
+      <section className="toolbar">
+        <span className="chip solid">база</span>
+        <span>прогноз от {dmy(f.as_of)}</span>
+        {f.base_forecast_id && <button type="button" className="ghost"
+          onClick={() => c.open({ id: f.base_forecast_id!, as_of: f.as_of, job_id: null, error_code: null })}>
+          Открыть исходный прогноз</button>}
+      </section>
+      {f.base_forecast_id
+        ? <Empty title="Открыт сохранённый сценарий" text="Новый сценарий строится от базового прогноза — откройте его кнопкой выше." />
+        : canWrite ? <ScenarioPanel key={f.id} api={api} base={f} />
+          : <Empty title="Сценарии запускает владелец компании" text="Сценарий создаёт отдельный расчёт на сервере." />}
+    </>}
+  </>;
+}
+
+function PulsePage() {
+  const { api, forecast: c } = useAccount();
+  const f = c.forecast.data;
+  return <>
+    <ForecastState />
+    {!c.runId && !c.working && <Empty title="Нет выбранного расчёта"
+      text="Пульс строится по сохранённому прогнозу. Рассчитайте его или откройте в разделе «Прогноз»." />}
+    {f?.status === "succeeded" && <PulsePanel key={f.id} api={api} forecastId={f.id} />}
+  </>;
+}
+
+// Ассистент — отдельная вкладка; история чата живёт в AccountProvider.
+function AssistantPage() {
+  return <AssistantPanel />;
+}

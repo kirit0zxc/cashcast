@@ -1,0 +1,919 @@
+{
+  "selected": {
+    "model": "candidate18",
+    "alpha": null,
+    "objective": 1.0,
+    "eligible": true
+  },
+  "trials": [
+    {
+      "model": "candidate18",
+      "alpha": null,
+      "objective": 1.0,
+      "eligible": true
+    },
+    {
+      "model": "residual0.0",
+      "alpha": 0.0,
+      "objective": 1.0121678771869325,
+      "eligible": false
+    },
+    {
+      "model": "residual0.25",
+      "alpha": 0.25,
+      "objective": 1.0092177493171988,
+      "eligible": false
+    },
+    {
+      "model": "residual0.5",
+      "alpha": 0.5,
+      "objective": 1.0075063567699016,
+      "eligible": false
+    },
+    {
+      "model": "residual1.0",
+      "alpha": 1.0,
+      "objective": 1.007539962160701,
+      "eligible": false
+    }
+  ],
+  "scores": {
+    "candidate18": {
+      "7": {
+        "windows": 268,
+        "days": 1876,
+        "companies": 104,
+        "mae_rub": 677343.6843176973,
+        "mse_rub2": 5458454450159.65,
+        "rmse_rub": 2336333.5485669957,
+        "final_mae_rub": 902840.9748880597,
+        "inflow_mae_rub": 171435.94761194027,
+        "outflow_mae_rub": 270899.8998454158,
+        "company_macro_mae_rub": 665275.7628777473,
+        "company_median_mae_rub": 199409.0904761905,
+        "cutoff_mae_rub": {
+          "2026-01-31": 540080.909212828,
+          "2026-02-28": 929461.4877051672,
+          "2026-03-31": 542510.5059210525
+        },
+        "cohorts": {
+          "short_history_mae_rub": 500432.7723214286,
+          "established_mae_rub": 682787.0969945054
+        },
+        "daily_negative": {
+          "n": 1876,
+          "positives": 77,
+          "tp": 76,
+          "fp": 27,
+          "fn": 1,
+          "tn": 1772,
+          "accuracy": 0.9850746268656716,
+          "precision": 0.7378640776699029,
+          "recall": 0.987012987012987,
+          "f1": 0.8444444444444444,
+          "f2": 0.9245742092457421
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 5,
+          "fn": 1,
+          "tn": 250,
+          "accuracy": 0.9765625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "14": {
+        "windows": 268,
+        "days": 3752,
+        "companies": 104,
+        "mae_rub": 843499.7293603412,
+        "mse_rub2": 6447010443168.019,
+        "rmse_rub": 2539096.383197774,
+        "final_mae_rub": 1031834.284738806,
+        "inflow_mae_rub": 187459.17578891257,
+        "outflow_mae_rub": 264431.47040778253,
+        "company_macro_mae_rub": 832763.5176625458,
+        "company_median_mae_rub": 268882.98404761904,
+        "cutoff_mae_rub": {
+          "2026-01-31": 721352.3455393587,
+          "2026-02-28": 1053456.0307294833,
+          "2026-03-31": 741322.772593985
+        },
+        "cohorts": {
+          "short_history_mae_rub": 927029.1634821428,
+          "established_mae_rub": 840929.5929258242
+        },
+        "daily_negative": {
+          "n": 3752,
+          "positives": 148,
+          "tp": 147,
+          "fp": 75,
+          "fn": 1,
+          "tn": 3529,
+          "accuracy": 0.9797441364605544,
+          "precision": 0.6621621621621622,
+          "recall": 0.9932432432432432,
+          "f1": 0.7945945945945946,
+          "f2": 0.902948402948403
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 6,
+          "fn": 1,
+          "tn": 249,
+          "accuracy": 0.97265625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "30": {
+        "windows": 268,
+        "days": 8040,
+        "companies": 104,
+        "mae_rub": 1041315.1300024876,
+        "mse_rub2": 8545297344654.67,
+        "rmse_rub": 2923234.055742829,
+        "final_mae_rub": 1198048.9537686568,
+        "inflow_mae_rub": 191191.00991169154,
+        "outflow_mae_rub": 276063.4059266169,
+        "company_macro_mae_rub": 1030075.9364989315,
+        "company_median_mae_rub": 368414.1803611111,
+        "cutoff_mae_rub": {
+          "2026-01-31": 948255.3103129253,
+          "2026-02-28": 1197904.6425851064,
+          "2026-03-31": 967636.8161447368
+        },
+        "cohorts": {
+          "short_history_mae_rub": 1068961.1432916666,
+          "established_mae_rub": 1040464.4834397436
+        },
+        "daily_negative": {
+          "n": 8040,
+          "positives": 316,
+          "tp": 314,
+          "fp": 191,
+          "fn": 2,
+          "tn": 7533,
+          "accuracy": 0.9759950248756218,
+          "precision": 0.6217821782178218,
+          "recall": 0.9936708860759493,
+          "f1": 0.7649208282582217,
+          "f2": 0.8875070661390616
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 2,
+          "tp": 0,
+          "fp": 6,
+          "fn": 2,
+          "tn": 248,
+          "accuracy": 0.96875,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      }
+    },
+    "blend75": {
+      "7": {
+        "windows": 268,
+        "days": 1876,
+        "companies": 104,
+        "mae_rub": 682662.2035341151,
+        "mse_rub2": 5255962232445.3125,
+        "rmse_rub": 2292588.5440796637,
+        "final_mae_rub": 901798.3292910447,
+        "inflow_mae_rub": 172796.84894989338,
+        "outflow_mae_rub": 271112.68222281453,
+        "company_macro_mae_rub": 669920.7099221612,
+        "company_median_mae_rub": 195640.4470238095,
+        "cutoff_mae_rub": {
+          "2026-01-31": 550163.954606414,
+          "2026-02-28": 907293.9725531916,
+          "2026-03-31": 575681.1786278196
+        },
+        "cohorts": {
+          "short_history_mae_rub": 499745.9746428571,
+          "established_mae_rub": 688290.3951923077
+        },
+        "daily_negative": {
+          "n": 1876,
+          "positives": 77,
+          "tp": 76,
+          "fp": 27,
+          "fn": 1,
+          "tn": 1772,
+          "accuracy": 0.9850746268656716,
+          "precision": 0.7378640776699029,
+          "recall": 0.987012987012987,
+          "f1": 0.8444444444444444,
+          "f2": 0.9245742092457421
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 5,
+          "fn": 1,
+          "tn": 250,
+          "accuracy": 0.9765625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "14": {
+        "windows": 268,
+        "days": 3752,
+        "companies": 104,
+        "mae_rub": 847997.5644829425,
+        "mse_rub2": 6299621479013.024,
+        "rmse_rub": 2509904.675284108,
+        "final_mae_rub": 1048835.4401492537,
+        "inflow_mae_rub": 190866.40542110874,
+        "outflow_mae_rub": 268036.25161513855,
+        "company_macro_mae_rub": 836890.2638026556,
+        "company_median_mae_rub": 268302.3710714285,
+        "cutoff_mae_rub": {
+          "2026-01-31": 724131.4320262391,
+          "2026-02-28": 1046516.5296048633,
+          "2026-03-31": 762183.0678947369
+        },
+        "cohorts": {
+          "short_history_mae_rub": 921278.2344642857,
+          "established_mae_rub": 845742.7746373626
+        },
+        "daily_negative": {
+          "n": 3752,
+          "positives": 148,
+          "tp": 147,
+          "fp": 72,
+          "fn": 1,
+          "tn": 3532,
+          "accuracy": 0.980543710021322,
+          "precision": 0.6712328767123288,
+          "recall": 0.9932432432432432,
+          "f1": 0.8010899182561307,
+          "f2": 0.906288532675709
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 5,
+          "fn": 1,
+          "tn": 250,
+          "accuracy": 0.9765625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "30": {
+        "windows": 268,
+        "days": 8040,
+        "companies": 104,
+        "mae_rub": 1040870.7670920398,
+        "mse_rub2": 8353220374515.189,
+        "rmse_rub": 2890193.8299213066,
+        "final_mae_rub": 1198048.9537686568,
+        "inflow_mae_rub": 192278.6026380597,
+        "outflow_mae_rub": 281141.947130597,
+        "company_macro_mae_rub": 1029168.9341068375,
+        "company_median_mae_rub": 364769.5637222222,
+        "cutoff_mae_rub": {
+          "2026-01-31": 938644.1955204081,
+          "2026-02-28": 1198574.0479219859,
+          "2026-03-31": 977635.1830921052
+        },
+        "cohorts": {
+          "short_history_mae_rub": 1057312.049375,
+          "established_mae_rub": 1040364.8814833333
+        },
+        "daily_negative": {
+          "n": 8040,
+          "positives": 316,
+          "tp": 314,
+          "fp": 185,
+          "fn": 2,
+          "tn": 7539,
+          "accuracy": 0.9767412935323383,
+          "precision": 0.6292585170340681,
+          "recall": 0.9936708860759493,
+          "f1": 0.7705521472392638,
+          "f2": 0.8905275099262621
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 2,
+          "tp": 0,
+          "fp": 6,
+          "fn": 2,
+          "tn": 248,
+          "accuracy": 0.96875,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      }
+    },
+    "residual0.0": {
+      "7": {
+        "windows": 268,
+        "days": 1876,
+        "companies": 104,
+        "mae_rub": 691842.6846002132,
+        "mse_rub2": 5100455409672.565,
+        "rmse_rub": 2258418.7852726886,
+        "final_mae_rub": 906589.0235447761,
+        "inflow_mae_rub": 171435.94761194027,
+        "outflow_mae_rub": 270899.8998454158,
+        "company_macro_mae_rub": 678289.4045810439,
+        "company_median_mae_rub": 193871.0027380952,
+        "cutoff_mae_rub": {
+          "2026-01-31": 563751.9654227404,
+          "2026-02-28": 889354.1208966564,
+          "2026-03-31": 612721.8354887218
+        },
+        "cohorts": {
+          "short_history_mae_rub": 501125.56,
+          "established_mae_rub": 697710.9038186813
+        },
+        "daily_negative": {
+          "n": 1876,
+          "positives": 77,
+          "tp": 76,
+          "fp": 31,
+          "fn": 1,
+          "tn": 1768,
+          "accuracy": 0.9829424307036247,
+          "precision": 0.7102803738317757,
+          "recall": 0.987012987012987,
+          "f1": 0.8260869565217391,
+          "f2": 0.9156626506024096
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 6,
+          "fn": 1,
+          "tn": 249,
+          "accuracy": 0.97265625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "14": {
+        "windows": 268,
+        "days": 3752,
+        "companies": 104,
+        "mae_rub": 851788.649848081,
+        "mse_rub2": 6215909686062.944,
+        "rmse_rub": 2493172.6145742387,
+        "final_mae_rub": 1031834.284738806,
+        "inflow_mae_rub": 187459.17578891257,
+        "outflow_mae_rub": 264431.47040778253,
+        "company_macro_mae_rub": 839206.2338953755,
+        "company_median_mae_rub": 274080.3847619047,
+        "cutoff_mae_rub": {
+          "2026-01-31": 740556.2504518952,
+          "2026-02-28": 1014682.5361778117,
+          "2026-03-31": 793745.8843984962
+        },
+        "cohorts": {
+          "short_history_mae_rub": 946753.3851785715,
+          "established_mae_rub": 848866.6579917583
+        },
+        "daily_negative": {
+          "n": 3752,
+          "positives": 148,
+          "tp": 147,
+          "fp": 83,
+          "fn": 1,
+          "tn": 3521,
+          "accuracy": 0.9776119402985075,
+          "precision": 0.6391304347826087,
+          "recall": 0.9932432432432432,
+          "f1": 0.7777777777777778,
+          "f2": 0.8941605839416058
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 6,
+          "fn": 1,
+          "tn": 249,
+          "accuracy": 0.97265625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "30": {
+        "windows": 268,
+        "days": 8040,
+        "companies": 104,
+        "mae_rub": 1046804.041340796,
+        "mse_rub2": 8566535086186.995,
+        "rmse_rub": 2926864.377826037,
+        "final_mae_rub": 1201201.498358209,
+        "inflow_mae_rub": 191191.00991169154,
+        "outflow_mae_rub": 276063.4059266169,
+        "company_macro_mae_rub": 1036331.5460502137,
+        "company_median_mae_rub": 386792.1337222222,
+        "cutoff_mae_rub": {
+          "2026-01-31": 966873.1514319729,
+          "2026-02-28": 1171176.7094574468,
+          "2026-03-31": 996043.4677631579
+        },
+        "cohorts": {
+          "short_history_mae_rub": 1077156.13375,
+          "established_mae_rub": 1045870.1308051283
+        },
+        "daily_negative": {
+          "n": 8040,
+          "positives": 316,
+          "tp": 314,
+          "fp": 202,
+          "fn": 2,
+          "tn": 7522,
+          "accuracy": 0.9746268656716418,
+          "precision": 0.6085271317829457,
+          "recall": 0.9936708860759493,
+          "f1": 0.7548076923076923,
+          "f2": 0.8820224719101124
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 2,
+          "tp": 0,
+          "fp": 6,
+          "fn": 2,
+          "tn": 248,
+          "accuracy": 0.96875,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      }
+    },
+    "residual0.25": {
+      "7": {
+        "windows": 268,
+        "days": 1876,
+        "companies": 104,
+        "mae_rub": 689857.67695629,
+        "mse_rub2": 5071930713516.18,
+        "rmse_rub": 2252094.739018805,
+        "final_mae_rub": 903704.5405597015,
+        "inflow_mae_rub": 171435.94761194027,
+        "outflow_mae_rub": 270899.8998454158,
+        "company_macro_mae_rub": 675974.9759684067,
+        "company_median_mae_rub": 195497.98154761904,
+        "cutoff_mae_rub": {
+          "2026-01-31": 563124.5915451894,
+          "2026-02-28": 885017.2971428571,
+          "2026-03-31": 611895.020018797
+        },
+        "cohorts": {
+          "short_history_mae_rub": 498682.0196428572,
+          "established_mae_rub": 695740.0048736263
+        },
+        "daily_negative": {
+          "n": 1876,
+          "positives": 77,
+          "tp": 76,
+          "fp": 31,
+          "fn": 1,
+          "tn": 1768,
+          "accuracy": 0.9829424307036247,
+          "precision": 0.7102803738317757,
+          "recall": 0.987012987012987,
+          "f1": 0.8260869565217391,
+          "f2": 0.9156626506024096
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 6,
+          "fn": 1,
+          "tn": 249,
+          "accuracy": 0.97265625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "14": {
+        "windows": 268,
+        "days": 3752,
+        "companies": 104,
+        "mae_rub": 849533.4447254797,
+        "mse_rub2": 6175536938078.539,
+        "rmse_rub": 2485062.7634083084,
+        "final_mae_rub": 1030384.6326492538,
+        "inflow_mae_rub": 187459.17578891257,
+        "outflow_mae_rub": 264431.47040778253,
+        "company_macro_mae_rub": 836154.5616723901,
+        "company_median_mae_rub": 274909.3459523809,
+        "cutoff_mae_rub": {
+          "2026-01-31": 739122.5069241982,
+          "2026-02-28": 1007406.8337082068,
+          "2026-03-31": 796640.988674812
+        },
+        "cohorts": {
+          "short_history_mae_rub": 939276.5580357143,
+          "established_mae_rub": 846772.118162088
+        },
+        "daily_negative": {
+          "n": 3752,
+          "positives": 148,
+          "tp": 147,
+          "fp": 83,
+          "fn": 1,
+          "tn": 3521,
+          "accuracy": 0.9776119402985075,
+          "precision": 0.6391304347826087,
+          "recall": 0.9932432432432432,
+          "f1": 0.7777777777777778,
+          "f2": 0.8941605839416058
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 6,
+          "fn": 1,
+          "tn": 249,
+          "accuracy": 0.97265625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "30": {
+        "windows": 268,
+        "days": 8040,
+        "companies": 104,
+        "mae_rub": 1043423.7469415423,
+        "mse_rub2": 8535377867683.391,
+        "rmse_rub": 2921536.9016466984,
+        "final_mae_rub": 1195281.1767164178,
+        "inflow_mae_rub": 191191.00991169154,
+        "outflow_mae_rub": 276063.4059266169,
+        "company_macro_mae_rub": 1032345.6863247863,
+        "company_median_mae_rub": 381576.99630555557,
+        "cutoff_mae_rub": {
+          "2026-01-31": 957035.3881496598,
+          "2026-02-28": 1173917.5916702126,
+          "2026-03-31": 993418.9805877194
+        },
+        "cohorts": {
+          "short_history_mae_rub": 1067867.113541667,
+          "established_mae_rub": 1042671.6433538463
+        },
+        "daily_negative": {
+          "n": 8040,
+          "positives": 316,
+          "tp": 314,
+          "fp": 202,
+          "fn": 2,
+          "tn": 7522,
+          "accuracy": 0.9746268656716418,
+          "precision": 0.6085271317829457,
+          "recall": 0.9936708860759493,
+          "f1": 0.7548076923076923,
+          "f2": 0.8820224719101124
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 2,
+          "tp": 0,
+          "fp": 6,
+          "fn": 2,
+          "tn": 248,
+          "accuracy": 0.96875,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      }
+    },
+    "residual0.5": {
+      "7": {
+        "windows": 268,
+        "days": 1876,
+        "companies": 104,
+        "mae_rub": 688091.6375959489,
+        "mse_rub2": 5045388553838.223,
+        "rmse_rub": 2246194.237780478,
+        "final_mae_rub": 901296.3738432836,
+        "inflow_mae_rub": 171435.94761194027,
+        "outflow_mae_rub": 270899.8998454158,
+        "company_macro_mae_rub": 673855.8798305863,
+        "company_median_mae_rub": 197386.1219047619,
+        "cutoff_mae_rub": {
+          "2026-01-31": 562758.4024198252,
+          "2026-02-28": 880834.7304711248,
+          "2026-03-31": 611312.7733458647
+        },
+        "cohorts": {
+          "short_history_mae_rub": 496773.82196428574,
+          "established_mae_rub": 693978.3396153847
+        },
+        "daily_negative": {
+          "n": 1876,
+          "positives": 77,
+          "tp": 76,
+          "fp": 30,
+          "fn": 1,
+          "tn": 1769,
+          "accuracy": 0.9834754797441365,
+          "precision": 0.7169811320754716,
+          "recall": 0.987012987012987,
+          "f1": 0.8306010928961749,
+          "f2": 0.9178743961352657
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 6,
+          "fn": 1,
+          "tn": 249,
+          "accuracy": 0.97265625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "14": {
+        "windows": 268,
+        "days": 3752,
+        "companies": 104,
+        "mae_rub": 847935.188358209,
+        "mse_rub2": 6142350882282.661,
+        "rmse_rub": 2478376.662713451,
+        "final_mae_rub": 1030453.6141791046,
+        "inflow_mae_rub": 187459.17578891257,
+        "outflow_mae_rub": 264431.47040778253,
+        "company_macro_mae_rub": 833698.6408276099,
+        "company_median_mae_rub": 278382.9632142857,
+        "cutoff_mae_rub": {
+          "2026-01-31": 738362.9477259475,
+          "2026-02-28": 1000565.073237082,
+          "2026-03-31": 800446.6410338345
+        },
+        "cohorts": {
+          "short_history_mae_rub": 932319.7971428571,
+          "established_mae_rub": 845338.7388571429
+        },
+        "daily_negative": {
+          "n": 3752,
+          "positives": 148,
+          "tp": 147,
+          "fp": 82,
+          "fn": 1,
+          "tn": 3522,
+          "accuracy": 0.9778784648187633,
+          "precision": 0.6419213973799127,
+          "recall": 0.9932432432432432,
+          "f1": 0.7798408488063661,
+          "f2": 0.8952496954933008
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 6,
+          "fn": 1,
+          "tn": 249,
+          "accuracy": 0.97265625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "30": {
+        "windows": 268,
+        "days": 8040,
+        "companies": 104,
+        "mae_rub": 1042765.5481890548,
+        "mse_rub2": 8536848977765.754,
+        "rmse_rub": 2921788.660694978,
+        "final_mae_rub": 1196826.5588432834,
+        "inflow_mae_rub": 191191.00991169154,
+        "outflow_mae_rub": 276063.4059266169,
+        "company_macro_mae_rub": 1030940.8895502136,
+        "company_median_mae_rub": 375643.6833888889,
+        "cutoff_mae_rub": {
+          "2026-01-31": 951102.1189863945,
+          "2026-02-28": 1178947.885262411,
+          "2026-03-31": 992527.0794649124
+        },
+        "cohorts": {
+          "short_history_mae_rub": 1059435.7614166667,
+          "established_mae_rub": 1042252.618551282
+        },
+        "daily_negative": {
+          "n": 8040,
+          "positives": 316,
+          "tp": 314,
+          "fp": 201,
+          "fn": 2,
+          "tn": 7523,
+          "accuracy": 0.9747512437810946,
+          "precision": 0.6097087378640776,
+          "recall": 0.9936708860759493,
+          "f1": 0.7557160048134778,
+          "f2": 0.8825182686902754
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 2,
+          "tp": 0,
+          "fp": 6,
+          "fn": 2,
+          "tn": 248,
+          "accuracy": 0.96875,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      }
+    },
+    "residual1.0": {
+      "7": {
+        "windows": 268,
+        "days": 1876,
+        "companies": 104,
+        "mae_rub": 685238.6478731344,
+        "mse_rub2": 4998251840035.667,
+        "rmse_rub": 2235677.0428744103,
+        "final_mae_rub": 897040.6608955225,
+        "inflow_mae_rub": 171435.94761194027,
+        "outflow_mae_rub": 270899.8998454158,
+        "company_macro_mae_rub": 670213.4282898351,
+        "company_median_mae_rub": 202088.3123809524,
+        "cutoff_mae_rub": {
+          "2026-01-31": 562566.5420845482,
+          "2026-02-28": 872776.5191641338,
+          "2026-03-31": 611466.3645300751
+        },
+        "cohorts": {
+          "short_history_mae_rub": 492971.0139285714,
+          "established_mae_rub": 691154.5750714287
+        },
+        "daily_negative": {
+          "n": 1876,
+          "positives": 77,
+          "tp": 76,
+          "fp": 27,
+          "fn": 1,
+          "tn": 1772,
+          "accuracy": 0.9850746268656716,
+          "precision": 0.7378640776699029,
+          "recall": 0.987012987012987,
+          "f1": 0.8444444444444444,
+          "f2": 0.9245742092457421
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 5,
+          "fn": 1,
+          "tn": 250,
+          "accuracy": 0.9765625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "14": {
+        "windows": 268,
+        "days": 3752,
+        "companies": 104,
+        "mae_rub": 847227.3614712154,
+        "mse_rub2": 6097538844654.718,
+        "rmse_rub": 2469319.5104430527,
+        "final_mae_rub": 1044450.3559328357,
+        "inflow_mae_rub": 187459.17578891257,
+        "outflow_mae_rub": 264431.47040778253,
+        "company_macro_mae_rub": 831017.5793372254,
+        "company_median_mae_rub": 281694.1109523809,
+        "cutoff_mae_rub": {
+          "2026-01-31": 737894.5112755102,
+          "2026-02-28": 988830.0216185409,
+          "2026-03-31": 813069.062330827
+        },
+        "cohorts": {
+          "short_history_mae_rub": 919319.2139285712,
+          "established_mae_rub": 845009.1506263737
+        },
+        "daily_negative": {
+          "n": 3752,
+          "positives": 148,
+          "tp": 147,
+          "fp": 72,
+          "fn": 1,
+          "tn": 3532,
+          "accuracy": 0.980543710021322,
+          "precision": 0.6712328767123288,
+          "recall": 0.9932432432432432,
+          "f1": 0.8010899182561307,
+          "f2": 0.906288532675709
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 1,
+          "tp": 0,
+          "fp": 5,
+          "fn": 1,
+          "tn": 250,
+          "accuracy": 0.9765625,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      },
+      "30": {
+        "windows": 268,
+        "days": 8040,
+        "companies": 104,
+        "mae_rub": 1048130.4014253732,
+        "mse_rub2": 8637676182610.618,
+        "rmse_rub": 2938992.375391712,
+        "final_mae_rub": 1222610.5574999999,
+        "inflow_mae_rub": 191191.00991169154,
+        "outflow_mae_rub": 276063.4059266169,
+        "company_macro_mae_rub": 1034103.1039893164,
+        "company_median_mae_rub": 386869.1979166667,
+        "cutoff_mae_rub": {
+          "2026-01-31": 944013.6109081634,
+          "2026-02-28": 1193884.4437624114,
+          "2026-03-31": 1002111.5263070175
+        },
+        "cohorts": {
+          "short_history_mae_rub": 1045228.558625,
+          "established_mae_rub": 1048219.6888961538
+        },
+        "daily_negative": {
+          "n": 8040,
+          "positives": 316,
+          "tp": 314,
+          "fp": 176,
+          "fn": 2,
+          "tn": 7548,
+          "accuracy": 0.9778606965174129,
+          "precision": 0.6408163265306123,
+          "recall": 0.9936708860759493,
+          "f1": 0.7791563275434243,
+          "f2": 0.895096921322691
+        },
+        "new_gap_point": {
+          "n": 256,
+          "positives": 2,
+          "tp": 0,
+          "fp": 6,
+          "fn": 2,
+          "tn": 248,
+          "accuracy": 0.96875,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "f2": 0.0
+        }
+      }
+    }
+  },
+  "selection": "development January-March only"
+}

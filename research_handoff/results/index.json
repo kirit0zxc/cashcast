@@ -1,0 +1,152 @@
+{
+  "24/report.json": {
+    "source": "data/raw/b-research-audit24/report.json",
+    "source_sha256": "65be4e33c82ba828ce061a348e2810ff75dbd159f2dd1a988a8fa2f128da6993",
+    "published_sha256": "65be4e33c82ba828ce061a348e2810ff75dbd159f2dd1a988a8fa2f128da6993",
+    "source_bytes": 649156
+  },
+  "24/by-company-and-period.json.gz": {
+    "source": "data/raw/b-research-audit24/by-company-and-period.json",
+    "source_sha256": "bbe0e14a3bd4a0fe257697118ea06c4ff056b308ecde889a678a07d30a2c3672",
+    "published_sha256": "ac18e224b1b5c2cb73c1007aca27ec543da7dbc2f2fb6cefefc685df4de33297",
+    "source_bytes": 8365666
+  },
+  "25/results.json": {
+    "source": "data/raw/company-crossfit-v25/results.json",
+    "source_sha256": "05b318bb37780cbdf0038238bd75d675304935af2de910aa48ed4e52a7b042b5",
+    "published_sha256": "05b318bb37780cbdf0038238bd75d675304935af2de910aa48ed4e52a7b042b5",
+    "source_bytes": 192630
+  },
+  "25/selection-frozen.json": {
+    "source": "data/raw/company-crossfit-v25/selection-frozen.json",
+    "source_sha256": "23444d4f37ceb69ee09adaa77e403334a73d446ab86c6a0fb8a3efe38c9ab042",
+    "published_sha256": "23444d4f37ceb69ee09adaa77e403334a73d446ab86c6a0fb8a3efe38c9ab042",
+    "source_bytes": 2984
+  },
+  "25/training-audit.json": {
+    "source": "data/raw/company-crossfit-v25/training-audit.json",
+    "source_sha256": "599736e54ba68d0677ebc2e2625e2adb063f9bbe1bc586e8d825a2c477222140",
+    "published_sha256": "599736e54ba68d0677ebc2e2625e2adb063f9bbe1bc586e8d825a2c477222140",
+    "source_bytes": 20044
+  },
+  "25/started.json": {
+    "source": "data/raw/company-crossfit-v25/started.json",
+    "source_sha256": "c8f0604d8d194e06ae4257b841c0bf06dcbf71bdf90a65016543ee70bcda7b35",
+    "published_sha256": "c8f0604d8d194e06ae4257b841c0bf06dcbf71bdf90a65016543ee70bcda7b35",
+    "source_bytes": 925
+  },
+  "25/completed.json": {
+    "source": "data/raw/company-crossfit-v25/completed.json",
+    "source_sha256": "9265d2222e6fb35693b77fdab9cdf5660321b9ea7a90f9f073acd1d121ddbc59",
+    "published_sha256": "9265d2222e6fb35693b77fdab9cdf5660321b9ea7a90f9f073acd1d121ddbc59",
+    "source_bytes": 200
+  },
+  "26/results.json": {
+    "source": "data/raw/chronos-residual-v26/results.json",
+    "source_sha256": "689122627d9638ecd71b4961b64e34779ac160cc1e6b3e90630fc2e80bfaa698",
+    "published_sha256": "689122627d9638ecd71b4961b64e34779ac160cc1e6b3e90630fc2e80bfaa698",
+    "source_bytes": 125054
+  },
+  "26/by-company-and-period.json.gz": {
+    "source": "data/raw/chronos-residual-v26/by-company-and-period.json",
+    "source_sha256": "2e04d6e6e61921212643769c06ea28172bd9da1e9212a13603bd6ec367f17e0a",
+    "published_sha256": "e75afdc0fdf77fdfbff7538bde2eee500f002af70ec8e24eb910c13fafdeb1dd",
+    "source_bytes": 6587703
+  },
+  "26/selection-frozen.json": {
+    "source": "data/raw/chronos-residual-v26/selection-frozen.json",
+    "source_sha256": "e0843a073a93be03131c72942aebfce008837a7ebd55453cd35e28c276e3dd44",
+    "published_sha256": "e0843a073a93be03131c72942aebfce008837a7ebd55453cd35e28c276e3dd44",
+    "source_bytes": 27266
+  },
+  "26/started.json": {
+    "source": "data/raw/chronos-residual-v26/started.json",
+    "source_sha256": "c50d699efc14a69b118b9c3828d6f7dfff035539537160fb170db26dca6af4fa",
+    "published_sha256": "c50d699efc14a69b118b9c3828d6f7dfff035539537160fb170db26dca6af4fa",
+    "source_bytes": 792
+  },
+  "26/completed.json": {
+    "source": "data/raw/chronos-residual-v26/completed.json",
+    "source_sha256": "1e4a9e92e27c6965b5a90143d085cc573891b45f574d262dde078a8cf4e47878",
+    "published_sha256": "1e4a9e92e27c6965b5a90143d085cc573891b45f574d262dde078a8cf4e47878",
+    "source_bytes": 92
+  },
+  "27/results.json": {
+    "source": "data/raw/weighted-reconciliation-v27/results.json",
+    "source_sha256": "95faf98505caf32e96f70467831a2f5c5e32b0b3385a5341b4f8d12e9a769ad1",
+    "published_sha256": "95faf98505caf32e96f70467831a2f5c5e32b0b3385a5341b4f8d12e9a769ad1",
+    "source_bytes": 125566
+  },
+  "27/by-company-and-period.json.gz": {
+    "source": "data/raw/weighted-reconciliation-v27/by-company-and-period.json",
+    "source_sha256": "e1d32487cf54046ad64591ffd83d2fd4905b38515daae66c451d7b0983126c4f",
+    "published_sha256": "5df1b534c8c34d3f63d646fc0b45bc6176db22065a1ce3ec91d7d7ca985e074d",
+    "source_bytes": 3927782
+  },
+  "27/selection-frozen.json": {
+    "source": "data/raw/weighted-reconciliation-v27/selection-frozen.json",
+    "source_sha256": "8c5545916570b0961c45ad9e74e47a51130331bf59d1252d491173e2ce1fb49d",
+    "published_sha256": "8c5545916570b0961c45ad9e74e47a51130331bf59d1252d491173e2ce1fb49d",
+    "source_bytes": 6382
+  },
+  "27/started.json": {
+    "source": "data/raw/weighted-reconciliation-v27/started.json",
+    "source_sha256": "5e98167a37f643d37434fead592427bfccc24f01c2f9dc16ba6092e4fe506583",
+    "published_sha256": "5e98167a37f643d37434fead592427bfccc24f01c2f9dc16ba6092e4fe506583",
+    "source_bytes": 179
+  },
+  "27/completed.json": {
+    "source": "data/raw/weighted-reconciliation-v27/completed.json",
+    "source_sha256": "332b249338d8f60b65a2768502515eb6dcf691f036f56ed8c517d63644b7becf",
+    "published_sha256": "332b249338d8f60b65a2768502515eb6dcf691f036f56ed8c517d63644b7becf",
+    "source_bytes": 92
+  },
+  "28/results.json": {
+    "source": "data/raw/crossfit-robustness-v28/results.json",
+    "source_sha256": "6f521a73d5d165619288c1541fa1c10db3a6b7324b04c5ebab2f377846d190e7",
+    "published_sha256": "6f521a73d5d165619288c1541fa1c10db3a6b7324b04c5ebab2f377846d190e7",
+    "source_bytes": 58980
+  },
+  "28/configuration-frozen.json": {
+    "source": "data/raw/crossfit-robustness-v28/configuration-frozen.json",
+    "source_sha256": "9c9fa9cd8de9bb2d66d116e794da8344ea060f3a3143e05f7359074d216d24c9",
+    "published_sha256": "9c9fa9cd8de9bb2d66d116e794da8344ea060f3a3143e05f7359074d216d24c9",
+    "source_bytes": 332
+  },
+  "28/completed.json": {
+    "source": "data/raw/crossfit-robustness-v28/completed.json",
+    "source_sha256": "f4ae950c50718c778bf58cc27937fcf1242deec4fb1a10958e268d9b91e21beb",
+    "published_sha256": "f4ae950c50718c778bf58cc27937fcf1242deec4fb1a10958e268d9b91e21beb",
+    "source_bytes": 92
+  },
+  "runtime18/verification.json": {
+    "source": "data/raw/b-runtime18/verification.json",
+    "source_sha256": "ab4b94cd6c055569950a17aeb77ca109acb3959027d7158fc4a4219149138d26",
+    "published_sha256": "ab4b94cd6c055569950a17aeb77ca109acb3959027d7158fc4a4219149138d26",
+    "source_bytes": 5165
+  },
+  "runtime18/edge-verification.json": {
+    "source": "data/raw/b-runtime18/edge-verification.json",
+    "source_sha256": "187065532d548af3d2b52b0442e6bde634b480c440642381618b933eea0db57c",
+    "published_sha256": "187065532d548af3d2b52b0442e6bde634b480c440642381618b933eea0db57c",
+    "source_bytes": 158
+  },
+  "runtime21/verification.json": {
+    "source": "data/raw/b-runtime21-bytecode-off/verification.json",
+    "source_sha256": "36af44c07121b560c98ce2a5e052737fb91c6a19f10d9306eb915a7606283c20",
+    "published_sha256": "36af44c07121b560c98ce2a5e052737fb91c6a19f10d9306eb915a7606283c20",
+    "source_bytes": 1004
+  },
+  "runtime25/verification.json": {
+    "source": "data/raw/b-runtime25/verification.json",
+    "source_sha256": "23295c22fdb556c5b0f1829c5781619aaa566d1405d4a7adc70d4e82a5a756d2",
+    "published_sha256": "23295c22fdb556c5b0f1829c5781619aaa566d1405d4a7adc70d4e82a5a756d2",
+    "source_bytes": 1004
+  },
+  "runtime25-unpacked/verification.json": {
+    "source": "data/raw/b-runtime25-unpacked/verification.json",
+    "source_sha256": "23295c22fdb556c5b0f1829c5781619aaa566d1405d4a7adc70d4e82a5a756d2",
+    "published_sha256": "23295c22fdb556c5b0f1829c5781619aaa566d1405d4a7adc70d4e82a5a756d2",
+    "source_bytes": 1004
+  }
+}

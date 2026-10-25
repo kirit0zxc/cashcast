@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "future_and_foreign_ignored": true,
+  "unsupported_horizon_explicit": true,
+  "actual_model_processes": true,
+  "db_used": false
+}

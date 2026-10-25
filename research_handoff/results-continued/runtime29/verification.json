@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "classifier_cases": 858,
+  "full_cli": [
+    {
+      "phase": "validation",
+      "company": "C004",
+      "cutoff": "2026-02-28",
+      "risk18": true,
+      "risk29": true
+    },
+    {
+      "phase": "bridge",
+      "company": "C037",
+      "cutoff": "2026-06-30",
+      "risk18": false,
+      "risk29": true
+    },
+    {
+      "phase": "late_development",
+      "company": "C066",
+      "cutoff": "2026-07-31",
+      "risk18": true,
+      "risk29": true
+    },
+    {
+      "phase": "other_early",
+      "company": "C124",
+      "cutoff": "2026-02-28",
+      "risk18": false,
+      "risk29": false
+    },
+    {
+      "phase": "late_other",
+      "company": "C027",
+      "cutoff": "2026-08-31",
+      "risk18": true,
+      "risk29": true
+    }
+  ],
+  "future_foreign_check": true,
+  "db_used": false,
+  "addon_manifest_sha256": "e1e0755760748887ddb673f03c2d2fde3217c02d1b9e3d364beda8798a2f32d8",
+  "unsupported_horizon_explicit": true
+}

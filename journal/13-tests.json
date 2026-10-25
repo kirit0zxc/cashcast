@@ -1,0 +1,7 @@
+{
+  "tests": 78,
+  "result": "passed",
+  "db_used": false,
+  "production_changed": false,
+  "source": "python -m unittest explicit 11 modules"
+}

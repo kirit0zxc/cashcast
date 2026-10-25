@@ -1,14 +1,13 @@
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "node:crypto";
+import { expectObligationPreview, expectStatementPreview, go, login } from "./fixtures/app";
 
 test("ambiguous payment is reviewed and split manually without double allocation", async ({ page }) => {
   const tag = randomUUID();
   const today = new Date().toISOString().slice(0, 10);
   const name = `Ручная сверка ${tag}`;
-  await page.goto("/");
-  await page.getByLabel("Email", { exact: true }).fill("demo@example.com");
-  await page.getByLabel("Пароль", { exact: true }).fill("demo-password");
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await login(page);
+  await go(page, "Импорт данных");
   await page.getByLabel("CSV-файл", { exact: true }).setInputFiles({
     name: "manual-payment.csv", mimeType: "text/csv", buffer: Buffer.from(
       "\ufeffoperation_id;operation_date;amount;direction;counterparty_name;payment_purpose\n"
@@ -17,12 +16,12 @@ test("ambiguous payment is reviewed and split manually without double allocation
       + `${tag}-in;${today};98.76;Поступление;Пополнение ${tag};Синтетическое пополнение\n`),
   });
   await page.getByRole("button", { name: "Проверить файл", exact: true }).click();
-  await expect(page.getByText(/Строк: 2\. Ошибок: 0/)).toBeVisible();
+  await expectStatementPreview(page, 2);
   await page.getByRole("button", { name: "Подтвердить импорт", exact: true }).click();
   await expect(page.getByRole("status").filter({ hasText: "Добавлено:" })).toBeVisible();
   // Неоднозначность должна существовать целиком до автоматического прогноза.
   // Два последовательных ручных ввода сначала создавали единственный безопасный match.
-  await page.getByText("Загрузить счета и обязательства из CSV", { exact: true }).click();
+  await page.getByRole("tab", { name: "Счета и обязательства", exact: true }).click();
   await page.getByLabel("Источник обязательств", { exact: true }).fill("manual-confirmation-fixture");
   await page.getByLabel("CSV счетов и обязательств", { exact: true }).setInputFiles({
     name: "ambiguous-plans.csv", mimeType: "text/csv", buffer: Buffer.from(
@@ -30,8 +29,10 @@ test("ambiguous payment is reviewed and split manually without double allocation
       + [0, 1].map(index => `${tag}-${index};${name};out;98.76;RUB;${today};${today};invoice;synthetic`).join("\n") + "\n"),
   });
   await page.getByRole("button", { name: "Проверить обязательства", exact: true }).click();
-  await expect(page.getByText(/Обязательств проверено: 2\. Корректных: 2\. Ошибок: 0/)).toBeVisible();
+  await expectObligationPreview(page, 2, 2, 0);
   await page.getByRole("button", { name: "Подтвердить обязательства", exact: true }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Обязательств добавлено:" })).toBeVisible();
+  await go(page, "Плановые платежи");
   await expect(page.getByRole("table", { name: "Плановые платежи", exact: true }).getByRole("row")
     .filter({ hasText: name })).toHaveCount(2);
   const companyId = await page.getByRole("combobox", { name: "Компания", exact: true }).inputValue();
@@ -44,7 +45,15 @@ test("ambiguous payment is reviewed and split manually without double allocation
   const proposal = before.proposals.find((item: { planned_event_id: string }) => item.planned_event_id === events[0]);
   expect(proposal).toBeDefined();
   expect(proposal.auto_confirm).toBe(false);
-  await page.getByText("Предложения и подтверждённые связи", { exact: true }).click();
+  await go(page, "Сверка оплат");
+  await page.getByRole("tab", { name: /^Предложения/ }).click();
+  // Подтверждение оплаты должно обновить сверку, даже если следующий enqueue недоступен.
+  // Это единственный искусственный отказ: импорт/подтверждения/GET идут в настоящий API.
+  await page.route("**/api/v1/companies/*/forecasts", async route => {
+    if (route.request().method() === "POST") await route.fulfill({ status: 503,
+      json: { error: { code: "test_unavailable", message: "Тестовый отказ очереди" } } });
+    else await route.continue();
+  });
   for (const [index, amount, expectedMinor] of [[0, "40,00", 4000], [1, "58,76", 5876]] as const) {
     const choice = page.getByTestId(`proposal-${events[index]}-${proposal.transaction_id}`);
     await choice.getByRole("button", { name: "Проверить предложение", exact: true }).click();
@@ -68,6 +77,9 @@ test("ambiguous payment is reviewed and split manually without double allocation
       item.planned_event_id === events[index]).matched_amount_minor).toBe(expectedMinor);
     await expect(choice).toHaveCount(0);
   }
+  await page.getByRole("tab", { name: /^Подтверждённые связи/ }).click();
+  await expect(page.getByRole("table", { name: "Подтверждённые связи", exact: true })).toContainText(name);
+  await page.unroute("**/api/v1/companies/*/forecasts");
   await page.reload();
   const after = await (await page.request.get(path)).json();
   const links = after.confirmed_matches.filter((item: { transaction_id: string }) => item.transaction_id === proposal.transaction_id);
@@ -79,6 +91,7 @@ test("ambiguous payment is reviewed and split manually without double allocation
       transaction_id: proposal.transaction_id, matched_amount_minor: 4000 },
   });
   expect(retry.status()).toBe(200);
+  await go(page, "Плановые платежи");
   const planRows = page.getByRole("table", { name: "Плановые платежи", exact: true }).getByRole("row").filter({ hasText: name });
   await expect(planRows).toHaveCount(2);
   await expect(page.getByTestId(`planned-event-${events[0]}`)).toContainText("Частично");

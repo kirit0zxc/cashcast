@@ -1,0 +1,136 @@
+{
+  "base_commit": "a92bd5013b5b5d7e5008157815160b67fd762edf",
+  "production_activated": false,
+  "release_allowed": false,
+  "independent_control_received": false,
+  "points": [
+    {
+      "model": "direct_depth6",
+      "phase": "validation",
+      "windows": 268,
+      "mae_rub": 1101383.498767413,
+      "mse_rub2": 8904263340498.318,
+      "rmse_rub": 2984001.2299760063,
+      "current_mae_rub": 1325056.6726430347,
+      "improvement_pct": 16.8802722550327
+    },
+    {
+      "model": "direct_depth6",
+      "phase": "retrospective_development",
+      "windows": 200,
+      "mae_rub": 1214414.212045,
+      "mse_rub2": 10716688543763.045,
+      "rmse_rub": 3273635.3712292155,
+      "current_mae_rub": 1377219.63538,
+      "improvement_pct": 11.82131151434529
+    },
+    {
+      "model": "direct_depth6",
+      "phase": "retrospective_other_companies",
+      "windows": 56,
+      "mae_rub": 1610753.4997619044,
+      "mse_rub2": 26454008728584.0,
+      "rmse_rub": 5143346.063467245,
+      "current_mae_rub": 1597639.5718392858,
+      "improvement_pct": -0.8208314411942919
+    },
+    {
+      "model": "net6_uniform",
+      "phase": "validation",
+      "windows": 268,
+      "mae_rub": 1114406.602699005,
+      "mse_rub2": 10245956538049.717,
+      "rmse_rub": 3200930.573762842,
+      "current_mae_rub": 1325056.6726430347,
+      "improvement_pct": 15.897438524184393
+    },
+    {
+      "model": "net6_uniform",
+      "phase": "retrospective_development",
+      "windows": 200,
+      "mae_rub": 1269250.7824616665,
+      "mse_rub2": 13653429253187.592,
+      "rmse_rub": 3695054.7023268263,
+      "current_mae_rub": 1377219.63538,
+      "improvement_pct": 7.839624860456118
+    },
+    {
+      "model": "net6_uniform",
+      "phase": "retrospective_other_companies",
+      "windows": 56,
+      "mae_rub": 1597170.5257857144,
+      "mse_rub2": 31320078718896.21,
+      "rmse_rub": 5596434.464808483,
+      "current_mae_rub": 1597639.5718392858,
+      "improvement_pct": 0.029358690272762722
+    },
+    {
+      "model": "chronos",
+      "phase": "validation",
+      "windows": 268,
+      "mae_rub": 1046804.041340796,
+      "mse_rub2": 8566535086186.995,
+      "rmse_rub": 2926864.377826037,
+      "current_mae_rub": 1325056.6726430347,
+      "improvement_pct": 20.999300410843546
+    },
+    {
+      "model": "chronos",
+      "phase": "retrospective_development",
+      "windows": 200,
+      "mae_rub": 1214072.4619966666,
+      "mse_rub2": 11214666368988.562,
+      "rmse_rub": 3348830.5972366775,
+      "current_mae_rub": 1377219.63538,
+      "improvement_pct": 11.846126005770907
+    },
+    {
+      "model": "chronos",
+      "phase": "retrospective_other_companies",
+      "windows": 56,
+      "mae_rub": 1582817.6720714285,
+      "mse_rub2": 27559964337181.113,
+      "rmse_rub": 5249758.50274859,
+      "current_mae_rub": 1597639.5718392858,
+      "improvement_pct": 0.9277373964137303
+    }
+  ],
+  "late_warning_common_windows": {
+    "candidate": {
+      "tp": 4,
+      "fp": 29,
+      "fn": 0,
+      "tn": 199,
+      "n": 232,
+      "accuracy": 0.875,
+      "precision": 0.12121212121212122,
+      "recall": 1.0,
+      "f1": 0.21621621621621623
+    },
+    "current": {
+      "tp": 4,
+      "fp": 45,
+      "fn": 0,
+      "tn": 183,
+      "n": 232,
+      "accuracy": 0.8060344827586207,
+      "precision": 0.08163265306122448,
+      "recall": 1.0,
+      "f1": 0.1509433962264151
+    }
+  },
+  "positive_windows": 4,
+  "positive_companies": 3,
+  "early_warning_gate_passed": false,
+  "tests": {
+    "research_unique": 39,
+    "existing_analytics": 77,
+    "artifact_checks": 13
+  },
+  "notes": [
+    "Поздние периоды уже изучались; это ретроспектива, не слепой контроль.",
+    "Наборы пригодных окон различаются между экспериментами; сравнения внутри одного опыта парные.",
+    "Chronos/net-quantile исследуют остатки; скопированные диагностические потоки не являются их прогнозом.",
+    "4 положительных окна относятся к 3 компаниям, а не 4 независимым компаниям."
+  ]
+}

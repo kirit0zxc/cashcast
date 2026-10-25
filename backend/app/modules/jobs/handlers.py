@@ -10,7 +10,10 @@ from sqlalchemy.orm import Session
 from app.core.forecast_input import ForecastInputCodec
 from app.core.models import ForecastPoint, ForecastRun
 from app.modules.contracts import ScenarioChange
+from app.modules.evaluation.service import handle_evaluation
 from app.modules.forecasting.service import get_forecast_service
+from app.modules.forecasting.v2.service import GuardedForecastService
+from app.modules.jobs.incremental import ForecastCheckpointRepository
 
 
 def handle_forecast(session: Session, payload: dict) -> dict:
@@ -26,7 +29,13 @@ def handle_forecast(session: Session, payload: dict) -> dict:
     if not run.input_snapshot:
         raise ValueError("snapshot_unavailable")
     data = ForecastInputCodec.decode(run.input_snapshot)
-    result = get_forecast_service(run.model_version).run(data)
+    service = get_forecast_service(run.model_version)
+    if isinstance(service, GuardedForecastService):
+        state, source_id = ForecastCheckpointRepository(session).find(run, data)
+        result = service.run(data, state=state)
+        result.details["calculation"]["source_forecast_id"] = source_id
+    else:
+        result = service.run(data)
     if result.model_version != run.model_version:
         raise ValueError("pinned_model_unavailable")
 
@@ -88,4 +97,4 @@ def mark_forecast_failed(session: Session, payload: dict, error_code: str) -> No
 
 
 # Реестр обработчиков по виду задания. Новые виды добавляются сюда.
-HANDLERS = {"forecast": handle_forecast}
+HANDLERS = {"forecast": handle_forecast, "evaluation": handle_evaluation}

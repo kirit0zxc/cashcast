@@ -4,7 +4,7 @@ import { CashCastApi, type Transaction } from "../../shared/api";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
 
 // Значения существующего Category из OpenAPI; подписи не меняют серверный словарь.
-const categories = {
+export const CATEGORIES = {
   sales: "Выручка", purchases: "Закупки", payroll: "Зарплата", rent: "Аренда",
   tax: "Налоги", fees: "Комиссии", loan: "Кредит", transfer: "Собственный перевод", other: "Прочее",
 };
@@ -28,13 +28,13 @@ export function CategoryEditor({ api, transaction, companyId, accountId, onChang
   }
   const category = transaction.category;
   return <>
-    <span data-testid="transaction-category">{category ? categories[category as keyof typeof categories] ?? category : "Не определена"}</span>
+    <span className="tag" data-testid="transaction-category">{category ? CATEGORIES[category as keyof typeof CATEGORIES] ?? category : "Не определена"}</span>
     <small>{transaction.category_source === "manual" ? "Выбрано вами"
       : transaction.category_source === "auto" ? "Определено автоматически" : "Источник не указан"}</small>
-    {canWrite && <details><summary>Изменить категорию</summary><form onSubmit={submit}>
+    {canWrite && <details className="inline"><summary>Изменить категорию</summary><form onSubmit={submit}>
       <label>Новая категория<select name="category" key={category} defaultValue={category ?? "other"}
         disabled={mutation.isPending} onChange={() => mutation.reset()}>
-        {Object.entries(categories).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+        {Object.entries(CATEGORIES).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
       </select></label>
       <button disabled={mutation.isPending}>Сохранить категорию</button>
     </form></details>}

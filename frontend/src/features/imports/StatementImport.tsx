@@ -2,6 +2,8 @@ import { useState, type FormEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CashCastApi, type Commit, type Preview } from "../../shared/api";
 import { useCompanyCanWrite } from "../../shared/company-permissions";
+import { navigate } from "../../app/router";
+import { Leaders, Stepper, dmy } from "../../ui/Blank";
 
 // Сервер возвращает согласованный mapping; пользователь может поправить его до загрузки.
 export function StatementImport({ api, companyId, accountId, onCommit }: {
@@ -38,27 +40,45 @@ export function StatementImport({ api, companyId, accountId, onCommit }: {
     finally { setBusy(false); }
   }
   if (!canWrite) return null;
-  return <section className="panel"><h2>1. Импорт выписки</h2>
-    <p>Выберите одну выписку statements/Cxxx.csv. Сводный файл нескольких компаний сюда не загружайте.</p>
-    <form onSubmit={upload}>
+  const step = commit ? 3 : preview ? 2 : file ? 1 : 0;
+  return <section className="panel">
+    <Stepper steps={["Выбрать файл", "Проверить данные", "Подтвердить импорт", "Готово"]} current={step} />
+    <h2>История денежных операций</h2>
+    <form onSubmit={upload} className="upload">
       <label>CSV-файл<input type="file" accept=".csv,text/csv" disabled={busy}
         onChange={e => { setFile(e.target.files?.[0] ?? null); setPreview(null); setCommit(null); }} /></label>
-      <details><summary>Соответствие колонок</summary>
+      <details><summary>Настройка колонок (для специалистов)</summary>
+        <p>Менять не нужно, если файл выгружен в стандартном формате.</p>
         <textarea aria-label="Соответствие колонок" rows={13} value={mapping} disabled={busy}
           onChange={e => { setMapping(e.target.value); setPreview(null); setCommit(null); }} />
-      </details><button disabled={!file || !accountId || busy || !preset}>Проверить файл</button>
+      </details>
+      <button disabled={!file || !accountId || busy || !preset}>Проверить файл</button>
     </form>
     {presets.error && <p role="alert">Не удалось получить настройки CSV: {presets.error.message}</p>}
-    {preview && <div><p>Строк: {preview.total_rows}. Ошибок: {preview.error_count}.
-      Повторов внутри: {preview.duplicate_in_file}.</p>
-      <p>Период: {preview.period_start ?? "—"} — {preview.period_end ?? "—"}.
-        {preview.reused && " Этот файл уже загружали."}</p>
-      {preview.sample_errors.length > 0 && <ul>{preview.sample_errors.map((e, i) =>
-        <li key={i}>Строка {e.row}, {e.field}: {e.message}</li>)}</ul>}
-      <button onClick={() => void confirm()} disabled={busy || preview.error_count > 0 || !!commit}>Подтвердить импорт</button>
+    {preview && <div className="check">
+      <span className="label">Предварительная проверка · {file?.name}</span>
+      <Leaders testId="statement-preview" rows={[
+        ["Строк в файле", preview.total_rows],
+        ["Ошибок", preview.error_count],
+        ["Повторов внутри файла", preview.duplicate_in_file],
+        ["Период", `${preview.period_start ? dmy(preview.period_start) : "—"} — ${preview.period_end ? dmy(preview.period_end) : "—"}`],
+      ]} />
+      {preview.reused && <p className="note">Этот файл уже загружали. Повторное подтверждение не добавит операции заново.</p>}
+      {preview.sample_errors.length > 0 && <div className="errors" role="alert"><b>Ошибки в строках — импорт недоступен</b>
+        <ul>{preview.sample_errors.map((e, i) => <li key={i}>Строка {e.row}, {e.field}: {e.message}</li>)}</ul></div>}
+      <div className="row">
+        <button onClick={() => void confirm()} disabled={busy || preview.error_count > 0 || !!commit}>Подтвердить импорт</button>
+      </div>
     </div>}
-    {commit && <><p role="status">Результат сохранённого импорта. Добавлено: {commit.inserted}. Уже существовали: {commit.skipped_existing}.</p>
-      <p>При повторном подтверждении возвращается та же сводка; операции заново не добавляются.</p></>}
+    {commit && <div className="done">
+      <p role="status">Результат сохранённого импорта. Добавлено: {commit.inserted}. Уже существовали: {commit.skipped_existing}.</p>
+      <p>При повторном подтверждении возвращается та же сводка; операции заново не добавляются.</p>
+      <p>Прогноз обновится автоматически.</p>
+      <div className="row">
+        <button type="button" onClick={() => navigate("/operations")}>Открыть операции</button>
+        <button type="button" className="ghost" onClick={() => navigate("/forecast")}>Открыть прогноз</button>
+      </div>
+    </div>}
     {busy && <p role="status">Обрабатываем…</p>}{error && <p role="alert">{error}</p>}
   </section>;
 }

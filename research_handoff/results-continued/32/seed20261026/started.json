@@ -1,0 +1,28 @@
+{
+  "params": {
+    "iterations": 600,
+    "depth": 4,
+    "learning_rate": 0.03,
+    "l2_leaf_reg": 8,
+    "loss_function": "Logloss",
+    "boosting_type": "Ordered",
+    "random_seed": 20261026,
+    "thread_count": 4,
+    "allow_writing_files": false,
+    "verbose": false
+  },
+  "python": "3.12.15 (main, Oct 14 2026, 01:08:45) [MSC v.1944 64 bit (AMD64)]",
+  "packages": {
+    "numpy": "2.5.4",
+    "lightgbm": "4.6.0",
+    "scikit-learn": "1.6.1",
+    "catboost": "1.2.8"
+  },
+  "prepared_sha256": "3898d41d41b5d182168851a3fc9c7ec529c6dea246a69a029b8fde649fa6d4ee",
+  "policy21_sha256": "132d1a60e8c8f4ab880e5a2e59582d5da87c79d959cf383c260d2f8de6f729a0",
+  "code_sha256": "fdbbd8a174859474f90ac60c9132d31b11e7de002d2720c056b0cc9795f70786",
+  "independent_control": false,
+  "protocol_sha256": "78d2c3ae20fc26ee1bf78a424442a1fd009a959bf275df84d1f88fb6b724a4ed",
+  "reference25_predictions_sha256": "9d9f010a16f0a8e274c787266d81a94f2ed522f46d99814ba60550b660a1e4a7",
+  "base_crossfit_code_sha256": "21c06e7c06520429c9b09f4e50485ca61c677e71df5782aae3b328b5768c982c"
+}

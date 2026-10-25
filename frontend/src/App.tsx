@@ -1,9 +1,9 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Login } from "./features/auth/Login";
-import { AccountWorkspace } from "./features/accounts/AccountWorkspace";
+import { AppShell } from "./app/AppShell";
 import { ApiError, CashCastApi, type User } from "./shared/api";
-import { CompanyPermission } from "./shared/company-permissions";
+import { Aura } from "./ui/Aura";
 import "./app.css";
 
 // Смена пользователя полностью очищает кэш данных предыдущей сессии.
@@ -29,31 +29,25 @@ export function App() {
     queryClient.setQueryData(["me"], null);
   }
   const expired = me.error instanceof ApiError && me.error.status === 401;
-  return <main><header><h1>CashCast</h1><p>Прогноз денежного потока по выписке счёта</p>
-    {me.data && !expired && <button onClick={() => void logout()}>Выйти ({me.data.email})</button>}</header>
-    {logoutError && <p role="alert">{logoutError}</p>}
-    {me.isPending ? <p role="status">Проверяем сессию…</p> : expired ? <Login onLogin={onLogin} /> : me.data
-      ? <Workspace key={me.data.id} user={me.data} />
-      : me.error && !(me.error instanceof ApiError && me.error.status === 401)
+  if (me.data && !expired) {
+    return <AppShell key={me.data.id} user={me.data} logout={() => void logout()} logoutError={logoutError} />;
+  }
+  return <Entry>
+    {me.isPending ? <p role="status">Проверяем сессию…</p>
+      : me.error && !expired
         ? <div role="alert">API недоступен: {me.error.message} <button onClick={() => void me.refetch()}>Повторить</button></div>
         : <Login onLogin={onLogin} />}
-  </main>;
+  </Entry>;
 }
 
-function Workspace({ user }: { user: User }) {
-  const [companyId, setCompanyId] = useState(user.companies[0]?.id ?? "");
-  const api = useMemo(() => new CashCastApi(user.csrf_token), [user.csrf_token]);
-  const role = user.companies.find(company => company.id === companyId)?.role;
-  return <>
-    <section className="panel row">
-      <label>Компания<select value={companyId} onChange={e => setCompanyId(e.target.value)}>
-        {user.companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-      </select></label>
-    </section>
-    {!companyId && <p>Нет доступных компаний. Обратитесь к владельцу стенда.</p>}
-    {companyId && <CompanyPermission key={companyId} role={role}>
-      {role !== "owner" && <p role="status">Только чтение: можно просматривать данные и сохранённые расчёты.</p>}
-      <AccountWorkspace api={api} companyId={companyId} />
-    </CompanyPermission>}
-  </>;
+function Entry({ children }: { children: ReactNode }) {
+  return <main className="login">
+    <div>
+      <div className="brand"><span className="mark" /><b>CashCast</b></div>
+      <p className="label">Прогноз денежного потока по выписке счёта</p>
+      <div className="statusbox" style={{ minHeight: 120, marginBottom: 18 }}><Aura tone="ok" cell={6} />
+        <span className="crop tl" /><span className="crop tr" /><span className="crop bl" /><span className="crop br" /></div>
+      {children}
+    </div>
+  </main>;
 }

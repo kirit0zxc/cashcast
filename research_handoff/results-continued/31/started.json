@@ -1,0 +1,35 @@
+{
+  "params": {
+    "n_estimators": 300,
+    "learning_rate": 0.03,
+    "num_leaves": 15,
+    "min_child_samples": 50,
+    "reg_lambda": 5.0,
+    "random_state": 42,
+    "deterministic": true,
+    "force_row_wise": true,
+    "verbose": -1,
+    "subsample": 0.8,
+    "subsample_freq": 1,
+    "colsample_bytree": 0.8,
+    "n_jobs": 4
+  },
+  "python": "3.12.15 (main, Oct 14 2026, 01:08:45) [MSC v.1944 64 bit (AMD64)]",
+  "packages": {
+    "numpy": "2.5.4",
+    "lightgbm": "4.6.0",
+    "scikit-learn": "1.6.1",
+    "catboost": "1.2.8"
+  },
+  "prepared_sha256": "3898d41d41b5d182168851a3fc9c7ec529c6dea246a69a029b8fde649fa6d4ee",
+  "policy21_sha256": "132d1a60e8c8f4ab880e5a2e59582d5da87c79d959cf383c260d2f8de6f729a0",
+  "code_sha256": "5a3f7aa18f3be77765995408597b4c0edc1394b1f7c24ca2773f2bac379226a0",
+  "independent_control": false,
+  "protocol_sha256": "9560e31f09b2a90c39598e924c41bed3c7508c848b2a0ad8983d2882fd025455",
+  "reference25_predictions_sha256": "9d9f010a16f0a8e274c787266d81a94f2ed522f46d99814ba60550b660a1e4a7",
+  "base_crossfit_code_sha256": "21c06e7c06520429c9b09f4e50485ca61c677e71df5782aae3b328b5768c982c",
+  "dataset_sha256": "e753802b7f7a2eecb7b5a558f9923b529e711c40fe431774750904b62ec79987",
+  "prepared86_sha256": "b386948d16719effcb28cc188e151e9a60459b9924b4d8776f86e47d0cd85629",
+  "feature_count": 86,
+  "diverse_helper_sha256": "fdbbd8a174859474f90ac60c9132d31b11e7de002d2720c056b0cc9795f70786"
+}
