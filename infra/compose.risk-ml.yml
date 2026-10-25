@@ -1,0 +1,22 @@
+services:
+  risk-ml:
+    build: ./risk-ml
+    image: cashcast-risk-ml:sr04-r3
+    restart: unless-stopped
+    mem_limit: 1g
+    cpus: 1.5
+    read_only: true
+    tmpfs: ["/tmp:size=32m"]
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/healthz',timeout=2)"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+  api:
+    environment:
+      CC_RISK_ML_URL: http://risk-ml:8765
+    depends_on:
+      risk-ml:
+        condition: service_healthy

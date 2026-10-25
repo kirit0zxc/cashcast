@@ -6327,6 +6327,53 @@
         ],
         "title": "LoginRequest"
       },
+      "MLFlagOut": {
+        "properties": {
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          },
+          "flag": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Flag"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "horizon_days": {
+            "type": "integer",
+            "const": 30,
+            "title": "Horizon Days",
+            "default": 30
+          },
+          "history_only": {
+            "type": "boolean",
+            "const": true,
+            "title": "History Only",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "available",
+          "flag",
+          "reason",
+          "model_version"
+        ],
+        "title": "MLFlagOut"
+      },
       "MatchProposalOut": {
         "properties": {
           "planned_event_id": {
@@ -7973,6 +8020,16 @@
             "const": false,
             "title": "Probability Calibrated",
             "default": false
+          },
+          "ml_flag": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MLFlagOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
